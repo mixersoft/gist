@@ -8,14 +8,32 @@ using Emgu.CV.Structure;
 using Emgu.CV;
 using Nemerle.Collections;
 using System.Console;
+using System.IO;
 
-def image = Image.[Gray, byte](@"venice\4bbb3976-0fd4-47dc-9218-11a0f67883f5.jpg");
+def files = System.Collections.Generic.List();
 
-def descriptor = Gist.Algorithm.GetBwDescriptor
-	( image      = image.Resize(32, 32, INTER.CV_INTER_CUBIC)
-	, blockCount = 4
-	, a          = 8
-	, b          = 8
-	, c          = 4
-	);
-descriptor.Iter(WriteLine);
+foreach (dir in Directory.GetDirectories("images"))
+	foreach (file in Directory.GetFiles(dir))
+		files.Add(file);
+foreach (file in files with i)
+{
+	def image = Image.[Gray, byte](file);
+
+	def descriptor = Gist.Algorithm.GetBwDescriptor
+		( image      = image.Resize(128, 128, INTER.CV_INTER_CUBIC)
+		, blockCount = 4
+		, a          = 8
+		, b          = 8
+		, c          = 4
+		);
+
+	def id  = Path.GetFileNameWithoutExtension(file);
+	def dir = Path.GetFileName(Path.GetDirectoryName(file));
+
+	def path = $@"descriptors\$dir\$id.txt";
+
+	_ = Directory.CreateDirectory($@"descriptors\$dir");
+
+	WriteLine($"$i/$(files.Count): $path");
+	File.WriteAllText($@"descriptors\$dir\$id.txt", descriptor.ToString("\r\n"));
+}

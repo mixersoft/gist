@@ -1,0 +1,50 @@
+// REFERENCE: Emgu.CV.dll
+// REFERENCE: Emgu.Util.dll
+
+using Emgu.CV.CvEnum;
+using Emgu.CV.Structure;
+using Emgu.CV;
+using Nemerle.Collections;
+using System.Console;
+using System.IO;
+using System.Math;
+
+mutable map = Map();
+foreach (path in Directory.GetFiles(@"descriptors\venice"))
+{
+	map = map.Add
+		( Path.GetFileNameWithoutExtension(path)
+		, File.ReadAllLines(path).Map(double.Parse)
+		);
+}
+
+def Distance(v1, v2)
+{
+	def Square(x) { x * x }
+	mutable sum = 0.0;
+	for (mutable i = 0; i != v1.Length; ++i)
+		sum += Square(v1[i] - v2[i]);
+	Sqrt(sum);
+}
+
+def WriteHtml(map)
+{
+	using (writer = File.CreateText("out.html"))
+	{
+		writer.WriteLine("<html><body>");
+		foreach ((id, _) in map)
+		{
+			def src = $@"images\venice\$id.jpg";
+			writer.WriteLine($"<img width='128px' src='$src'> ");
+		}
+		writer.WriteLine("</body></html>");
+	}
+}
+
+def δ = 0.5;
+
+for (;;)
+{
+	def v1 = map.Get(ReadLine());
+	WriteHtml(map.Filter((_, v2) => Distance(v1, v2) <= δ));
+}
