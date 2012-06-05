@@ -1,0 +1,27 @@
+// REFERENCE: Newtonsoft.Json.dll
+
+using Newtonsoft.Json.Linq;
+using System.Console;
+using System.IO;
+using System.Net;
+using System;
+
+def data = JObject.Parse(File.ReadAllText(@"data\newyork.json"));
+
+def castingCall = data["response"]["castingCall"];
+def baseUrl     = "http://dev.snaphappi.com" + castingCall["CastingCall"]["Auditions"]["Baseurl"];
+def photos      = castingCall["CastingCall"]["Auditions"]["Audition"];
+
+def client = WebClient();
+
+foreach (photo in photos.Children())
+{
+	def id = photo["id"];
+	//dateTaken = photos[i]["Photo"]["DateTaken"];
+	//unixtime = photos[i]["Photo"]["TS"];
+	def image = baseUrl + photo["Photo"]["Img"]["Src"]["rootSrc"];
+
+	WriteLine(id);
+
+	client.DownloadFile(image, $@"newyork\$id.jpg");
+}

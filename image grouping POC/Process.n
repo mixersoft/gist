@@ -1,0 +1,21 @@
+// REFERENCE: ComputeGist.dll
+// REFERENCE: Emgu.CV.dll
+// REFERENCE: Emgu.Util.dll
+// PLATFORM: x64
+
+using Emgu.CV.CvEnum;
+using Emgu.CV.Structure;
+using Emgu.CV;
+using Nemerle.Collections;
+using System.Console;
+
+def image = Image.[Gray, byte](@"venice\4bbb3976-0fd4-47dc-9218-11a0f67883f5.jpg");
+
+def descriptor = Gist.Algorithm.GetBwDescriptor
+	( image      = image.Resize(32, 32, INTER.CV_INTER_CUBIC)
+	, blockCount = 4
+	, a          = 8
+	, b          = 8
+	, c          = 4
+	);
+descriptor.Iter(WriteLine);
