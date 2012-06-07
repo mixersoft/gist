@@ -1,21 +1,35 @@
 // REFERENCE: Emgu.CV.dll
 // REFERENCE: Emgu.Util.dll
+// REFERENCE: Newtonsoft.Json.dll
 
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
 using Emgu.CV;
 using Nemerle.Collections;
+using Newtonsoft.Json.Linq;
 using System.Console;
 using System.IO;
 using System.Math;
 
-mutable map = Map();
-foreach (path in Directory.GetFiles(@"descriptors\venice"))
+def GetImageData()
 {
-	map = map.Add
-		( Path.GetFileNameWithoutExtension(path)
-		, File.ReadAllLines(path).Map(double.Parse)
-		);
+	def GetData(photo)
+	{
+		def id   = photo["id"] :> string;
+		def time = photo["Photo"]["TS"] :> int;
+
+		def path = $@"descriptors\venice\$id.txt";
+		def descriptor = File.ReadAllLines(path).Map(double.Parse);
+
+		(id, time, descriptor);
+	}
+
+	def data = JObject.Parse(File.ReadAllText(@"data\venice.json"));
+
+	def castingCall = data["response"]["castingCall"];
+	def photos      = castingCall["CastingCall"]["Auditions"]["Audition"];
+
+	photos.Children().Map(GetData).ToArray().Sort((_, time, _) => time);
 }
 
 def Distance(v1, v2)
@@ -27,24 +41,53 @@ def Distance(v1, v2)
 	Sqrt(sum);
 }
 
-def WriteHtml(map)
+def WriteHtml(images, path)
 {
-	using (writer = File.CreateText("out.html"))
+	WriteLine(images.Length);
+	using (writer = File.CreateText(path))
 	{
-		writer.WriteLine("<html><body>");
-		foreach ((id, _) in map)
+		[ "<html><body>"
+		, "<head><style type='text/css'>"
+		, "	.even { background-color : #C1B398 }"
+		, "	.odd  { background-color : #ACCEC0 }"
+		, "	span { display : block; padding : 8px; }"
+		, "</style></head>"
+		].Iter(writer.WriteLine);
+
+		writer.WriteLine("<body>");
+
+		mutable prevDesc = images[0][2];
+		mutable first    = true;
+		mutable even     = true;
+
+		def src = $@"images\venice\$(images[0][0]).jpg";
+		writer.WriteLine("<span class='even'>");
+		writer.WriteLine($"<img height='64' src='$src'>");
+
+		foreach ((id, _, desc) in images)
 		{
+			if (first)
+			{
+				first = false;
+			}
+			else
+			{
+				when (Distance(desc, prevDesc) > 0.5)
+				{
+					even = !even;
+					def spanClass = if (even) "even" else "odd";
+					writer.WriteLine($"</span><span class='$spanClass'>");
+				}
+			}
+
 			def src = $@"images\venice\$id.jpg";
-			writer.WriteLine($"<img width='128px' src='$src'> ");
+			writer.WriteLine($"<img height='64' src='$src'>");
+
+			prevDesc = desc;
 		}
-		writer.WriteLine("</body></html>");
+
+		writer.WriteLine("</span></body></html>");
 	}
 }
 
-def δ = 0.5;
-
-for (;;)
-{
-	def v1 = map.Get(ReadLine());
-	WriteHtml(map.Filter((_, v2) => Distance(v1, v2) <= δ));
-}
+WriteHtml(GetImageData(), "out.html");
