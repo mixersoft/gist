@@ -15,6 +15,8 @@
 #include <pthread.h>
 
 #include <algorithm>
+#include <stdexcept>
+#include <sstream>
 
 #include <opencv/cv.h>
 #include <opencv/highgui.h>
@@ -1045,6 +1047,12 @@ void GetBwDescriptor
 		cv::resize(image, thumbnail, thumbnail.size(), 0, 0, cv::INTER_CUBIC);
 		imwrite("out.jpg", thumbnail);
 		GetBwDescriptor(thumbnail, blockCount, a, b, c, descriptor);
+	}
+	else
+	{
+		std::ostringstream stream;
+		stream << " Image '" << path << "' could not be loaded.";
+		throw std::runtime_error(stream.str());
 	}
 }
 

@@ -58,8 +58,7 @@ void ProcessData(const string & basePath, float threshold, bool prettyPrint)
 		group.append(photos[i]["id"].asString());
 
 		string path(basePath);
-		//path.append(photos[i]["Photo"]["Img"]["Src"]["rootSrc"].asString());
-		path.append(photos[i]["id"].asString() + ".jpg");
+		path.append(photos[i]["Photo"]["Img"]["Src"]["rootSrc"].asString());
 
 		GetBwDescriptor(path.c_str(), 4, 8, 8, 4, *currDescriptor);
 
