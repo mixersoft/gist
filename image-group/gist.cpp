@@ -1045,7 +1045,6 @@ void GetBwDescriptor
 	{
 		cv::Mat thumbnail(128, 128, image.type());
 		cv::resize(image, thumbnail, thumbnail.size(), 0, 0, cv::INTER_CUBIC);
-		imwrite("out.jpg", thumbnail);
 		GetBwDescriptor(thumbnail, blockCount, a, b, c, descriptor);
 	}
 	else

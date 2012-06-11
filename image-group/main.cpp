@@ -33,8 +33,7 @@ void ProcessData(const string & basePath, float threshold, bool prettyPrint)
 	Json::Value  root;
 	Json::Reader reader;
 
-	ifstream stream("venice.json");
-	if (!reader.parse(stream, root, false))
+	if (!reader.parse(cin, root, false))
 		throw std::runtime_error(reader.getFormattedErrorMessages());
 
 	Descriptor d1;
