@@ -1,0 +1,18 @@
+// REFERENCE: Newtonsoft.Json.dll
+
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
+using System.IO.File;
+using System.IO.Directory;
+
+foreach (file in GetFiles("data", "peter-alice-*.json"))
+{
+	def data = JObject.Parse(ReadAllText(file));
+	using (file = JsonTextWriter(CreateText(file)))
+	{
+		file.Formatting  = Formatting.Indented;
+		file.Indentation = 1;
+		file.IndentChar  = '\t';
+		data.WriteTo(file);
+	}
+}

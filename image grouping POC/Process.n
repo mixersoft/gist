@@ -8,32 +8,33 @@ using Emgu.CV.Structure;
 using Emgu.CV;
 using Nemerle.Collections;
 using System.Console;
+using System.IO.Directory;
+using System.IO.File;
+using System.IO.Path;
 using System.IO;
 
-def files = System.Collections.Generic.List();
-
-foreach (dir in Directory.GetDirectories("images"))
-	foreach (file in Directory.GetFiles(dir))
-		files.Add(file);
-foreach (file in files with i)
+foreach (srcDir in GetDirectories("images"))
 {
-	def image = Image.[Gray, byte](file);
+	def dstDir = Combine("descriptors", GetFileName(srcDir));
+	unless (Directory.Exists(dstDir))
+	{
+		WriteLine(dstDir);
 
-	def descriptor = Gist.Algorithm.GetBwDescriptor
-		( image      = image.Resize(128, 128, INTER.CV_INTER_CUBIC)
-		, blockCount = 4
-		, a          = 8
-		, b          = 8
-		, c          = 4
-		);
+		_ = CreateDirectory(dstDir);
 
-	def id  = Path.GetFileNameWithoutExtension(file);
-	def dir = Path.GetFileName(Path.GetDirectoryName(file));
+		def files = GetFiles(srcDir);
+		foreach (srcFile in files with i)
+		{
+			def descriptor =
+				using (image = Image.[Gray, byte](srcFile))
+					Gist.Algorithm.GetBwDescriptor(image, 4, 8, 8, 4);
 
-	def path = $@"descriptors\$dir\$id.txt";
+			def id      = GetFileNameWithoutExtension(srcFile);
+			def dstFile = Combine(dstDir, id + ".txt");
 
-	_ = Directory.CreateDirectory($@"descriptors\$dir");
+			WriteLine($"\t$i/$(files.Length) $id");
 
-	WriteLine($"$i/$(files.Count): $path");
-	File.WriteAllText($@"descriptors\$dir\$id.txt", descriptor.ToString("\r\n"));
+			WriteAllText(dstFile, descriptor.ToString("\r\n"));
+		}
+	}
 }
