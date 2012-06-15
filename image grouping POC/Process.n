@@ -13,6 +13,24 @@ using System.IO.File;
 using System.IO.Path;
 using System.IO;
 
+def ProcessFiles(srcDir, dstDir)
+{
+	def files = GetFiles(srcDir);
+	foreach (srcFile in files with i)
+	{
+		def descriptor =
+			using (image = Image.[Gray, byte](srcFile))
+				Gist.Algorithm.GetBwDescriptor(image, 4, 8, 8, 4);
+
+		def id      = GetFileNameWithoutExtension(srcFile);
+		def dstFile = Combine(dstDir, id + ".txt");
+
+		WriteLine($"\t$i/$(files.Length) $id");
+
+		WriteAllText(dstFile, descriptor.ToString("\r\n"));
+	}
+}
+
 foreach (srcDir in GetDirectories("images"))
 {
 	def dstDir = Combine("descriptors", GetFileName(srcDir));
@@ -22,19 +40,6 @@ foreach (srcDir in GetDirectories("images"))
 
 		_ = CreateDirectory(dstDir);
 
-		def files = GetFiles(srcDir);
-		foreach (srcFile in files with i)
-		{
-			def descriptor =
-				using (image = Image.[Gray, byte](srcFile))
-					Gist.Algorithm.GetBwDescriptor(image, 4, 8, 8, 4);
-
-			def id      = GetFileNameWithoutExtension(srcFile);
-			def dstFile = Combine(dstDir, id + ".txt");
-
-			WriteLine($"\t$i/$(files.Length) $id");
-
-			WriteAllText(dstFile, descriptor.ToString("\r\n"));
-		}
+		ProcessFiles(srcDir, dstDir);
 	}
 }

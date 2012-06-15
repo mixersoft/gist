@@ -4,64 +4,20 @@ using Nemerle.Collections;
 using Newtonsoft.Json.Linq;
 using System.Console;
 using System.IO;
+using System.IO.Directory;
+using System.IO.Path;
 using System.Net;
 using System;
 
-/*
-def MakeHttpParameters(parameters : list[string * string]) : string
+def client = WebClient();
+
+def ProcessFile(file, dstDir)
 {
-	parameters.Map((name, value) => $"$name=$value").ToString("&")
-}
-
-def HttpPost(uri : string, parameters : string) : string
-{
-	def req = System.Net.WebRequest.Create(uri);
-	//req.Proxy = System.Net.WebProxy(ProxyString, true);
-
-	//Add these, as we're doing a POST
-	req.ContentType = "application/x-www-form-urlencoded";
-	req.Method = "POST";
-
-	//We need to count how many bytes we're sending. Post'ed Faked Forms should be name=value&
-	def bytes = System.Text.Encoding.ASCII.GetBytes(parameters);
-	req.ContentLength = bytes.Length;
-	using (stream = req.GetRequestStream())
-	{
-		stream.Write (bytes, 0, bytes.Length); //Push it out there
-		stream.Close ();
-	}
-	match (req.GetResponse())
-	{
-	| null => null
-	| response =>
-		using (reader = StreamReader(response.GetResponseStream()))
-			reader.ReadToEnd().Trim();
-	}
-}
-
-_ = HttpPost
-	( uri        = "http://dev.snaphappi.com/users/signin"
-	, parameters = MakeHttpParameters
-		(
-			[ ("_method",              "POST")
-			, ("data[User][username]", "Alexey")
-			, ("data[User][password]", "AXtv0Imd6PhYikvvJOhE")
-			]
-		)
-	);
-*/
-
-foreach (item in [ "peter-alice" ])
-{
-	_ = Directory.CreateDirectory($@"images\$item");
-
-	def data = JObject.Parse(File.ReadAllText($@"data\$item.json"));
+	def data = JObject.Parse(File.ReadAllText(file));
 
 	def castingCall = data["response"]["castingCall"];
 	def baseUrl     = "http://dev.snaphappi.com" + castingCall["CastingCall"]["Auditions"]["Baseurl"];
 	def photos      = castingCall["CastingCall"]["Auditions"]["Audition"];
-
-	def client = WebClient();
 
 	def count = photos.Children().NCount();
 
@@ -71,8 +27,21 @@ foreach (item in [ "peter-alice" ])
 		def rootSrc = photo["Photo"]["Img"]["Src"]["rootSrc"];
 		def image   = baseUrl + rootSrc.ToString().Replace("/", "/tn~");
 
-		WriteLine($"$(i+1)/$count $id");
+		WriteLine($"\t$i/$count $id");
 
-		client.DownloadFile(image, $@"images\$item\$id.jpg");
+		client.DownloadFile(image, Combine(dstDir, id + ".jpg"));
+	}
+}
+
+foreach (file in GetFiles("data"))
+{
+	def dstDir = Combine("images", GetFileNameWithoutExtension(file));
+	unless (Directory.Exists(dstDir))
+	{
+		WriteLine(dstDir);
+
+		_ = CreateDirectory(dstDir);
+
+		ProcessFile(file, dstDir);
 	}
 }
