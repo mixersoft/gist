@@ -8,6 +8,9 @@ using Emgu.CV;
 using Nemerle.Collections;
 using Profiling;
 using System.Console;
+using System.IO.Directory;
+using System.IO.File;
+using System.IO.Path;
 using System.IO;
 using System.Math;
 
@@ -16,11 +19,11 @@ using SCG = System.Collections.Generic;
 [assembly: ProfSetup(Enabled) ]
 module ProfilerOutput { [ ProfDump ] public Print() : void { } }
 
-def GetImageData()
+def GetImageData(dir)
 {
 	def GetId(path)         { Path.GetFileNameWithoutExtension(path) }
 	def GetDescriptor(path) { File.ReadAllLines(path).Map(double.Parse) }
-	Directory.GetFiles(@"descriptors\venice")
+	Directory.GetFiles(dir)
 		.Map(path => (GetId(path), GetDescriptor(path)));
 }
 
@@ -69,7 +72,23 @@ def Cluster(descriptors, threshold)
 	clusters.Reverse();
 }
 
-def WriteHtml(clusters, path)
+ProfileLocal
+def WriteClusters(clusters, path)
+{
+	using (file = CreateText(path))
+	{
+		file.WriteLine(clusters.Length);
+		foreach (cluster in clusters)
+		{
+			file.WriteLine(cluster.Length);
+			foreach ((id, _) in cluster)
+				file.WriteLine(id);
+		}
+	}
+}
+
+ProfileLocal
+def WriteHtml(clusters, path, imageDir)
 {
 	using (writer = File.CreateText(path))
 	{
@@ -90,7 +109,7 @@ def WriteHtml(clusters, path)
 
 			foreach ((id, _) in cluster)
 			{
-				def src = $@"images\venice\$id.jpg";
+				def src = Combine(imageDir, id + ".jpg");
 				writer.WriteLine($"<img height='64' src='$src'>");
 			}
 
@@ -101,5 +120,28 @@ def WriteHtml(clusters, path)
 	}
 }
 
-WriteHtml(Cluster(GetImageData(), 0.4), "out.html");
+def ProcessFiles(item, outFile, htmlFile)
+{
+	def clusters = Cluster
+		( descriptors = GetImageData(Combine("descriptors", item))
+		, threshold   =  0.4
+		);
+
+	WriteClusters(clusters, outFile);
+
+	WriteHtml(clusters, htmlFile, Combine(@"..\images", item));
+}
+
+foreach (srcDir in GetDirectories("descriptors"))
+{
+	def item = GetFileName(srcDir);
+	def outFile = Combine("clusters", item + ".txt");
+	unless (File.Exists(outFile))
+	{
+		WriteLine(item);
+
+		ProcessFiles(item, outFile, Combine("clusters-html", item + ".html"));
+	}
+}
+
 ProfilerOutput.Print();

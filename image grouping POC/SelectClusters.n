@@ -1,0 +1,135 @@
+// REFERENCE: System.Drawing.dll
+// REFERENCE: System.Windows.Forms.dll
+// REFERENCE: Newtonsoft.Json.dll
+
+using System.Windows.Forms;
+using Newtonsoft.Json.Linq;
+using Nemerle.Collections;
+using Nemerle.Utility;
+using System.Drawing;
+using System.IO;
+using System.Threading;
+using System;
+
+using SCG = System.Collections.Generic;
+
+[ Record ]
+class ItemState
+{
+	public mutable ID         : string;
+	public mutable Control    : Control;
+	public mutable GroupStart : bool;
+}
+
+def LoadData(path)
+{
+	def data = JObject.Parse(File.ReadAllText(path));
+
+	def castingCall = data["response"]["castingCall"];
+	def photos      = castingCall["CastingCall"]["Auditions"]["Audition"];
+
+	photos.Children()
+		.Map(photo => photo["id"] :> string)
+		.ToArray()
+		.Sort(id => id);
+}
+
+def CreateForm(ids, imageDir)
+{
+	def layout = FlowLayoutPanel();
+	layout.AutoScroll = true;
+	layout.BackColor  = Color.White;
+	layout.Dock       = DockStyle.Fill;
+
+	def evenGroupColor = Color.FromArgb(171,107,91);
+	def oddGroupColor  = Color.FromArgb(161,163,98);
+	def selectionColor = Color.FromArgb(251,168,76);
+
+	def itemStates = SCG.List(ids.Length);
+	def RecolorStates()
+	{
+		mutable even = true;
+		foreach (state in itemStates)
+		{
+			when (state.GroupStart)
+				even = !even;
+			state.Control.BackColor =
+				if (even)
+					evenGroupColor
+				else
+					oddGroupColor;
+		}
+	}
+	mutable selection;
+	foreach (id in ids with i)
+	{
+		def picture = PictureBox();
+		picture.AutoSize      = true;
+		picture.Height        = 90;
+		picture.Padding       = Padding(8);
+		picture.ImageLocation = Path.Combine(imageDir, id + ".jpg");
+		picture.BackColor     = evenGroupColor;
+
+		def state = ItemState(id, picture, false);
+		itemStates.Add(state);
+
+		picture.MouseClick += fun(_, args)
+		{
+			match (args.Button)
+			{
+			| MouseButtons.Left =>
+				match (selection)
+				{
+				| null =>
+					selection = state;
+					picture.BackColor = selectionColor;
+				| _ =>
+					def dst = itemStates.IndexOf(state);
+					def src = itemStates.IndexOf(selection);
+
+					_ = itemStates.RemoveAt(src);
+
+					itemStates.Insert(dst, selection);
+					layout.Controls.SetChildIndex(selection.Control, dst);
+
+					selection = null;
+					RecolorStates();
+				}
+			| MouseButtons.Right =>
+				state.GroupStart = !state.GroupStart;
+				RecolorStates();
+			| _ => ()
+			}
+		};
+	}
+	RecolorStates();
+
+	layout.SuspendLayout();
+	foreach (state in itemStates)
+		layout.Controls.Add(state.Control);
+	layout.ResumeLayout();
+
+	def form = Form();
+	form.Text        = "Select Clusters";
+	form.WindowState = FormWindowState.Maximized;
+	form.Controls.Add(layout);
+
+	form.Shown += fun(_)
+	{
+		_ = layout.Focus();
+	}
+
+	form;
+}
+
+Application.EnableVisualStyles();
+Application.SetCompatibleTextRenderingDefault(false);
+
+def form = CreateForm
+	( ids      = LoadData(@"data\venice.json")
+	, imageDir = @"images\venice"
+	);
+
+def thread = Thread(ThreadStart(() => Application.Run(form)));
+thread.SetApartmentState(ApartmentState.STA);
+thread.Start();
