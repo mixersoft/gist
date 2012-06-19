@@ -4,6 +4,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <iterator>
 #include <stdexcept>
 #include <fstream>
 #include <string>
@@ -33,7 +34,10 @@ void ProcessData(const string & basePath, float threshold, bool prettyPrint)
 	Json::Value  root;
 	Json::Reader reader;
 
-	if (!reader.parse(cin, root, false))
+	string doc;
+	copy(istream_iterator<char>(cin), istream_iterator<char>(), back_inserter(doc));
+
+	if (!reader.parse(doc, root, false))
 		throw std::runtime_error(reader.getFormattedErrorMessages());
 
 	Descriptor d1;

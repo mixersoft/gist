@@ -13,9 +13,11 @@ set_target_properties(
 
 add_definitions(-DUSE_GIST -DSTANDALONE_GIST -DJSON_IS_AMALGAMATION)
 
+find_package(Boost REQUIRED program_options)
+find_package(OpenCV REQUIRED)
+
 include_directories(".")
 
-target_link_libraries(image-group libboost_program_options.so)
-target_link_libraries(image-group libcv.so)
+target_link_libraries(image-group ${Boost_PROGRAM_OPTIONS_LIBRARY})
+target_link_libraries(image-group ${OpenCV_LIBS})
 target_link_libraries(image-group libfftw3f.so)
-target_link_libraries(image-group libhighgui.so)
