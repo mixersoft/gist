@@ -21,7 +21,11 @@ class ItemState
 	public mutable GroupStart : bool;
 }
 
-def LoadData(path)
+def MakeJsonPath  (name)     { Path.Combine("data", name + ".json")        }
+def MakeImagePath (name, id) { Path.Combine("images", name, id + ".jpg")   }
+def MakeSavePath  (name)     { Path.Combine("clusters-ref", name + ".txt") }
+
+def LoadJson(path)
 {
 	def data = JObject.Parse(File.ReadAllText(path));
 
@@ -33,19 +37,96 @@ def LoadData(path)
 		.ToArray()
 		.Sort(id => id);
 }
-
-def CreateForm(ids, imageDir)
+def LoadState(path, itemStates)
 {
+	def ReadClusters()
+	{
+		using (file = File.OpenText(path))
+		{
+			def clusters = array(int.Parse(file.ReadLine()));
+			for (mutable i = 0; i != clusters.Length; ++i)
+			{
+				def cluster = array(int.Parse(file.ReadLine()));
+				for (mutable j = 0; j != cluster.Length; ++j)
+					cluster[j] = file.ReadLine();
+				clusters[i] = cluster;
+			}
+			clusters;
+		}
+	}
+	def SetStates(clusters)
+	{
+		def map = Hashtable(itemStates.Count);
+		foreach (state in itemStates)
+			map.Add(state.ID, state);
+		mutable i = 0;
+		foreach (cluster in clusters)
+		{
+			itemStates[i] = map[cluster[0]];
+			itemStates[i].GroupStart = true;
+			++i;
+			for (mutable j = 1; j < cluster.Length; ++j)
+			{
+				itemStates[i] = map[cluster[j]];
+				itemStates[i].GroupStart = false;
+				++i;
+			}
+		}
+	}
+	try
+	{
+		SetStates(ReadClusters());
+	}
+	catch
+	{
+	| _ is FileNotFoundException => ()
+	}
+}
+def SaveState(path, itemStates)
+{
+	def CreateClusters()
+	{
+		mutable clusters = [];
+		foreach (state in itemStates with i)
+		{
+			when (i == 0 || state.GroupStart)
+				clusters ::= [];
+			clusters = (state.ID :: clusters.Head) :: clusters.Tail;
+		}
+		clusters.Map(_.Reverse()).Reverse();
+	}
+	def WriteClusters(clusters)
+	{
+		using (file = File.CreateText(path))
+		{
+			file.WriteLine(clusters.Length);
+			foreach (cluster in clusters)
+			{
+				file.WriteLine(cluster.Length);
+				foreach (id in cluster)
+					file.WriteLine(id);
+			}
+		}
+	}
+	WriteClusters(CreateClusters());
+}
+
+def CreateForm(mutable name)
+{
+	def backgroundColor = Color.FromArgb(255, 255, 255);
+	def evenGroupColor  = Color.FromArgb(51,  51,  51);
+	def oddGroupColor   = Color.FromArgb(232, 232, 232);
+	def selectionColor  = Color.FromArgb(185, 5,   4);
+
 	def layout = FlowLayoutPanel();
 	layout.AutoScroll = true;
-	layout.BackColor  = Color.White;
+	layout.BackColor  = backgroundColor;
 	layout.Dock       = DockStyle.Fill;
-
-	def evenGroupColor = Color.FromArgb(171,107,91);
-	def oddGroupColor  = Color.FromArgb(161,163,98);
-	def selectionColor = Color.FromArgb(251,168,76);
+	
+	def ids = LoadJson(MakeJsonPath(name));
 
 	def itemStates = SCG.List(ids.Length);
+	mutable selection;
 	def RecolorStates()
 	{
 		mutable even = true;
@@ -54,20 +135,22 @@ def CreateForm(ids, imageDir)
 			when (state.GroupStart)
 				even = !even;
 			state.Control.BackColor =
-				if (even)
-					evenGroupColor
+				if (state == selection : object)
+					selectionColor
 				else
-					oddGroupColor;
+					if (even)
+						evenGroupColor
+					else
+						oddGroupColor;
 		}
 	}
-	mutable selection;
 	foreach (id in ids with i)
 	{
 		def picture = PictureBox();
 		picture.AutoSize      = true;
 		picture.Height        = 90;
 		picture.Padding       = Padding(8);
-		picture.ImageLocation = Path.Combine(imageDir, id + ".jpg");
+		picture.ImageLocation = MakeImagePath(name, id);
 		picture.BackColor     = evenGroupColor;
 
 		def state = ItemState(id, picture, false);
@@ -82,7 +165,6 @@ def CreateForm(ids, imageDir)
 				{
 				| null =>
 					selection = state;
-					picture.BackColor = selectionColor;
 				| _ =>
 					def dst = itemStates.IndexOf(state);
 					def src = itemStates.IndexOf(selection);
@@ -93,8 +175,8 @@ def CreateForm(ids, imageDir)
 					layout.Controls.SetChildIndex(selection.Control, dst);
 
 					selection = null;
-					RecolorStates();
 				}
+				RecolorStates();
 			| MouseButtons.Right =>
 				state.GroupStart = !state.GroupStart;
 				RecolorStates();
@@ -102,6 +184,7 @@ def CreateForm(ids, imageDir)
 			}
 		};
 	}
+	LoadState(MakeSavePath(name), itemStates);
 	RecolorStates();
 
 	layout.SuspendLayout();
@@ -110,13 +193,28 @@ def CreateForm(ids, imageDir)
 	layout.ResumeLayout();
 
 	def form = Form();
-	form.Text        = "Select Clusters";
+	form.Text        = $"Select Clusters: $name";
 	form.WindowState = FormWindowState.Maximized;
 	form.Controls.Add(layout);
 
 	form.Shown += fun(_)
 	{
 		_ = layout.Focus();
+	}
+	layout.KeyDown += fun(_, args)
+	{
+		match (args.KeyCode)
+		{
+		| Keys.S when args.Control =>
+			SaveState(MakeSavePath(name), itemStates)
+		| Keys.O when args.Control =>
+			def dialog = OpenFileDialog();
+			dialog.InitialDirectory = Path.GetFullPath(Path.GetDirectoryName(MakeJsonPath(name)));
+			dialog.Filter   = "Json input (*.json)|*.json|All files (*.*)|*.*";
+			when (DialogResult.OK == dialog.ShowDialog(form))
+				LoadState(dialog.FileName, itemStates);
+		| _ => ()
+		}
 	}
 
 	form;
@@ -125,10 +223,7 @@ def CreateForm(ids, imageDir)
 Application.EnableVisualStyles();
 Application.SetCompatibleTextRenderingDefault(false);
 
-def form = CreateForm
-	( ids      = LoadData(@"data\venice.json")
-	, imageDir = @"images\venice"
-	);
+def form = CreateForm("venice");
 
 def thread = Thread(ThreadStart(() => Application.Run(form)));
 thread.SetApartmentState(ApartmentState.STA);
