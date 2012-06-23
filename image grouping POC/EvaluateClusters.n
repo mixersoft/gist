@@ -1,6 +1,44 @@
 using Nemerle.Collections;
 using System.Console;
+using System.IO.Directory;
+using System.IO.File;
+using System.IO.Path;
+using System.IO;
+using System.Math;
 using System;
+
+def LoadClusters(path)
+{
+	using (file = OpenText(path))
+	{
+		def clusters = array(int.Parse(file.ReadLine()));
+		for (mutable i = 0; i != clusters.Length; ++i)
+		{
+			def cluster = array(int.Parse(file.ReadLine()));
+			for (mutable j = 0; j != cluster.Length; ++j)
+				cluster[j] = file.ReadLine();
+			clusters[i] = cluster;
+		}
+		clusters;
+	}
+}
+
+def WriteResults(path, results)
+{
+	def nameColWidth = 1 + results
+		.Map((name, _) => name.Length)
+		.Fold(0, Max : int * int -> int);
+	using (file = CreateText(path))
+	{
+		foreach ((name, grade) in results)
+		{
+			file.Write(name);
+			repeat (nameColWidth - name.Length)
+				file.Write(' ');
+			file.WriteLine(grade);
+		}
+	}
+}
 
 /// <summary>
 /// Number of discrepancies between two partitions of a set.
@@ -36,4 +74,16 @@ def EvaluateClusters(l1, l2)
 
 }
 
-WriteLine(EvaluateClusters([[1, 2], [3]], [[1, 3], [2]]));
+mutable results = [];
+foreach (file1 in GetFiles("clusters"))
+{
+	def file2 = Combine("clusters-ref", GetFileName(file1));
+	when (File.Exists(file2))
+	{
+		results ::=
+			( GetFileNameWithoutExtension(file1)
+			, EvaluateClusters(LoadClusters(file1), LoadClusters(file2))
+			);
+	}
+}
+WriteResults("cluster-eval.txt", results);

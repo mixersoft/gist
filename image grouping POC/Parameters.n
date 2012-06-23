@@ -1,0 +1,36 @@
+// TARGET: library
+
+using Nemerle.Collections;
+using Nemerle.Utility;
+using System.IO.File;
+
+public class Parameters
+{
+	[ Accessor ] private downloadImagePrefix : string;
+	[ Accessor ] private imageSize           : option[int * int];
+
+	public this()
+	{
+		def ParseSize(_)
+		{
+		| null => None()
+		| str  =>
+			def i = str.IndexOf(',');
+			def w = int.Parse(str.Substring(0, i));
+			def h = int.Parse(str.Substring(i + 1));
+			Some(w, h);
+		}
+
+		def map = Hashtable();
+		foreach (line in ReadAllLines("parameters.txt"))
+		{
+			def i = line.IndexOf('=');
+			def name  = line.Substring(0, i).Trim();
+			def value = line.Substring(i + 1).Trim();
+			map.Add(name, value);
+		}
+
+		downloadImagePrefix = map["download image prefix"];
+		imageSize           = ParseSize(map.GetValueOrDefault("image size", null));
+	}
+}

@@ -27,15 +27,25 @@ def MakeSavePath  (name)     { Path.Combine("clusters-ref", name + ".txt") }
 
 def LoadJson(path)
 {
+	def FilterDuplciates(l)
+	{
+		mutable set = Set();
+		mutable result = [];
+		foreach (x when !set.Contains(x) in l)
+		{
+			set = set.Add(x);
+			result ::= x;
+		}
+		result.Reverse();
+	}
+
 	def data = JObject.Parse(File.ReadAllText(path));
 
 	def castingCall = data["response"]["castingCall"];
 	def photos      = castingCall["CastingCall"]["Auditions"]["Audition"];
 
-	photos.Children()
-		.Map(photo => photo["id"] :> string)
-		.ToArray()
-		.Sort(id => id);
+	def ids = photos.Children().Map(photo => photo["id"] :> string);
+	FilterDuplciates(ids).ToArray();
 }
 def LoadState(path, itemStates)
 {
@@ -144,6 +154,16 @@ def CreateForm(mutable name)
 						oddGroupColor;
 		}
 	}
+	def MoveSelectionTo(state)
+	{
+		def dst = itemStates.IndexOf(state);
+		def src = itemStates.IndexOf(selection);
+
+		_ = itemStates.RemoveAt(src);
+
+		itemStates.Insert(dst, selection);
+		layout.Controls.SetChildIndex(selection.Control, dst);
+	}
 	foreach (id in ids with i)
 	{
 		def picture = PictureBox();
@@ -166,14 +186,7 @@ def CreateForm(mutable name)
 				| null =>
 					selection = state;
 				| _ =>
-					def dst = itemStates.IndexOf(state);
-					def src = itemStates.IndexOf(selection);
-
-					_ = itemStates.RemoveAt(src);
-
-					itemStates.Insert(dst, selection);
-					layout.Controls.SetChildIndex(selection.Control, dst);
-
+					MoveSelectionTo(state);
 					selection = null;
 				}
 				RecolorStates();
@@ -212,7 +225,18 @@ def CreateForm(mutable name)
 			dialog.InitialDirectory = Path.GetFullPath(Path.GetDirectoryName(MakeJsonPath(name)));
 			dialog.Filter   = "Json input (*.json)|*.json|All files (*.*)|*.*";
 			when (DialogResult.OK == dialog.ShowDialog(form))
+			{
 				LoadState(dialog.FileName, itemStates);
+				RecolorStates();
+			}
+		| Keys.End when selection != null =>
+			MoveSelectionTo(itemStates[itemStates.Count - 1]);
+			RecolorStates();
+			selection = null;
+		| Keys.Home when selection != null =>
+			MoveSelectionTo(itemStates[0]);
+			RecolorStates();
+			selection = null;
 		| _ => ()
 		}
 	}
