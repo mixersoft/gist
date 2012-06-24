@@ -54,7 +54,6 @@ def DownloadData()
 	}
 }
 
-ProfileLocal(Recursive)
 def ExtractDescriptors()
 {
 	def ProcessFiles(srcDir, dstDir)
@@ -89,7 +88,6 @@ def ExtractDescriptors()
 	}
 }
 
-ProfileLocal(Recursive)
 def ClusterData()
 {
 	def GetImageData(dir)
@@ -109,12 +107,13 @@ def ClusterData()
 		Sqrt(sum);
 	}
 
+	ProfileLocal(Recursive)
 	def Cluster(descriptors, threshold)
 	{
 		def descriptors = SCG.List(descriptors);
 		def BuildCandidateCluster(_, d1)
 		{
-			descriptors.Filter((_, d2) => Distance(d1, d2) < threshold);
+			descriptors.Filter((_, d2) => Distance(d1, d2) > threshold);
 		}
 		def ChooseLargest(clusters)
 		{
@@ -215,7 +214,6 @@ def ClusterData()
 	}
 }
 
-ProfileLocal(Recursive)
 def EvaluateClusters()
 {
 	def LoadClusters(path)
@@ -232,6 +230,17 @@ def EvaluateClusters()
 			}
 			clusters;
 		}
+	}
+
+	def ProcessClusters(autoClusters, mutable refClusters)
+	{
+		def set = Set(refClusters[refClusters.Length - 1]);
+		Array.Resize(ref refClusters, refClusters.Length - 1);
+		( autoClusters
+			.MapToArray(clusters => clusters.FilterToArray(id => !set.Contains(id)))
+			.FilterToArray(clusters => clusters.Length > 0)
+		, refClusters
+		);
 	}
 
 	def WriteResults(path, results)
@@ -293,7 +302,12 @@ def EvaluateClusters()
 		{
 			results ::=
 				( Path.GetFileNameWithoutExtension(file1)
-				, EvaluateClusters(LoadClusters(file1), LoadClusters(file2))
+				, EvaluateClusters
+					( ProcessClusters
+						( LoadClusters(file1)
+						, LoadClusters(file2)
+						)
+					)
 				);
 		}
 	}
