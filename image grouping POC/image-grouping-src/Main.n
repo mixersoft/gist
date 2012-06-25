@@ -11,94 +11,85 @@ using System;
 
 using SCG = System.Collections.Generic;
 
-[assembly: ProfSetup(Disabled) ]
-module ProfilerOutput { [ ProfDump ] public Print() : void { } }
+[assembly: ProfSetup(Enabled) ]
 
-def DownloadData()
+module Main
 {
-	def client = WebClient();
-
-	def ProcessFile(file, dstDir)
+	private DownloadData() : void
 	{
-		def data = JObject.Parse(File.ReadAllText(file));
+		def client = WebClient();
 
-		def castingCall = data["response"]["castingCall"];
-		def baseUrl     = "http://dev.snaphappi.com" + castingCall["CastingCall"]["Auditions"]["Baseurl"];
-		def photos      = castingCall["CastingCall"]["Auditions"]["Audition"];
-
-		def count = photos.Children().NCount();
-
-		foreach (photo in photos.Children() with i)
+		def ProcessFile(file, dstDir)
 		{
-			def id      = photo["id"];
-			def rootSrc = photo["Photo"]["Img"]["Src"]["rootSrc"];
-			def image   = baseUrl + rootSrc.ToString().Replace("/", "/tn~");
+			def data = JObject.Parse(File.ReadAllText(file));
 
-			Console.WriteLine($"\t$i/$count $id");
+			def castingCall = data["response"]["castingCall"];
+			def baseUrl     = "http://dev.snaphappi.com" + castingCall["CastingCall"]["Auditions"]["Baseurl"];
+			def photos      = castingCall["CastingCall"]["Auditions"]["Audition"];
 
-			client.DownloadFile(image, Path.Combine(dstDir, id + ".jpg"));
+			def count = photos.Children().NCount();
+
+			foreach (photo in photos.Children() with i)
+			{
+				def id      = photo["id"];
+				def rootSrc = photo["Photo"]["Img"]["Src"]["rootSrc"];
+				def image   = baseUrl + rootSrc.ToString().Replace("/", "/tn~");
+
+				Console.WriteLine($"\t$i/$count $id");
+
+				client.DownloadFile(image, Path.Combine(dstDir, id + ".jpg"));
+			}
+		}
+
+		foreach (file in Directory.GetFiles("data"))
+		{
+			def dstDir = Path.Combine("images", Path.GetFileNameWithoutExtension(file));
+			unless (Directory.Exists(dstDir))
+			{
+				Console.WriteLine(dstDir);
+
+				_ = Directory.CreateDirectory(dstDir);
+
+				ProcessFile(file, dstDir);
+			}
 		}
 	}
 
-	foreach (file in Directory.GetFiles("data"))
+	private ExtractDescriptors() : void
 	{
-		def dstDir = Path.Combine("images", Path.GetFileNameWithoutExtension(file));
-		unless (Directory.Exists(dstDir))
+		def ProcessFiles(srcDir, dstDir)
 		{
-			Console.WriteLine(dstDir);
+			def files = Directory.GetFiles(srcDir);
+			foreach (srcFile in files with i)
+			{
+				def descriptor =
+					using (image = Image.[Gray, byte](srcFile))
+						Gist.Algorithm.GetBwDescriptor(image, 4, 8, 8, 4);
 
-			_ = Directory.CreateDirectory(dstDir);
+				def id      = Path.GetFileNameWithoutExtension(srcFile);
+				def dstFile = Path.Combine(dstDir, id + ".txt");
 
-			ProcessFile(file, dstDir);
+				Console.WriteLine($"\t$i/$(files.Length) $id");
+
+				File.WriteAllText(dstFile, descriptor.ToString("\r\n"));
+			}
+		}
+
+		foreach (srcDir in Directory.GetDirectories("images"))
+		{
+			def dstDir = Path.Combine("descriptors", Path.GetFileName(srcDir));
+			unless (Directory.Exists(dstDir))
+			{
+				Console.WriteLine(dstDir);
+
+				_ = Directory.CreateDirectory(dstDir);
+
+				ProcessFiles(srcDir, dstDir);
+			}
 		}
 	}
-}
 
-def ExtractDescriptors()
-{
-	def ProcessFiles(srcDir, dstDir)
-	{
-		def files = Directory.GetFiles(srcDir);
-		foreach (srcFile in files with i)
-		{
-			def descriptor =
-				using (image = Image.[Gray, byte](srcFile))
-					Gist.Algorithm.GetBwDescriptor(image, 4, 8, 8, 4);
-
-			def id      = Path.GetFileNameWithoutExtension(srcFile);
-			def dstFile = Path.Combine(dstDir, id + ".txt");
-
-			Console.WriteLine($"\t$i/$(files.Length) $id");
-
-			File.WriteAllText(dstFile, descriptor.ToString("\r\n"));
-		}
-	}
-
-	foreach (srcDir in Directory.GetDirectories("images"))
-	{
-		def dstDir = Path.Combine("descriptors", Path.GetFileName(srcDir));
-		unless (Directory.Exists(dstDir))
-		{
-			Console.WriteLine(dstDir);
-
-			_ = Directory.CreateDirectory(dstDir);
-
-			ProcessFiles(srcDir, dstDir);
-		}
-	}
-}
-
-def ClusterData()
-{
-	def GetImageData(dir)
-	{
-		def GetId(path)         { Path.GetFileNameWithoutExtension(path) }
-		def GetDescriptor(path) { File.ReadAllLines(path).Map(double.Parse) }
-		Directory.GetFiles(dir)
-			.Map(path => (GetId(path), GetDescriptor(path)));
-	}
-
-	def Distance(v1, v2)
+	private Distance(v1 : array[double], v2 : array[double]) : double
 	{
 		def Square(x) { x * x }
 		mutable sum = 0.0;
@@ -107,216 +98,261 @@ def ClusterData()
 		Sqrt(sum);
 	}
 
-	ProfileLocal(Recursive)
-	def Cluster(descriptors, threshold)
+	[ Profile(Recursive) ]
+	private ClusterData() : void
 	{
-		def descriptors = SCG.List(descriptors);
-		def BuildCandidateCluster(_, d1)
+		def GetImageData(dir)
 		{
-			descriptors.Filter((_, d2) => Distance(d1, d2) > threshold);
+			def GetId(path)         { Path.GetFileNameWithoutExtension(path) }
+			def GetDescriptor(path) { File.ReadAllLines(path).Map(double.Parse) }
+			Directory.GetFiles(dir)
+				.Map(path => (GetId(path), GetDescriptor(path)));
 		}
-		def ChooseLargest(clusters)
+
+		def Cluster(descriptors, threshold) : list[array[string]]
 		{
-			mutable maxLength = 0;
-			mutable maxCluster;
-			foreach (cluster in clusters)
+			def withinThreshold = array(descriptors.Length, descriptors.Length);
+			for (mutable i = 0; i != descriptors.Length; ++i)
+			for (mutable j = 0; j != descriptors.Length; ++j)
 			{
-				when (cluster.Length > maxLength)
+				def d1 = descriptors[i][1];
+				def d2 = descriptors[j][1];
+				withinThreshold[i, j] = Distance(d1, d2) < threshold;
+			}
+
+			def indices = SCG.List($[0 .. descriptors.Length - 1]);
+
+			def CountNear(i)
+			{
+				mutable count = 0;
+				foreach (j in indices)
 				{
-					maxLength  = cluster.Length;
-					maxCluster = cluster;
+					when (withinThreshold[i, j])
+						++count;
+				}
+				count;
+			}
+
+			def ChooseLargest(counts)
+			{
+				mutable maxCount = 0;
+				mutable maxIndex = 0;
+				foreach (count in counts with i)
+				{
+					when (count > maxCount)
+					{
+						maxCount = count;
+						maxIndex = indices[i];
+					}
+				}
+				mutable cluster = array(maxCount);
+				mutable k       = 0;
+				foreach (j when (withinThreshold[maxIndex, j]) in indices)
+				{
+					cluster[k] = j;
+					++k;
+				}
+				cluster;
+			}
+
+			def Remove(cluster)
+			{
+				foreach (item in cluster)
+					_ = indices.Remove(item);
+			}
+
+			mutable clusters = [];
+			while (indices.Count > 0)
+			{
+				clusters ::= ChooseLargest(indices.Map(CountNear));
+				Remove(clusters.Head);
+			}
+			clusters.Map(cluster => cluster.Map(i => descriptors[i][0])).Reverse();
+		}
+
+		def WriteClusters(clusters, path)
+		{
+			using (file = File.CreateText(path))
+			{
+				file.WriteLine(clusters.Length);
+				foreach (cluster in clusters)
+				{
+					file.WriteLine(cluster.Length);
+					foreach (id in cluster)
+						file.WriteLine(id);
 				}
 			}
-			maxCluster;
 		}
-		def Remove(cluster)
-		{
-			foreach (item in cluster)
-				_ = descriptors.Remove(item);
-		}
-		mutable clusters = [];
-		while (descriptors.Count > 0)
-		{
-			clusters ::= ChooseLargest(descriptors.Map(BuildCandidateCluster));
-			Remove(clusters.Head);
-		}
-		clusters.Reverse();
-	}
 
-	def WriteClusters(clusters, path)
-	{
-		using (file = File.CreateText(path))
+		def WriteHtml(clusters, path, imageDir)
 		{
-			file.WriteLine(clusters.Length);
-			foreach (cluster in clusters)
+			using (writer = File.CreateText(path))
 			{
-				file.WriteLine(cluster.Length);
-				foreach ((id, _) in cluster)
-					file.WriteLine(id);
-			}
-		}
-	}
+				[ "<html><body>"
+				, "<head><style type='text/css'>"
+				, "	.even { background-color : #C1B398 }"
+				, "	.odd  { background-color : #ACCEC0 }"
+				, "	span { display : block; padding : 8px; }"
+				, "</style></head>"
+				].Iter(writer.WriteLine);
 
-	def WriteHtml(clusters, path, imageDir)
-	{
-		using (writer = File.CreateText(path))
-		{
-			[ "<html><body>"
-			, "<head><style type='text/css'>"
-			, "	.even { background-color : #C1B398 }"
-			, "	.odd  { background-color : #ACCEC0 }"
-			, "	span { display : block; padding : 8px; }"
-			, "</style></head>"
-			].Iter(writer.WriteLine);
+				writer.WriteLine("<body>");
 
-			writer.WriteLine("<body>");
-
-			foreach (cluster in clusters with i)
-			{
-				def spanClass = if (i % 2 == 0) "even" else "odd";
-				writer.WriteLine($"<span class='$spanClass'>");
-
-				foreach ((id, _) in cluster)
+				foreach (cluster in clusters with i)
 				{
-					def src = Path.Combine(imageDir, id + ".jpg");
-					writer.WriteLine($"<img height='64' src='$src'>");
+					def spanClass = if (i % 2 == 0) "even" else "odd";
+					writer.WriteLine($"<span class='$spanClass'>");
+
+					foreach (id in cluster)
+					{
+						def src = Path.Combine(imageDir, id + ".jpg");
+						writer.WriteLine($"<img height='64' src='$src'>");
+					}
+
+					writer.WriteLine("</span>");
 				}
 
-				writer.WriteLine("</span>");
-			}
-
-			writer.WriteLine("</body></html>");
-		}
-	}
-
-	def ProcessFiles(item, outFile, htmlFile)
-	{
-		def clusters = Cluster
-			( descriptors = GetImageData(Path.Combine("descriptors", item))
-			, threshold   =  0.4
-			);
-
-		WriteClusters(clusters, outFile);
-
-		WriteHtml(clusters, htmlFile, Path.Combine(@"..\images", item));
-	}
-
-	foreach (srcDir in Directory.GetDirectories("descriptors"))
-	{
-		def item = Path.GetFileName(srcDir);
-		def outFile = Path.Combine("clusters", item + ".txt");
-		unless (File.Exists(outFile))
-		{
-			Console.WriteLine(item);
-
-			ProcessFiles(item, outFile, Path.Combine("clusters-html", item + ".html"));
-		}
-	}
-}
-
-def EvaluateClusters()
-{
-	def LoadClusters(path)
-	{
-		using (file = File.OpenText(path))
-		{
-			def clusters = array(int.Parse(file.ReadLine()));
-			for (mutable i = 0; i != clusters.Length; ++i)
-			{
-				def cluster = array(int.Parse(file.ReadLine()));
-				for (mutable j = 0; j != cluster.Length; ++j)
-					cluster[j] = file.ReadLine();
-				clusters[i] = cluster;
-			}
-			clusters;
-		}
-	}
-
-	def ProcessClusters(autoClusters, mutable refClusters)
-	{
-		def set = Set(refClusters[refClusters.Length - 1]);
-		Array.Resize(ref refClusters, refClusters.Length - 1);
-		( autoClusters
-			.MapToArray(clusters => clusters.FilterToArray(id => !set.Contains(id)))
-			.FilterToArray(clusters => clusters.Length > 0)
-		, refClusters
-		);
-	}
-
-	def WriteResults(path, results)
-	{
-		def nameColWidth = 1 + results
-			.Map((name, _) => name.Length)
-			.Fold(0, Max : int * int -> int);
-		using (file = File.CreateText(path))
-		{
-			foreach ((name, grade) in results)
-			{
-				file.Write(name);
-				repeat (nameColWidth - name.Length)
-					file.Write(' ');
-				file.WriteLine(grade);
+				writer.WriteLine("</body></html>");
 			}
 		}
-	}
 
-	/// <summary>
-	/// Number of discrepancies between two partitions of a set.
-	/// Similar to <a src="http://en.wikipedia.org/wiki/Rand_index">Rand index</a>.
-	/// </summary>
-	def EvaluateClusters(l1, l2)
-	{
-		def CountPairs(n)
+		def ProcessFiles(item, outFile, htmlFile)
 		{
-			n * (n - 1) / 2
-		}
-		def GetContingencyTableSum(l1, l2)
-		{
-			mutable sum = 0;
-			foreach (x in l1 with i)
-			foreach (y in l2 with j)
-				sum += CountPairs(x.Intersect(y).Count);
-			sum;
-		}
-		def GetMarginalSum(l)
-		{
-			l.Fold(0, (x, sum) => sum + CountPairs(x.Count))
-		}
-
-		def l1 = l1.Map(Set);
-		def l2 = l2.Map(Set);
-
-		def ab = GetContingencyTableSum(l1, l2);
-		def a  = GetMarginalSum(l1);
-		def b  = GetMarginalSum(l2);
-
-		(a + b) / 2 - ab;
-
-	}
-
-	mutable results = [];
-	foreach (file1 in Directory.GetFiles("clusters"))
-	{
-		def file2 = Path.Combine("clusters-ref", Path.GetFileName(file1));
-		when (File.Exists(file2))
-		{
-			results ::=
-				( Path.GetFileNameWithoutExtension(file1)
-				, EvaluateClusters
-					( ProcessClusters
-						( LoadClusters(file1)
-						, LoadClusters(file2)
-						)
-					)
+			def clusters = Cluster
+				( descriptors = GetImageData(Path.Combine("descriptors", item))
+				, threshold   =  0.4
 				);
+
+			WriteClusters(clusters, outFile);
+
+			WriteHtml(clusters, htmlFile, Path.Combine(@"..\images", item));
+		}
+
+		foreach (srcDir in Directory.GetDirectories("descriptors"))
+		{
+			def item = Path.GetFileName(srcDir);
+			def outFile = Path.Combine("clusters", item + ".txt");
+			unless (File.Exists(outFile))
+			{
+				Console.WriteLine(item);
+
+				ProcessFiles(item, outFile, Path.Combine("clusters-html", item + ".html"));
+			}
 		}
 	}
-	WriteResults("cluster-eval.txt", results);
+
+	private EvaluateClusters() : void
+	{
+		def LoadClusters(path)
+		{
+			using (file = File.OpenText(path))
+			{
+				def clusters = array(int.Parse(file.ReadLine()));
+				for (mutable i = 0; i != clusters.Length; ++i)
+				{
+					def cluster = array(int.Parse(file.ReadLine()));
+					for (mutable j = 0; j != cluster.Length; ++j)
+						cluster[j] = file.ReadLine();
+					clusters[i] = cluster;
+				}
+				clusters;
+			}
+		}
+
+		def ProcessClusters(autoClusters, mutable refClusters)
+		{
+			def set = Set(refClusters[refClusters.Length - 1]);
+			Array.Resize(ref refClusters, refClusters.Length - 1);
+			( autoClusters
+				.MapToArray(clusters => clusters.FilterToArray(id => !set.Contains(id)))
+				.FilterToArray(clusters => clusters.Length > 0)
+			, refClusters
+			);
+		}
+
+		def WriteResults(path, results)
+		{
+			def nameColWidth = 1 + results
+				.Map((name, _) => name.Length)
+				.Fold(0, Max : int * int -> int);
+			using (file = File.CreateText(path))
+			{
+				foreach ((name, grade) in results)
+				{
+					file.Write(name);
+					repeat (nameColWidth - name.Length)
+						file.Write(' ');
+					file.WriteLine(grade);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Number of discrepancies between two partitions of a set.
+		/// Similar to <a src="http://en.wikipedia.org/wiki/Rand_index">Rand index</a>.
+		/// </summary>
+		def EvaluateClusters(l1, l2)
+		{
+			def CountPairs(n)
+			{
+				n * (n - 1) / 2
+			}
+			def GetContingencyTableSum(l1, l2)
+			{
+				mutable sum = 0;
+				foreach (x in l1 with i)
+				foreach (y in l2 with j)
+					sum += CountPairs(x.Intersect(y).Count);
+				sum;
+			}
+			def GetMarginalSum(l)
+			{
+				l.Fold(0, (x, sum) => sum + CountPairs(x.Count))
+			}
+
+			def l1 = l1.Map(Set);
+			def l2 = l2.Map(Set);
+
+			def ab = GetContingencyTableSum(l1, l2);
+			def a  = GetMarginalSum(l1);
+			def b  = GetMarginalSum(l2);
+
+			(a + b) / 2 - ab;
+
+		}
+
+		mutable results = [];
+		foreach (file1 in Directory.GetFiles("clusters"))
+		{
+			def file2 = Path.Combine("clusters-ref", Path.GetFileName(file1));
+			when (File.Exists(file2))
+			{
+				results ::=
+					( Path.GetFileNameWithoutExtension(file1)
+					, EvaluateClusters
+						( ProcessClusters
+							( LoadClusters(file1)
+							, LoadClusters(file2)
+							)
+						)
+					);
+			}
+		}
+		WriteResults("cluster-eval.txt", results);
+	}
+
+	[ ProfDump ]
+	public PrintProfileInfo() : void
+	{
+	}
+
+	public Main() : void
+	{
+		DownloadData();
+		ExtractDescriptors();
+		ClusterData();
+		EvaluateClusters();
+
+		PrintProfileInfo();
+	}
 }
-
-DownloadData();
-ExtractDescriptors();
-ClusterData();
-EvaluateClusters();
-
-ProfilerOutput.Print();
