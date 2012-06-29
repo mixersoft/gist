@@ -1,0 +1,46 @@
+using Emgu.CV.CvEnum;
+using Emgu.CV.Structure;
+using Emgu.CV;
+using Nemerle.Collections;
+using Nemerle.Utility;
+using Profiling;
+using System.IO;
+using System;
+
+using SCG = System.Collections.Generic;
+
+class ExtractDescriptors : ITask
+{
+	public GetInputs() : list[TaskItem]
+	{
+		Directory.GetDirectories("images").MapToList(path => TaskItem.Directory(path) : TaskItem)
+	}
+
+	public GetOutput(input : TaskItem) : TaskItem
+	{
+		def srcDir = (input :> TaskItem.Directory).path;
+		TaskItem.Directory(Path.Combine("descriptors", Path.GetFileName(srcDir)));
+	}
+
+	[ Profile ]
+	public Execute(input : TaskItem, output : TaskItem) : void
+	{
+		def srcDir = (input  :> TaskItem.Directory).path;
+		def dstDir = (output :> TaskItem.Directory).path;
+
+		def files = Directory.GetFiles(srcDir);
+		foreach (srcFile in files with i)
+		{
+			def descriptor =
+				using (image = Image.[Gray, byte](srcFile))
+					Gist.Algorithm.GetBwDescriptor(image, 4, 8, 8, 4);
+
+			def id      = Path.GetFileNameWithoutExtension(srcFile);
+			def dstFile = Path.Combine(dstDir, id + ".txt");
+
+			Console.WriteLine($"\t$i/$(files.Length) $id");
+
+			File.WriteAllText(dstFile, descriptor.ToString("\r\n"));
+		}
+	}
+}

@@ -4,21 +4,29 @@ using Nemerle.Collections;
 using Nemerle.Utility;
 using System.IO.File;
 
-public class Parameters
+/// <summary>Meta-parameter source.</summary>
+public interface IParameters
+{
+	DownloadImagePrefix : string    { get }
+	ImageSize           : int * int { get }
+	ClusteringThreshold : double    { get }
+}
+
+/// <summary>Meta-parameter source that loads from "parameters.txt".</summary>
+public class Parameters : IParameters
 {
 	[ Accessor ] private downloadImagePrefix : string;
-	[ Accessor ] private imageSize           : option[int * int];
+	[ Accessor ] private imageSize           : int * int;
+	[ Accessor ] private clusteringThreshold : double;
 
 	public this()
 	{
-		def ParseSize(_)
+		def ParseSize(str)
 		{
-		| null => None()
-		| str  =>
 			def i = str.IndexOf(',');
 			def w = int.Parse(str.Substring(0, i));
 			def h = int.Parse(str.Substring(i + 1));
-			Some(w, h);
+			(w, h);
 		}
 
 		def map = Hashtable();
@@ -31,6 +39,16 @@ public class Parameters
 		}
 
 		downloadImagePrefix = map["download image prefix"];
-		imageSize           = ParseSize(map.GetValueOrDefault("image size", null));
+		imageSize           = ParseSize("image size");
+		clusteringThreshold = double.Parse(map["clustering threshold"]);
 	}
+}
+
+/// <summary>Meta-parameter source with fixed contents.</summary>
+[ Record ]
+public class MockParameters : IParameters
+{
+	[ Accessor ] private downloadImagePrefix : string;
+	[ Accessor ] private imageSize           : int * int;
+	[ Accessor ] private clusteringThreshold : double;
 }

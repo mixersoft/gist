@@ -1,0 +1,28 @@
+using System.IO;
+
+variant TaskItem
+{
+| File      { path : string }
+| Directory { path : string }
+
+	public Exists : bool
+	{
+		get
+		{
+			match (this)
+			{
+			| File(path)      => File.Exists(path)
+			| Directory(path) => Directory.Exists(path)
+			}
+		}
+	}
+
+	public override ToString() : string
+	{
+		match (this)
+		{
+		| File(path)      => path
+		| Directory(path) => path
+		}
+	}
+}

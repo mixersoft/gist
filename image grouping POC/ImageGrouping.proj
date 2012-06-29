@@ -20,6 +20,7 @@
 		<Out Include="bin\*" />
 	<!-- references -->
 		<ImageGroupingRef Include="@(ParametersBin)" />
+		<ImageGroupingRef Include="System.Core.dll" />
 		<ImageGroupingRef Include="System.Drawing.dll" />
 		<ImageGroupingRef Include="System.Windows.Forms.dll" />
 		<ImageGroupingRef Include="lib\ComputeGist.dll" />
@@ -47,13 +48,13 @@
 
 	<Target
 		Name             = "ImageGrouping"
-		Inputs           = "@(ImageGroupingSrc)"
+		Inputs           = "@(ImageGroupingSrc); @(ParametersBin)"
 		Outputs          = "@(ImageGroupingBin)"
 		DependsOnTargets = "Dependencies; Parameters"
 		>
 		<ncc
 			DefineConstants      = "$(Defines)"
-			EmitDebugInformation = "true"
+			EmitDebugInformation = "false"
 			NoLogo               = "true"
 			OutputAssembly       = "@(ImageGroupingBin)"
 			Platform             = "x64"

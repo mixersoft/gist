@@ -1,0 +1,186 @@
+using Emgu.CV.CvEnum;
+using Emgu.CV.Structure;
+using Emgu.CV;
+using Nemerle.Collections;
+using Nemerle.Utility;
+using Newtonsoft.Json.Linq;
+using Profiling;
+using System.IO;
+using System.Math;
+using System.Net;
+using System;
+
+using SCG = System.Collections.Generic;
+
+[ Record ]
+class ClusterData : ITask
+{
+	private threshold : double;
+
+	public GetInputs() : list[TaskItem]
+	{
+		Directory.GetDirectories("descriptors").MapToList(path => TaskItem.Directory(path) : TaskItem)
+	}
+
+	public GetOutput(input : TaskItem) : TaskItem
+	{
+		def item = Path.GetFileName((input :> TaskItem.Directory).path);
+		TaskItem.File(Path.Combine("clusters", item + ".txt"));
+	}
+
+	[ Profile(Recursive) ]
+	public Execute(input : TaskItem, output : TaskItem) : void
+	{
+		def GetImageData(dir)
+		{
+			def GetId(path)         { Path.GetFileNameWithoutExtension(path) }
+			def GetDescriptor(path) { File.ReadAllLines(path).Map(double.Parse) }
+			Directory.GetFiles(dir)
+				.Map(path => (GetId(path), GetDescriptor(path)));
+		}
+
+		def Cluster(descriptors) : list[array[string]]
+		{
+			def CreateThresholdMap()
+			{
+				def sqThreshold = threshold * threshold;
+
+				def map = array(descriptors.Length, descriptors.Length);
+				for (mutable i = 0; i != descriptors.Length; ++i)
+				for (mutable j = 0; j != descriptors.Length; ++j)
+				{
+					def d1 = descriptors[i][1];
+					def d2 = descriptors[j][1];
+					map[i, j] = SqDistance(d1, d2) < sqThreshold;
+				}
+				map;
+			}
+			def withinThreshold = CreateThresholdMap();
+
+			def indices = SCG.List($[0 .. descriptors.Length - 1]);
+
+			def CountNear(i)
+			{
+				mutable count = 0;
+				foreach (j when withinThreshold[i, j] in indices)
+					++count;
+				count;
+			}
+
+			def ChooseLargest(counts)
+			{
+				mutable maxCount = 0;
+				mutable maxIndex = 0;
+				foreach (count in counts with i)
+				{
+					when (count > maxCount)
+					{
+						maxCount = count;
+						maxIndex = indices[i];
+					}
+				}
+				mutable cluster = array(maxCount);
+				mutable k       = 0;
+				foreach (j when withinThreshold[maxIndex, j] in indices)
+				{
+					cluster[k] = j;
+					++k;
+				}
+				cluster;
+			}
+
+			def Remove(cluster)
+			{
+				foreach (item in cluster)
+					_ = indices.Remove(item);
+			}
+
+			mutable clusters = [];
+			while (indices.Count > 0)
+			{
+				clusters ::= ChooseLargest(indices.Map(CountNear));
+				Remove(clusters.Head);
+			}
+			clusters.Map(cluster => cluster.Map(i => descriptors[i][0])).Reverse();
+		}
+
+		def WriteClusters(clusters, path)
+		{
+			using (file = File.CreateText(path))
+			{
+				file.WriteLine(clusters.Length);
+				foreach (cluster in clusters)
+				{
+					file.WriteLine(cluster.Length);
+					foreach (id in cluster)
+						file.WriteLine(id);
+				}
+			}
+		}
+
+		def WriteHtml(clusters, path, imageDir)
+		{
+			using (writer = File.CreateText(path))
+			{
+				[ "<html><body>"
+				, "<head><style type='text/css'>"
+				, "	.even { background-color : #C1B398 }"
+				, "	.odd  { background-color : #ACCEC0 }"
+				, "	span { display : block; padding : 8px; }"
+				, "</style></head>"
+				].Iter(writer.WriteLine);
+
+				writer.WriteLine("<body>");
+
+				foreach (cluster in clusters with i)
+				{
+					def spanClass = if (i % 2 == 0) "even" else "odd";
+					writer.WriteLine($"<span class='$spanClass'>");
+
+					foreach (id in cluster)
+					{
+						def src = Path.Combine(imageDir, id + ".jpg");
+						writer.WriteLine($"<img height='64' src='$src'>");
+					}
+
+					writer.WriteLine("</span>");
+				}
+
+				writer.WriteLine("</body></html>");
+			}
+		}
+
+		def descriptorsDir = (input  :> TaskItem.Directory).path;
+		def outFile        = (output :> TaskItem.File).path;
+
+		def item = Path.GetFileName(descriptorsDir);
+
+		def imageDir = Path.Combine(@"..\images", item);
+
+		def htmlFile = Path.Combine
+				( "clusters-html"
+				, Path.GetFileNameWithoutExtension(outFile) + ".html"
+				);
+
+		def clusters = Cluster(GetImageData(descriptorsDir));
+
+		WriteClusters(clusters, outFile);
+
+		WriteHtml(clusters, htmlFile, imageDir);
+	}
+
+	private SqDistance(v1 : array[double], v2 : array[double]) : double
+	{
+		unchecked
+		{
+			mutable sum = 0.0;
+			for (mutable i = 0; i != v1.Length; ++i)
+			{
+				def δ = v1[i] - v2[i];
+				sum += δ * δ;
+			}
+			sum;
+		}
+	}
+}
+

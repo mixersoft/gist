@@ -1,0 +1,26 @@
+using System.Console;
+
+module TaskManager
+{
+	public LazyExecute(task : ITask) : void
+	{
+		foreach (input in task.GetInputs())
+		{
+			def output = task.GetOutput(input);
+			unless (output.Exists)
+				ExecuteTask(task, input, output);
+		}
+	}
+
+	public Execute(task : ITask) : void
+	{
+		foreach (input in task.GetInputs())
+			ExecuteTask(task, input, task.GetOutput(input));
+	}
+
+	public ExecuteTask(task : ITask, input : TaskItem, output : TaskItem) : void
+	{
+		WriteLine($"Execute $(task.GetType().Name): '$input' -> '$output'");
+		task.Execute(input, output);
+	}
+}
