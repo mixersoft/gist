@@ -2,6 +2,7 @@ using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
 using Emgu.CV;
 using Nemerle.Collections;
+using Nemerle.Text;
 using Nemerle.Utility;
 using Newtonsoft.Json.Linq;
 using Profiling;
@@ -26,8 +27,8 @@ module Main
 	{
 		def parameters = Parameters();
 		def tasks =
-			[ DownloadData () : ITask
-			, ExtractDescriptors()
+			[ DownloadData (parameters.DownloadImagePrefix) : ITask
+			, ExtractDescriptors(parameters.ImageSize)
 			, ClusterData (parameters.ClusteringThreshold)
 			, EvaluateClusters ()
 			];
@@ -35,15 +36,15 @@ module Main
 
 	}
 
-	private RunThresholdOptimization() : void
+	private RunThresholdOptimization(min : double, max : double, count : int) : void
 	{
 		def Run(threshold)
 		{
 			def tasks =
-				[ ( DownloadData () : ITask, true)
-				, ( ExtractDescriptors(),    true)
-				, ( ClusterData (threshold), false)
-				, ( EvaluateClusters(),      false)
+				[ ( DownloadData ("") : ITask, true)
+				, ( ExtractDescriptors(0, 0),  true)
+				, ( ClusterData (threshold),   false)
+				, ( EvaluateClusters(),        false)
 				];
 			foreach ((task, lazy) in tasks)
 			{
@@ -53,30 +54,41 @@ module Main
 					TaskManager.Execute(task);
 			}
 			( threshold
-			, ["venice", "peter-alice"].Map(item => (item, File.ReadAllText(item + "-eval.txt")))
+			, File.ReadAllText("peter-alice-eval.txt").Trim()
 			)
 		}
 
 		Console.WriteLine("Threshold Optimization");
-		def results = $[1 .. 20].Map(step : int => 0.005 * step).Map(Run);
+		def Lerp(step : int)
+		{
+			min + (max - min) * step / count
+		}
+		def results = $[0 .. count].Map(Lerp).Map(Run);
 		
 		using (file = File.CreateText("threshold results.txt"))
 		{
-			foreach ((threshold, scores) in results)
-			foreach ((item, score) in scores)
-				file.WriteLine($"$threshold, $item, $score");
+			foreach ((threshold, score) in results)
+				file.WriteLine($"$threshold\t$score");
 		}
 	}
 
 	public Main() : void
 	{
-		mutable optimizeThreshold = false;
-		mutable displayHelp       = false;
+		mutable threshold   = None();
+		mutable displayHelp = false;
 		def opts =
-			[ Getopt.CliOption.Flag
+			[ Getopt.CliOption.String
 				( "-optimize-threshold"
-				, "Optimize the threshold meta-parameter."
-				, () => optimizeThreshold = true
+				, "Optimize the threshold meta-parameter over the given range: 'min max count'."
+				, value =>
+					regexp match (value)
+					{
+					| @"(?<min:double>[^ ]+) (?<max:double>[^ ]+) (?<count:int>[^ ]+)" =>
+						threshold = Some(min, max, count);
+					| _ =>
+						Console.WriteLine($"Invalid threshold range: '$value'.");
+						displayHelp = true;
+					}
 				)
 			, Getopt.CliOption.Flag
 				( "-help"
@@ -93,14 +105,10 @@ module Main
 		}
 		else
 		{
-			if (optimizeThreshold)
+			match (threshold)
 			{
-				RunThresholdOptimization();
-			}
-			else
-			{
-				Run();
-				PrintProfileInfo();
+			| Some((min, max, count)) => RunThresholdOptimization(min, max, count);
+			| None                    => Run(); PrintProfileInfo();
 			}
 		}
 	}

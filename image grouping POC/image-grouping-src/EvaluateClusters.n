@@ -61,7 +61,7 @@ class EvaluateClusters: ITask
 		/// </summary>
 		def EvaluateClusters(l1, l2)
 		{
-			def CountPairs(n)
+			def PairsCount(n)
 			{
 				n * (n - 1) / 2
 			}
@@ -70,12 +70,16 @@ class EvaluateClusters: ITask
 				mutable sum = 0;
 				foreach (x in l1 with i)
 				foreach (y in l2 with j)
-					sum += CountPairs(x.Intersect(y).Count);
+					sum += PairsCount(x.Intersect(y).Count);
 				sum;
 			}
 			def GetMarginalSum(l)
 			{
-				l.Fold(0, (x, sum) => sum + CountPairs(x.Count))
+				l.Fold(0, (x, sum) => sum + PairsCount(x.Count))
+			}
+			def TotalPairsCount(l)
+			{
+				PairsCount(l.Fold(0, (x, sum) => sum + x.Count))
 			}
 
 			def l1 = l1.Map(Set);
@@ -84,8 +88,15 @@ class EvaluateClusters: ITask
 			def ab = GetContingencyTableSum(l1, l2);
 			def a  = GetMarginalSum(l1);
 			def b  = GetMarginalSum(l2);
+			def n2 = TotalPairsCount(l1);
 
-			(a + b) / 2 - ab;
+			// Integer index:
+			// MaxIndex - Index
+			// (a + b) / 2 - ab;
+
+			// Adjusted rand index:
+			// (Index - ExpectedIndex) / (MaxIndex - ExpectedIndex)
+			unchecked (n2 * ab - a * b) / (0.5 * n2 * (a + b) - a * b);
 
 		}
 
@@ -101,6 +112,6 @@ class EvaluateClusters: ITask
 			);
 
 		using (writer = File.CreateText(resultFile))
-			writer.WriteLine(result);
+			writer.Write(result);
 	}
 }

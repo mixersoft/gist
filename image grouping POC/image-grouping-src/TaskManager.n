@@ -20,7 +20,7 @@ module TaskManager
 
 	public ExecuteTask(task : ITask, input : TaskItem, output : TaskItem) : void
 	{
-		WriteLine($"Execute $(task.GetType().Name): '$input' -> '$output'");
+		WriteLine($"$(task.GetType().Name): '$input' -> '$output'");
 		task.Execute(input, output);
 	}
 }

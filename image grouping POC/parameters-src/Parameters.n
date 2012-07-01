@@ -39,7 +39,7 @@ public class Parameters : IParameters
 		}
 
 		downloadImagePrefix = map["download image prefix"];
-		imageSize           = ParseSize("image size");
+		imageSize           = ParseSize(map["image size"]);
 		clusteringThreshold = double.Parse(map["clustering threshold"]);
 	}
 }

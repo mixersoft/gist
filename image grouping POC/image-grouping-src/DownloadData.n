@@ -16,6 +16,13 @@ class DownloadData : ITask
 {
 	private client = WebClient();
 
+	private downloadPrefix : string;
+
+	public this(downloadPrefix : string)
+	{
+		this.downloadPrefix = downloadPrefix;
+	}
+
 	public GetInputs() : list[TaskItem]
 	{
 		Directory.GetFiles("data").MapToList(path => TaskItem.File(path) : TaskItem)
@@ -32,6 +39,9 @@ class DownloadData : ITask
 		def file   = (input  :> TaskItem.File).path;
 		def dstDir = (output :> TaskItem.Directory).path;
 
+		_ = Directory.CreateDirectory("images");
+		_ = Directory.CreateDirectory(dstDir);
+
 		def data = JObject.Parse(File.ReadAllText(file));
 
 		def castingCall = data["response"]["castingCall"];
@@ -40,11 +50,13 @@ class DownloadData : ITask
 
 		def count = photos.Children().NCount();
 
+		def downloadPrefix = "/" + downloadPrefix;
+
 		foreach (photo in photos.Children() with i)
 		{
 			def id      = photo["id"];
 			def rootSrc = photo["Photo"]["Img"]["Src"]["rootSrc"];
-			def image   = baseUrl + rootSrc.ToString().Replace("/", "/tn~");
+			def image   = baseUrl + rootSrc.ToString().Replace("/", downloadPrefix);
 
 			Console.WriteLine($"\t$i/$count $id");
 

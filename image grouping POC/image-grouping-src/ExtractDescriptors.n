@@ -9,8 +9,11 @@ using System;
 
 using SCG = System.Collections.Generic;
 
+[ Record ]
 class ExtractDescriptors : ITask
 {
+	private imageSize : int * int;
+
 	public GetInputs() : list[TaskItem]
 	{
 		Directory.GetDirectories("images").MapToList(path => TaskItem.Directory(path) : TaskItem)
@@ -28,19 +31,33 @@ class ExtractDescriptors : ITask
 		def srcDir = (input  :> TaskItem.Directory).path;
 		def dstDir = (output :> TaskItem.Directory).path;
 
+		def ExtractDescriptor =
+			match (imageSize)
+			{
+			| (0, 0) => path => 
+				fun (path)
+				{
+					using (image = Image.[Bgr, byte](srcFile))
+						Gist.Algorithm.GetColorDescriptor(image, 4, 8, 8, 4);
+				}
+			| (w, h) =>
+				fun (path)
+				{
+					using (image = Image.[Bgr, byte](srcFile))
+					using (image = image.Resize(w, h)
+						Gist.Algorithm.GetColorDescriptor(image, 4, 8, 8, 4);
+				}
+			}
+
 		def files = Directory.GetFiles(srcDir);
 		foreach (srcFile in files with i)
 		{
-			def descriptor =
-				using (image = Image.[Gray, byte](srcFile))
-					Gist.Algorithm.GetBwDescriptor(image, 4, 8, 8, 4);
-
 			def id      = Path.GetFileNameWithoutExtension(srcFile);
 			def dstFile = Path.Combine(dstDir, id + ".txt");
 
 			Console.WriteLine($"\t$i/$(files.Length) $id");
 
-			File.WriteAllText(dstFile, descriptor.ToString("\r\n"));
+			File.WriteAllText(dstFile, ExtractDescriptor(srcFile).ToString("\r\n"));
 		}
 	}
 }
