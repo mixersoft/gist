@@ -1,11 +1,11 @@
-// REFERENCE: Newtonsoft.Json.dll
+// REFERENCE: lib\Newtonsoft.Json.dll
 
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System.IO.File;
 using System.IO.Directory;
 
-foreach (file in GetFiles("data", "peter-alice-*.json"))
+foreach (file in GetFiles("data", "*.json"))
 {
 	def data = JObject.Parse(ReadAllText(file));
 	using (file = JsonTextWriter(CreateText(file)))
