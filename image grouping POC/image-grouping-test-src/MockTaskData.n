@@ -1,0 +1,38 @@
+using Nemerle.Utility;
+
+[ Record ]
+class MockTaskData : ITaskData
+{
+	private hasCache : bool;
+
+	[ Accessor ] private mutable isSaved      : bool;
+	[ Accessor ] private mutable isLoaded     : bool;
+	[ Accessor ] private mutable computeCount : int;
+
+	public HasCache() : bool
+	{
+		hasCache;
+	}
+
+	public Save() : void
+	{
+		isSaved = true;
+	}
+
+	public Load() : void
+	{
+		isLoaded = true;
+	}
+
+	public Compute() : void
+	{
+		++computeCount;
+	}
+
+	public Reset() : void
+	{
+		isSaved      = false;
+		isLoaded     = false;
+		computeCount = 0;
+	}
+}

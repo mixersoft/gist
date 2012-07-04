@@ -1,0 +1,32 @@
+using Nemerle.Collections;
+using Nemerle.Utility;
+
+[ Record ]
+class MockTask : ITask
+{
+	public Name : string;
+
+	private itemMap : list[list[string] * list[string]];
+	private items   : Hashtable[string, TaskItem];
+
+	public MapItems(items : list[TaskItem]) : list[TaskMapping]
+	{
+		def CreateMapping(i, o)
+		{
+			def i = i.Map(name => items.Find(item => item.Name == name).Value);
+			def o = o.Map(name => this.items[name]);
+			TaskMapping
+				( inputs  = i
+				, outputs = o
+				, compute = () => Compute(o)
+				);
+		}
+		itemMap.Map(CreateMapping);
+	}
+
+	private Compute(outputs : list[TaskItem]) : void
+	{
+		foreach (output in outputs)
+			(output.Data :> MockTaskData).Compute();
+	}
+}

@@ -1,8 +1,4 @@
-interface ITask
+public interface ITask
 {
-	GetInputs() : list[TaskItem];
-
-	GetOutput(input : TaskItem) : TaskItem;
-
-	Execute(input : TaskItem, output : TaskItem) : void;
+	MapItems(items : list[TaskItem]) : list[TaskMapping];
 }

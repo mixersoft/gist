@@ -1,0 +1,125 @@
+using NUnit.Framework;
+using Nemerle.Collections;
+using System.Linq;
+using System;
+
+[ TestFixture ]
+public class PersistedTaskManagerTest
+{
+	private mutable taskManager : TaskManager;
+	private mutable items       : Hashtable[string, TaskItem];
+
+	[ SetUp ]
+	public Setup() : void
+	{
+		def AddTaskItem(name, hasCache)
+		{
+			items.Add
+				( name
+				, TaskItem
+					( name = name
+					, data = MockTaskData
+						( hasCache     = hasCache
+						, isSaved      = false
+						, isLoaded     = false
+						, computeCount = 0
+						)
+					)
+				);
+		}
+		items = Hashtable();
+		[ ("item-1", false)
+		, ("item-2", true)
+		, ("item-3", false)
+		, ("item-4", true)
+		, ("item-5", false)
+		].Iter(AddTaskItem);
+
+		taskManager = TaskManager
+			( tasks =
+				[ MockTask
+					( name    = "task-1"
+					, itemMap =
+						[ ([], ["item-1"])
+						, ([], ["item-2"])
+						]
+					, items = items
+					)
+				, MockTask
+					( name    = "task-2"
+					, itemMap =
+						[ (["item-1", "item-2"], ["item-3"])
+						, (["item-1", "item-2"], ["item-4"])
+						]
+					, items = items
+					)
+				, MockTask
+					( name    = "task-3"
+					, itemMap =
+						[ (["item-1", "item-3"], ["item-5"]) ]
+					, items = items
+					)
+				]
+			, persistData = true
+			);
+	}
+
+	[ Test ]
+	public TestConstruction() : void
+	{
+		def IsLoaded(name)
+		{
+			(items[name].Data :> MockTaskData).IsLoaded
+		}
+
+		def items = taskManager.Items.ToArray();
+		Array.Sort(items);
+
+		CollectionAssert.AreEquivalent
+			( expected = $[1..5].Map(n => $"item-$n")
+			, actual   = items
+			);
+
+		CollectionAssert.AreEqual
+			( expected = [ false, true, false, true, false ]
+			, actual   = items.Map(IsLoaded)
+			, message  = "Are the cached items loaded?"
+			);
+	}
+
+	[ Test ]
+	public TestCompute() : void
+	{
+		def IsSaved(name)
+		{
+			(items[name].Data :> MockTaskData).IsSaved
+		}
+
+		taskManager.Compute();
+
+		def items = taskManager.Items.ToArray();
+		Array.Sort(items);
+
+		CollectionAssert.AreEqual
+			( expected = [ 1, 0, 1, 1, 1 ]
+			, actual   = items.Map(GetComputeCount)
+			, message  = "Were the appropriate items computed?"
+			);
+
+
+		CollectionAssert.AreEqual
+			( expected = [ true, false, true, true, true ]
+			, actual   = items.Map(IsSaved)
+			, message  = "Are the updated items saved?"
+			);
+	}
+
+	private GetComputeCount(itemName : string) : int
+	{
+		match (items.Get(itemName))
+		{
+		| Some(item) => (item.Data :> MockTaskData).ComputeCount
+		| None       => 0
+		}
+	}
+}

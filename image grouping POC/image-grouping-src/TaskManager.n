@@ -1,26 +1,80 @@
-using System.Console;
+using Nemerle.Collections;
+using System;
 
-module TaskManager
+using SCG = System.Collections.Generic;
+
+public class TaskManager
 {
-	public LazyExecute(task : ITask) : void
+	private persistData : bool;
+
+	private items        : Hashtable[string, TaskItem];
+	private taskMappings : list[list[TaskMapping]];
+
+	private mutable toCompute : Set[string];
+
+	public this(tasks : list[ITask], persistData : bool)
 	{
-		foreach (input in task.GetInputs())
+		this.persistData = persistData;
+
+		mutable taskMappings = [];
+		mutable items        = [];
+		foreach (task in tasks)
 		{
-			def output = task.GetOutput(input);
-			unless (output.Exists)
-				ExecuteTask(task, input, output);
+			def mappings = task.MapItems(items);
+			foreach (mapping in mappings)
+				items = mapping.Outputs.Append(items);
+			taskMappings ::= mappings;
+		}
+
+		this.taskMappings = taskMappings.Reverse();
+
+		this.items = Hashtable();
+		foreach (item in items)
+			this.items.Add(item.Name, item);
+
+		this.toCompute = Set();
+		foreach (item in items)
+		{
+			if (item.Data.HasCache())
+				item.Data.Load();
+			else
+				this.toCompute = this.toCompute.Add(item.Name);
 		}
 	}
 
-	public Execute(task : ITask) : void
+	public Items : SCG.IEnumerable[string]
 	{
-		foreach (input in task.GetInputs())
-			ExecuteTask(task, input, task.GetOutput(input));
+		get { items.Keys }
 	}
 
-	public ExecuteTask(task : ITask, input : TaskItem, output : TaskItem) : void
+	public DiscardItemData(name : string) : void
 	{
-		WriteLine($"$(task.GetType().Name): '$input' -> '$output'");
-		task.Execute(input, output);
+		when (!items.Contains(name))
+			throw ArgumentException("name");
+		toCompute = toCompute.Replace(name);
+	}
+
+	public Compute() : void
+	{
+		def ToCompute(item) { toCompute.Contains(item.Name) }
+		foreach (layer in taskMappings)
+		{
+			foreach (mapping in layer)
+			{
+				def i = mapping.Inputs;
+				def o = mapping.Outputs;
+				when (i.Exists(ToCompute) || o.Exists(ToCompute))
+				{
+					mapping.Compute();
+					toCompute = toCompute.ReplaceList(o.Map(_.Name));
+				}
+			}
+		}
+		when (persistData)
+		{
+			foreach (name in toCompute)
+				items[name].Data.Save();
+		}
+		toCompute = toCompute.Clear();
 	}
 }

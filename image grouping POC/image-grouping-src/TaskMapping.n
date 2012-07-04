@@ -1,0 +1,7 @@
+[ Record ]
+public class TaskMapping
+{
+	public Inputs  : list[TaskItem];
+	public Outputs : list[TaskItem];
+	public Compute : void -> void;
+}

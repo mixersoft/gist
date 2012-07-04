@@ -17,7 +17,7 @@ using SCG = System.Collections.Generic;
 
 module Main
 {
-
+	/*
 	[ ProfDump ]
 	private PrintProfileInfo() : void
 	{
@@ -111,5 +111,10 @@ module Main
 			| None                    => Run(); PrintProfileInfo();
 			}
 		}
+	}
+*/
+
+	public Main() : void
+	{
 	}
 }

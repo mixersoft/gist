@@ -1,3 +1,4 @@
+/*
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
 using Emgu.CV;
@@ -115,3 +116,4 @@ class EvaluateClusters: ITask
 			writer.Write(result);
 	}
 }
+*/
