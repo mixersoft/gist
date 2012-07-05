@@ -1,8 +1,11 @@
-using System.IO;
-
 [ Record ]
 public class TaskItem
 {
 	public Name : string;
 	public Data : ITaskData;
+
+	public override ToString() : string
+	{
+		Name
+	}
 }

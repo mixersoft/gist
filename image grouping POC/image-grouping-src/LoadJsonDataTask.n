@@ -1,0 +1,76 @@
+using Nemerle.Collections;
+using Nemerle.Utility;
+using Newtonsoft.Json.Linq;
+using System.IO;
+
+public class JsonData : ITaskData
+{
+	public class PhotoInfo
+	{
+		public ID      : string;
+		public RootSrc : string;
+
+		public this(id : string, rootSrc : string)
+		{
+			ID      = id;
+			RootSrc = rootSrc;
+		}
+	}
+
+	private path : string;
+
+	private mutable photos  : list[PhotoInfo];
+	private mutable baseUrl : string;
+
+	public this(path : string)
+	{
+		this.path = path;
+	}
+
+	public HasCache() : bool
+	{
+		File.Exists(path);
+	}
+
+	public Save() : void
+	{
+	}
+
+	public Load() : void
+	{
+		def data = JObject.Parse(File.ReadAllText(path));
+		System.Console.WriteLine($"Loading: $path");
+
+		def castingCall = data["response"]["castingCall"];
+
+		baseUrl = "http://dev.snaphappi.com" + castingCall["CastingCall"]["Auditions"]["Baseurl"];
+
+		def GetPhotoInfo(record)
+		{
+			PhotoInfo
+				( id      = record["id"].ToString()
+				, rootSrc = record["Photo"]["Img"]["Src"]["rootSrc"].ToString()
+				)
+		}
+		photos = castingCall["CastingCall"]["Auditions"]["Audition"]
+			.Children()
+			.MapToList(GetPhotoInfo);
+	}
+}
+
+class LoadJsonDataTask : ITask
+{
+	public MapItems(_ : list[TaskItem]) : list[TaskMapping]
+	{
+		def CreateTaskMapping(file)
+		{
+			TaskMapping
+				( inputs  = []
+				, outputs = [ TaskItem(file, JsonData(file)) ]
+				, compute = () => ()
+				);
+		}
+		Directory.GetFiles("data", "*.json")
+			.Map(CreateTaskMapping).NToList();
+	}
+}

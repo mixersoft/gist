@@ -78,18 +78,22 @@ public class PersistedTaskManagerTest
 		CollectionAssert.AreEquivalent
 			( expected = $[1..5].Map(n => $"item-$n")
 			, actual   = items
+			, message  = "Were all items discovered?"
 			);
 
-		CollectionAssert.AreEqual
-			( expected = [ false, true, false, true, false ]
-			, actual   = items.Map(IsLoaded)
-			, message  = "Are the cached items loaded?"
+		Assert.IsFalse
+			( condition = items.Exists(IsLoaded)
+			, message   = "Were any items loaded on startup?"
 			);
 	}
 
 	[ Test ]
 	public TestCompute() : void
 	{
+		def IsLoaded(name)
+		{
+			(items[name].Data :> MockTaskData).IsLoaded
+		}
 		def IsSaved(name)
 		{
 			(items[name].Data :> MockTaskData).IsSaved
@@ -106,11 +110,16 @@ public class PersistedTaskManagerTest
 			, message  = "Were the appropriate items computed?"
 			);
 
+		CollectionAssert.AreEqual
+			( expected = [ false, true, false, false, false ]
+			, actual   = items.Map(IsLoaded)
+			, message  = "Were the appropriate items loaded?"
+			);
 
 		CollectionAssert.AreEqual
 			( expected = [ true, false, true, true, true ]
 			, actual   = items.Map(IsSaved)
-			, message  = "Are the updated items saved?"
+			, message  = "Were the appropriate items saved?"
 			);
 	}
 

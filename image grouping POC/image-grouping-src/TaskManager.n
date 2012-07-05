@@ -11,6 +11,7 @@ public class TaskManager
 	private taskMappings : list[list[TaskMapping]];
 
 	private mutable toCompute : Set[string];
+	private mutable loaded    : Set[string];
 
 	public this(tasks : list[ITask], persistData : bool)
 	{
@@ -35,11 +36,11 @@ public class TaskManager
 		this.toCompute = Set();
 		foreach (item in items)
 		{
-			if (item.Data.HasCache())
-				item.Data.Load();
-			else
+			unless (item.Data.HasCache())
 				this.toCompute = this.toCompute.Add(item.Name);
 		}
+
+		this.loaded = Set();
 	}
 
 	public Items : SCG.IEnumerable[string]
@@ -65,6 +66,15 @@ public class TaskManager
 				def o = mapping.Outputs;
 				when (i.Exists(ToCompute) || o.Exists(ToCompute))
 				{
+					foreach (item in i)
+					{
+						when (!loaded.Contains(item.Name) && item.Data.HasCache())
+						{
+							loaded = loaded.Add(item.Name);
+							item.Data.Load();
+						}
+					}
+					//Console.WriteLine($"..$i -> ..$o");
 					mapping.Compute();
 					toCompute = toCompute.ReplaceList(o.Map(_.Name));
 				}

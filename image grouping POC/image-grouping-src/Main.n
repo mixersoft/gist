@@ -17,7 +17,6 @@ using SCG = System.Collections.Generic;
 
 module Main
 {
-	/*
 	[ ProfDump ]
 	private PrintProfileInfo() : void
 	{
@@ -25,6 +24,13 @@ module Main
 
 	private Run() : void
 	{
+		TaskManager
+			( tasks =
+				[ LoadJsonDataTask()
+				]
+			, persistData = true
+			).Compute();
+		/*
 		def parameters = Parameters();
 		def tasks =
 			[ DownloadData (parameters.DownloadImagePrefix) : ITask
@@ -33,11 +39,16 @@ module Main
 			, EvaluateClusters ()
 			];
 		tasks.Iter(TaskManager.LazyExecute);
+		*/
 
 	}
 
 	private RunThresholdOptimization(min : double, max : double, count : int) : void
 	{
+		_ = min;
+		_ = max;
+		_ = count;
+		/*
 		def Run(threshold)
 		{
 			def tasks =
@@ -70,6 +81,7 @@ module Main
 			foreach ((threshold, score) in results)
 				file.WriteLine($"$threshold\t$score");
 		}
+		*/
 	}
 
 	public Main() : void
@@ -111,10 +123,5 @@ module Main
 			| None                    => Run(); PrintProfileInfo();
 			}
 		}
-	}
-*/
-
-	public Main() : void
-	{
 	}
 }
