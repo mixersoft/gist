@@ -74,7 +74,7 @@ public class TaskManager
 							item.Data.Load();
 						}
 					}
-					//Console.WriteLine($"..$i -> ..$o");
+					Console.WriteLine($"..$i -> ..$o");
 					mapping.Compute();
 					toCompute = toCompute.ReplaceList(o.Map(_.Name));
 				}

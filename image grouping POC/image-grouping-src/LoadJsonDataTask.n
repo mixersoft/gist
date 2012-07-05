@@ -19,8 +19,8 @@ public class JsonData : ITaskData
 
 	private path : string;
 
-	private mutable photos  : list[PhotoInfo];
-	private mutable baseUrl : string;
+	public mutable Photos  : list[PhotoInfo];
+	public mutable BaseUrl : string;
 
 	public this(path : string)
 	{
@@ -43,7 +43,7 @@ public class JsonData : ITaskData
 
 		def castingCall = data["response"]["castingCall"];
 
-		baseUrl = "http://dev.snaphappi.com" + castingCall["CastingCall"]["Auditions"]["Baseurl"];
+		BaseUrl = "http://dev.snaphappi.com" + castingCall["CastingCall"]["Auditions"]["Baseurl"];
 
 		def GetPhotoInfo(record)
 		{
@@ -52,7 +52,7 @@ public class JsonData : ITaskData
 				, rootSrc = record["Photo"]["Img"]["Src"]["rootSrc"].ToString()
 				)
 		}
-		photos = castingCall["CastingCall"]["Auditions"]["Audition"]
+		Photos = castingCall["CastingCall"]["Auditions"]["Audition"]
 			.Children()
 			.MapToList(GetPhotoInfo);
 	}

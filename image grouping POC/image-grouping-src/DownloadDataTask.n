@@ -1,0 +1,89 @@
+using Nemerle.Collections;
+using Nemerle.Utility;
+using System.IO;
+using System.Net;
+using System;
+
+using SCG = System.Collections.Generic;
+
+/// <summary>
+/// This data item holds image paths without the data.
+/// </summary>
+class ImageCollectionData : ITaskData
+{
+	private path : string;
+
+	public mutable ImageIDs : array[string];
+
+	public this(path : string)
+	{
+		this.path = path;
+	}
+
+	public MakePath(id : string) : string
+	{
+		Path.Combine(path, id + ".jpg")
+	}
+
+	public HasCache() : bool
+	{
+		Directory.Exists(path);
+	}
+
+	public Save() : void
+	{
+	}
+
+	public Load() : void
+	{
+		ImageIDs = Directory.GetFiles(path).Map(Path.GetFileNameWithoutExtension);
+	}
+}
+
+class DownloadDataTask : ITask
+{
+	private downloadPrefix : string;
+
+	public this(downloadPrefix : string)
+	{
+		this.downloadPrefix = downloadPrefix;
+	}
+
+	public MapItems(items : list[TaskItem]) : list[TaskMapping]
+	{
+		def CreateMapping(item)
+		{
+			def jsonData = item.Data :> JsonData;
+
+			def path = Path.Combine("images", Path.GetFileNameWithoutExtension(item.Name));
+
+			def result = ImageCollectionData(path);
+
+			TaskMapping
+				( inputs  = [ item ]
+				, outputs = [ TaskItem(path, result) ]
+				, compute = () => Compute(jsonData, result)
+				);
+		}
+		items.Filter(item => item.Name.StartsWith(@"data\"))
+			.Map(CreateMapping);
+	}
+
+	public Compute(jsonData : JsonData, result : ImageCollectionData) : void
+	{
+		def client = WebClient();
+
+		def downloadPrefix = "/" + downloadPrefix;
+
+		result.ImageIDs = array(jsonData.Photos.Length);
+
+		foreach (photo in jsonData.Photos with i)
+		{
+			client.DownloadFile
+				( address  = jsonData.BaseUrl + photo.RootSrc.Replace("/", downloadPrefix)
+				, fileName = result.MakePath(photo.ID)
+				);
+			result.ImageIDs[i] = photo.ID;
+		}
+	}
+}

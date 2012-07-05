@@ -1,0 +1,211 @@
+using Emgu.CV.CvEnum;
+using Emgu.CV.Structure;
+using Emgu.CV;
+using Nemerle.Collections;
+using Nemerle.Utility;
+using Newtonsoft.Json.Linq;
+using Profiling;
+using System.IO;
+using System.Math;
+using System.Net;
+using System;
+
+using SCG = System.Collections.Generic;
+
+public class ClusterData : ITaskData
+{
+	private path : string;
+
+	public mutable Clusters : array[array[string]];
+
+	public this(path : string)
+	{
+		this.path = path;
+	}
+
+	public HasCache() : bool
+	{
+		File.Exists(path);
+	}
+
+	public Save() : void
+	{
+		def WriteClusters(clusters, path)
+		{
+			using (file = File.CreateText(path))
+			{
+				file.WriteLine(clusters.Length);
+				foreach (cluster in clusters)
+				{
+					file.WriteLine(cluster.Length);
+					foreach (id in cluster)
+						file.WriteLine(id);
+				}
+			}
+		}
+
+		def WriteHtml(clusters, path, imageDir)
+		{
+			using (writer = File.CreateText(path))
+			{
+				[ "<html><body>"
+				, "<head><style type='text/css'>"
+				, "	.even { background-color : #C1B398 }"
+				, "	.odd  { background-color : #ACCEC0 }"
+				, "	span { display : block; padding : 8px; }"
+				, "</style></head>"
+				].Iter(writer.WriteLine);
+
+				writer.WriteLine("<body>");
+
+				foreach (cluster in clusters with i)
+				{
+					def spanClass = if (i % 2 == 0) "even" else "odd";
+					writer.WriteLine($"<span class='$spanClass'>");
+
+					foreach (id in cluster)
+					{
+						def src = Path.Combine(imageDir, id + ".jpg");
+						writer.WriteLine($"<img height='64' src='$src'>");
+					}
+
+					writer.WriteLine("</span>");
+				}
+
+				writer.WriteLine("</body></html>");
+			}
+		}
+
+		def imageDir = Path.Combine(@"..\images", Path.GetFileNameWithoutExtension(path));
+
+		WriteClusters(Clusters, path);
+		WriteHtml(Clusters, path, imageDir);
+	}
+
+	public Load() : void
+	{
+		using (file = File.OpenText(path))
+		{
+			Clusters = array(int.Parse(file.ReadLine()));
+			for (mutable i = 0; i != Clusters.Length; ++i)
+			{
+				def cluster = array(int.Parse(file.ReadLine()));
+				for (mutable j = 0; j != cluster.Length; ++j)
+					cluster[j] = file.ReadLine();
+				Clusters[i] = cluster;
+			}
+		}
+	}
+}
+
+[ Record ]
+class ClusterDataTask : ITask
+{
+	private threshold : double;
+
+	public MapItems(items : list[TaskItem]) : list[TaskMapping]
+	{
+		def CreateMapping(item)
+		{
+			def images = item.Data :> DescriptorData;
+
+			def path = Path.Combine("clusters", Path.GetFileName(item.Name) + ".txt");
+
+			def result = ClusterData(path);
+
+			TaskMapping
+				( inputs  = [ item ]
+				, outputs = [ TaskItem(path, result) ]
+				, compute = () => Compute(images, result)
+				);
+		}
+		items.Filter(item => item.Name.StartsWith(@"descriptors\"))
+			.Map(CreateMapping);
+	}
+
+	[ Profile(Recursive) ]
+	public Compute(descriptors : DescriptorData, result : ClusterData) : void
+	{
+		def Cluster(descriptors) : array[array[string]]
+		{
+			def CreateThresholdMap()
+			{
+				def sqThreshold = threshold * threshold;
+
+				def map = array(descriptors.Length, descriptors.Length);
+				for (mutable i = 0; i != descriptors.Length; ++i)
+				for (mutable j = 0; j != descriptors.Length; ++j)
+				{
+					def d1 = descriptors[i].Data;
+					def d2 = descriptors[j].Data;
+					map[i, j] = SqDistance(d1, d2) < sqThreshold;
+				}
+				map;
+			}
+			def withinThreshold = CreateThresholdMap();
+
+			def indices = SCG.List($[0 .. descriptors.Length - 1]);
+
+			def CountNear(i)
+			{
+				mutable count = 0;
+				foreach (j when withinThreshold[i, j] in indices)
+					++count;
+				count;
+			}
+
+			def ChooseLargest(counts)
+			{
+				mutable maxCount = 0;
+				mutable maxIndex = 0;
+				foreach (count in counts with i)
+				{
+					when (count > maxCount)
+					{
+						maxCount = count;
+						maxIndex = indices[i];
+					}
+				}
+				mutable cluster = array(maxCount);
+				mutable k       = 0;
+				foreach (j when withinThreshold[maxIndex, j] in indices)
+				{
+					cluster[k] = j;
+					++k;
+				}
+				cluster;
+			}
+
+			def Remove(cluster)
+			{
+				foreach (item in cluster)
+					_ = indices.Remove(item);
+			}
+
+			mutable clusters = [];
+			while (indices.Count > 0)
+			{
+				clusters ::= ChooseLargest(indices.Map(CountNear));
+				Remove(clusters.Head);
+			}
+			clusters.Map(cluster => cluster.Map(i => descriptors[i].ID))
+				.Reverse().ToArray();
+		}
+
+		result.Clusters = Cluster(descriptors.Descriptors);
+	}
+
+	private SqDistance(v1 : array[double], v2 : array[double]) : double
+	{
+		unchecked
+		{
+			mutable sum = 0.0;
+			for (mutable i = 0; i != v1.Length; ++i)
+			{
+				def δ = v1[i] - v2[i];
+				sum += δ * δ;
+			}
+			sum;
+		}
+	}
+}

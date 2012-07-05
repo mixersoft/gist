@@ -1,0 +1,149 @@
+using Emgu.CV.CvEnum;
+using Emgu.CV.Structure;
+using Emgu.CV;
+using Nemerle.Collections;
+using Nemerle.Utility;
+using Profiling;
+using System.IO;
+using System.Math;
+using System;
+
+using SCG = System.Collections.Generic;
+
+public class ClusterEvaluationData : ITaskData
+{
+	private path : string;
+
+	public mutable Value : double;
+
+	public this(path : string)
+	{
+		this.path = path;
+	}
+
+	public HasCache() : bool
+	{
+		File.Exists(path);
+	}
+
+	public Save() : void
+	{
+		File.WriteAllText(path, Value.ToString());
+	}
+
+	public Load() : void
+	{
+		Value = double.Parse(File.ReadAllText(path));
+	}
+}
+
+public class EvaluateClustersTask: ITask
+{
+	public MapItems(items : list[TaskItem]) : list[TaskMapping]
+	{
+		def clusters   = items.Filter(item => item.Name.StartsWith(@"clusters\"));
+		def references = items.Filter(item => item.Name.StartsWith(@"clusters-ref\"));
+
+		def references = Hashtable(references.Map(item => (item.Name, item)));
+
+		mutable mappings = [];
+		foreach (cluster in clusters)
+		{
+			def fileName = Path.GetFileName(cluster.Name);
+			match (references.Get(Path.Combine("clusters-ref", fileName)))
+			{
+			| Some(reference) =>
+				def path = Path.Combine("eval", fileName);
+
+				def result = ClusterEvaluationData(path);
+
+				mappings ::= TaskMapping
+					( inputs  = [ cluster, reference ]
+					, outputs = [ TaskItem(path, result) ]
+					, compute = () => Compute
+						( cluster.Data   :> ClusterData
+						, reference.Data :> ClusterData
+						, result
+						)
+					);
+			| None => ()
+			}
+		}
+		mappings;
+	}
+
+	[ Profile(Recursive) ]
+	private Compute
+		( autoClusters : ClusterData
+		, refClusters  : ClusterData
+		, result       : ClusterEvaluationData
+		) : void
+	{
+		/// <summary>
+		/// Remove the last reference cluster and all items containined in it.
+		/// This cluster is reserved for unsorted items.
+		/// </summary>
+		def PrepareClusters(autoClusters, mutable refClusters)
+		{
+			def set = Set(refClusters[refClusters.Length - 1]);
+			Array.Resize(ref refClusters, refClusters.Length - 1);
+			( autoClusters
+				.MapToArray(clusters => clusters.FilterToArray(id => !set.Contains(id)))
+				.FilterToArray(clusters => clusters.Length > 0)
+			, refClusters
+			);
+		}
+
+		/// <summary>
+		/// Number of discrepancies between two partitions of a set.
+		/// Similar to <a src="http://en.wikipedia.org/wiki/Rand_index">Rand index</a>.
+		/// </summary>
+		def EvaluateClusters(l1, l2)
+		{
+			def PairsCount(n)
+			{
+				n * (n - 1) / 2
+			}
+			def GetContingencyTableSum(l1, l2)
+			{
+				mutable sum = 0;
+				foreach (x in l1 with i)
+				foreach (y in l2 with j)
+					sum += PairsCount(x.Intersect(y).Count);
+				sum;
+			}
+			def GetMarginalSum(l)
+			{
+				l.Fold(0, (x, sum) => sum + PairsCount(x.Count))
+			}
+			def TotalPairsCount(l)
+			{
+				PairsCount(l.Fold(0, (x, sum) => sum + x.Count))
+			}
+
+			def l1 = l1.Map(Set);
+			def l2 = l2.Map(Set);
+
+			def ab = GetContingencyTableSum(l1, l2);
+			def a  = GetMarginalSum(l1);
+			def b  = GetMarginalSum(l2);
+			def n2 = TotalPairsCount(l1);
+
+			// Integer index:
+			// MaxIndex - Index
+			// (a + b) / 2 - ab;
+
+			// Adjusted rand index:
+			// (Index - ExpectedIndex) / (MaxIndex - ExpectedIndex)
+			unchecked (n2 * ab - a * b) / (0.5 * n2 * (a + b) - a * b);
+
+		}
+
+		result.Value = EvaluateClusters
+			( PrepareClusters
+				( autoClusters.Clusters
+				, refClusters.Clusters
+				)
+			);
+	}
+}

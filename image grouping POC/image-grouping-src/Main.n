@@ -24,23 +24,21 @@ module Main
 
 	private Run() : void
 	{
-		TaskManager
+		def parameters = Parameters();
+		def taskManager = TaskManager
 			( tasks =
-				[ LoadJsonDataTask()
+				[ LoadJsonDataTask() : ITask
+				, DownloadDataTask(parameters.DownloadImagePrefix)
+				, ExtractDescriptorsTask(parameters.ImageSize)
+				, ClusterDataTask(parameters.ClusteringThreshold)
+				, LoadReferenceClustersTask()
+				, EvaluateClustersTask()
 				]
 			, persistData = true
-			).Compute();
-		/*
-		def parameters = Parameters();
-		def tasks =
-			[ DownloadData (parameters.DownloadImagePrefix) : ITask
-			, ExtractDescriptors(parameters.ImageSize)
-			, ClusterData (parameters.ClusteringThreshold)
-			, EvaluateClusters ()
-			];
-		tasks.Iter(TaskManager.LazyExecute);
-		*/
-
+			);
+		Console.WriteLine("Items:");
+		taskManager.Items.Iter(Console.WriteLine);
+		taskManager.Compute();
 	}
 
 	private RunThresholdOptimization(min : double, max : double, count : int) : void

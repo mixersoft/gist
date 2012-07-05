@@ -1,0 +1,18 @@
+using Nemerle.Collections;
+using System.IO;
+
+class LoadReferenceClustersTask : ITask
+{
+	public MapItems(_ : list[TaskItem]) : list[TaskMapping]
+	{
+		def MakeMapping(path)
+		{
+			TaskMapping
+				( inputs  = []
+				, outputs = [ TaskItem(path, ClusterData(path)) ]
+				, compute = () => ()
+				)
+		}
+		Directory.GetFiles("clusters-ref").MapToList(MakeMapping);
+	}
+}

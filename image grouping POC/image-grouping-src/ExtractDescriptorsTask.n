@@ -1,0 +1,117 @@
+using Emgu.CV.CvEnum;
+using Emgu.CV.Structure;
+using Emgu.CV;
+using Nemerle.Collections;
+using Nemerle.Utility;
+using Profiling;
+using System.IO;
+using System;
+
+using SCG = System.Collections.Generic;
+
+public class DescriptorData : ITaskData
+{
+	[ Record ]
+	public struct Descriptor
+	{
+		public ID   : string;
+		public Data : array[double];
+	}
+
+	private path : string;
+
+	public mutable Descriptors : array[Descriptor];
+
+	public this(path : string)
+	{
+		this.path = path;
+	}
+
+	public MakePath(id : string) : string
+	{
+		Path.Combine(path, id + ".txt")
+	}
+
+	public HasCache() : bool
+	{
+		Directory.Exists(path);
+	}
+
+	public Save() : void
+	{
+		foreach (descriptor in Descriptors)
+		{
+			File.WriteAllText
+				( path     = MakePath(descriptor.ID)
+				, contents = descriptor.Data.ToString("\r\n")
+				);
+		}
+	}
+
+	public Load() : void
+	{
+		def MakeDescriptor(path)
+		{
+			Descriptor
+				( iD   = Path.GetFileNameWithoutExtension(path)
+				, data = File.ReadAllLines(path).Map(double.Parse)
+				)
+		}
+		Descriptors = Directory.GetFiles(path).Map(MakeDescriptor);
+	}
+}
+
+[ Record ]
+class ExtractDescriptorsTask : ITask
+{
+	private imageSize : int * int;
+
+	public MapItems(items : list[TaskItem]) : list[TaskMapping]
+	{
+		def CreateMapping(item)
+		{
+			def images = item.Data :> ImageCollectionData;
+
+			def path = Path.Combine("descriptors", Path.GetFileName(item.Name));
+
+			def result = DescriptorData(path);
+
+			TaskMapping
+				( inputs  = [ item ]
+				, outputs = [ TaskItem(path, result) ]
+				, compute = () => Compute(images, result)
+				);
+		}
+		items.Filter(item => item.Name.StartsWith(@"images\"))
+			.Map(CreateMapping);
+	}
+
+	[ Profile ]
+	public Compute(images : ImageCollectionData, result : DescriptorData) : void
+	{
+		def ExtractDescriptor =
+			match (imageSize)
+			{
+			| (0, 0) =>
+				fun (path)
+				{
+					using (image = Image.[Bgr, byte](path))
+						Gist.Algorithm.GetColorDescriptor(image, 4, 8, 8, 4);
+				}
+			| (w, h) =>
+				fun (path)
+				{
+					using (image = Image.[Bgr, byte](path))
+					using (image = image.Resize(w, h, INTER.CV_INTER_LINEAR))
+						Gist.Algorithm.GetColorDescriptor(image, 4, 8, 8, 4);
+				}
+			}
+		def MakeDescriptor(id)
+		{
+			def FloatToDouble(n : float) { n :> double }
+			def data = ExtractDescriptor(images.MakePath(id));
+			DescriptorData.Descriptor(id, data.Map(FloatToDouble))
+		}
+		result.Descriptors = images.ImageIDs.Map(MakeDescriptor);
+	}
+}
