@@ -20,7 +20,7 @@ class ClusterDataTask : ITask
 		mutable mappings = [];
 		foreach (item is DescriptorItem in items)
 		{
-			def path = Path.Combine("clusters", Path.GetFileName(item.Name) + ".txt");
+			def path = Path.Combine("clusters", Path.GetFileName(item.Path) + ".txt");
 
 			def result = ClusterItem(path);
 

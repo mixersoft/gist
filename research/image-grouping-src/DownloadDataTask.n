@@ -18,7 +18,7 @@ class DownloadDataTask : ITask
 		mutable mappings = [];
 		foreach (item is JsonItem in items)
 		{
-			def path = Path.Combine("images", Path.GetFileNameWithoutExtension(item.Name));
+			def path = Path.Combine("images", Path.GetFileNameWithoutExtension(item.Path));
 
 			def result = ImageCollectionItem(path);
 

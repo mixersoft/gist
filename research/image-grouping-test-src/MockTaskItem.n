@@ -1,9 +1,11 @@
 using Nemerle.Utility;
+using System;
 
 [ Record ]
-class MockTaskItem : ITaskItem
+class MockTaskItem : ITaskItem, IComparable[MockTaskItem]
 {
-	private path     : string;
+	[ Accessor ] private path : string;
+
 	private hasCache : bool;
 
 	[ Accessor ] private mutable isSaved      : bool;
@@ -25,7 +27,10 @@ class MockTaskItem : ITaskItem
 		isLoaded = true;
 	}
 
-	public Name : string { get { path } }
+	public CompareTo(other : MockTaskItem) : int
+	{
+		this.path.CompareTo(other.path)
+	}
 
 	public Compute() : void
 	{

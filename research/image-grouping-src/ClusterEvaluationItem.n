@@ -1,9 +1,10 @@
 using Nemerle.Collections;
+using Nemerle.Utility;
 using System.IO;
 
 public class ClusterEvaluationItem : ITaskItem
 {
-	private path : string;
+	[ Accessor ] private path : string;
 
 	public mutable Value : double;
 
@@ -27,6 +28,4 @@ public class ClusterEvaluationItem : ITaskItem
 	{
 		Value = double.Parse(File.ReadAllText(path));
 	}
-
-	public Name : string { get { path } }
 }

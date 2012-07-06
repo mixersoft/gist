@@ -8,15 +8,15 @@ public class EvaluateClustersTask: ITask
 {
 	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
 	{
-		def clusters   = items.Filter(item => item.Name.StartsWith(@"clusters\"));
-		def references = items.Filter(item => item.Name.StartsWith(@"clusters-ref\"));
+		def clusters   = items.Filter(item => item.Path.StartsWith(@"clusters\"));
+		def references = items.Filter(item => item.Path.StartsWith(@"clusters-ref\"));
 
-		def references = Hashtable(references.Map(item => (item.Name, item)));
+		def references = Hashtable(references.Map(item => (item.Path, item)));
 
 		mutable mappings = [];
 		foreach (cluster is ClusterItem in clusters)
 		{
-			def fileName = Path.GetFileName(cluster.Name);
+			def fileName = Path.GetFileName(cluster.Path);
 			match (references.Get(Path.Combine("clusters-ref", fileName)))
 			{
 			| Some(reference is ClusterItem ) =>

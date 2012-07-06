@@ -1,4 +1,5 @@
 using Nemerle.Collections;
+using Nemerle.Utility;
 using System.IO;
 
 public class DescriptorItem : ITaskItem
@@ -10,7 +11,7 @@ public class DescriptorItem : ITaskItem
 		public Data : array[double];
 	}
 
-	private path : string;
+	[ Accessor ] private path : string;
 
 	public mutable Descriptors : array[Descriptor];
 
@@ -53,6 +54,4 @@ public class DescriptorItem : ITaskItem
 		}
 		Descriptors = Directory.GetFiles(path).Map(MakeDescriptor);
 	}
-
-	public Name : string { get { path } }
 }

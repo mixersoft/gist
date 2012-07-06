@@ -37,21 +37,21 @@ public class TaskManager
 
 		this.items = Hashtable();
 		foreach (item in items)
-			this.items.Add(item.Name, item);
+			this.items.Add(item.Path, item);
 
 		this.toCompute = Set();
 		foreach (item in items)
 		{
 			unless (item.HasCache())
-				this.toCompute = this.toCompute.Add(item.Name);
+				this.toCompute = this.toCompute.Add(item.Path);
 		}
 
 		this.loaded = Set();
 	}
 
-	public Items : SCG.IEnumerable[string]
+	public Items : SCG.IEnumerable[ITaskItem]
 	{
-		get { items.Keys }
+		get { items.Values }
 	}
 
 	public DiscardItemData(name : string) : void
@@ -63,7 +63,7 @@ public class TaskManager
 
 	public Compute() : void
 	{
-		def ToCompute(item) { toCompute.Contains(item.Name) }
+		def ToCompute(item) { toCompute.Contains(item.Path) }
 		foreach (layer in taskMappings)
 		{
 			foreach (mapping in layer)
@@ -74,16 +74,16 @@ public class TaskManager
 				{
 					foreach (item in i)
 					{
-						when (!loaded.Contains(item.Name) && item.HasCache())
+						when (!loaded.Contains(item.Path) && item.HasCache())
 						{
-							loaded = loaded.Add(item.Name);
+							loaded = loaded.Add(item.Path);
 							item.Load();
 						}
 					}
 					when (displayProgress)
-						Console.WriteLine($"..$i -> ..$o");
+						Console.WriteLine($"..$(i.Map(_.Path)) -> ..$o.Map(_.Path))");
 					mapping.Compute();
-					toCompute = toCompute.ReplaceList(o.Map(_.Name));
+					toCompute = toCompute.ReplaceList(o.Map(_.Path));
 				}
 			}
 		}

@@ -7,31 +7,28 @@ using System;
 public class PersistedTaskManagerTest
 {
 	private mutable taskManager : TaskManager;
-	private mutable items       : Hashtable[string, ITaskItem];
+	private mutable items       : list[MockTaskItem];
 
 	[ SetUp ]
 	public Setup() : void
 	{
-		def AddTaskItem(name, hasCache)
+		def MakeTaskItem(path, hasCache)
 		{
-			items.Add
-				( name
-				,  MockTaskItem
-					( path         = name
-					, hasCache     = hasCache
-					, isSaved      = false
-					, isLoaded     = false
-					, computeCount = 0
-					)
-				);
+			MockTaskItem
+				( path         = path
+				, hasCache     = hasCache
+				, isSaved      = false
+				, isLoaded     = false
+				, computeCount = 0
+				)
 		}
-		items = Hashtable();
-		[ ("item-1", false)
-		, ("item-2", true)
-		, ("item-3", false)
-		, ("item-4", true)
-		, ("item-5", false)
-		].Iter(AddTaskItem);
+		items =
+			[ ("item-1", false)
+			, ("item-2", true)
+			, ("item-3", false)
+			, ("item-4", true)
+			, ("item-5", false)
+			].Map(MakeTaskItem);
 
 		taskManager = TaskManager
 			( tasks =
@@ -66,22 +63,16 @@ public class PersistedTaskManagerTest
 	[ Test ]
 	public TestConstruction() : void
 	{
-		def IsLoaded(name)
-		{
-			(items[name] :> MockTaskItem).IsLoaded
-		}
-
-		def items = taskManager.Items.ToArray();
-		Array.Sort(items);
+		def items = taskManager.Items.Map(ToMockTaskItem);
 
 		CollectionAssert.AreEquivalent
 			( expected = $[1..5].Map(n => $"item-$n")
-			, actual   = items
+			, actual   = items.Map(_.Path)
 			, message  = "Were all items discovered?"
 			);
 
 		Assert.IsFalse
-			( condition = items.Exists(IsLoaded)
+			( condition = items.Exists(_.IsLoaded)
 			, message   = "Were any items loaded on startup?"
 			);
 	}
@@ -89,45 +80,31 @@ public class PersistedTaskManagerTest
 	[ Test ]
 	public TestCompute() : void
 	{
-		def IsLoaded(name)
-		{
-			(items[name] :> MockTaskItem).IsLoaded
-		}
-		def IsSaved(name)
-		{
-			(items[name] :> MockTaskItem).IsSaved
-		}
-
 		taskManager.Compute();
 
-		def items = taskManager.Items.ToArray();
-		Array.Sort(items);
+		def items = taskManager.Items.Map(ToMockTaskItem).Sort((x, y) => x.CompareTo(y));
 
 		CollectionAssert.AreEqual
 			( expected = [ 1, 0, 1, 1, 1 ]
-			, actual   = items.Map(GetComputeCount)
+			, actual   = items.Map(_.ComputeCount)
 			, message  = "Were the appropriate items computed?"
 			);
 
 		CollectionAssert.AreEqual
 			( expected = [ false, true, false, false, false ]
-			, actual   = items.Map(IsLoaded)
+			, actual   = items.Map(_.IsLoaded)
 			, message  = "Were the appropriate items loaded?"
 			);
 
 		CollectionAssert.AreEqual
 			( expected = [ true, false, true, true, true ]
-			, actual   = items.Map(IsSaved)
+			, actual   = items.Map(_.IsSaved)
 			, message  = "Were the appropriate items saved?"
 			);
 	}
 
-	private GetComputeCount(itemName : string) : int
+	private static ToMockTaskItem(item : ITaskItem) : MockTaskItem
 	{
-		match (items.Get(itemName))
-		{
-		| Some(item) => (item :> MockTaskItem).ComputeCount
-		| None       => 0
-		}
+		item :> MockTaskItem
 	}
 }

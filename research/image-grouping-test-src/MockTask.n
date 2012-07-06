@@ -7,14 +7,18 @@ class MockTask : ITask
 	public Name : string;
 
 	private itemMap : list[list[string] * list[string]];
-	private items   : Hashtable[string, ITaskItem];
+	private items   : list[MockTaskItem];
 
-	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
+	public MapItems(_ : list[ITaskItem]) : list[TaskMapping]
 	{
+		def GetItemsByPath(paths)
+		{
+			paths.Map(path => items.Find(item => item.Path == path).Value)
+		}
 		def CreateMapping(i, o)
 		{
-			def i = i.Map(name => items.Find(item => item.Name == name).Value);
-			def o = o.Map(name => this.items[name]);
+			def i = GetItemsByPath(i);
+			def o = GetItemsByPath(o);
 			TaskMapping
 				( inputs  = i
 				, outputs = o

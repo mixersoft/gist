@@ -1,6 +1,6 @@
 public interface ITaskItem
 {
-	Name : string { get };
+	Path : string { get };
 
 	HasCache() : bool;
 	Save()     : void;
