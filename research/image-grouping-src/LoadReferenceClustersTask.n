@@ -3,13 +3,13 @@ using System.IO;
 
 class LoadReferenceClustersTask : ITask
 {
-	public MapItems(_ : list[TaskItem]) : list[TaskMapping]
+	public MapItems(_ : list[ITaskItem]) : list[TaskMapping]
 	{
 		def MakeMapping(path)
 		{
 			TaskMapping
 				( inputs  = []
-				, outputs = [ TaskItem(path, ClusterData(path)) ]
+				, outputs = [ ClusterItem(path) ]
 				, compute = () => ()
 				)
 		}

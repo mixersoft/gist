@@ -7,7 +7,7 @@ using System;
 public class PersistedTaskManagerTest
 {
 	private mutable taskManager : TaskManager;
-	private mutable items       : Hashtable[string, TaskItem];
+	private mutable items       : Hashtable[string, ITaskItem];
 
 	[ SetUp ]
 	public Setup() : void
@@ -16,14 +16,12 @@ public class PersistedTaskManagerTest
 		{
 			items.Add
 				( name
-				, TaskItem
-					( name = name
-					, data = MockTaskData
-						( hasCache     = hasCache
-						, isSaved      = false
-						, isLoaded     = false
-						, computeCount = 0
-						)
+				,  MockTaskItem
+					( path         = name
+					, hasCache     = hasCache
+					, isSaved      = false
+					, isLoaded     = false
+					, computeCount = 0
 					)
 				);
 		}
@@ -70,7 +68,7 @@ public class PersistedTaskManagerTest
 	{
 		def IsLoaded(name)
 		{
-			(items[name].Data :> MockTaskData).IsLoaded
+			(items[name] :> MockTaskItem).IsLoaded
 		}
 
 		def items = taskManager.Items.ToArray();
@@ -93,11 +91,11 @@ public class PersistedTaskManagerTest
 	{
 		def IsLoaded(name)
 		{
-			(items[name].Data :> MockTaskData).IsLoaded
+			(items[name] :> MockTaskItem).IsLoaded
 		}
 		def IsSaved(name)
 		{
-			(items[name].Data :> MockTaskData).IsSaved
+			(items[name] :> MockTaskItem).IsSaved
 		}
 
 		taskManager.Compute();
@@ -128,7 +126,7 @@ public class PersistedTaskManagerTest
 	{
 		match (items.Get(itemName))
 		{
-		| Some(item) => (item.Data :> MockTaskData).ComputeCount
+		| Some(item) => (item :> MockTaskItem).ComputeCount
 		| None       => 0
 		}
 	}

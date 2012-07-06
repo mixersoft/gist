@@ -1,6 +1,0 @@
-public interface ITaskData
-{
-	HasCache() : bool;
-	Save()     : void;
-	Load()     : void;
-}

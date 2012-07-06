@@ -4,42 +4,6 @@ using System.IO;
 using System.Net;
 using System;
 
-using SCG = System.Collections.Generic;
-
-/// <summary>
-/// This data item holds image paths without the data.
-/// </summary>
-class ImageCollectionData : ITaskData
-{
-	public path : string;
-
-	public mutable ImageIDs : array[string];
-
-	public this(path : string)
-	{
-		this.path = path;
-	}
-
-	public MakePath(id : string) : string
-	{
-		Path.Combine(path, id + ".jpg")
-	}
-
-	public HasCache() : bool
-	{
-		Directory.Exists(path);
-	}
-
-	public Save() : void
-	{
-	}
-
-	public Load() : void
-	{
-		ImageIDs = Directory.GetFiles(path).Map(Path.GetFileNameWithoutExtension);
-	}
-}
-
 class DownloadDataTask : ITask
 {
 	private downloadPrefix : string;
@@ -49,27 +13,25 @@ class DownloadDataTask : ITask
 		this.downloadPrefix = downloadPrefix;
 	}
 
-	public MapItems(items : list[TaskItem]) : list[TaskMapping]
+	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
 	{
-		def CreateMapping(item)
+		mutable mappings = [];
+		foreach (item is JsonItem in items)
 		{
-			def jsonData = item.Data :> JsonData;
-
 			def path = Path.Combine("images", Path.GetFileNameWithoutExtension(item.Name));
 
-			def result = ImageCollectionData(path);
+			def result = ImageCollectionItem(path);
 
-			TaskMapping
+			mappings ::= TaskMapping
 				( inputs  = [ item ]
-				, outputs = [ TaskItem(path, result) ]
-				, compute = () => Compute(jsonData, result)
+				, outputs = [ result ]
+				, compute = () => Compute(item, result)
 				);
 		}
-		items.Filter(item => item.Name.StartsWith(@"data\"))
-			.Map(CreateMapping);
+		mappings;
 	}
 
-	public Compute(jsonData : JsonData, result : ImageCollectionData) : void
+	public Compute(jsonData : JsonItem, result : ImageCollectionItem) : void
 	{
 		def client = WebClient();
 

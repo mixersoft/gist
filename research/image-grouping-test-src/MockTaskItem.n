@@ -1,8 +1,9 @@
 using Nemerle.Utility;
 
 [ Record ]
-class MockTaskData : ITaskData
+class MockTaskItem : ITaskItem
 {
+	private path     : string;
 	private hasCache : bool;
 
 	[ Accessor ] private mutable isSaved      : bool;
@@ -23,6 +24,8 @@ class MockTaskData : ITaskData
 	{
 		isLoaded = true;
 	}
+
+	public Name : string { get { path } }
 
 	public Compute() : void
 	{

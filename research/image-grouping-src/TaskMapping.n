@@ -1,7 +1,7 @@
 [ Record ]
 public class TaskMapping
 {
-	public Inputs  : list[TaskItem];
-	public Outputs : list[TaskItem];
+	public Inputs  : list[ITaskItem];
+	public Outputs : list[ITaskItem];
 	public Compute : void -> void;
 }

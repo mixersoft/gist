@@ -1,2 +1,8 @@
-using System.IO;
+public interface ITaskItem
+{
+	Name : string { get };
 
+	HasCache() : bool;
+	Save()     : void;
+	Load()     : void;
+}

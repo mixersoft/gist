@@ -7,9 +7,9 @@ class MockTask : ITask
 	public Name : string;
 
 	private itemMap : list[list[string] * list[string]];
-	private items   : Hashtable[string, TaskItem];
+	private items   : Hashtable[string, ITaskItem];
 
-	public MapItems(items : list[TaskItem]) : list[TaskMapping]
+	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
 	{
 		def CreateMapping(i, o)
 		{
@@ -24,9 +24,9 @@ class MockTask : ITask
 		itemMap.Map(CreateMapping);
 	}
 
-	private Compute(outputs : list[TaskItem]) : void
+	private Compute(outputs : list[ITaskItem]) : void
 	{
-		foreach (output in outputs)
-			(output.Data :> MockTaskData).Compute();
+		foreach (output is MockTaskItem in outputs)
+			output.Compute();
 	}
 }

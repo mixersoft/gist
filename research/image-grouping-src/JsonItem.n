@@ -1,0 +1,60 @@
+using Nemerle.Collections;
+using Newtonsoft.Json.Linq;
+using System.IO;
+
+public class JsonItem : ITaskItem
+{
+	public class PhotoInfo
+	{
+		public ID      : string;
+		public RootSrc : string;
+
+		public this(id : string, rootSrc : string)
+		{
+			ID      = id;
+			RootSrc = rootSrc;
+		}
+	}
+
+	private path : string;
+
+	public mutable Photos  : list[PhotoInfo];
+	public mutable BaseUrl : string;
+
+	public this(path : string)
+	{
+		this.path = path;
+	}
+
+	public HasCache() : bool
+	{
+		File.Exists(path);
+	}
+
+	public Save() : void
+	{
+	}
+
+	public Load() : void
+	{
+		def data = JObject.Parse(File.ReadAllText(path));
+		System.Console.WriteLine($"Loading: $path");
+
+		def castingCall = data["response"]["castingCall"];
+
+		BaseUrl = "http://dev.snaphappi.com" + castingCall["CastingCall"]["Auditions"]["Baseurl"];
+
+		def GetPhotoInfo(record)
+		{
+			PhotoInfo
+				( id      = record["id"].ToString()
+				, rootSrc = record["Photo"]["Img"]["Src"]["rootSrc"].ToString()
+				)
+		}
+		Photos = castingCall["CastingCall"]["Auditions"]["Audition"]
+			.Children()
+			.MapToList(GetPhotoInfo);
+	}
+
+	public Name : string { get { path } }
+}

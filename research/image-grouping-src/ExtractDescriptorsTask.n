@@ -7,89 +7,31 @@ using Profiling;
 using System.IO;
 using System;
 
-using SCG = System.Collections.Generic;
-
-public class DescriptorData : ITaskData
-{
-	[ Record ]
-	public struct Descriptor
-	{
-		public ID   : string;
-		public Data : array[double];
-	}
-
-	private path : string;
-
-	public mutable Descriptors : array[Descriptor];
-
-	public this(path : string)
-	{
-		this.path = path;
-	}
-
-	public MakePath(id : string) : string
-	{
-		Path.Combine(path, id + ".txt")
-	}
-
-	public HasCache() : bool
-	{
-		Directory.Exists(path);
-	}
-
-	public Save() : void
-	{
-		_ = Directory.CreateDirectory("descriptors");
-		_ = Directory.CreateDirectory(path);
-		foreach (descriptor in Descriptors)
-		{
-			File.WriteAllText
-				( path     = MakePath(descriptor.ID)
-				, contents = descriptor.Data.ToString("\r\n")
-				);
-		}
-	}
-
-	public Load() : void
-	{
-		def MakeDescriptor(path)
-		{
-			Descriptor
-				( iD   = Path.GetFileNameWithoutExtension(path)
-				, data = File.ReadAllLines(path).Map(double.Parse)
-				)
-		}
-		Descriptors = Directory.GetFiles(path).Map(MakeDescriptor);
-	}
-}
-
 [ Record ]
 class ExtractDescriptorsTask : ITask
 {
 	private imageSize : int * int;
 
-	public MapItems(items : list[TaskItem]) : list[TaskMapping]
+	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
 	{
-		def CreateMapping(item)
+		mutable mappings = [];
+		foreach (item is ImageCollectionItem in items)
 		{
-			def images = item.Data :> ImageCollectionData;
-
 			def path = Path.Combine("descriptors", Path.GetFileName(item.Name));
 
-			def result = DescriptorData(path);
+			def result = DescriptorItem(path);
 
-			TaskMapping
+			mappings ::= TaskMapping
 				( inputs  = [ item ]
-				, outputs = [ TaskItem(path, result) ]
-				, compute = () => Compute(images, result)
+				, outputs = [ result ]
+				, compute = () => Compute(item, result)
 				);
 		}
-		items.Filter(item => item.Name.StartsWith(@"images\"))
-			.Map(CreateMapping);
+		mappings;
 	}
 
 	[ Profile(Recursive) ]
-	public Compute(images : ImageCollectionData, result : DescriptorData) : void
+	public Compute(images : ImageCollectionItem, result : DescriptorItem) : void
 	{
 		def ExtractDescriptor =
 			match (imageSize)
@@ -112,7 +54,7 @@ class ExtractDescriptorsTask : ITask
 		{
 			def FloatToDouble(n : float) { n :> double }
 			def data = ExtractDescriptor(images.MakePath(id));
-			DescriptorData.Descriptor(id, data.Map(FloatToDouble))
+			DescriptorItem.Descriptor(id, data.Map(FloatToDouble))
 		}
 		result.Descriptors = images.ImageIDs.Map(MakeDescriptor);
 	}

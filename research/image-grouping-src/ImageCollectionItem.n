@@ -1,0 +1,38 @@
+using Nemerle.Collections;
+using System.IO;
+
+/// <summary>
+/// This data item holds image paths without the data.
+/// </summary>
+class ImageCollectionItem : ITaskItem
+{
+	private path : string;
+
+	public mutable ImageIDs : array[string];
+
+	public this(path : string)
+	{
+		this.path = path;
+	}
+
+	public MakePath(id : string) : string
+	{
+		Path.Combine(path, id + ".jpg")
+	}
+
+	public HasCache() : bool
+	{
+		Directory.Exists(path);
+	}
+
+	public Save() : void
+	{
+	}
+
+	public Load() : void
+	{
+		ImageIDs = Directory.GetFiles(path).Map(Path.GetFileNameWithoutExtension);
+	}
+
+	public Name : string { get { path } }
+}

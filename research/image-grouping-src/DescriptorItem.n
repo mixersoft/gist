@@ -1,0 +1,58 @@
+using Nemerle.Collections;
+using System.IO;
+
+public class DescriptorItem : ITaskItem
+{
+	[ Record ]
+	public struct Descriptor
+	{
+		public ID   : string;
+		public Data : array[double];
+	}
+
+	private path : string;
+
+	public mutable Descriptors : array[Descriptor];
+
+	public this(path : string)
+	{
+		this.path = path;
+	}
+
+	public MakePath(id : string) : string
+	{
+		Path.Combine(path, id + ".txt")
+	}
+
+	public HasCache() : bool
+	{
+		Directory.Exists(path);
+	}
+
+	public Save() : void
+	{
+		_ = Directory.CreateDirectory("descriptors");
+		_ = Directory.CreateDirectory(path);
+		foreach (descriptor in Descriptors)
+		{
+			File.WriteAllText
+				( path     = MakePath(descriptor.ID)
+				, contents = descriptor.Data.ToString("\r\n")
+				);
+		}
+	}
+
+	public Load() : void
+	{
+		def MakeDescriptor(path)
+		{
+			Descriptor
+				( iD   = Path.GetFileNameWithoutExtension(path)
+				, data = File.ReadAllLines(path).Map(double.Parse)
+				)
+		}
+		Descriptors = Directory.GetFiles(path).Map(MakeDescriptor);
+	}
+
+	public Name : string { get { path } }
+}

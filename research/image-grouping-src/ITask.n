@@ -1,4 +1,4 @@
 public interface ITask
 {
-	MapItems(items : list[TaskItem]) : list[TaskMapping];
+	MapItems(items : list[ITaskItem]) : list[TaskMapping];
 }

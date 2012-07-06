@@ -6,133 +6,35 @@ using Nemerle.Utility;
 using Newtonsoft.Json.Linq;
 using Profiling;
 using System.IO;
-using System.Math;
-using System.Net;
 using System;
 
 using SCG = System.Collections.Generic;
-
-public class ClusterData : ITaskData
-{
-	private path : string;
-
-	public mutable Clusters : array[array[string]];
-
-	public this(path : string)
-	{
-		this.path = path;
-	}
-
-	public HasCache() : bool
-	{
-		File.Exists(path);
-	}
-
-	public Save() : void
-	{
-		def WriteClusters(clusters, path)
-		{
-			using (file = File.CreateText(path))
-			{
-				file.WriteLine(clusters.Length);
-				foreach (cluster in clusters)
-				{
-					file.WriteLine(cluster.Length);
-					foreach (id in cluster)
-						file.WriteLine(id);
-				}
-			}
-		}
-
-		def WriteHtml(clusters, path, imageDir)
-		{
-			using (writer = File.CreateText(path))
-			{
-				[ "<html><body>"
-				, "<head><style type='text/css'>"
-				, "	.even { background-color : #C1B398 }"
-				, "	.odd  { background-color : #ACCEC0 }"
-				, "	span { display : block; padding : 8px; }"
-				, "</style></head>"
-				].Iter(writer.WriteLine);
-
-				writer.WriteLine("<body>");
-
-				foreach (cluster in clusters with i)
-				{
-					def spanClass = if (i % 2 == 0) "even" else "odd";
-					writer.WriteLine($"<span class='$spanClass'>");
-
-					foreach (id in cluster)
-					{
-						def src = Path.Combine(imageDir, id + ".jpg");
-						writer.WriteLine($"<img height='64' src='$src'>");
-					}
-
-					writer.WriteLine("</span>");
-				}
-
-				writer.WriteLine("</body></html>");
-			}
-		}
-
-		def MakeHtmlPath(path)
-		{
-			Path.Combine("clusters-html", Path.GetFileNameWithoutExtension(path) + ".html");
-		}
-
-		def imageDir = Path.Combine(@"..\images", Path.GetFileNameWithoutExtension(path));
-
-		_ = Directory.CreateDirectory("clusters");
-		_ = Directory.CreateDirectory("clusters-html");
-
-		WriteClusters(Clusters, path);
-		WriteHtml(Clusters, MakeHtmlPath(path), imageDir);
-	}
-
-	public Load() : void
-	{
-		using (file = File.OpenText(path))
-		{
-			Clusters = array(int.Parse(file.ReadLine()));
-			for (mutable i = 0; i != Clusters.Length; ++i)
-			{
-				def cluster = array(int.Parse(file.ReadLine()));
-				for (mutable j = 0; j != cluster.Length; ++j)
-					cluster[j] = file.ReadLine();
-				Clusters[i] = cluster;
-			}
-		}
-	}
-}
 
 [ Record ]
 class ClusterDataTask : ITask
 {
 	private threshold : double;
 
-	public MapItems(items : list[TaskItem]) : list[TaskMapping]
+	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
 	{
-		def CreateMapping(item)
+		mutable mappings = [];
+		foreach (item is DescriptorItem in items)
 		{
-			def images = item.Data :> DescriptorData;
-
 			def path = Path.Combine("clusters", Path.GetFileName(item.Name) + ".txt");
 
-			def result = ClusterData(path);
+			def result = ClusterItem(path);
 
-			TaskMapping
+			mappings ::= TaskMapping
 				( inputs  = [ item ]
-				, outputs = [ TaskItem(path, result) ]
-				, compute = () => Compute(images, result)
+				, outputs = [ result ]
+				, compute = () => Compute(item, result)
 				);
 		}
-		items.Filter(item => item.Name.StartsWith(@"descriptors\"))
-			.Map(CreateMapping);
+		mappings;
 	}
 
 	[ Profile(Recursive) ]
-	public Compute(descriptors : DescriptorData, result : ClusterData) : void
+	public Compute(descriptors : DescriptorItem, result : ClusterItem) : void
 	{
 		def Cluster(descriptors) : array[array[string]]
 		{

@@ -8,7 +8,7 @@ public class TaskManager
 	private persistData     : bool;
 	private displayProgress : bool;
 
-	private items        : Hashtable[string, TaskItem];
+	private items        : Hashtable[string, ITaskItem];
 	private taskMappings : list[list[TaskMapping]];
 
 	private mutable toCompute : Set[string];
@@ -42,7 +42,7 @@ public class TaskManager
 		this.toCompute = Set();
 		foreach (item in items)
 		{
-			unless (item.Data.HasCache())
+			unless (item.HasCache())
 				this.toCompute = this.toCompute.Add(item.Name);
 		}
 
@@ -74,10 +74,10 @@ public class TaskManager
 				{
 					foreach (item in i)
 					{
-						when (!loaded.Contains(item.Name) && item.Data.HasCache())
+						when (!loaded.Contains(item.Name) && item.HasCache())
 						{
 							loaded = loaded.Add(item.Name);
-							item.Data.Load();
+							item.Load();
 						}
 					}
 					when (displayProgress)
@@ -91,8 +91,9 @@ public class TaskManager
 		{
 			foreach (name in toCompute)
 			{
-				Console.WriteLine($"Save $name");
-				items[name].Data.Save();
+				when (displayProgress)
+					Console.WriteLine($"Save $name");
+				items[name].Save();
 			}
 		}
 		toCompute = toCompute.Clear();

@@ -1,0 +1,32 @@
+using Nemerle.Collections;
+using System.IO;
+
+public class ClusterEvaluationItem : ITaskItem
+{
+	private path : string;
+
+	public mutable Value : double;
+
+	public this(path : string)
+	{
+		this.path = path;
+	}
+
+	public HasCache() : bool
+	{
+		File.Exists(path);
+	}
+
+	public Save() : void
+	{
+		_ = Directory.CreateDirectory("eval");
+		File.WriteAllText(path, Value.ToString());
+	}
+
+	public Load() : void
+	{
+		Value = double.Parse(File.ReadAllText(path));
+	}
+
+	public Name : string { get { path } }
+}
