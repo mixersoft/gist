@@ -60,7 +60,8 @@ public class PersistedTaskManagerTest
 					, items = items
 					)
 				]
-			, persistData = true
+			, persistData     = true
+			, displayProgress = false
 			);
 	}
 

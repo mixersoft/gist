@@ -76,10 +76,18 @@ public class ClusterData : ITaskData
 			}
 		}
 
+		def MakeHtmlPath(path)
+		{
+			Path.Combine("clusters-html", Path.GetFileNameWithoutExtension(path) + ".html");
+		}
+
 		def imageDir = Path.Combine(@"..\images", Path.GetFileNameWithoutExtension(path));
 
+		_ = Directory.CreateDirectory("clusters");
+		_ = Directory.CreateDirectory("clusters-html");
+
 		WriteClusters(Clusters, path);
-		WriteHtml(Clusters, path, imageDir);
+		WriteHtml(Clusters, MakeHtmlPath(path), imageDir);
 	}
 
 	public Load() : void

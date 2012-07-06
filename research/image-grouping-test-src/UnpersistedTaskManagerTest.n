@@ -60,7 +60,8 @@ public class UnpersistedTaskManagerTest
 					, items = items
 					)
 				]
-			, persistData = false
+			, persistData     = false
+			, displayProgress = false
 			);
 	}
 

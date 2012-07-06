@@ -39,6 +39,8 @@ public class DescriptorData : ITaskData
 
 	public Save() : void
 	{
+		_ = Directory.CreateDirectory("descriptors");
+		_ = Directory.CreateDirectory(path);
 		foreach (descriptor in Descriptors)
 		{
 			File.WriteAllText
@@ -86,7 +88,7 @@ class ExtractDescriptorsTask : ITask
 			.Map(CreateMapping);
 	}
 
-	[ Profile ]
+	[ Profile(Recursive) ]
 	public Compute(images : ImageCollectionData, result : DescriptorData) : void
 	{
 		def ExtractDescriptor =
@@ -95,15 +97,15 @@ class ExtractDescriptorsTask : ITask
 			| (0, 0) =>
 				fun (path)
 				{
-					using (image = Image.[Bgr, byte](path))
-						Gist.Algorithm.GetColorDescriptor(image, 4, 8, 8, 4);
+					using (image = Image.[Gray, byte](path))
+						Gist.Algorithm.GetBwDescriptor(image, 4, 8, 8, 4);
 				}
 			| (w, h) =>
 				fun (path)
 				{
-					using (image = Image.[Bgr, byte](path))
+					using (image = Image.[Gray, byte](path))
 					using (image = image.Resize(w, h, INTER.CV_INTER_LINEAR))
-						Gist.Algorithm.GetColorDescriptor(image, 4, 8, 8, 4);
+						Gist.Algorithm.GetBwDescriptor(image, 4, 8, 8, 4);
 				}
 			}
 		def MakeDescriptor(id)

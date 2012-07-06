@@ -28,6 +28,7 @@ public class ClusterEvaluationData : ITaskData
 
 	public Save() : void
 	{
+		_ = Directory.CreateDirectory("eval");
 		File.WriteAllText(path, Value.ToString());
 	}
 

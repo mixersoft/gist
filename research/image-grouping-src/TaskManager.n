@@ -5,7 +5,8 @@ using SCG = System.Collections.Generic;
 
 public class TaskManager
 {
-	private persistData : bool;
+	private persistData     : bool;
+	private displayProgress : bool;
 
 	private items        : Hashtable[string, TaskItem];
 	private taskMappings : list[list[TaskMapping]];
@@ -13,9 +14,14 @@ public class TaskManager
 	private mutable toCompute : Set[string];
 	private mutable loaded    : Set[string];
 
-	public this(tasks : list[ITask], persistData : bool)
+	public this
+		( tasks           : list[ITask]
+		, persistData     : bool
+		, displayProgress : bool
+		)
 	{
-		this.persistData = persistData;
+		this.persistData     = persistData;
+		this.displayProgress = displayProgress;
 
 		mutable taskMappings = [];
 		mutable items        = [];
@@ -74,7 +80,8 @@ public class TaskManager
 							item.Data.Load();
 						}
 					}
-					Console.WriteLine($"..$i -> ..$o");
+					when (displayProgress)
+						Console.WriteLine($"..$i -> ..$o");
 					mapping.Compute();
 					toCompute = toCompute.ReplaceList(o.Map(_.Name));
 				}
@@ -83,7 +90,10 @@ public class TaskManager
 		when (persistData)
 		{
 			foreach (name in toCompute)
+			{
+				Console.WriteLine($"Save $name");
 				items[name].Data.Save();
+			}
 		}
 		toCompute = toCompute.Clear();
 	}
