@@ -1,0 +1,624 @@
+{
+   "message" : "",
+   "response" : {
+      "castingCall" : {
+         "CastingCall" : {
+            "Auditions" : {
+               "Audition" : [
+                  {
+                     "Clusters" : "",
+                     "Credits" : "",
+                     "IsCast" : false,
+                     "LayoutHint" : {
+                        "FocusCenter" : {
+                           "Scale" : 4000,
+                           "X" : 2000,
+                           "Y" : 1336
+                        },
+                        "FocusVector" : {
+                           "Direction" : 0,
+                           "Magnitude" : 0
+                        }
+                     },
+                     "Photo" : {
+                        "BatchId" : "1270599803",
+                        "CameraId" : "",
+                        "Caption" : "P1010577",
+                        "Created" : "2010-04-06 14:39:02",
+                        "DateTaken" : "2009-09-09 15:23:59",
+                        "ExifColorSpace" : 1,
+                        "ExifFlash" : 0,
+                        "ExifOrientation" : 1,
+                        "Fix" : {
+                           "Crops" : "",
+                           "Rating" : "2.00",
+                           "Rotate" : "1",
+                           "Score" : "1.5",
+                           "Scrub" : "",
+                           "Votes" : "2"
+                        },
+                        "H" : 2672,
+                        "Img" : {
+                           "Src" : {
+                              "H" : 428,
+                              "Orientation" : 1,
+                              "W" : 640,
+                              "rootSrc" : "stage7/4bbb3976-d510-4283-91ce-11a0f67883f5.jpg"
+                           }
+                        },
+                        "Keyword" : "",
+                        "TS" : 1252509839,
+                        "W" : 4000,
+                        "id" : "4bbb3976-d510-4283-91ce-11a0f67883f5",
+                        "isOwner" : true,
+                        "origSrc" : "/venice/P1010577.JPG"
+                     },
+                     "Shot" : {
+                        "count" : "2",
+                        "id" : "4de5b9a2-9b8c-47fe-86e5-0494f67883f5"
+                     },
+                     "SubstitutionREF" : "4de5b9a2-9b8c-47fe-86e5-0494f67883f5",
+                     "Tags" : [],
+                     "id" : "4bbb3976-d510-4283-91ce-11a0f67883f5",
+                     "lastPerformed" : null
+                  },
+                  {
+                     "Clusters" : "",
+                     "Credits" : "",
+                     "IsCast" : false,
+                     "LayoutHint" : {
+                        "FocusCenter" : {
+                           "Scale" : 4000,
+                           "X" : 2000,
+                           "Y" : 1336
+                        },
+                        "FocusVector" : {
+                           "Direction" : 0,
+                           "Magnitude" : 0
+                        }
+                     },
+                     "Photo" : {
+                        "BatchId" : "1270599803",
+                        "CameraId" : "",
+                        "Caption" : "P1010579",
+                        "Created" : "2010-04-06 14:39:02",
+                        "DateTaken" : "2009-09-09 16:49:09",
+                        "ExifColorSpace" : 1,
+                        "ExifFlash" : 0,
+                        "ExifOrientation" : 1,
+                        "Fix" : {
+                           "Crops" : "",
+                           "Rating" : "5.00",
+                           "Rotate" : "1",
+                           "Score" : "3.0",
+                           "Scrub" : "",
+                           "Votes" : "2"
+                        },
+                        "H" : 2672,
+                        "Img" : {
+                           "Src" : {
+                              "H" : 428,
+                              "Orientation" : 1,
+                              "W" : 640,
+                              "rootSrc" : "stage4/4bbb3976-40b4-4c39-a20d-11a0f67883f5.jpg"
+                           }
+                        },
+                        "Keyword" : "",
+                        "TS" : 1252514949,
+                        "W" : 4000,
+                        "id" : "4bbb3976-40b4-4c39-a20d-11a0f67883f5",
+                        "isOwner" : true,
+                        "origSrc" : "/venice/P1010579.JPG"
+                     },
+                     "Shot" : {
+                        "count" : "",
+                        "id" : ""
+                     },
+                     "SubstitutionREF" : null,
+                     "Tags" : [],
+                     "id" : "4bbb3976-40b4-4c39-a20d-11a0f67883f5",
+                     "lastPerformed" : null
+                  },
+                  {
+                     "Clusters" : "",
+                     "Credits" : "",
+                     "IsCast" : false,
+                     "LayoutHint" : {
+                        "FocusCenter" : {
+                           "Scale" : 4000,
+                           "X" : 2000,
+                           "Y" : 1336
+                        },
+                        "FocusVector" : {
+                           "Direction" : 0,
+                           "Magnitude" : 0
+                        }
+                     },
+                     "Photo" : {
+                        "BatchId" : "1270599803",
+                        "CameraId" : "",
+                        "Caption" : "P1010580",
+                        "Created" : "2010-04-06 14:39:02",
+                        "DateTaken" : "2009-09-09 16:50:53",
+                        "ExifColorSpace" : 1,
+                        "ExifFlash" : 0,
+                        "ExifOrientation" : 1,
+                        "Fix" : {
+                           "Crops" : "",
+                           "Rating" : "1.00",
+                           "Rotate" : "1",
+                           "Score" : "1.0",
+                           "Scrub" : "",
+                           "Votes" : "2"
+                        },
+                        "H" : 2672,
+                        "Img" : {
+                           "Src" : {
+                              "H" : 428,
+                              "Orientation" : 1,
+                              "W" : 640,
+                              "rootSrc" : "stage0/4bbb3976-3e78-4904-85ae-11a0f67883f5.jpg"
+                           }
+                        },
+                        "Keyword" : "",
+                        "TS" : 1252515053,
+                        "W" : 4000,
+                        "id" : "4bbb3976-3e78-4904-85ae-11a0f67883f5",
+                        "isOwner" : true,
+                        "origSrc" : "/venice/P1010580.JPG"
+                     },
+                     "Shot" : {
+                        "count" : "2",
+                        "id" : "4de5b9a2-9b8c-47fe-86e5-0494f67883f5"
+                     },
+                     "SubstitutionREF" : "4de5b9a2-9b8c-47fe-86e5-0494f67883f5",
+                     "Tags" : [],
+                     "id" : "4bbb3976-3e78-4904-85ae-11a0f67883f5",
+                     "lastPerformed" : null
+                  },
+                  {
+                     "Clusters" : "",
+                     "Credits" : "",
+                     "IsCast" : false,
+                     "LayoutHint" : {
+                        "FocusCenter" : {
+                           "Scale" : 4000,
+                           "X" : 2000,
+                           "Y" : 1336
+                        },
+                        "FocusVector" : {
+                           "Direction" : 0,
+                           "Magnitude" : 0
+                        }
+                     },
+                     "Photo" : {
+                        "BatchId" : "1270599803",
+                        "CameraId" : "",
+                        "Caption" : "P1010581",
+                        "Created" : "2010-04-06 14:39:02",
+                        "DateTaken" : "2009-09-09 16:53:17",
+                        "ExifColorSpace" : 1,
+                        "ExifFlash" : 0,
+                        "ExifOrientation" : 1,
+                        "Fix" : {
+                           "Crops" : "",
+                           "Rating" : "3.00",
+                           "Rotate" : "1",
+                           "Score" : "2.5",
+                           "Scrub" : "",
+                           "Votes" : "2"
+                        },
+                        "H" : 2672,
+                        "Img" : {
+                           "Src" : {
+                              "H" : 428,
+                              "Orientation" : 1,
+                              "W" : 640,
+                              "rootSrc" : "stage4/4bbb3976-c0a8-4268-b6f8-11a0f67883f5.jpg"
+                           }
+                        },
+                        "Keyword" : "",
+                        "TS" : 1252515197,
+                        "W" : 4000,
+                        "id" : "4bbb3976-c0a8-4268-b6f8-11a0f67883f5",
+                        "isOwner" : true,
+                        "origSrc" : "/venice/P1010581.JPG"
+                     },
+                     "Shot" : {
+                        "count" : "",
+                        "id" : ""
+                     },
+                     "SubstitutionREF" : null,
+                     "Tags" : [],
+                     "id" : "4bbb3976-c0a8-4268-b6f8-11a0f67883f5",
+                     "lastPerformed" : null
+                  },
+                  {
+                     "Clusters" : "",
+                     "Credits" : "",
+                     "IsCast" : false,
+                     "LayoutHint" : {
+                        "FocusCenter" : {
+                           "Scale" : 4000,
+                           "X" : 2000,
+                           "Y" : 1336
+                        },
+                        "FocusVector" : {
+                           "Direction" : 0,
+                           "Magnitude" : 0
+                        }
+                     },
+                     "Photo" : {
+                        "BatchId" : "1270599803",
+                        "CameraId" : "",
+                        "Caption" : "Along the Grand Canal, nr Academia",
+                        "Created" : "2010-04-06 14:39:02",
+                        "DateTaken" : "2009-09-09 16:54:38",
+                        "ExifColorSpace" : 1,
+                        "ExifFlash" : 0,
+                        "ExifOrientation" : 1,
+                        "Fix" : {
+                           "Crops" : "",
+                           "Rating" : "2.00",
+                           "Rotate" : "1",
+                           "Score" : "2.0",
+                           "Scrub" : "",
+                           "Votes" : "2"
+                        },
+                        "H" : 2672,
+                        "Img" : {
+                           "Src" : {
+                              "H" : 428,
+                              "Orientation" : 1,
+                              "W" : 640,
+                              "rootSrc" : "stage6/4bbb3976-0138-484b-a898-11a0f67883f5.jpg"
+                           }
+                        },
+                        "Keyword" : "",
+                        "TS" : 1252515278,
+                        "W" : 4000,
+                        "id" : "4bbb3976-0138-484b-a898-11a0f67883f5",
+                        "isOwner" : true,
+                        "origSrc" : "/venice/P1010582.JPG"
+                     },
+                     "Shot" : {
+                        "count" : "",
+                        "id" : ""
+                     },
+                     "SubstitutionREF" : null,
+                     "Tags" : [],
+                     "id" : "4bbb3976-0138-484b-a898-11a0f67883f5",
+                     "lastPerformed" : null
+                  },
+                  {
+                     "Clusters" : "",
+                     "Credits" : "",
+                     "IsCast" : false,
+                     "LayoutHint" : {
+                        "FocusCenter" : {
+                           "Scale" : 4000,
+                           "X" : 2000,
+                           "Y" : 1336
+                        },
+                        "FocusVector" : {
+                           "Direction" : 0,
+                           "Magnitude" : 0
+                        }
+                     },
+                     "Photo" : {
+                        "BatchId" : "1270599803",
+                        "CameraId" : "",
+                        "Caption" : "P1010583",
+                        "Created" : "2010-04-06 14:39:02",
+                        "DateTaken" : "2009-09-09 16:55:19",
+                        "ExifColorSpace" : 1,
+                        "ExifFlash" : 0,
+                        "ExifOrientation" : 1,
+                        "Fix" : {
+                           "Crops" : "",
+                           "Rating" : "4.00",
+                           "Rotate" : "1",
+                           "Score" : "2.5",
+                           "Scrub" : "",
+                           "Votes" : "2"
+                        },
+                        "H" : 2672,
+                        "Img" : {
+                           "Src" : {
+                              "H" : 428,
+                              "Orientation" : 1,
+                              "W" : 640,
+                              "rootSrc" : "stage2/4bbb3976-580c-4725-87e5-11a0f67883f5.jpg"
+                           }
+                        },
+                        "Keyword" : "",
+                        "TS" : 1252515319,
+                        "W" : 4000,
+                        "id" : "4bbb3976-580c-4725-87e5-11a0f67883f5",
+                        "isOwner" : true,
+                        "origSrc" : "/venice/P1010583.JPG"
+                     },
+                     "Shot" : {
+                        "count" : "",
+                        "id" : ""
+                     },
+                     "SubstitutionREF" : null,
+                     "Tags" : [],
+                     "id" : "4bbb3976-580c-4725-87e5-11a0f67883f5",
+                     "lastPerformed" : null
+                  },
+                  {
+                     "Clusters" : "",
+                     "Credits" : "",
+                     "IsCast" : false,
+                     "LayoutHint" : {
+                        "FocusCenter" : {
+                           "Scale" : 4000,
+                           "X" : 2000,
+                           "Y" : 1336
+                        },
+                        "FocusVector" : {
+                           "Direction" : 0,
+                           "Magnitude" : 0
+                        }
+                     },
+                     "Photo" : {
+                        "BatchId" : "1270599803",
+                        "CameraId" : "",
+                        "Caption" : "P1010584",
+                        "Created" : "2010-04-06 14:39:02",
+                        "DateTaken" : "2009-09-09 16:56:41",
+                        "ExifColorSpace" : 1,
+                        "ExifFlash" : 0,
+                        "ExifOrientation" : 1,
+                        "Fix" : {
+                           "Crops" : "",
+                           "Rating" : "3.00",
+                           "Rotate" : "1",
+                           "Score" : "1.0",
+                           "Scrub" : "",
+                           "Votes" : "2"
+                        },
+                        "H" : 2672,
+                        "Img" : {
+                           "Src" : {
+                              "H" : 428,
+                              "Orientation" : 1,
+                              "W" : 640,
+                              "rootSrc" : "stage2/4bbb3976-a83c-40b8-a612-11a0f67883f5.jpg"
+                           }
+                        },
+                        "Keyword" : "",
+                        "TS" : 1252515401,
+                        "W" : 4000,
+                        "id" : "4bbb3976-a83c-40b8-a612-11a0f67883f5",
+                        "isOwner" : true,
+                        "origSrc" : "/venice/P1010584.JPG"
+                     },
+                     "Shot" : {
+                        "count" : "",
+                        "id" : ""
+                     },
+                     "SubstitutionREF" : null,
+                     "Tags" : [],
+                     "id" : "4bbb3976-a83c-40b8-a612-11a0f67883f5",
+                     "lastPerformed" : null
+                  },
+                  {
+                     "Clusters" : "",
+                     "Credits" : "",
+                     "IsCast" : false,
+                     "LayoutHint" : {
+                        "FocusCenter" : {
+                           "Scale" : 4000,
+                           "X" : 2000,
+                           "Y" : 1336
+                        },
+                        "FocusVector" : {
+                           "Direction" : 0,
+                           "Magnitude" : 0
+                        }
+                     },
+                     "Photo" : {
+                        "BatchId" : "1270599803",
+                        "CameraId" : "",
+                        "Caption" : "P1010585",
+                        "Created" : "2010-04-06 14:39:02",
+                        "DateTaken" : "2009-09-09 17:30:34",
+                        "ExifColorSpace" : 1,
+                        "ExifFlash" : 0,
+                        "ExifOrientation" : 1,
+                        "Fix" : {
+                           "Crops" : "",
+                           "Rating" : "1.00",
+                           "Rotate" : "1",
+                           "Score" : "1.0",
+                           "Scrub" : "",
+                           "Votes" : "2"
+                        },
+                        "H" : 2672,
+                        "Img" : {
+                           "Src" : {
+                              "H" : 428,
+                              "Orientation" : 1,
+                              "W" : 640,
+                              "rootSrc" : "stage7/4bbb3976-4070-419d-8055-11a0f67883f5.jpg"
+                           }
+                        },
+                        "Keyword" : "",
+                        "TS" : 1252517434,
+                        "W" : 4000,
+                        "id" : "4bbb3976-4070-419d-8055-11a0f67883f5",
+                        "isOwner" : true,
+                        "origSrc" : "/venice/P1010585.JPG"
+                     },
+                     "Shot" : {
+                        "count" : "",
+                        "id" : ""
+                     },
+                     "SubstitutionREF" : null,
+                     "Tags" : [],
+                     "id" : "4bbb3976-4070-419d-8055-11a0f67883f5",
+                     "lastPerformed" : null
+                  },
+                  {
+                     "Clusters" : "",
+                     "Credits" : "",
+                     "IsCast" : false,
+                     "LayoutHint" : {
+                        "FocusCenter" : {
+                           "Scale" : 4000,
+                           "X" : 2000,
+                           "Y" : 1336
+                        },
+                        "FocusVector" : {
+                           "Direction" : 0,
+                           "Magnitude" : 0
+                        }
+                     },
+                     "Photo" : {
+                        "BatchId" : "1270599803",
+                        "CameraId" : "",
+                        "Caption" : "P1010586",
+                        "Created" : "2010-04-06 14:39:02",
+                        "DateTaken" : "2009-09-09 17:43:43",
+                        "ExifColorSpace" : 1,
+                        "ExifFlash" : 0,
+                        "ExifOrientation" : 1,
+                        "Fix" : {
+                           "Crops" : "",
+                           "Rating" : "2.00",
+                           "Rotate" : "1",
+                           "Score" : "1.5",
+                           "Scrub" : "",
+                           "Votes" : "2"
+                        },
+                        "H" : 2672,
+                        "Img" : {
+                           "Src" : {
+                              "H" : 428,
+                              "Orientation" : 1,
+                              "W" : 640,
+                              "rootSrc" : "stage5/4bbb3976-1c9c-40aa-a405-11a0f67883f5.jpg"
+                           }
+                        },
+                        "Keyword" : "",
+                        "TS" : 1252518223,
+                        "W" : 4000,
+                        "id" : "4bbb3976-1c9c-40aa-a405-11a0f67883f5",
+                        "isOwner" : true,
+                        "origSrc" : "/venice/P1010586.JPG"
+                     },
+                     "Shot" : {
+                        "count" : "",
+                        "id" : ""
+                     },
+                     "SubstitutionREF" : null,
+                     "Tags" : [],
+                     "id" : "4bbb3976-1c9c-40aa-a405-11a0f67883f5",
+                     "lastPerformed" : null
+                  },
+                  {
+                     "Clusters" : "",
+                     "Credits" : "",
+                     "IsCast" : false,
+                     "LayoutHint" : {
+                        "FocusCenter" : {
+                           "Scale" : 4000,
+                           "X" : 2000,
+                           "Y" : 1336
+                        },
+                        "FocusVector" : {
+                           "Direction" : 0,
+                           "Magnitude" : 0
+                        }
+                     },
+                     "Photo" : {
+                        "BatchId" : "1270599803",
+                        "CameraId" : "",
+                        "Caption" : "P1010587",
+                        "Created" : "2010-04-06 14:39:02",
+                        "DateTaken" : "2009-09-09 17:45:16",
+                        "ExifColorSpace" : 1,
+                        "ExifFlash" : 0,
+                        "ExifOrientation" : 1,
+                        "Fix" : {
+                           "Crops" : "",
+                           "Rating" : "3.00",
+                           "Rotate" : "1",
+                           "Score" : "1.8",
+                           "Scrub" : "",
+                           "Votes" : "4"
+                        },
+                        "H" : 2672,
+                        "Img" : {
+                           "Src" : {
+                              "H" : 428,
+                              "Orientation" : 1,
+                              "W" : 640,
+                              "rootSrc" : "stage3/4bbb3976-a080-44f5-84c8-11a0f67883f5.jpg"
+                           }
+                        },
+                        "Keyword" : "",
+                        "TS" : 1252518316,
+                        "W" : 4000,
+                        "id" : "4bbb3976-a080-44f5-84c8-11a0f67883f5",
+                        "isOwner" : true,
+                        "origSrc" : "/venice/P1010587.JPG"
+                     },
+                     "Shot" : {
+                        "count" : "",
+                        "id" : ""
+                     },
+                     "SubstitutionREF" : null,
+                     "Tags" : [],
+                     "id" : "4bbb3976-a080-44f5-84c8-11a0f67883f5",
+                     "lastPerformed" : null
+                  }
+               ],
+               "Baseurl" : "/svc/STAGING/",
+               "Bestshot" : {
+                  "4dda2379-6f9c-4dc9-9d27-051cf67883f5" : "4bbb3976-0854-4158-b0f6-11a0f67883f5",
+                  "4dda2496-681c-41b1-9967-051cf67883f5" : "4bbb3976-5c7c-4835-806b-11a0f67883f5",
+                  "4dda25f4-0438-4962-acef-051cf67883f5" : "4bbb3976-a258-4626-9ff6-11a0f67883f5",
+                  "4dda26c1-d420-465f-9ba7-051cf67883f5" : "4bbb3976-ca20-4ebd-a833-11a0f67883f5",
+                  "4dda2879-e774-4ca0-b05b-051cf67883f5" : "4bbb3976-df30-43cc-8500-11a0f67883f5",
+                  "4dda2909-a4a0-4a6f-86c5-051cf67883f5" : "4bbb3976-5aec-4849-888c-11a0f67883f5",
+                  "4dda2a36-9894-466f-bfa4-051cf67883f5" : "4bbb3976-5d28-4030-b616-11a0f67883f5",
+                  "4dda2cb9-05c0-444d-91f9-051cf67883f5" : "4bbb3976-ecf8-43ee-9273-11a0f67883f5",
+                  "4dda2d79-2938-4548-9664-051cf67883f5" : "4bbb3976-0400-4a94-bb04-11a0f67883f5",
+                  "4dda2f8a-0f64-4716-b55b-051cf67883f5" : "4bbb3976-f190-4eb4-a099-11a0f67883f5",
+                  "4ddc52eb-cdc0-468b-8f48-0494f67883f5" : "4bbb3976-6414-47d4-b44c-11a0f67883f5",
+                  "4ddc76f5-dff4-4544-9db5-0494f67883f5" : "4bbb3976-62ec-4508-8c63-11a0f67883f5",
+                  "4ddc784f-eecc-4653-9c17-0494f67883f5" : "4bbb3976-eb78-45a7-92f6-11a0f67883f5",
+                  "4ddc78bf-056c-416a-a36c-0494f67883f5" : "4bbb3976-069c-4fff-90d9-11a0f67883f5",
+                  "4ddc78e2-7f4c-4fbb-bb44-0494f67883f5" : "4bbb3976-7004-471d-a23a-11a0f67883f5",
+                  "4de449d2-ad14-4847-a435-0494f67883f5" : "4bbb3976-1b18-42e4-89b3-11a0f67883f5",
+                  "4de5b618-d648-46c2-b9b9-0494f67883f5" : "4bbb3976-19c4-4f77-907b-11a0f67883f5",
+                  "4e591ceb-db30-4d6f-9791-564d0a803b63" : "4bbb3976-7588-494a-953e-11a0f67883f5",
+                  "4e591cf4-fa94-48ae-bed3-564d0a803b63" : "4bbb3976-95e0-41ed-9ccc-11a0f67883f5",
+                  "4e591cfd-5150-4684-a17e-564d0a803b63" : "4bbb3976-1150-4d24-9f44-11a0f67883f5",
+                  "4e591d06-81d0-4275-bb43-564d0a803b63" : "4bbb3976-04b4-4318-96aa-11a0f67883f5",
+                  "4e591d29-2f44-4fc7-b0f6-54ae0a803b63" : "4bbb3976-eeac-4771-a7f4-11a0f67883f5",
+                  "4e591d39-30f4-4456-a3d7-54ae0a803b63" : "4bbb3976-2650-4f14-b0d9-11a0f67883f5"
+               },
+               "Page" : 1,
+               "Pages" : 1,
+               "Perpage" : 500,
+               "ShotType" : "Usershot",
+               "Total" : 244
+            },
+            "GroupAsShotPerm" : "Usershot",
+            "ID" : 1338858027,
+            "ProviderName" : "snappi",
+            "Request" : "/person/odesk_photos/12345678-1111-0000-0000-venice------/page:1/perpage:500/.json",
+            "ShowHidden" : true,
+            "Timestamp" : 1338858027
+         },
+         "lookups" : null
+      },
+      "filter" : [],
+      "profile" : null
+   },
+   "success" : "true"
+}
