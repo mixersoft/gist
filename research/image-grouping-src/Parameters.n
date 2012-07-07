@@ -48,7 +48,7 @@ public class Parameters : IParameters
 [ Record ]
 public class MockParameters : IParameters
 {
-	[ Accessor ] private downloadImagePrefix : string;
-	[ Accessor ] private imageSize           : int * int;
-	[ Accessor ] private clusteringThreshold : double;
+	public DownloadImagePrefix : string    { get; set }
+	public ImageSize           : int * int { get; set }
+	public ClusteringThreshold : double    { get; set }
 }

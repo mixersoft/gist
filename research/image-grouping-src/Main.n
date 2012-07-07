@@ -27,12 +27,12 @@ module Main
 		def parameters = Parameters();
 		TaskManager
 			( tasks =
-				[ LoadJsonDataTask() : ITask
-				, DownloadDataTask(parameters.DownloadImagePrefix)
-				, ExtractDescriptorsTask(parameters.ImageSize)
-				, ClusterDataTask(parameters.ClusteringThreshold)
-				, LoadReferenceClustersTask()
-				, EvaluateClustersTask()
+				[ LoadJsonDataTask          ():ITask
+				, DownloadDataTask          (parameters)
+				, ExtractDescriptorsTask    (parameters)
+				, ClusterDataTask           (parameters)
+				, LoadReferenceClustersTask ()
+				, EvaluateClustersTask      ()
 				]
 			, persistData     = true
 			, displayProgress = true
@@ -41,43 +41,49 @@ module Main
 
 	private RunThresholdOptimization(min : double, max : double, count : int) : void
 	{
-		_ = min;
-		_ = max;
-		_ = count;
-		/*
+		def parameters = MockParameters
+			( downloadImagePrefix = ""
+			, imageSize           = (0, 0)
+			, clusteringThreshold = 0.0
+			);
+
+		def taskManager = TaskManager
+			( tasks =
+				[ LoadJsonDataTask          ():ITask
+				, DownloadDataTask          (parameters)
+				, ExtractDescriptorsTask    (parameters)
+				, ClusterDataTask           (parameters)
+				, LoadReferenceClustersTask ()
+				, EvaluateClustersTask      ()
+				]
+			, persistData     = false
+			, displayProgress = true
+			);
+
+		def taskPath = @"eval\peter-alice.txt";
+		def task =
+			match (taskManager.Items.Find(item => item.Path == taskPath))
+			{
+			| Some(item is ClusterEvaluationItem) => item
+			| _                                   => throw Exception($"'$taskPath' not found.")
+			};
+
 		def Run(threshold)
 		{
-			def tasks =
-				[ ( DownloadData ("") : ITask, true)
-				, ( ExtractDescriptors(0, 0),  true)
-				, ( ClusterData (threshold),   false)
-				, ( EvaluateClusters(),        false)
-				];
-			foreach ((task, lazy) in tasks)
-			{
-				if (lazy)
-					TaskManager.LazyExecute(task)
-				else
-					TaskManager.Execute(task);
-			}
-			( threshold
-			, File.ReadAllText("peter-alice-eval.txt").Trim()
-			)
+			parameters.ClusteringThreshold = threshold;
+
+			taskManager.DiscardItemData(@"clusters\peter-alice.txt");
+			taskManager.Compute();
+
+			Console.WriteLine($"$threshold\t$(task.Value)");
 		}
 
-		Console.WriteLine("Threshold Optimization");
+		Console.WriteLine("Threshold Optimization:");
 		def Lerp(step : int)
 		{
 			min + (max - min) * step / count
 		}
-		def results = $[0 .. count].Map(Lerp).Map(Run);
-		
-		using (file = File.CreateText("threshold results.txt"))
-		{
-			foreach ((threshold, score) in results)
-				file.WriteLine($"$threshold\t$score");
-		}
-		*/
+		$[0 .. count].Map(Lerp).Iter(Run);
 	}
 
 	public Main() : void

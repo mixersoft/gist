@@ -74,14 +74,16 @@ public class TaskManager
 				{
 					foreach (item in i)
 					{
-						when (!loaded.Contains(item.Path) && item.HasCache())
+						when (!ToCompute(item) && !loaded.Contains(item.Path) && item.HasCache())
 						{
+							when (displayProgress)
+								Console.WriteLine($"Load $(item.Path)");
 							loaded = loaded.Add(item.Path);
 							item.Load();
 						}
 					}
 					when (displayProgress)
-						Console.WriteLine($"..$(i.Map(_.Path)) -> ..$o.Map(_.Path))");
+						Console.WriteLine($"..$(i.Map(_.Path)) -> ..$(o.Map(_.Path))");
 					mapping.Compute();
 					toCompute = toCompute.ReplaceList(o.Map(_.Path));
 				}

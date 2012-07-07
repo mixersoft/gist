@@ -11,17 +11,14 @@
 	<ItemGroup>
 	<!-- source code -->
 		<ImageGroupingSrc     Include="image-grouping-src\\*.n"      />
-		<ParametersSrc        Include="parameters-src\\*.n"          />
 		<ClusterUiSrc         Include="cluster-ui-src\\*.n"          />
 		<ImageGroupingTestSrc Include="image-grouping-test-src\\*.n" />
 	<!-- output -->
 		<ImageGroupingBin     Include="bin\\ImageGrouping.exe"     />
-		<ParametersBin        Include="bin\\Parameters.dll"        />
 		<ClusterUiBin         Include="bin\\ClusterUI.exe"         />
 		<ImageGroupingTestBin Include="bin\\ImageGroupingTest.dll" />
 		<Out Include="bin\" />
 	<!-- references -->
-		<ImageGroupingRef     Include="@(ParametersBin)"         />
 		<ImageGroupingRef     Include="System.Core.dll"          />
 		<ImageGroupingRef     Include="System.Drawing.dll"       />
 		<ImageGroupingRef     Include="System.Windows.Forms.dll" />
@@ -53,9 +50,9 @@
 
 	<Target
 		Name             = "ImageGrouping"
-		Inputs           = "@(ImageGroupingSrc); @(ParametersBin)"
+		Inputs           = "@(ImageGroupingSrc)"
 		Outputs          = "@(ImageGroupingBin)"
-		DependsOnTargets = "Dependencies; Parameters"
+		DependsOnTargets = "Dependencies"
 		>
 		<ncc
 			DefineConstants      = "$(Defines)"
@@ -91,7 +88,7 @@
 		Name             = "ClusterUI"
 		Inputs           = "@(ClusterUiSrc)"
 		Outputs          = "@(ClusterUiBin)"
-		DependsOnTargets = "Dependencies; Parameters"
+		DependsOnTargets = "Dependencies"
 		>
 		<ncc
 			DefineConstants      = "$(Defines)"
@@ -102,23 +99,6 @@
 			References           = "@(ClusterUiRef)"
 			Sources              = "@(ClusterUiSrc)"
 			TargetType           = "exe"
-			/>
-	</Target>
-
-	<Target
-		Name    = "Parameters"
-		Inputs  = "@(ParametersSrc)"
-		Outputs = "@(ParametersBin)"
-		>
-		<ncc
-			DefineConstants      = "$(Defines)"
-			EmitDebugInformation = "true"
-			NoLogo               = "true"
-			OutputAssembly       = "@(ParametersBin)"
-			Platform             = "anycpu"
-			References           = "@(References)"
-			Sources              = "@(ParametersSrc)"
-			TargetType           = "library"
 			/>
 	</Target>
 

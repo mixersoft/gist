@@ -1,0 +1,58 @@
+using NUnit.Framework;
+using Nemerle.Collections;
+using System.Linq;
+using System;
+
+[ TestFixture ]
+public class MiscTaskManagerTest
+{
+	[ Test ]
+	public TestDualRoleLoading() : void
+	{
+		def MakeTaskItem(path, hasCache)
+		{
+			MockTaskItem
+				( path         = path
+				, hasCache     = hasCache
+				, isSaved      = false
+				, isLoaded     = false
+				, computeCount = 0
+				)
+		}
+		def items =
+			[ ("item-1", false)
+			, ("item-2", true)
+			, ("item-3", false)
+			].Map(MakeTaskItem);
+
+		def taskManager = TaskManager
+			( tasks =
+				[ MockTask
+					( name    = "task-1"
+					, itemMap = [ ([], ["item-1"]) ]
+					, items   = items
+					)
+				, MockTask
+					( name    = "task-2"
+					, itemMap = [ (["item-1"], ["item-2"]) ]
+					, items   = items
+					)
+				, MockTask
+					( name    = "task-1"
+					, itemMap = [ (["item-2"], ["item-3"]) ]
+					, items   = items
+					)
+				]
+			, persistData     = false
+			, displayProgress = false
+			);
+
+		taskManager.Compute();
+
+		CollectionAssert.AreEqual
+			( expected = [ false, false, false ]
+			, actual   = items.Map(_.IsLoaded)
+			, message  = "Is any item loaded?"
+			);
+	}
+}

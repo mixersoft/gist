@@ -13,7 +13,7 @@ using SCG = System.Collections.Generic;
 [ Record ]
 class ClusterDataTask : ITask
 {
-	private threshold : double;
+	private parameters : IParameters;
 
 	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
 	{
@@ -36,10 +36,12 @@ class ClusterDataTask : ITask
 	[ Profile(Recursive) ]
 	public Compute(descriptors : DescriptorItem, result : ClusterItem) : void
 	{
+
 		def Cluster(descriptors) : array[array[string]]
 		{
 			def CreateThresholdMap()
 			{
+				def threshold = parameters.ClusteringThreshold;
 				def sqThreshold = threshold * threshold;
 
 				def map = array(descriptors.Length, descriptors.Length);

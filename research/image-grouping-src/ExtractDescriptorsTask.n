@@ -10,7 +10,7 @@ using System;
 [ Record ]
 class ExtractDescriptorsTask : ITask
 {
-	private imageSize : int * int;
+	private parameters : IParameters;
 
 	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
 	{
@@ -34,7 +34,7 @@ class ExtractDescriptorsTask : ITask
 	public Compute(images : ImageCollectionItem, result : DescriptorItem) : void
 	{
 		def ExtractDescriptor =
-			match (imageSize)
+			match (parameters.ImageSize)
 			{
 			| (0, 0) =>
 				fun (path)

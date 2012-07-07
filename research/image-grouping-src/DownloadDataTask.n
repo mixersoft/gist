@@ -4,14 +4,10 @@ using System.IO;
 using System.Net;
 using System;
 
+[ Record ]
 class DownloadDataTask : ITask
 {
-	private downloadPrefix : string;
-
-	public this(downloadPrefix : string)
-	{
-		this.downloadPrefix = downloadPrefix;
-	}
+	private parameters : IParameters;
 
 	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
 	{
@@ -33,9 +29,9 @@ class DownloadDataTask : ITask
 
 	public Compute(jsonData : JsonItem, result : ImageCollectionItem) : void
 	{
-		def client = WebClient();
+		def downloadPrefix = "/" + parameters.DownloadImagePrefix;
 
-		def downloadPrefix = "/" + downloadPrefix;
+		def client = WebClient();
 
 		result.ImageIDs = array(jsonData.Photos.Length);
 
