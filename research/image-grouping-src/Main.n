@@ -15,6 +15,13 @@ using SCG = System.Collections.Generic;
 
 [assembly: ProfSetup(Disabled) ]
 
+variant RunMode
+{
+| Normal
+| OptimizeThreshold { min : double; max : double; count : int }
+| OptimizeImageSize
+}
+
 module Main
 {
 	[ ProfDump ]
@@ -37,6 +44,7 @@ module Main
 			, persistData     = true
 			, displayProgress = true
 			).Compute();
+		PrintProfileInfo();
 	}
 
 	private RunThresholdOptimization(min : double, max : double, count : int) : void
@@ -44,7 +52,7 @@ module Main
 		def parameters = MockParameters
 			( downloadImagePrefix = ""
 			, imageSize           = (0, 0)
-			, clusteringThreshold = 0.0
+			, clusteringThreshold = 0.2
 			);
 
 		def taskManager = TaskManager
@@ -78,7 +86,7 @@ module Main
 			Console.WriteLine($"$threshold\t$(task.Value)");
 		}
 
-		Console.WriteLine("Threshold Optimization:");
+		Console.WriteLine("Threshold optimization:");
 		def Lerp(step : int)
 		{
 			min + (max - min) * step / count
@@ -86,9 +94,69 @@ module Main
 		$[0 .. count].Map(Lerp).Iter(Run);
 	}
 
+	private RunImageSizeOptimization() : void
+	{
+		def parameters = MockParameters
+			( downloadImagePrefix = ""
+			, imageSize           = (0, 0)
+			, clusteringThreshold = 0.0
+			);
+
+		def taskManager = TaskManager
+			( tasks =
+				[ LoadJsonDataTask          ():ITask
+				, DownloadDataTask          (parameters)
+				, ExtractDescriptorsTask    (parameters)
+				, ClusterDataTask           (parameters)
+				, LoadReferenceClustersTask ()
+				, EvaluateClustersTask      ()
+				]
+			, persistData     = false
+			, displayProgress = false
+			);
+
+		def dataSet = "peter-alice";
+
+		def taskPath = $@"eval\$dataSet.txt";
+		def task =
+			match (taskManager.Items.Find(item => item.Path == taskPath))
+			{
+			| Some(item is ClusterEvaluationItem) => item
+			| _                                   => throw Exception($"'$taskPath' not found.")
+			};
+
+		def (min, max, count) = (0.1, 0.9, 80);
+
+		def Run(w, h)
+		{
+			def Run(threshold)
+			{
+				parameters.ClusteringThreshold = threshold;
+
+				taskManager.DiscardItemData($@"clusters\$dataSet.txt");
+				taskManager.Compute();
+
+				Console.WriteLine($"$(w)x$(h)\t$threshold\t$(task.Value)");
+			}
+
+			parameters.ImageSize = (w, h);
+
+			taskManager.DiscardItemData($@"descriptors\$dataSet");
+
+			def Lerp(step : int)
+			{
+				min + (max - min) * step / count
+			}
+			$[0 .. count].Map(Lerp).Iter(Run);
+		}
+
+		Console.WriteLine("Image size optimization:");
+		[ (90, 90), (120, 120), (256, 256) ].Iter(Run);
+	}
+
 	public Main() : void
 	{
-		mutable threshold   = None();
+		mutable runMode     = RunMode.Normal();
 		mutable displayHelp = false;
 		def opts =
 			[ Getopt.CliOption.String
@@ -98,11 +166,16 @@ module Main
 					regexp match (value)
 					{
 					| @"(?<min:double>[^ ]+) (?<max:double>[^ ]+) (?<count:int>[^ ]+)" =>
-						threshold = Some(min, max, count);
+						runMode = RunMode.OptimizeThreshold(min, max, count);
 					| _ =>
 						Console.WriteLine($"Invalid threshold range: '$value'.");
 						displayHelp = true;
 					}
+				)
+			, Getopt.CliOption.Flag
+				( "-optimize-image-size"
+				, "Optimize the image size."
+				, () => runMode = RunMode.OptimizeImageSize()
 				)
 			, Getopt.CliOption.Flag
 				( "-help"
@@ -119,10 +192,11 @@ module Main
 		}
 		else
 		{
-			match (threshold)
+			match (runMode)
 			{
-			| Some((min, max, count)) => RunThresholdOptimization(min, max, count);
-			| None                    => Run(); PrintProfileInfo();
+			| Normal                             => Run()
+			| OptimizeThreshold(min, max, count) => RunThresholdOptimization(min, max, count)
+			| OptimizeImageSize                  => RunImageSizeOptimization()
 			}
 		}
 	}
