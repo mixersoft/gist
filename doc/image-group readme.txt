@@ -24,3 +24,11 @@ The app was compiled under 32-bit Debian Linux. It depends on the following libr
 	* libcv
 	* libfftw3f
 	* libhighgui
+
+Build instruction for Ubuntu 12.04:
+> sudo apt-get install build-essential cmake libboost-program-options-dev libfftw3-dev libcv-dev libhighgui-dev libcvaux-dev libopencv-gpu-dev
+> # cd to folder containing 'image-group'
+> mkdir release; 
+> cd release; cmake ..; make;
+
+
