@@ -21,13 +21,12 @@ float Distance(Descriptor d1, Descriptor d2)
 }
 
 void ClusterOrdered
-	( const vector<PhotoInfo>           & photos
-	,       vector<vector<const PhotoInfo*> > & groups
-	,       float                         threshold
+	( const vector<PhotoInfo>  & photos
+	,       vector<PhotoGroup> & groups
+	,       float                threshold
 	)
 {
-	Descriptor d1;
-	Descriptor d2;
+	Descriptor d1, d2;
 
 	Descriptor * prevDescriptor(&d1);
 	Descriptor * currDescriptor(&d2);

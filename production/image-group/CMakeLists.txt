@@ -1,6 +1,9 @@
 add_executable(
 	image-group
-	main.cpp
+	Main.cpp
+	Cluster.hpp Cluster.cpp
+	PhotoInfo.hpp
+	InputData.hpp
 	gist.hpp gist.cpp
 	standalone_image.hpp standalone_image.cpp
 	jsoncpp.cpp json/json.h json/json-forwards.h
