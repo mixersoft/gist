@@ -3,6 +3,7 @@
 #include "cluster.hpp"
 
 #include <cmath>
+#include <set>
 #include <string>
 #include <stdexcept>
 
@@ -24,12 +25,14 @@ float Distance(Descriptor d1, Descriptor d2)
 	return sqrt(sum);
 }
 
-void LoadImage(const string & path, int width, int height, cv::Mat & result)
+void GetDescriptor(const string & path, int width, int height, Descriptor & descriptor)
 {
 	cv::Mat image(cv::imread(path.c_str(), CV_LOAD_IMAGE_GRAYSCALE));
 	if (image.rows == 0 || image.cols == 0)
 		throw std::runtime_error("Image could not be opened.");
-	cv::resize(image, result, cv::Size(120, 120), 0.0, 0.0, cv::INTER_AREA);
+	cv::Mat resized;
+	cv::resize(image, resized, cv::Size(width, height), 0.0, 0.0, cv::INTER_AREA);
+	GetBwDescriptor(resized, 4, 8, 8, 4, descriptor);
 }
 
 void ClusterOrdered
@@ -49,9 +52,7 @@ void ClusterOrdered
 	{
 		const PhotoInfo & photo(photos[i]);
 
-		cv::Mat image;
-		LoadImage(photo.Path, 120, 120, image);
-		GetBwDescriptor(image, 4, 8, 8, 4, *currDescriptor);
+		GetDescriptor(photo.Path, 120, 120, *currDescriptor);
 
 		if (i != 0 && Distance(*currDescriptor, *prevDescriptor) > threshold)
 			groups.push_back(PhotoGroup());
@@ -59,5 +60,71 @@ void ClusterOrdered
 		groups.back().push_back(&photo);
 
 		swap(prevDescriptor, currDescriptor);
+	}
+}
+
+// QT clustering algorithm
+void ClusterUnordered
+	( const vector<PhotoInfo>  & photos
+	,       vector<PhotoGroup> & groups
+	,       float                threshold
+	)
+{
+	const int n(photos.size());
+
+	// get the descriptors
+
+	vector<Descriptor> descriptors(n);
+	for (int i(0); i != n; ++i)
+		GetDescriptor(photos[i].Path, 120, 120, descriptors[i]);
+
+	// cache all difference comparisons
+
+	vector<bool> withinThreshold(n * n);
+	for (int i(0); i != n; ++i)
+	for (int j(0); j != n; ++j)
+	{
+		float distance(Distance(descriptors[i], descriptors[j]));
+		withinThreshold[i * n + j] = distance < threshold;
+	}
+
+	// list all indices
+
+	set<int> indices;
+	for (int i(0); i != n; ++i)
+		indices.insert(i);
+
+	while (!indices.empty())
+	{
+		// find the largest cluster
+
+		int   maxIndex (0);
+		float maxCount (0);
+		for (set<int>::const_iterator i(indices.begin()), end(indices.end()); i != end; ++i)
+		{
+			int count(0);
+			for (int j(0); j != n; ++j)
+			{
+				if (withinThreshold[*i * n + j])
+					++count;
+			}
+			if (count > maxCount)
+			{
+				maxIndex = *i;
+				maxCount = count;
+			}
+		}
+
+		// save the cluster and its member's indices from further consideration
+
+		groups.push_back(PhotoGroup());
+		for (int j(0); j != n; ++j)
+		{
+			if (withinThreshold[maxIndex * n + j])
+			{
+				groups.back().push_back(&photos[j]);
+				indices.erase(j);
+			}
+		}
 	}
 }

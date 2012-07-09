@@ -12,3 +12,9 @@ void ClusterOrdered
 	,       std::vector<PhotoGroup> & groups
 	,       float                     threshold
 	);
+
+void ClusterUnordered
+	( const std::vector<PhotoInfo>  & photos
+	,       std::vector<PhotoGroup> & groups
+	,       float                     threshold
+	);

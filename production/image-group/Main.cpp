@@ -65,13 +65,21 @@ void Write
 		cout << Json::FastWriter().write(result);
 }
 
-void Process(const string & basePath, float threshold, bool prettyPrint)
+void Process
+	( const string & basePath
+	,       bool     preserveOrder
+	,       float    threshold
+	,       bool     prettyPrint
+	)
 {
 	InputData inputData;
 	Read(basePath, inputData);
 
 	vector<PhotoGroup> groups;
-	ClusterOrdered(inputData.Photos, groups, threshold);
+	if (preserveOrder)
+		ClusterOrdered(inputData.Photos, groups, threshold);
+	else
+		ClusterUnordered(inputData.Photos, groups, threshold);
 
 	Write(inputData, groups, prettyPrint);
 }
@@ -84,6 +92,7 @@ try
 		("help", "display this help message")
 		("base_path", po::value<string>()->default_value("./"), "base path for images")
 		("threshold", po::value<float>()->default_value(0.5f), "GIST difference threshold for separating groups")
+		("preserve_order", "Group photos without reordering them. Especially useful when input is ordered by time.")
 		("pretty_print", "format output")
 		;
 
@@ -107,6 +116,7 @@ try
 
 	Process
 		( vm["base_path"].as<string>()
+		, vm.count("preserve_order")
 		, vm["threshold"].as<float>()
 		, vm.count("pretty_print")
 		);

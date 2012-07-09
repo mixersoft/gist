@@ -11,7 +11,7 @@ add_executable(
 
 set_target_properties(
 	image-group
-	PROPERTIES COMPILE_FLAGS "-ffor-scope -Werror -Wall"
+	PROPERTIES COMPILE_FLAGS "-ffor-scope -Werror -Wall -Wextra -ansi"
 	)
 
 add_definitions(-DUSE_GIST -DSTANDALONE_GIST -DJSON_IS_AMALGAMATION)
