@@ -1,9 +1,9 @@
-#include "gist.hpp"
+#include "InputData.hpp"
+#include "Cluster.hpp"
 
 #include "json/json.h"
 
 #include <algorithm>
-#include <cmath>
 #include <iterator>
 #include <stdexcept>
 #include <fstream>
@@ -16,76 +16,64 @@ using namespace std;
 
 namespace po = boost::program_options;
 
-float Distance(Descriptor d1, Descriptor d2)
-{
-	if (d1.size() != d2.size())
-		throw std::logic_error("Comparing descriptors of different dimensionalities.");
-	float sum(0.0f);
-	for (int i(0), size(d1.size()); i != size; ++i)
-	{
-		float delta(d1[i] - d2[i]);
-		sum += delta * delta;
-	}
-	return sqrt(sum);
-}
-
-void ProcessData(const string & basePath, float threshold, bool prettyPrint)
+void Read(const string & basePath, InputData & inputData)
 {
 	Json::Value  root;
 	Json::Reader reader;
 
-	string doc;
-	copy(istream_iterator<char>(cin), istream_iterator<char>(), back_inserter(doc));
-
+	string doc = string(istream_iterator<char>(cin), istream_iterator<char>());
 	if (!reader.parse(doc, root, false))
 		throw std::runtime_error(reader.getFormattedErrorMessages());
-
-	Descriptor d1;
-	Descriptor d2;
-
-	Descriptor * prevDescriptor(&d1);
-	Descriptor * currDescriptor(&d2);
 
 	Json::Value castingCall (root["response"]["castingCall"]);
 	Json::Value photos      (castingCall["CastingCall"]["Auditions"]["Audition"]);
 
-	Json::Value result(Json::objectValue);
-	result["ID"]        = castingCall["CastingCall"]["ID"];
-	result["Timestamp"] = castingCall["CastingCall"]["Timestamp"];
-	result["Groups"]    = Json::Value(Json::arrayValue);
+	inputData.ID        = castingCall["CastingCall"]["ID"].asUInt();
+	inputData.Timestamp = castingCall["CastingCall"]["Timestamp"].asUInt();
 
-	Json::Value group(Json::arrayValue);
+	inputData.Photos.resize(photos.size());
 
 	for (int i(0), size(photos.size()); i != size; ++i)
 	{
-		group.append(photos[i]["id"].asString());
-
-		string path(basePath);
-		path.append(photos[i]["Photo"]["Img"]["Src"]["rootSrc"].asString());
-
-		GetBwDescriptor(path.c_str(), 4, 8, 8, 4, *currDescriptor);
-
-		if (i != 0 && Distance(*currDescriptor, *prevDescriptor) > threshold)
-		{
-			result["Groups"].append(group);
-			group.clear();
-		}
-
-		swap(d1, d2);
+		inputData.Photos[i].ID   = photos[i]["id"].asString();
+		inputData.Photos[i].Path = basePath + photos[i]["Photo"]["Img"]["Src"]["rootSrc"].asString();
 	}
-	if (!group.empty())
+}
+
+void Write
+	( const InputData          & inputData
+	, const vector<PhotoGroup> & groups
+	,       bool                 prettyPrint
+	)
+{
+	Json::Value result(Json::objectValue);
+	result["ID"]        = inputData.ID;
+	result["Timestamp"] = inputData.Timestamp;
+	result["Groups"]    = Json::Value(Json::arrayValue);
+
+	for (int i(0), size(groups.size()); i != size; ++i)
+	{
+		Json::Value group(Json::arrayValue);
+		for (int j(0), size(groups[i].size()); j != size; ++j)
+			group.append(groups[i][j]->ID);
 		result["Groups"].append(group);
+	}
 
 	if (prettyPrint)
-	{
-		Json::StyledWriter writer;
-		cout << writer.write(result);
-	}
+		cout << Json::StyledWriter().write(result);
 	else
-	{
-		Json::FastWriter writer;
-		cout << writer.write(result);
-	}
+		cout << Json::FastWriter().write(result);
+}
+
+void Process(const string & basePath, float threshold, bool prettyPrint)
+{
+	InputData inputData;
+	Read(basePath, inputData);
+
+	vector<PhotoGroup> groups;
+	ClusterOrdered(inputData.Photos, groups, threshold);
+
+	Write(inputData, groups, prettyPrint);
 }
 
 int main(int argc, char * argv[])
@@ -117,7 +105,7 @@ try
 		return EXIT_SUCCESS;
 	}
 
-	ProcessData
+	Process
 		( vm["base_path"].as<string>()
 		, vm["threshold"].as<float>()
 		, vm.count("pretty_print")
