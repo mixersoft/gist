@@ -1,9 +1,6 @@
-/* Lear's GIST implementation, version 1.1, (c) INRIA 2009, Licence: PSFL */
-/*--------------------------------------------------------------------------*/
-
-#ifdef USE_GIST
-
-/*--------------------------------------------------------------------------*/
+// Lear's GIST implementation, version 1.1, (c) INRIA 2009, Licence: PSFL
+//
+// Edited by Alexey Badalov (alexey.badalov@gmail.com), 2012
 
 #include <math.h>
 #include <stdio.h>
@@ -21,16 +18,7 @@
 #include <opencv/cv.h>
 #include <opencv/highgui.h>
 
-#ifdef STANDALONE_GIST
-
 #include "gist.hpp"
-
-#else 
-
-#include <image.h>
-#include <descriptors.h>
-
-#endif
 
 /*--------------------------------------------------------------------------*/
 
@@ -1023,7 +1011,6 @@ void GetBwDescriptor
 
 	float * descRaw(bw_gist(tempImg, blockCount, a, b, c));
 
-
 	descriptor.resize(blockCount * blockCount * (a + b + c));
 	copy_n(descRaw, descriptor.begin(), descriptor.size());
 
@@ -1054,7 +1041,6 @@ void GetBwDescriptor
 		throw std::runtime_error(stream.str());
 	}
 }
-
 
 /*
 array<float> ^ Gist::Algorithm::GetColorDescriptor
@@ -1091,55 +1077,3 @@ array<float> ^ Gist::Algorithm::GetColorDescriptor
 	return desc;
 }
 */
-
-
-#ifndef STANDALONE_GIST
-
-/*--------------------------------------------------------------------------*/
-
-local_desc_list_t *descriptor_bw_gist_cpu(image_t *src, int a, int b, int c, int w)
-{
-    local_desc_list_t *desc_list = local_desc_list_new();
-
-    float *desc_raw = bw_gist(src, w, a, b, c); 
-
-    local_desc_t *desc = local_desc_new();
-
-    desc->desc_size = (a+b+c)*w*w;
-    desc->desc = (float *) malloc(desc->desc_size*sizeof(float));
-    memcpy(desc->desc, desc_raw, desc->desc_size*sizeof(float));
-    local_desc_list_append(desc_list, desc);
-
-    free(desc_raw);
-
-    return desc_list;
-}
-
-/*--------------------------------------------------------------------------*/
-
-local_desc_list_t *descriptor_color_gist_cpu(color_image_t *src, int a, int b, int c, int w)
-{
-    local_desc_list_t *desc_list = local_desc_list_new();
-
-    float *desc_raw = color_gist(src, w, a, b, c);
-
-    local_desc_t *desc = local_desc_new();
-
-    desc->desc_size = 3*(a+b+c)*w*w;
-    desc->desc = (float *) malloc(desc->desc_size*sizeof(float));
-    memcpy(desc->desc, desc_raw, desc->desc_size*sizeof(float));
-    local_desc_list_append(desc_list, desc);
-
-    free(desc_raw);
-
-    return desc_list;
-}
-
-/*--------------------------------------------------------------------------*/
-
-#endif 
-
-#endif
-
-/*--------------------------------------------------------------------------*/
-

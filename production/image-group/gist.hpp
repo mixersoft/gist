@@ -1,13 +1,14 @@
+#pragma once
+
 /* Lear's GIST implementation, version 1.1, (c) INRIA 2009, Licence: PSFL */
-
-
-#ifndef GIST_H_INCLUDED
-#define GIST_H_INCLUDED
-
+//
+// Edited by Alexey Badalov (alexey.badalov@gmail.com), 2012
 
 #include "standalone_image.hpp"
 
 #include <vector>
+
+#include <opencv/cv.h>
 
 
 /*! Graylevel GIST for various scales. Based on Torralba's Matlab
@@ -47,7 +48,7 @@ float *color_gist_scaletab(color_image_t *src, int nblocks, int n_scale, const i
 typedef std::vector<float> Descriptor;
 
 void GetBwDescriptor
-	( const char * path
+	( cv::Mat      & image
 	, int          blockCount
 	, int          a
 	, int          b
@@ -55,4 +56,11 @@ void GetBwDescriptor
 	, Descriptor & descriptor
 	);
 
-#endif
+void GetBwDescriptor
+	( const char * path
+	, int          blockCount
+	, int          a
+	, int          b
+	, int          c
+	, Descriptor & descriptor
+	);
