@@ -39,7 +39,6 @@ public class JsonItem : ITaskItem
 	public Load() : void
 	{
 		def data = JObject.Parse(File.ReadAllText(path));
-		System.Console.WriteLine($"Loading: $path");
 
 		def castingCall = data["response"]["castingCall"];
 

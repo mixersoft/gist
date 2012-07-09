@@ -5,7 +5,7 @@ The app is called image-group. It takes JSON data as input and produces JSON dat
 
 Sample usage
 
-cat sample/venice.json | bin/image-group --base_path sample/images/ --pretty_print
+cat sample/venice.json | bin/image-group --base_path sample/ --pretty_print
 
 
 Supported options
