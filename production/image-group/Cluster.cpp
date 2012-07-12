@@ -1,5 +1,3 @@
-#include "gist.hpp"
-
 #include "cluster.hpp"
 
 #include <cmath>
@@ -25,13 +23,13 @@ float Distance(Descriptor d1, Descriptor d2)
 	return sqrt(sum);
 }
 
-void GetDescriptor(const string & path, int width, int height, Descriptor & descriptor)
+void LoadDescriptor(const string & path, Descriptor & descriptor)
 {
 	cv::Mat image(cv::imread(path.c_str(), CV_LOAD_IMAGE_GRAYSCALE));
 	if (image.rows == 0 || image.cols == 0)
 		throw std::runtime_error("Image could not be opened.");
 	cv::Mat resized;
-	cv::resize(image, resized, cv::Size(width, height), 0.0, 0.0, cv::INTER_AREA);
+	cv::resize(image, resized, cv::Size(120, 120), 0.0, 0.0, cv::INTER_AREA);
 	GetBwDescriptor(resized, 4, 8, 8, 4, descriptor);
 }
 
@@ -39,6 +37,7 @@ void ClusterOrdered
 	( const vector<PhotoInfo>  & photos
 	,       vector<PhotoGroup> & groups
 	,       float                threshold
+	,       DescriptorLoader     LoadDescriptor
 	)
 {
 	Descriptor d1, d2;
@@ -46,15 +45,16 @@ void ClusterOrdered
 	Descriptor * prevDescriptor(&d1);
 	Descriptor * currDescriptor(&d2);
 
-	groups.push_back(PhotoGroup());
+	if (!photos.empty())
+		groups.push_back(PhotoGroup());
 
 	for (int i(0), size(photos.size()); i != size; ++i)
 	{
 		const PhotoInfo & photo(photos[i]);
 
-		GetDescriptor(photo.Path, 120, 120, *currDescriptor);
+		LoadDescriptor(photo.Path, *currDescriptor);
 
-		if (i != 0 && Distance(*currDescriptor, *prevDescriptor) > threshold)
+		if (i != 0 && Distance(*currDescriptor, *prevDescriptor) >= threshold)
 			groups.push_back(PhotoGroup());
 
 		groups.back().push_back(&photo);
@@ -68,6 +68,7 @@ void ClusterUnordered
 	( const vector<PhotoInfo>  & photos
 	,       vector<PhotoGroup> & groups
 	,       float                threshold
+	,       DescriptorLoader     LoadDescriptor
 	)
 {
 	const int n(photos.size());
@@ -76,7 +77,7 @@ void ClusterUnordered
 
 	vector<Descriptor> descriptors(n);
 	for (int i(0); i != n; ++i)
-		GetDescriptor(photos[i].Path, 120, 120, descriptors[i]);
+		LoadDescriptor(photos[i].Path, descriptors[i]);
 
 	// cache all difference comparisons
 
