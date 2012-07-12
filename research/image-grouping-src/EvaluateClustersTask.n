@@ -6,6 +6,8 @@ using System;
 
 public class EvaluateClustersTask: ITask
 {
+	public Name : string { get { "EvaluateClustersTask" } }
+
 	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
 	{
 		def clusters   = items.Filter(item => item.Path.StartsWith(@"clusters\"));
@@ -42,6 +44,11 @@ public class EvaluateClustersTask: ITask
 		, result       : ClusterEvaluationItem
 		) : void
 	{
+		def MakeHash(c)
+		{
+			c.Fold(0, (c, hash) => c.Fold(hash, (id, hash) => hash ^ id.GetHashCode()))
+		}
+
 		/// <summary>
 		/// Remove the last reference cluster and all items containined in it.
 		/// This cluster is reserved for unsorted items.
@@ -102,11 +109,12 @@ public class EvaluateClustersTask: ITask
 
 		}
 
-		result.Value = EvaluateClusters
-			( PrepareClusters
-				( autoClusters.Clusters
-				, refClusters.Clusters
-				)
-			);
+		def autoClusters = autoClusters.Clusters;
+		def refClusters  = refClusters.Clusters;
+
+		when (MakeHash(autoClusters) != MakeHash(refClusters))
+			throw Exception("Cannot compare clusters of different items.");
+
+		result.Value = EvaluateClusters(PrepareClusters(autoClusters, refClusters));
 	}
 }

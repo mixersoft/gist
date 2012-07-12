@@ -3,6 +3,8 @@ using System.IO;
 
 class LoadJsonDataTask : ITask
 {
+	public Name : string { get { "LoadJsonDataTask" } }
+
 	public MapItems(_ : list[ITaskItem]) : list[TaskMapping]
 	{
 		def CreateTaskMapping(file)

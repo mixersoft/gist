@@ -1,4 +1,6 @@
 public interface ITask
 {
+	Name : string { get }
+
 	MapItems(items : list[ITaskItem]) : list[TaskMapping];
 }

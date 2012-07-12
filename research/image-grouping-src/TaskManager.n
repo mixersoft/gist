@@ -85,17 +85,17 @@ public class TaskManager
 					when (displayProgress)
 						Console.WriteLine($"..$(i.Map(_.Path)) -> ..$(o.Map(_.Path))");
 					mapping.Compute();
+					when (persistData)
+					{
+						foreach (item in o)
+						{
+							when (displayProgress)
+								Console.WriteLine($"Save $(item.Path)");
+							item.Save();
+						}
+					}
 					toCompute = toCompute.ReplaceList(o.Map(_.Path));
 				}
-			}
-		}
-		when (persistData)
-		{
-			foreach (name in toCompute)
-			{
-				when (displayProgress)
-					Console.WriteLine($"Save $name");
-				items[name].Save();
 			}
 		}
 		toCompute = toCompute.Clear();

@@ -4,7 +4,7 @@ using Nemerle.Utility;
 [ Record ]
 class MockTask : ITask
 {
-	public Name : string;
+	[ Accessor ] private name : string;
 
 	private itemMap : list[list[string] * list[string]];
 	private items   : list[MockTaskItem];

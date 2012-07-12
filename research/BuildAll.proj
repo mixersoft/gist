@@ -10,29 +10,32 @@
 
 	<ItemGroup>
 	<!-- source code -->
-		<ImageGroupingSrc     Include="image-grouping-src\\*.n"      />
-		<ClusterUiSrc         Include="cluster-ui-src\\*.n"          />
-		<ImageGroupingTestSrc Include="image-grouping-test-src\\*.n" />
+		<ImageGroupingSrc     Include="image-grouping-src\*.n"      />
+		<ClusterUiSrc         Include="cluster-ui-src\*.n"          />
+		<ImageGroupingTestSrc Include="image-grouping-test-src\*.n" />
+		<PrettyPrintSrc       Include="pretty-print-src\*.n"        />
 	<!-- output -->
-		<ImageGroupingBin     Include="bin\\ImageGrouping.exe"     />
-		<ClusterUiBin         Include="bin\\ClusterUI.exe"         />
-		<ImageGroupingTestBin Include="bin\\ImageGroupingTest.dll" />
+		<ImageGroupingBin     Include="bin\ImageGrouping.exe"     />
+		<ClusterUiBin         Include="bin\ClusterUI.exe"         />
+		<ImageGroupingTestBin Include="bin\ImageGroupingTest.dll" />
+		<PrettyPrintBin       Include="bin\PrettyPrint.exe"       />
 		<Out Include="bin\" />
 	<!-- references -->
 		<ImageGroupingRef     Include="System.Core.dll"          />
 		<ImageGroupingRef     Include="System.Drawing.dll"       />
 		<ImageGroupingRef     Include="System.Windows.Forms.dll" />
-		<ImageGroupingRef     Include="lib\\ComputeGist.dll"     />
-		<ImageGroupingRef     Include="lib\\Emgu.CV.dll"         />
-		<ImageGroupingRef     Include="lib\\Emgu.Util.dll"       />
-		<ImageGroupingRef     Include="lib\\Newtonsoft.Json.dll" />
-		<ImageGroupingRef     Include="lib\\Profiling.dll"       />
+		<ImageGroupingRef     Include="lib\ComputeGist.dll"      />
+		<ImageGroupingRef     Include="lib\Emgu.CV.dll"          />
+		<ImageGroupingRef     Include="lib\Emgu.Util.dll"        />
+		<ImageGroupingRef     Include="lib\Newtonsoft.Json.dll"  />
+		<ImageGroupingRef     Include="lib\Profiling.dll"        />
 		<ClusterUiRef         Include="System.Drawing.dll"       />
 		<ClusterUiRef         Include="System.Windows.Forms.dll" />
-		<ClusterUiRef         Include="lib\\Newtonsoft.Json.dll" />
+		<ClusterUiRef         Include="lib\Newtonsoft.Json.dll"  />
 		<ImageGroupingTestRef Include="System.Core"              />
-		<ImageGroupingTestRef Include="lib\\nunit.framework.dll" />
+		<ImageGroupingTestRef Include="lib\nunit.framework.dll"  />
 		<ImageGroupingTestRef Include="@(ImageGroupingBin)"      />
+		<PrettyPrintRef       Include="lib\Newtonsoft.Json.dll"  />
 	<!-- dependencies -->
 		<Dependencies Include="lib\*" />
 	</ItemGroup>
@@ -45,7 +48,7 @@
 
 	<Target
 		Name             = "All"
-		DependsOnTargets = "ImageGrouping; ImageGroupingTest; ClusterUI"
+		DependsOnTargets = "ImageGrouping; ImageGroupingTest; ClusterUI; PrettyPrint"
 		/>
 
 	<Target
@@ -98,6 +101,24 @@
 			Platform             = "x64"
 			References           = "@(ClusterUiRef)"
 			Sources              = "@(ClusterUiSrc)"
+			TargetType           = "exe"
+			/>
+	</Target>
+
+	<Target
+		Name             = "PrettyPrint"
+		Inputs           = "@(PrettyPrintSrc)"
+		Outputs          = "@(PrettyPrintBin)"
+		DependsOnTargets = "Dependencies"
+		>
+		<ncc
+			DefineConstants      = "$(Defines)"
+			EmitDebugInformation = "true"
+			NoLogo               = "true"
+			OutputAssembly       = "@(PrettyPrintBin)"
+			Platform             = "x64"
+			References           = "@(PrettyPrintRef)"
+			Sources              = "@(PrettyPrintSrc)"
 			TargetType           = "exe"
 			/>
 	</Target>

@@ -9,6 +9,8 @@ class DownloadDataTask : ITask
 {
 	private parameters : IParameters;
 
+	public Name : string { get { "DownloadDataTask" } }
+
 	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
 	{
 		mutable mappings = [];
@@ -27,7 +29,7 @@ class DownloadDataTask : ITask
 		mappings;
 	}
 
-	public Compute(jsonData : JsonItem, result : ImageCollectionItem) : void
+	private Compute(jsonData : JsonItem, result : ImageCollectionItem) : void
 	{
 		def downloadPrefix = "/" + parameters.DownloadImagePrefix;
 

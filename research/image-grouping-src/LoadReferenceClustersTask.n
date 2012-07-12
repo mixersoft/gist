@@ -3,6 +3,8 @@ using System.IO;
 
 class LoadReferenceClustersTask : ITask
 {
+	public Name : string { get { "LoadReferenceClustersTask" } }
+
 	public MapItems(_ : list[ITaskItem]) : list[TaskMapping]
 	{
 		def MakeMapping(path)

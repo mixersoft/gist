@@ -12,6 +12,8 @@ class ExtractDescriptorsTask : ITask
 {
 	private parameters : IParameters;
 
+	public Name : string { get { "ExtractDescriptorsTask" } }
+
 	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
 	{
 		mutable mappings = [];
