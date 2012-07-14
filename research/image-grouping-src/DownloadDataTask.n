@@ -16,10 +16,8 @@ class DownloadDataTask : ITask
 		mutable mappings = [];
 		foreach (item is JsonItem in items)
 		{
-			def path = Path.Combine("images", Path.GetFileNameWithoutExtension(item.Path));
-
-			def result = ImageCollectionItem(path);
-
+			def result = ImageCollectionItem
+				(Path.Combine("images", Path.GetFileNameWithoutExtension(item.Path)));
 			mappings ::= TaskMapping
 				( inputs  = [ item ]
 				, outputs = [ result ]
@@ -29,22 +27,22 @@ class DownloadDataTask : ITask
 		mappings;
 	}
 
-	private Compute(jsonData : JsonItem, result : ImageCollectionItem) : void
+	private Compute(jsonItem : JsonItem, result : ImageCollectionItem) : void
 	{
 		def downloadPrefix = "/" + parameters.DownloadImagePrefix;
 
 		def client = WebClient();
 
-		result.ImageIDs = array(jsonData.Photos.Length);
+		result.ImageIDs = array(jsonItem.Photos.Length);
 
 		_ = Directory.CreateDirectory("images");
 
-		foreach (photo in jsonData.Photos with i)
+		foreach (photo in jsonItem.Photos with i)
 		{
 			def path = result.MakePath(photo.ID);
 			_ = Directory.CreateDirectory(Path.GetDirectoryName(path));
 			client.DownloadFile
-				( address  = jsonData.BaseUrl + photo.RootSrc.Replace("/", downloadPrefix)
+				( address  = jsonItem.BaseUrl + photo.RootSrc.Replace("/", downloadPrefix)
 				, fileName = result.MakePath(photo.ID)
 				);
 			result.ImageIDs[i] = photo.ID;

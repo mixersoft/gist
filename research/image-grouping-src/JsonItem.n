@@ -9,11 +9,13 @@ public class JsonItem : ITaskItem
 	{
 		public ID      : string;
 		public RootSrc : string;
+		public ShotID  : string;
 
-		public this(id : string, rootSrc : string)
+		public this(id : string, rootSrc : string, shotID : string)
 		{
 			ID      = id;
 			RootSrc = rootSrc;
+			ShotID  = shotID;
 		}
 	}
 
@@ -49,6 +51,7 @@ public class JsonItem : ITaskItem
 			PhotoInfo
 				( id      = record["id"].ToString()
 				, rootSrc = record["Photo"]["Img"]["Src"]["rootSrc"].ToString()
+				, shotID  = record["Shot"]["id"].ToString()
 				)
 		}
 		Photos = castingCall["CastingCall"]["Auditions"]["Audition"]

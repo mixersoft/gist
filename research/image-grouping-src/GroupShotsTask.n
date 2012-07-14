@@ -1,0 +1,33 @@
+using Nemerle.Collections;
+using System.IO;
+using System.Linq;
+
+using SCG = System.Collections.Generic;
+
+class GroupShotsTask : ITask
+{
+	public Name : string { get { "GroupShotsTask" } }
+
+	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
+	{
+		mutable mappings = [];
+		foreach (item is JsonItem in items)
+		{
+			def result = ClusterItem
+				(Path.Combine("shot-groups", Path.GetFileNameWithoutExtension(item.Path) + ".txt"));
+			mappings ::= TaskMapping
+				( inputs  = [ item ]
+				, outputs = [ result ]
+				, compute = () => Compute(item, result)
+				);
+		}
+		mappings;
+	}
+
+	private Compute(jsonItem : JsonItem, clusterItem : ClusterItem) : void
+	{
+		clusterItem.Clusters =
+			jsonItem.Photos.GroupBy(_.ShotID)
+			.MapToArray(_.MapToArray(_.ID));
+	}
+}

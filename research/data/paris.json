@@ -5,8 +5,8 @@
 		"profile": null,
 		"castingCall": {
 			"CastingCall": {
-				"ID": 1342058396,
-				"Timestamp": 1342058396,
+				"ID": 1342227924,
+				"Timestamp": 1342227924,
 				"ProviderName": "snappi",
 				"Auditions": {
 					"Audition": [
@@ -18,11 +18,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "0.8",
-									"Votes": "2"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -70,6 +70,65 @@
 							"Credits": ""
 						},
 						{
+							"id": "4bbb38cc-c884-4fb0-9b58-11a0f67883f5",
+							"Photo": {
+								"id": "4bbb38cc-c884-4fb0-9b58-11a0f67883f5",
+								"W": 4000,
+								"H": 3000,
+								"Fix": {
+									"Crops": "",
+									"Rating": null,
+									"Rotate": 1,
+									"Scrub": "",
+									"Score": "0.0",
+									"Votes": null
+								},
+								"Img": {
+									"Src": {
+										"W": 480,
+										"H": 640,
+										"rootSrc": "stage2/4bbb38cc-c884-4fb0-9b58-11a0f67883f5.jpg",
+										"Orientation": 1
+									}
+								},
+								"isOwner": true,
+								"DateTaken": "2009-08-31 15:18:09",
+								"TS": 1251731889,
+								"ExifColorSpace": 1,
+								"ExifFlash": 0,
+								"ExifOrientation": 1,
+								"Caption": "P1000880",
+								"origSrc": "/paris/P1000880.JPG",
+								"CameraId": "",
+								"OwnerId": "12345678-1111-0000-0000-paris-------",
+								"ProviderAccountId": "4bbb38c6-1704-4102-be65-11a0f67883f5",
+								"BatchId": "1270599803",
+								"Keyword": "",
+								"Created": "2010-04-06 14:36:12"
+							},
+							"LayoutHint": {
+								"FocusCenter": {
+									"Scale": 4000,
+									"X": 2000,
+									"Y": 1500
+								},
+								"FocusVector": {
+									"Direction": 0,
+									"Magnitude": 0
+								}
+							},
+							"IsCast": false,
+							"lastPerformed": null,
+							"SubstitutionREF": "4ff910db-9b18-495c-b93e-0a20f67883f5",
+							"Shot": {
+								"id": "4ff910db-9b18-495c-b93e-0a20f67883f5",
+								"count": "2"
+							},
+							"Tags": [],
+							"Clusters": "",
+							"Credits": ""
+						},
+						{
 							"id": "4bbb38cc-db20-4eee-a7a5-11a0f67883f5",
 							"Photo": {
 								"id": "4bbb38cc-db20-4eee-a7a5-11a0f67883f5",
@@ -77,11 +136,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "3.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "3.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -136,11 +195,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "3.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "3.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -188,6 +247,65 @@
 							"Credits": ""
 						},
 						{
+							"id": "4bbb38cc-bca0-4df6-a8e1-11a0f67883f5",
+							"Photo": {
+								"id": "4bbb38cc-bca0-4df6-a8e1-11a0f67883f5",
+								"W": 4000,
+								"H": 3000,
+								"Fix": {
+									"Crops": "",
+									"Rating": null,
+									"Rotate": 1,
+									"Scrub": "",
+									"Score": "0.0",
+									"Votes": null
+								},
+								"Img": {
+									"Src": {
+										"W": 640,
+										"H": 480,
+										"rootSrc": "stage6/4bbb38cc-bca0-4df6-a8e1-11a0f67883f5.jpg",
+										"Orientation": 1
+									}
+								},
+								"isOwner": true,
+								"DateTaken": "2009-08-31 18:52:20",
+								"TS": 1251744740,
+								"ExifColorSpace": 1,
+								"ExifFlash": 0,
+								"ExifOrientation": 1,
+								"Caption": "P1000883",
+								"origSrc": "/paris/P1000883.JPG",
+								"CameraId": "",
+								"OwnerId": "12345678-1111-0000-0000-paris-------",
+								"ProviderAccountId": "4bbb38c6-1704-4102-be65-11a0f67883f5",
+								"BatchId": "1270599803",
+								"Keyword": "",
+								"Created": "2010-04-06 14:36:12"
+							},
+							"LayoutHint": {
+								"FocusCenter": {
+									"Scale": 4000,
+									"X": 2000,
+									"Y": 1500
+								},
+								"FocusVector": {
+									"Direction": 0,
+									"Magnitude": 0
+								}
+							},
+							"IsCast": false,
+							"lastPerformed": null,
+							"SubstitutionREF": "4ff910df-d6e0-4761-a642-0a20f67883f5",
+							"Shot": {
+								"id": "4ff910df-d6e0-4761-a642-0a20f67883f5",
+								"count": "2"
+							},
+							"Tags": [],
+							"Clusters": "",
+							"Credits": ""
+						},
+						{
 							"id": "4bbb38cc-d29c-43a3-bc58-11a0f67883f5",
 							"Photo": {
 								"id": "4bbb38cc-d29c-43a3-bc58-11a0f67883f5",
@@ -195,11 +313,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -254,11 +372,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -313,11 +431,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -365,6 +483,65 @@
 							"Credits": ""
 						},
 						{
+							"id": "4bbb38cc-75b8-439b-96eb-11a0f67883f5",
+							"Photo": {
+								"id": "4bbb38cc-75b8-439b-96eb-11a0f67883f5",
+								"W": 4000,
+								"H": 3000,
+								"Fix": {
+									"Crops": "",
+									"Rating": null,
+									"Rotate": 1,
+									"Scrub": "",
+									"Score": "0.0",
+									"Votes": null
+								},
+								"Img": {
+									"Src": {
+										"W": 640,
+										"H": 480,
+										"rootSrc": "stage6/4bbb38cc-75b8-439b-96eb-11a0f67883f5.jpg",
+										"Orientation": 1
+									}
+								},
+								"isOwner": true,
+								"DateTaken": "2009-08-31 19:02:03",
+								"TS": 1251745323,
+								"ExifColorSpace": 1,
+								"ExifFlash": 0,
+								"ExifOrientation": 1,
+								"Caption": "P1000887",
+								"origSrc": "/paris/P1000887.JPG",
+								"CameraId": "",
+								"OwnerId": "12345678-1111-0000-0000-paris-------",
+								"ProviderAccountId": "4bbb38c6-1704-4102-be65-11a0f67883f5",
+								"BatchId": "1270599803",
+								"Keyword": "",
+								"Created": "2010-04-06 14:36:12"
+							},
+							"LayoutHint": {
+								"FocusCenter": {
+									"Scale": 4000,
+									"X": 2000,
+									"Y": 1500
+								},
+								"FocusVector": {
+									"Direction": 0,
+									"Magnitude": 0
+								}
+							},
+							"IsCast": false,
+							"lastPerformed": null,
+							"SubstitutionREF": "4ff910e9-b1ac-446f-8a29-0cb3f67883f5",
+							"Shot": {
+								"id": "4ff910e9-b1ac-446f-8a29-0cb3f67883f5",
+								"count": "2"
+							},
+							"Tags": [],
+							"Clusters": "",
+							"Credits": ""
+						},
+						{
 							"id": "4bbb38cc-3498-4602-bbe4-11a0f67883f5",
 							"Photo": {
 								"id": "4bbb38cc-3498-4602-bbe4-11a0f67883f5",
@@ -372,11 +549,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.50",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.5",
-									"Votes": "2"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -431,11 +608,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "2"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -483,6 +660,65 @@
 							"Credits": ""
 						},
 						{
+							"id": "4bbb38cc-f480-4b4d-b90d-11a0f67883f5",
+							"Photo": {
+								"id": "4bbb38cc-f480-4b4d-b90d-11a0f67883f5",
+								"W": 4000,
+								"H": 3000,
+								"Fix": {
+									"Crops": "",
+									"Rating": null,
+									"Rotate": 1,
+									"Scrub": "",
+									"Score": "0.0",
+									"Votes": null
+								},
+								"Img": {
+									"Src": {
+										"W": 640,
+										"H": 480,
+										"rootSrc": "stage5/4bbb38cc-f480-4b4d-b90d-11a0f67883f5.jpg",
+										"Orientation": 1
+									}
+								},
+								"isOwner": true,
+								"DateTaken": "2009-08-31 21:29:58",
+								"TS": 1251754198,
+								"ExifColorSpace": 1,
+								"ExifFlash": 0,
+								"ExifOrientation": 1,
+								"Caption": "P1000890",
+								"origSrc": "/paris/P1000890.JPG",
+								"CameraId": "",
+								"OwnerId": "12345678-1111-0000-0000-paris-------",
+								"ProviderAccountId": "4bbb38c6-1704-4102-be65-11a0f67883f5",
+								"BatchId": "1270599803",
+								"Keyword": "",
+								"Created": "2010-04-06 14:36:12"
+							},
+							"LayoutHint": {
+								"FocusCenter": {
+									"Scale": 4000,
+									"X": 2000,
+									"Y": 1500
+								},
+								"FocusVector": {
+									"Direction": 0,
+									"Magnitude": 0
+								}
+							},
+							"IsCast": false,
+							"lastPerformed": null,
+							"SubstitutionREF": "4ff910ee-7c6c-4827-9854-0cb3f67883f5",
+							"Shot": {
+								"id": "4ff910ee-7c6c-4827-9854-0cb3f67883f5",
+								"count": "2"
+							},
+							"Tags": [],
+							"Clusters": "",
+							"Credits": ""
+						},
+						{
 							"id": "4bbb38cc-7288-4e31-9b42-11a0f67883f5",
 							"Photo": {
 								"id": "4bbb38cc-7288-4e31-9b42-11a0f67883f5",
@@ -490,11 +726,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -549,11 +785,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -608,11 +844,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "2"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -667,11 +903,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -726,11 +962,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -785,11 +1021,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -844,11 +1080,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -903,11 +1139,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -962,11 +1198,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -1021,11 +1257,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -1080,11 +1316,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -1132,6 +1368,65 @@
 							"Credits": ""
 						},
 						{
+							"id": "4bbb38cc-0968-4ea9-9623-11a0f67883f5",
+							"Photo": {
+								"id": "4bbb38cc-0968-4ea9-9623-11a0f67883f5",
+								"W": 4000,
+								"H": 3000,
+								"Fix": {
+									"Crops": "",
+									"Rating": null,
+									"Rotate": 1,
+									"Scrub": "",
+									"Score": "0.0",
+									"Votes": null
+								},
+								"Img": {
+									"Src": {
+										"W": 640,
+										"H": 480,
+										"rootSrc": "stage1/4bbb38cc-0968-4ea9-9623-11a0f67883f5.jpg",
+										"Orientation": 1
+									}
+								},
+								"isOwner": true,
+								"DateTaken": "2009-09-01 13:02:34",
+								"TS": 1251810154,
+								"ExifColorSpace": 1,
+								"ExifFlash": 0,
+								"ExifOrientation": 1,
+								"Caption": "P1000905",
+								"origSrc": "/paris/P1000905.JPG",
+								"CameraId": "",
+								"OwnerId": "12345678-1111-0000-0000-paris-------",
+								"ProviderAccountId": "4bbb38c6-1704-4102-be65-11a0f67883f5",
+								"BatchId": "1270599803",
+								"Keyword": "",
+								"Created": "2010-04-06 14:36:12"
+							},
+							"LayoutHint": {
+								"FocusCenter": {
+									"Scale": 4000,
+									"X": 2000,
+									"Y": 1500
+								},
+								"FocusVector": {
+									"Direction": 0,
+									"Magnitude": 0
+								}
+							},
+							"IsCast": false,
+							"lastPerformed": null,
+							"SubstitutionREF": "4ff910fc-da5c-4da8-9307-0cc8f67883f5",
+							"Shot": {
+								"id": "4ff910fc-da5c-4da8-9307-0cc8f67883f5",
+								"count": "2"
+							},
+							"Tags": [],
+							"Clusters": "",
+							"Credits": ""
+						},
+						{
 							"id": "4bbb38cc-a9ac-4d4d-94ed-11a0f67883f5",
 							"Photo": {
 								"id": "4bbb38cc-a9ac-4d4d-94ed-11a0f67883f5",
@@ -1139,11 +1434,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -1198,11 +1493,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -1250,6 +1545,65 @@
 							"Credits": ""
 						},
 						{
+							"id": "4bbb38cc-2ce4-422b-b89e-11a0f67883f5",
+							"Photo": {
+								"id": "4bbb38cc-2ce4-422b-b89e-11a0f67883f5",
+								"W": 4000,
+								"H": 3000,
+								"Fix": {
+									"Crops": "",
+									"Rating": null,
+									"Rotate": 1,
+									"Scrub": "",
+									"Score": "0.0",
+									"Votes": null
+								},
+								"Img": {
+									"Src": {
+										"W": 480,
+										"H": 640,
+										"rootSrc": "stage0/4bbb38cc-2ce4-422b-b89e-11a0f67883f5.jpg",
+										"Orientation": 1
+									}
+								},
+								"isOwner": true,
+								"DateTaken": "2009-09-01 13:04:34",
+								"TS": 1251810274,
+								"ExifColorSpace": 1,
+								"ExifFlash": 0,
+								"ExifOrientation": 1,
+								"Caption": "P1000908",
+								"origSrc": "/paris/P1000908.JPG",
+								"CameraId": "",
+								"OwnerId": "12345678-1111-0000-0000-paris-------",
+								"ProviderAccountId": "4bbb38c6-1704-4102-be65-11a0f67883f5",
+								"BatchId": "1270599803",
+								"Keyword": "",
+								"Created": "2010-04-06 14:36:12"
+							},
+							"LayoutHint": {
+								"FocusCenter": {
+									"Scale": 4000,
+									"X": 2000,
+									"Y": 1500
+								},
+								"FocusVector": {
+									"Direction": 0,
+									"Magnitude": 0
+								}
+							},
+							"IsCast": false,
+							"lastPerformed": null,
+							"SubstitutionREF": "4ff91100-f454-4201-a4fc-0cc8f67883f5",
+							"Shot": {
+								"id": "4ff91100-f454-4201-a4fc-0cc8f67883f5",
+								"count": "2"
+							},
+							"Tags": [],
+							"Clusters": "",
+							"Credits": ""
+						},
+						{
 							"id": "4bbb38cc-7c0c-485b-b5fe-11a0f67883f5",
 							"Photo": {
 								"id": "4bbb38cc-7c0c-485b-b5fe-11a0f67883f5",
@@ -1257,11 +1611,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -1316,11 +1670,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -1375,11 +1729,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -1434,11 +1788,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -1493,11 +1847,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -1552,11 +1906,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -1604,6 +1958,65 @@
 							"Credits": ""
 						},
 						{
+							"id": "4bbb38cc-63bc-4f9e-83a4-11a0f67883f5",
+							"Photo": {
+								"id": "4bbb38cc-63bc-4f9e-83a4-11a0f67883f5",
+								"W": 4000,
+								"H": 3000,
+								"Fix": {
+									"Crops": "",
+									"Rating": null,
+									"Rotate": 1,
+									"Scrub": "",
+									"Score": "0.0",
+									"Votes": null
+								},
+								"Img": {
+									"Src": {
+										"W": 480,
+										"H": 640,
+										"rootSrc": "stage6/4bbb38cc-63bc-4f9e-83a4-11a0f67883f5.jpg",
+										"Orientation": 1
+									}
+								},
+								"isOwner": true,
+								"DateTaken": "2009-09-01 13:10:11",
+								"TS": 1251810611,
+								"ExifColorSpace": 1,
+								"ExifFlash": 0,
+								"ExifOrientation": 1,
+								"Caption": "P1000915",
+								"origSrc": "/paris/P1000915.JPG",
+								"CameraId": "",
+								"OwnerId": "12345678-1111-0000-0000-paris-------",
+								"ProviderAccountId": "4bbb38c6-1704-4102-be65-11a0f67883f5",
+								"BatchId": "1270599803",
+								"Keyword": "",
+								"Created": "2010-04-06 14:36:12"
+							},
+							"LayoutHint": {
+								"FocusCenter": {
+									"Scale": 4000,
+									"X": 2000,
+									"Y": 1500
+								},
+								"FocusVector": {
+									"Direction": 0,
+									"Magnitude": 0
+								}
+							},
+							"IsCast": false,
+							"lastPerformed": null,
+							"SubstitutionREF": "4ff91112-3bfc-400f-bdc8-0d5cf67883f5",
+							"Shot": {
+								"id": "4ff91112-3bfc-400f-bdc8-0d5cf67883f5",
+								"count": "4"
+							},
+							"Tags": [],
+							"Clusters": "",
+							"Credits": ""
+						},
+						{
 							"id": "4bbb38cc-db84-493d-8be9-11a0f67883f5",
 							"Photo": {
 								"id": "4bbb38cc-db84-493d-8be9-11a0f67883f5",
@@ -1611,11 +2024,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "4.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "4.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -1663,6 +2076,124 @@
 							"Credits": ""
 						},
 						{
+							"id": "4bbb38cc-93c0-461c-b414-11a0f67883f5",
+							"Photo": {
+								"id": "4bbb38cc-93c0-461c-b414-11a0f67883f5",
+								"W": 4000,
+								"H": 3000,
+								"Fix": {
+									"Crops": "",
+									"Rating": null,
+									"Rotate": 1,
+									"Scrub": "",
+									"Score": "0.0",
+									"Votes": null
+								},
+								"Img": {
+									"Src": {
+										"W": 480,
+										"H": 640,
+										"rootSrc": "stage2/4bbb38cc-93c0-461c-b414-11a0f67883f5.jpg",
+										"Orientation": 1
+									}
+								},
+								"isOwner": true,
+								"DateTaken": "2009-09-01 13:10:43",
+								"TS": 1251810643,
+								"ExifColorSpace": 1,
+								"ExifFlash": 0,
+								"ExifOrientation": 1,
+								"Caption": "P1000917",
+								"origSrc": "/paris/P1000917.JPG",
+								"CameraId": "",
+								"OwnerId": "12345678-1111-0000-0000-paris-------",
+								"ProviderAccountId": "4bbb38c6-1704-4102-be65-11a0f67883f5",
+								"BatchId": "1270599803",
+								"Keyword": "",
+								"Created": "2010-04-06 14:36:12"
+							},
+							"LayoutHint": {
+								"FocusCenter": {
+									"Scale": 4000,
+									"X": 2000,
+									"Y": 1500
+								},
+								"FocusVector": {
+									"Direction": 0,
+									"Magnitude": 0
+								}
+							},
+							"IsCast": false,
+							"lastPerformed": null,
+							"SubstitutionREF": "4ff91112-3bfc-400f-bdc8-0d5cf67883f5",
+							"Shot": {
+								"id": "4ff91112-3bfc-400f-bdc8-0d5cf67883f5",
+								"count": "4"
+							},
+							"Tags": [],
+							"Clusters": "",
+							"Credits": ""
+						},
+						{
+							"id": "4bbb38cc-1484-4895-97ab-11a0f67883f5",
+							"Photo": {
+								"id": "4bbb38cc-1484-4895-97ab-11a0f67883f5",
+								"W": 4000,
+								"H": 3000,
+								"Fix": {
+									"Crops": "",
+									"Rating": null,
+									"Rotate": 1,
+									"Scrub": "",
+									"Score": "0.0",
+									"Votes": null
+								},
+								"Img": {
+									"Src": {
+										"W": 480,
+										"H": 640,
+										"rootSrc": "stage1/4bbb38cc-1484-4895-97ab-11a0f67883f5.jpg",
+										"Orientation": 1
+									}
+								},
+								"isOwner": true,
+								"DateTaken": "2009-09-01 13:10:49",
+								"TS": 1251810649,
+								"ExifColorSpace": 1,
+								"ExifFlash": 0,
+								"ExifOrientation": 1,
+								"Caption": "P1000918",
+								"origSrc": "/paris/P1000918.JPG",
+								"CameraId": "",
+								"OwnerId": "12345678-1111-0000-0000-paris-------",
+								"ProviderAccountId": "4bbb38c6-1704-4102-be65-11a0f67883f5",
+								"BatchId": "1270599803",
+								"Keyword": "",
+								"Created": "2010-04-06 14:36:13"
+							},
+							"LayoutHint": {
+								"FocusCenter": {
+									"Scale": 4000,
+									"X": 2000,
+									"Y": 1500
+								},
+								"FocusVector": {
+									"Direction": 0,
+									"Magnitude": 0
+								}
+							},
+							"IsCast": false,
+							"lastPerformed": null,
+							"SubstitutionREF": "4ff91112-3bfc-400f-bdc8-0d5cf67883f5",
+							"Shot": {
+								"id": "4ff91112-3bfc-400f-bdc8-0d5cf67883f5",
+								"count": "4"
+							},
+							"Tags": [],
+							"Clusters": "",
+							"Credits": ""
+						},
+						{
 							"id": "4bbb38cc-4d04-490d-bdbe-11a0f67883f5",
 							"Photo": {
 								"id": "4bbb38cc-4d04-490d-bdbe-11a0f67883f5",
@@ -1670,11 +2201,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -1729,11 +2260,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -1788,11 +2319,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -1847,11 +2378,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -1906,11 +2437,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -1965,11 +2496,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -2024,11 +2555,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -2083,11 +2614,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "3.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "3.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -2142,11 +2673,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -2201,11 +2732,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -2260,11 +2791,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -2319,11 +2850,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -2378,11 +2909,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -2430,6 +2961,65 @@
 							"Credits": ""
 						},
 						{
+							"id": "4bbb38cc-35ac-4877-b22a-11a0f67883f5",
+							"Photo": {
+								"id": "4bbb38cc-35ac-4877-b22a-11a0f67883f5",
+								"W": 4000,
+								"H": 3000,
+								"Fix": {
+									"Crops": "",
+									"Rating": null,
+									"Rotate": 1,
+									"Scrub": "",
+									"Score": "0.0",
+									"Votes": null
+								},
+								"Img": {
+									"Src": {
+										"W": 640,
+										"H": 480,
+										"rootSrc": "stage7/4bbb38cc-35ac-4877-b22a-11a0f67883f5.jpg",
+										"Orientation": 1
+									}
+								},
+								"isOwner": true,
+								"DateTaken": "2009-09-01 15:07:09",
+								"TS": 1251817629,
+								"ExifColorSpace": 1,
+								"ExifFlash": 0,
+								"ExifOrientation": 1,
+								"Caption": "P1000933",
+								"origSrc": "/paris/P1000933.JPG",
+								"CameraId": "",
+								"OwnerId": "12345678-1111-0000-0000-paris-------",
+								"ProviderAccountId": "4bbb38c6-1704-4102-be65-11a0f67883f5",
+								"BatchId": "1270599803",
+								"Keyword": "",
+								"Created": "2010-04-06 14:36:13"
+							},
+							"LayoutHint": {
+								"FocusCenter": {
+									"Scale": 4000,
+									"X": 2000,
+									"Y": 1500
+								},
+								"FocusVector": {
+									"Direction": 0,
+									"Magnitude": 0
+								}
+							},
+							"IsCast": false,
+							"lastPerformed": null,
+							"SubstitutionREF": "4ff91123-c708-4e7d-a94a-0d5df67883f5",
+							"Shot": {
+								"id": "4ff91123-c708-4e7d-a94a-0d5df67883f5",
+								"count": "2"
+							},
+							"Tags": [],
+							"Clusters": "",
+							"Credits": ""
+						},
+						{
 							"id": "4bbb38cc-72dc-40df-a063-11a0f67883f5",
 							"Photo": {
 								"id": "4bbb38cc-72dc-40df-a063-11a0f67883f5",
@@ -2437,11 +3027,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "3.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "3.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -2496,11 +3086,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -2555,11 +3145,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -2614,11 +3204,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -2673,11 +3263,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -2732,11 +3322,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -2791,11 +3381,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -2850,11 +3440,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -2909,11 +3499,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -2968,11 +3558,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -3020,6 +3610,65 @@
 							"Credits": ""
 						},
 						{
+							"id": "4bbb38cc-1be0-4fb7-a63e-11a0f67883f5",
+							"Photo": {
+								"id": "4bbb38cc-1be0-4fb7-a63e-11a0f67883f5",
+								"W": 4000,
+								"H": 3000,
+								"Fix": {
+									"Crops": "",
+									"Rating": null,
+									"Rotate": 1,
+									"Scrub": "",
+									"Score": "0.0",
+									"Votes": null
+								},
+								"Img": {
+									"Src": {
+										"W": 640,
+										"H": 480,
+										"rootSrc": "stage0/4bbb38cc-1be0-4fb7-a63e-11a0f67883f5.jpg",
+										"Orientation": 1
+									}
+								},
+								"isOwner": true,
+								"DateTaken": "2009-09-01 16:57:08",
+								"TS": 1251824228,
+								"ExifColorSpace": 1,
+								"ExifFlash": 0,
+								"ExifOrientation": 1,
+								"Caption": "P1000945",
+								"origSrc": "/paris/P1000945.JPG",
+								"CameraId": "",
+								"OwnerId": "12345678-1111-0000-0000-paris-------",
+								"ProviderAccountId": "4bbb38c6-1704-4102-be65-11a0f67883f5",
+								"BatchId": "1270599803",
+								"Keyword": "",
+								"Created": "2010-04-06 14:36:13"
+							},
+							"LayoutHint": {
+								"FocusCenter": {
+									"Scale": 4000,
+									"X": 2000,
+									"Y": 1500
+								},
+								"FocusVector": {
+									"Direction": 0,
+									"Magnitude": 0
+								}
+							},
+							"IsCast": false,
+							"lastPerformed": null,
+							"SubstitutionREF": "4ff9112e-6264-45c8-b76e-0d5ef67883f5",
+							"Shot": {
+								"id": "4ff9112e-6264-45c8-b76e-0d5ef67883f5",
+								"count": "2"
+							},
+							"Tags": [],
+							"Clusters": "",
+							"Credits": ""
+						},
+						{
 							"id": "4bbb38cc-8b10-4471-b959-11a0f67883f5",
 							"Photo": {
 								"id": "4bbb38cc-8b10-4471-b959-11a0f67883f5",
@@ -3027,11 +3676,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -3079,6 +3728,65 @@
 							"Credits": ""
 						},
 						{
+							"id": "4bbb38cc-fcfc-443c-9171-11a0f67883f5",
+							"Photo": {
+								"id": "4bbb38cc-fcfc-443c-9171-11a0f67883f5",
+								"W": 4000,
+								"H": 3000,
+								"Fix": {
+									"Crops": "",
+									"Rating": null,
+									"Rotate": 1,
+									"Scrub": "",
+									"Score": "0.0",
+									"Votes": null
+								},
+								"Img": {
+									"Src": {
+										"W": 640,
+										"H": 480,
+										"rootSrc": "stage4/4bbb38cc-fcfc-443c-9171-11a0f67883f5.jpg",
+										"Orientation": 1
+									}
+								},
+								"isOwner": true,
+								"DateTaken": "2009-09-01 17:02:01",
+								"TS": 1251824521,
+								"ExifColorSpace": 1,
+								"ExifFlash": 0,
+								"ExifOrientation": 1,
+								"Caption": "P1000947",
+								"origSrc": "/paris/P1000947.JPG",
+								"CameraId": "",
+								"OwnerId": "12345678-1111-0000-0000-paris-------",
+								"ProviderAccountId": "4bbb38c6-1704-4102-be65-11a0f67883f5",
+								"BatchId": "1270599803",
+								"Keyword": "",
+								"Created": "2010-04-06 14:36:13"
+							},
+							"LayoutHint": {
+								"FocusCenter": {
+									"Scale": 4000,
+									"X": 2000,
+									"Y": 1500
+								},
+								"FocusVector": {
+									"Direction": 0,
+									"Magnitude": 0
+								}
+							},
+							"IsCast": false,
+							"lastPerformed": null,
+							"SubstitutionREF": "4ff91134-3224-4681-a777-0d5ff67883f5",
+							"Shot": {
+								"id": "4ff91134-3224-4681-a777-0d5ff67883f5",
+								"count": "2"
+							},
+							"Tags": [],
+							"Clusters": "",
+							"Credits": ""
+						},
+						{
 							"id": "4bbb38cc-bb78-4c58-b342-11a0f67883f5",
 							"Photo": {
 								"id": "4bbb38cc-bb78-4c58-b342-11a0f67883f5",
@@ -3086,11 +3794,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -3138,6 +3846,183 @@
 							"Credits": ""
 						},
 						{
+							"id": "4bbb38cc-5348-456e-ae0f-11a0f67883f5",
+							"Photo": {
+								"id": "4bbb38cc-5348-456e-ae0f-11a0f67883f5",
+								"W": 4000,
+								"H": 3000,
+								"Fix": {
+									"Crops": "",
+									"Rating": null,
+									"Rotate": 1,
+									"Scrub": "",
+									"Score": "0.0",
+									"Votes": null
+								},
+								"Img": {
+									"Src": {
+										"W": 480,
+										"H": 640,
+										"rootSrc": "stage4/4bbb38cc-5348-456e-ae0f-11a0f67883f5.jpg",
+										"Orientation": 1
+									}
+								},
+								"isOwner": true,
+								"DateTaken": "2009-09-01 17:05:51",
+								"TS": 1251824751,
+								"ExifColorSpace": 1,
+								"ExifFlash": 0,
+								"ExifOrientation": 1,
+								"Caption": "P1000950",
+								"origSrc": "/paris/P1000950.JPG",
+								"CameraId": "",
+								"OwnerId": "12345678-1111-0000-0000-paris-------",
+								"ProviderAccountId": "4bbb38c6-1704-4102-be65-11a0f67883f5",
+								"BatchId": "1270599803",
+								"Keyword": "",
+								"Created": "2010-04-06 14:36:13"
+							},
+							"LayoutHint": {
+								"FocusCenter": {
+									"Scale": 4000,
+									"X": 2000,
+									"Y": 1500
+								},
+								"FocusVector": {
+									"Direction": 0,
+									"Magnitude": 0
+								}
+							},
+							"IsCast": false,
+							"lastPerformed": null,
+							"SubstitutionREF": "4ff9113b-8c68-4d9c-ab49-0d61f67883f5",
+							"Shot": {
+								"id": "4ff9113b-8c68-4d9c-ab49-0d61f67883f5",
+								"count": "4"
+							},
+							"Tags": [],
+							"Clusters": "",
+							"Credits": ""
+						},
+						{
+							"id": "4bbb38cc-0a58-43c5-8e67-11a0f67883f5",
+							"Photo": {
+								"id": "4bbb38cc-0a58-43c5-8e67-11a0f67883f5",
+								"W": 4000,
+								"H": 3000,
+								"Fix": {
+									"Crops": "",
+									"Rating": null,
+									"Rotate": 1,
+									"Scrub": "",
+									"Score": "0.0",
+									"Votes": null
+								},
+								"Img": {
+									"Src": {
+										"W": 480,
+										"H": 640,
+										"rootSrc": "stage5/4bbb38cc-0a58-43c5-8e67-11a0f67883f5.jpg",
+										"Orientation": 1
+									}
+								},
+								"isOwner": true,
+								"DateTaken": "2009-09-01 17:05:56",
+								"TS": 1251824756,
+								"ExifColorSpace": 1,
+								"ExifFlash": 0,
+								"ExifOrientation": 1,
+								"Caption": "P1000951",
+								"origSrc": "/paris/P1000951.JPG",
+								"CameraId": "",
+								"OwnerId": "12345678-1111-0000-0000-paris-------",
+								"ProviderAccountId": "4bbb38c6-1704-4102-be65-11a0f67883f5",
+								"BatchId": "1270599803",
+								"Keyword": "",
+								"Created": "2010-04-06 14:36:13"
+							},
+							"LayoutHint": {
+								"FocusCenter": {
+									"Scale": 4000,
+									"X": 2000,
+									"Y": 1500
+								},
+								"FocusVector": {
+									"Direction": 0,
+									"Magnitude": 0
+								}
+							},
+							"IsCast": false,
+							"lastPerformed": null,
+							"SubstitutionREF": "4ff9113b-8c68-4d9c-ab49-0d61f67883f5",
+							"Shot": {
+								"id": "4ff9113b-8c68-4d9c-ab49-0d61f67883f5",
+								"count": "4"
+							},
+							"Tags": [],
+							"Clusters": "",
+							"Credits": ""
+						},
+						{
+							"id": "4bbb38cc-9288-4314-ac82-11a0f67883f5",
+							"Photo": {
+								"id": "4bbb38cc-9288-4314-ac82-11a0f67883f5",
+								"W": 4000,
+								"H": 3000,
+								"Fix": {
+									"Crops": "",
+									"Rating": null,
+									"Rotate": 1,
+									"Scrub": "",
+									"Score": "0.0",
+									"Votes": null
+								},
+								"Img": {
+									"Src": {
+										"W": 480,
+										"H": 640,
+										"rootSrc": "stage6/4bbb38cc-9288-4314-ac82-11a0f67883f5.jpg",
+										"Orientation": 1
+									}
+								},
+								"isOwner": true,
+								"DateTaken": "2009-09-01 17:06:12",
+								"TS": 1251824772,
+								"ExifColorSpace": 1,
+								"ExifFlash": 0,
+								"ExifOrientation": 1,
+								"Caption": "P1000952",
+								"origSrc": "/paris/P1000952.JPG",
+								"CameraId": "",
+								"OwnerId": "12345678-1111-0000-0000-paris-------",
+								"ProviderAccountId": "4bbb38c6-1704-4102-be65-11a0f67883f5",
+								"BatchId": "1270599803",
+								"Keyword": "",
+								"Created": "2010-04-06 14:36:13"
+							},
+							"LayoutHint": {
+								"FocusCenter": {
+									"Scale": 4000,
+									"X": 2000,
+									"Y": 1500
+								},
+								"FocusVector": {
+									"Direction": 0,
+									"Magnitude": 0
+								}
+							},
+							"IsCast": false,
+							"lastPerformed": null,
+							"SubstitutionREF": "4ff9113b-8c68-4d9c-ab49-0d61f67883f5",
+							"Shot": {
+								"id": "4ff9113b-8c68-4d9c-ab49-0d61f67883f5",
+								"count": "4"
+							},
+							"Tags": [],
+							"Clusters": "",
+							"Credits": ""
+						},
+						{
 							"id": "4bbb38cc-1a54-4b8d-bff3-11a0f67883f5",
 							"Photo": {
 								"id": "4bbb38cc-1a54-4b8d-bff3-11a0f67883f5",
@@ -3145,11 +4030,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -3197,6 +4082,65 @@
 							"Credits": ""
 						},
 						{
+							"id": "4bbb38cc-7f5c-4a46-b3c4-11a0f67883f5",
+							"Photo": {
+								"id": "4bbb38cc-7f5c-4a46-b3c4-11a0f67883f5",
+								"W": 4000,
+								"H": 3000,
+								"Fix": {
+									"Crops": "",
+									"Rating": null,
+									"Rotate": 1,
+									"Scrub": "",
+									"Score": "0.0",
+									"Votes": null
+								},
+								"Img": {
+									"Src": {
+										"W": 480,
+										"H": 640,
+										"rootSrc": "stage2/4bbb38cc-7f5c-4a46-b3c4-11a0f67883f5.jpg",
+										"Orientation": 1
+									}
+								},
+								"isOwner": true,
+								"DateTaken": "2009-09-01 17:07:28",
+								"TS": 1251824848,
+								"ExifColorSpace": 1,
+								"ExifFlash": 0,
+								"ExifOrientation": 1,
+								"Caption": "P1000954",
+								"origSrc": "/paris/P1000954.JPG",
+								"CameraId": "",
+								"OwnerId": "12345678-1111-0000-0000-paris-------",
+								"ProviderAccountId": "4bbb38c6-1704-4102-be65-11a0f67883f5",
+								"BatchId": "1270599803",
+								"Keyword": "",
+								"Created": "2010-04-06 14:36:13"
+							},
+							"LayoutHint": {
+								"FocusCenter": {
+									"Scale": 4000,
+									"X": 2000,
+									"Y": 1500
+								},
+								"FocusVector": {
+									"Direction": 0,
+									"Magnitude": 0
+								}
+							},
+							"IsCast": false,
+							"lastPerformed": null,
+							"SubstitutionREF": "4ff91144-7f84-45b1-8a40-0b26f67883f5",
+							"Shot": {
+								"id": "4ff91144-7f84-45b1-8a40-0b26f67883f5",
+								"count": "2"
+							},
+							"Tags": [],
+							"Clusters": "",
+							"Credits": ""
+						},
+						{
 							"id": "4bbb38cc-c9d4-4744-b108-11a0f67883f5",
 							"Photo": {
 								"id": "4bbb38cc-c9d4-4744-b108-11a0f67883f5",
@@ -3204,11 +4148,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "4.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "4.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -3263,11 +4207,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -3322,11 +4266,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -3381,11 +4325,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -3440,11 +4384,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -3492,6 +4436,124 @@
 							"Credits": ""
 						},
 						{
+							"id": "4bbb38cc-39e0-480b-a558-11a0f67883f5",
+							"Photo": {
+								"id": "4bbb38cc-39e0-480b-a558-11a0f67883f5",
+								"W": 4000,
+								"H": 3000,
+								"Fix": {
+									"Crops": "",
+									"Rating": null,
+									"Rotate": 1,
+									"Scrub": "",
+									"Score": "0.0",
+									"Votes": null
+								},
+								"Img": {
+									"Src": {
+										"W": 640,
+										"H": 480,
+										"rootSrc": "stage7/4bbb38cc-39e0-480b-a558-11a0f67883f5.jpg",
+										"Orientation": 1
+									}
+								},
+								"isOwner": true,
+								"DateTaken": "2009-09-01 17:25:19",
+								"TS": 1251825919,
+								"ExifColorSpace": 1,
+								"ExifFlash": 0,
+								"ExifOrientation": 1,
+								"Caption": "P1000960",
+								"origSrc": "/paris/P1000960.JPG",
+								"CameraId": "",
+								"OwnerId": "12345678-1111-0000-0000-paris-------",
+								"ProviderAccountId": "4bbb38c6-1704-4102-be65-11a0f67883f5",
+								"BatchId": "1270599803",
+								"Keyword": "",
+								"Created": "2010-04-06 14:36:13"
+							},
+							"LayoutHint": {
+								"FocusCenter": {
+									"Scale": 4000,
+									"X": 2000,
+									"Y": 1500
+								},
+								"FocusVector": {
+									"Direction": 0,
+									"Magnitude": 0
+								}
+							},
+							"IsCast": false,
+							"lastPerformed": null,
+							"SubstitutionREF": "4ff9116c-7400-4dc2-8a80-0a20f67883f5",
+							"Shot": {
+								"id": "4ff9116c-7400-4dc2-8a80-0a20f67883f5",
+								"count": "2"
+							},
+							"Tags": [],
+							"Clusters": "",
+							"Credits": ""
+						},
+						{
+							"id": "4bbb38cc-6a2c-4144-af22-11a0f67883f5",
+							"Photo": {
+								"id": "4bbb38cc-6a2c-4144-af22-11a0f67883f5",
+								"W": 4000,
+								"H": 3000,
+								"Fix": {
+									"Crops": "",
+									"Rating": null,
+									"Rotate": 1,
+									"Scrub": "",
+									"Score": "0.0",
+									"Votes": null
+								},
+								"Img": {
+									"Src": {
+										"W": 640,
+										"H": 480,
+										"rootSrc": "stage3/4bbb38cc-6a2c-4144-af22-11a0f67883f5.jpg",
+										"Orientation": 1
+									}
+								},
+								"isOwner": true,
+								"DateTaken": "2009-09-01 17:25:45",
+								"TS": 1251825945,
+								"ExifColorSpace": 1,
+								"ExifFlash": 0,
+								"ExifOrientation": 1,
+								"Caption": "P1000961",
+								"origSrc": "/paris/P1000961.JPG",
+								"CameraId": "",
+								"OwnerId": "12345678-1111-0000-0000-paris-------",
+								"ProviderAccountId": "4bbb38c6-1704-4102-be65-11a0f67883f5",
+								"BatchId": "1270599803",
+								"Keyword": "",
+								"Created": "2010-04-06 14:36:13"
+							},
+							"LayoutHint": {
+								"FocusCenter": {
+									"Scale": 4000,
+									"X": 2000,
+									"Y": 1500
+								},
+								"FocusVector": {
+									"Direction": 0,
+									"Magnitude": 0
+								}
+							},
+							"IsCast": false,
+							"lastPerformed": null,
+							"SubstitutionREF": "4ff9115f-96d8-4026-890a-0d50f67883f5",
+							"Shot": {
+								"id": "4ff9115f-96d8-4026-890a-0d50f67883f5",
+								"count": "3"
+							},
+							"Tags": [],
+							"Clusters": "",
+							"Credits": ""
+						},
+						{
 							"id": "4bbb38cc-8ccc-4bc5-a9ac-11a0f67883f5",
 							"Photo": {
 								"id": "4bbb38cc-8ccc-4bc5-a9ac-11a0f67883f5",
@@ -3499,11 +4561,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "3.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "3.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -3551,6 +4613,65 @@
 							"Credits": ""
 						},
 						{
+							"id": "4bbb38cc-0c00-4149-88b7-11a0f67883f5",
+							"Photo": {
+								"id": "4bbb38cc-0c00-4149-88b7-11a0f67883f5",
+								"W": 4000,
+								"H": 3000,
+								"Fix": {
+									"Crops": "",
+									"Rating": null,
+									"Rotate": 1,
+									"Scrub": "",
+									"Score": "0.0",
+									"Votes": null
+								},
+								"Img": {
+									"Src": {
+										"W": 640,
+										"H": 480,
+										"rootSrc": "stage1/4bbb38cc-0c00-4149-88b7-11a0f67883f5.jpg",
+										"Orientation": 1
+									}
+								},
+								"isOwner": true,
+								"DateTaken": "2009-09-01 17:26:01",
+								"TS": 1251825961,
+								"ExifColorSpace": 1,
+								"ExifFlash": 0,
+								"ExifOrientation": 1,
+								"Caption": "P1000963",
+								"origSrc": "/paris/P1000963.JPG",
+								"CameraId": "",
+								"OwnerId": "12345678-1111-0000-0000-paris-------",
+								"ProviderAccountId": "4bbb38c6-1704-4102-be65-11a0f67883f5",
+								"BatchId": "1270599803",
+								"Keyword": "",
+								"Created": "2010-04-06 14:36:13"
+							},
+							"LayoutHint": {
+								"FocusCenter": {
+									"Scale": 4000,
+									"X": 2000,
+									"Y": 1500
+								},
+								"FocusVector": {
+									"Direction": 0,
+									"Magnitude": 0
+								}
+							},
+							"IsCast": false,
+							"lastPerformed": null,
+							"SubstitutionREF": "4ff9115f-96d8-4026-890a-0d50f67883f5",
+							"Shot": {
+								"id": "4ff9115f-96d8-4026-890a-0d50f67883f5",
+								"count": "3"
+							},
+							"Tags": [],
+							"Clusters": "",
+							"Credits": ""
+						},
+						{
 							"id": "4bbb38cc-8f1c-4c88-97a2-11a0f67883f5",
 							"Photo": {
 								"id": "4bbb38cc-8f1c-4c88-97a2-11a0f67883f5",
@@ -3558,11 +4679,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -3617,11 +4738,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -3676,11 +4797,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -3735,11 +4856,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -3794,11 +4915,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -3846,6 +4967,183 @@
 							"Credits": ""
 						},
 						{
+							"id": "4bbb38cc-be90-4740-b39c-11a0f67883f5",
+							"Photo": {
+								"id": "4bbb38cc-be90-4740-b39c-11a0f67883f5",
+								"W": 4000,
+								"H": 3000,
+								"Fix": {
+									"Crops": "",
+									"Rating": null,
+									"Rotate": 1,
+									"Scrub": "",
+									"Score": "0.0",
+									"Votes": null
+								},
+								"Img": {
+									"Src": {
+										"W": 640,
+										"H": 480,
+										"rootSrc": "stage6/4bbb38cc-be90-4740-b39c-11a0f67883f5.jpg",
+										"Orientation": 1
+									}
+								},
+								"isOwner": true,
+								"DateTaken": "2009-09-01 18:23:22",
+								"TS": 1251829402,
+								"ExifColorSpace": 1,
+								"ExifFlash": 0,
+								"ExifOrientation": 1,
+								"Caption": "P1000969",
+								"origSrc": "/paris/P1000969.JPG",
+								"CameraId": "",
+								"OwnerId": "12345678-1111-0000-0000-paris-------",
+								"ProviderAccountId": "4bbb38c6-1704-4102-be65-11a0f67883f5",
+								"BatchId": "1270599803",
+								"Keyword": "",
+								"Created": "2010-04-06 14:36:13"
+							},
+							"LayoutHint": {
+								"FocusCenter": {
+									"Scale": 4000,
+									"X": 2000,
+									"Y": 1500
+								},
+								"FocusVector": {
+									"Direction": 0,
+									"Magnitude": 0
+								}
+							},
+							"IsCast": false,
+							"lastPerformed": null,
+							"SubstitutionREF": "4ff91172-24d4-4c84-a0a8-0cb3f67883f5",
+							"Shot": {
+								"id": "4ff91172-24d4-4c84-a0a8-0cb3f67883f5",
+								"count": "2"
+							},
+							"Tags": [],
+							"Clusters": "",
+							"Credits": ""
+						},
+						{
+							"id": "4bbb38cc-eaf4-4ce6-88b6-11a0f67883f5",
+							"Photo": {
+								"id": "4bbb38cc-eaf4-4ce6-88b6-11a0f67883f5",
+								"W": 4000,
+								"H": 3000,
+								"Fix": {
+									"Crops": "",
+									"Rating": null,
+									"Rotate": 1,
+									"Scrub": "",
+									"Score": "0.0",
+									"Votes": null
+								},
+								"Img": {
+									"Src": {
+										"W": 640,
+										"H": 480,
+										"rootSrc": "stage3/4bbb38cc-eaf4-4ce6-88b6-11a0f67883f5.jpg",
+										"Orientation": 1
+									}
+								},
+								"isOwner": true,
+								"DateTaken": "2009-09-01 18:50:06",
+								"TS": 1251831006,
+								"ExifColorSpace": 1,
+								"ExifFlash": 0,
+								"ExifOrientation": 1,
+								"Caption": "P1000970",
+								"origSrc": "/paris/P1000970.JPG",
+								"CameraId": "",
+								"OwnerId": "12345678-1111-0000-0000-paris-------",
+								"ProviderAccountId": "4bbb38c6-1704-4102-be65-11a0f67883f5",
+								"BatchId": "1270599803",
+								"Keyword": "",
+								"Created": "2010-04-06 14:36:13"
+							},
+							"LayoutHint": {
+								"FocusCenter": {
+									"Scale": 4000,
+									"X": 2000,
+									"Y": 1500
+								},
+								"FocusVector": {
+									"Direction": 0,
+									"Magnitude": 0
+								}
+							},
+							"IsCast": false,
+							"lastPerformed": null,
+							"SubstitutionREF": "4ff91184-0c5c-4d57-baf2-0cc8f67883f5",
+							"Shot": {
+								"id": "4ff91184-0c5c-4d57-baf2-0cc8f67883f5",
+								"count": "3"
+							},
+							"Tags": [],
+							"Clusters": "",
+							"Credits": ""
+						},
+						{
+							"id": "4bbb38cc-26f8-488f-8113-11a0f67883f5",
+							"Photo": {
+								"id": "4bbb38cc-26f8-488f-8113-11a0f67883f5",
+								"W": 4000,
+								"H": 3000,
+								"Fix": {
+									"Crops": "",
+									"Rating": null,
+									"Rotate": 1,
+									"Scrub": "",
+									"Score": "0.0",
+									"Votes": null
+								},
+								"Img": {
+									"Src": {
+										"W": 640,
+										"H": 480,
+										"rootSrc": "stage7/4bbb38cc-26f8-488f-8113-11a0f67883f5.jpg",
+										"Orientation": 1
+									}
+								},
+								"isOwner": true,
+								"DateTaken": "2009-09-01 18:50:22",
+								"TS": 1251831022,
+								"ExifColorSpace": 1,
+								"ExifFlash": 0,
+								"ExifOrientation": 1,
+								"Caption": "P1000971",
+								"origSrc": "/paris/P1000971.JPG",
+								"CameraId": "",
+								"OwnerId": "12345678-1111-0000-0000-paris-------",
+								"ProviderAccountId": "4bbb38c6-1704-4102-be65-11a0f67883f5",
+								"BatchId": "1270599803",
+								"Keyword": "",
+								"Created": "2010-04-06 14:36:13"
+							},
+							"LayoutHint": {
+								"FocusCenter": {
+									"Scale": 4000,
+									"X": 2000,
+									"Y": 1500
+								},
+								"FocusVector": {
+									"Direction": 0,
+									"Magnitude": 0
+								}
+							},
+							"IsCast": false,
+							"lastPerformed": null,
+							"SubstitutionREF": "4ff91184-0c5c-4d57-baf2-0cc8f67883f5",
+							"Shot": {
+								"id": "4ff91184-0c5c-4d57-baf2-0cc8f67883f5",
+								"count": "3"
+							},
+							"Tags": [],
+							"Clusters": "",
+							"Credits": ""
+						},
+						{
 							"id": "4bbb38cc-a690-4b77-81b8-11a0f67883f5",
 							"Photo": {
 								"id": "4bbb38cc-a690-4b77-81b8-11a0f67883f5",
@@ -3853,11 +5151,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "3.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "3.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -3912,11 +5210,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -3971,11 +5269,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -4030,11 +5328,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -4089,11 +5387,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -4148,11 +5446,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -4207,11 +5505,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -4266,11 +5564,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -4318,6 +5616,65 @@
 							"Credits": ""
 						},
 						{
+							"id": "4bbb38cc-b268-465a-af5b-11a0f67883f5",
+							"Photo": {
+								"id": "4bbb38cc-b268-465a-af5b-11a0f67883f5",
+								"W": 4000,
+								"H": 3000,
+								"Fix": {
+									"Crops": "",
+									"Rating": null,
+									"Rotate": 1,
+									"Scrub": "",
+									"Score": "0.0",
+									"Votes": null
+								},
+								"Img": {
+									"Src": {
+										"W": 640,
+										"H": 480,
+										"rootSrc": "stage6/4bbb38cc-b268-465a-af5b-11a0f67883f5.jpg",
+										"Orientation": 1
+									}
+								},
+								"isOwner": true,
+								"DateTaken": "2009-09-02 13:36:55",
+								"TS": 1251898615,
+								"ExifColorSpace": 1,
+								"ExifFlash": 0,
+								"ExifOrientation": 1,
+								"Caption": "P1000980",
+								"origSrc": "/paris/P1000980.JPG",
+								"CameraId": "",
+								"OwnerId": "12345678-1111-0000-0000-paris-------",
+								"ProviderAccountId": "4bbb38c6-1704-4102-be65-11a0f67883f5",
+								"BatchId": "1270599803",
+								"Keyword": "",
+								"Created": "2010-04-06 14:36:13"
+							},
+							"LayoutHint": {
+								"FocusCenter": {
+									"Scale": 4000,
+									"X": 2000,
+									"Y": 1500
+								},
+								"FocusVector": {
+									"Direction": 0,
+									"Magnitude": 0
+								}
+							},
+							"IsCast": false,
+							"lastPerformed": null,
+							"SubstitutionREF": "4ff91198-9a68-410f-8f69-0d5cf67883f5",
+							"Shot": {
+								"id": "4ff91198-9a68-410f-8f69-0d5cf67883f5",
+								"count": "2"
+							},
+							"Tags": [],
+							"Clusters": "",
+							"Credits": ""
+						},
+						{
 							"id": "4bbb38cc-5f50-474c-ab95-11a0f67883f5",
 							"Photo": {
 								"id": "4bbb38cc-5f50-474c-ab95-11a0f67883f5",
@@ -4325,11 +5682,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -4384,11 +5741,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -4443,11 +5800,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -4502,11 +5859,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -4561,11 +5918,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -4620,11 +5977,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -4679,11 +6036,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -4738,11 +6095,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -4797,11 +6154,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -4856,11 +6213,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -4915,11 +6272,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -4974,11 +6331,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -5033,11 +6390,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -5085,6 +6442,65 @@
 							"Credits": ""
 						},
 						{
+							"id": "4bbb38cc-78fc-4a3d-bfb4-11a0f67883f5",
+							"Photo": {
+								"id": "4bbb38cc-78fc-4a3d-bfb4-11a0f67883f5",
+								"W": 4000,
+								"H": 3000,
+								"Fix": {
+									"Crops": "",
+									"Rating": null,
+									"Rotate": 1,
+									"Scrub": "",
+									"Score": "0.0",
+									"Votes": null
+								},
+								"Img": {
+									"Src": {
+										"W": 640,
+										"H": 480,
+										"rootSrc": "stage1/4bbb38cc-78fc-4a3d-bfb4-11a0f67883f5.jpg",
+										"Orientation": 1
+									}
+								},
+								"isOwner": true,
+								"DateTaken": "2009-09-02 14:31:33",
+								"TS": 1251901893,
+								"ExifColorSpace": 1,
+								"ExifFlash": 0,
+								"ExifOrientation": 1,
+								"Caption": "P1000994",
+								"origSrc": "/paris/P1000994.JPG",
+								"CameraId": "",
+								"OwnerId": "12345678-1111-0000-0000-paris-------",
+								"ProviderAccountId": "4bbb38c6-1704-4102-be65-11a0f67883f5",
+								"BatchId": "1270599803",
+								"Keyword": "",
+								"Created": "2010-04-06 14:36:13"
+							},
+							"LayoutHint": {
+								"FocusCenter": {
+									"Scale": 4000,
+									"X": 2000,
+									"Y": 1500
+								},
+								"FocusVector": {
+									"Direction": 0,
+									"Magnitude": 0
+								}
+							},
+							"IsCast": false,
+							"lastPerformed": null,
+							"SubstitutionREF": "4ff911b8-7c68-46ab-a4a6-0cc8f67883f5",
+							"Shot": {
+								"id": "4ff911b8-7c68-46ab-a4a6-0cc8f67883f5",
+								"count": "3"
+							},
+							"Tags": [],
+							"Clusters": "",
+							"Credits": ""
+						},
+						{
 							"id": "4bbb38cc-1d4c-4f96-8850-11a0f67883f5",
 							"Photo": {
 								"id": "4bbb38cc-1d4c-4f96-8850-11a0f67883f5",
@@ -5092,11 +6508,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -5144,6 +6560,65 @@
 							"Credits": ""
 						},
 						{
+							"id": "4bbb38cc-4cd0-487a-9ce9-11a0f67883f5",
+							"Photo": {
+								"id": "4bbb38cc-4cd0-487a-9ce9-11a0f67883f5",
+								"W": 4000,
+								"H": 3000,
+								"Fix": {
+									"Crops": "",
+									"Rating": null,
+									"Rotate": 1,
+									"Scrub": "",
+									"Score": "0.0",
+									"Votes": null
+								},
+								"Img": {
+									"Src": {
+										"W": 640,
+										"H": 480,
+										"rootSrc": "stage3/4bbb38cc-4cd0-487a-9ce9-11a0f67883f5.jpg",
+										"Orientation": 1
+									}
+								},
+								"isOwner": true,
+								"DateTaken": "2009-09-02 14:31:58",
+								"TS": 1251901918,
+								"ExifColorSpace": 1,
+								"ExifFlash": 0,
+								"ExifOrientation": 1,
+								"Caption": "P1000996",
+								"origSrc": "/paris/P1000996.JPG",
+								"CameraId": "",
+								"OwnerId": "12345678-1111-0000-0000-paris-------",
+								"ProviderAccountId": "4bbb38c6-1704-4102-be65-11a0f67883f5",
+								"BatchId": "1270599803",
+								"Keyword": "",
+								"Created": "2010-04-06 14:36:13"
+							},
+							"LayoutHint": {
+								"FocusCenter": {
+									"Scale": 4000,
+									"X": 2000,
+									"Y": 1500
+								},
+								"FocusVector": {
+									"Direction": 0,
+									"Magnitude": 0
+								}
+							},
+							"IsCast": false,
+							"lastPerformed": null,
+							"SubstitutionREF": "4ff911b8-7c68-46ab-a4a6-0cc8f67883f5",
+							"Shot": {
+								"id": "4ff911b8-7c68-46ab-a4a6-0cc8f67883f5",
+								"count": "3"
+							},
+							"Tags": [],
+							"Clusters": "",
+							"Credits": ""
+						},
+						{
 							"id": "4bbb38cc-85b4-4d57-b981-11a0f67883f5",
 							"Photo": {
 								"id": "4bbb38cc-85b4-4d57-b981-11a0f67883f5",
@@ -5151,11 +6626,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -5210,11 +6685,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -5269,11 +6744,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -5321,6 +6796,65 @@
 							"Credits": ""
 						},
 						{
+							"id": "4bbb38cc-a720-4e45-a06b-11a0f67883f5",
+							"Photo": {
+								"id": "4bbb38cc-a720-4e45-a06b-11a0f67883f5",
+								"W": 4000,
+								"H": 3000,
+								"Fix": {
+									"Crops": "",
+									"Rating": null,
+									"Rotate": 1,
+									"Scrub": "",
+									"Score": "0.0",
+									"Votes": null
+								},
+								"Img": {
+									"Src": {
+										"W": 640,
+										"H": 480,
+										"rootSrc": "stage0/4bbb38cc-a720-4e45-a06b-11a0f67883f5.jpg",
+										"Orientation": 1
+									}
+								},
+								"isOwner": true,
+								"DateTaken": "2009-09-02 14:33:43",
+								"TS": 1251902023,
+								"ExifColorSpace": 1,
+								"ExifFlash": 0,
+								"ExifOrientation": 1,
+								"Caption": "P1010001",
+								"origSrc": "/paris/P1010001.JPG",
+								"CameraId": "",
+								"OwnerId": "12345678-1111-0000-0000-paris-------",
+								"ProviderAccountId": "4bbb38c6-1704-4102-be65-11a0f67883f5",
+								"BatchId": "1270599803",
+								"Keyword": "",
+								"Created": "2010-04-06 14:36:13"
+							},
+							"LayoutHint": {
+								"FocusCenter": {
+									"Scale": 4000,
+									"X": 2000,
+									"Y": 1500
+								},
+								"FocusVector": {
+									"Direction": 0,
+									"Magnitude": 0
+								}
+							},
+							"IsCast": false,
+							"lastPerformed": null,
+							"SubstitutionREF": "4ff911d3-3834-4dca-92de-0d5ff67883f5",
+							"Shot": {
+								"id": "4ff911d3-3834-4dca-92de-0d5ff67883f5",
+								"count": "2"
+							},
+							"Tags": [],
+							"Clusters": "",
+							"Credits": ""
+						},
+						{
 							"id": "4bbb38cc-22d0-4309-9304-11a0f67883f5",
 							"Photo": {
 								"id": "4bbb38cc-22d0-4309-9304-11a0f67883f5",
@@ -5328,11 +6862,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -5387,11 +6921,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -5446,11 +6980,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -5505,11 +7039,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -5564,11 +7098,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -5616,6 +7150,65 @@
 							"Credits": ""
 						},
 						{
+							"id": "4bbb38cc-8c14-40c7-ae16-11a0f67883f5",
+							"Photo": {
+								"id": "4bbb38cc-8c14-40c7-ae16-11a0f67883f5",
+								"W": 4000,
+								"H": 3000,
+								"Fix": {
+									"Crops": "",
+									"Rating": null,
+									"Rotate": 1,
+									"Scrub": "",
+									"Score": "0.0",
+									"Votes": null
+								},
+								"Img": {
+									"Src": {
+										"W": 640,
+										"H": 480,
+										"rootSrc": "stage4/4bbb38cc-8c14-40c7-ae16-11a0f67883f5.jpg",
+										"Orientation": 1
+									}
+								},
+								"isOwner": true,
+								"DateTaken": "2009-09-02 14:53:09",
+								"TS": 1251903189,
+								"ExifColorSpace": 1,
+								"ExifFlash": 0,
+								"ExifOrientation": 1,
+								"Caption": "P1010007",
+								"origSrc": "/paris/P1010007.JPG",
+								"CameraId": "",
+								"OwnerId": "12345678-1111-0000-0000-paris-------",
+								"ProviderAccountId": "4bbb38c6-1704-4102-be65-11a0f67883f5",
+								"BatchId": "1270599803",
+								"Keyword": "",
+								"Created": "2010-04-06 14:36:13"
+							},
+							"LayoutHint": {
+								"FocusCenter": {
+									"Scale": 4000,
+									"X": 2000,
+									"Y": 1500
+								},
+								"FocusVector": {
+									"Direction": 0,
+									"Magnitude": 0
+								}
+							},
+							"IsCast": false,
+							"lastPerformed": null,
+							"SubstitutionREF": "4ff911dd-bff8-4fe3-8ccc-0dfdf67883f5",
+							"Shot": {
+								"id": "4ff911dd-bff8-4fe3-8ccc-0dfdf67883f5",
+								"count": "2"
+							},
+							"Tags": [],
+							"Clusters": "",
+							"Credits": ""
+						},
+						{
 							"id": "4bbb38cc-15d4-4c2e-92e1-11a0f67883f5",
 							"Photo": {
 								"id": "4bbb38cc-15d4-4c2e-92e1-11a0f67883f5",
@@ -5623,11 +7216,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -5682,11 +7275,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "4.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "4.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -5741,11 +7334,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -5793,6 +7386,65 @@
 							"Credits": ""
 						},
 						{
+							"id": "4bbb38cc-2f4c-4bed-99da-11a0f67883f5",
+							"Photo": {
+								"id": "4bbb38cc-2f4c-4bed-99da-11a0f67883f5",
+								"W": 4000,
+								"H": 3000,
+								"Fix": {
+									"Crops": "",
+									"Rating": null,
+									"Rotate": 1,
+									"Scrub": "",
+									"Score": "0.0",
+									"Votes": null
+								},
+								"Img": {
+									"Src": {
+										"W": 640,
+										"H": 480,
+										"rootSrc": "stage3/4bbb38cc-2f4c-4bed-99da-11a0f67883f5.jpg",
+										"Orientation": 1
+									}
+								},
+								"isOwner": true,
+								"DateTaken": "2009-09-02 14:56:58",
+								"TS": 1251903418,
+								"ExifColorSpace": 1,
+								"ExifFlash": 0,
+								"ExifOrientation": 1,
+								"Caption": "P1010011",
+								"origSrc": "/paris/P1010011.JPG",
+								"CameraId": "",
+								"OwnerId": "12345678-1111-0000-0000-paris-------",
+								"ProviderAccountId": "4bbb38c6-1704-4102-be65-11a0f67883f5",
+								"BatchId": "1270599803",
+								"Keyword": "",
+								"Created": "2010-04-06 14:36:13"
+							},
+							"LayoutHint": {
+								"FocusCenter": {
+									"Scale": 4000,
+									"X": 2000,
+									"Y": 1500
+								},
+								"FocusVector": {
+									"Direction": 0,
+									"Magnitude": 0
+								}
+							},
+							"IsCast": false,
+							"lastPerformed": null,
+							"SubstitutionREF": "4ff911e2-aeec-4948-b194-0dfdf67883f5",
+							"Shot": {
+								"id": "4ff911e2-aeec-4948-b194-0dfdf67883f5",
+								"count": "2"
+							},
+							"Tags": [],
+							"Clusters": "",
+							"Credits": ""
+						},
+						{
 							"id": "4bbb38cc-88dc-4fec-bb70-11a0f67883f5",
 							"Photo": {
 								"id": "4bbb38cc-88dc-4fec-bb70-11a0f67883f5",
@@ -5800,11 +7452,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -5859,11 +7511,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -5918,11 +7570,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -5977,11 +7629,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -6036,11 +7688,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -6095,11 +7747,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -6154,11 +7806,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -6213,11 +7865,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "4.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "4.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -6272,11 +7924,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -6331,11 +7983,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -6383,6 +8035,65 @@
 							"Credits": ""
 						},
 						{
+							"id": "4bbb38cc-37b4-44e7-b34e-11a0f67883f5",
+							"Photo": {
+								"id": "4bbb38cc-37b4-44e7-b34e-11a0f67883f5",
+								"W": 4000,
+								"H": 3000,
+								"Fix": {
+									"Crops": "",
+									"Rating": null,
+									"Rotate": 1,
+									"Scrub": "",
+									"Score": "0.0",
+									"Votes": null
+								},
+								"Img": {
+									"Src": {
+										"W": 640,
+										"H": 480,
+										"rootSrc": "stage7/4bbb38cc-37b4-44e7-b34e-11a0f67883f5.jpg",
+										"Orientation": 1
+									}
+								},
+								"isOwner": true,
+								"DateTaken": "2009-09-02 16:35:15",
+								"TS": 1251909315,
+								"ExifColorSpace": 1,
+								"ExifFlash": 0,
+								"ExifOrientation": 1,
+								"Caption": "P1010022",
+								"origSrc": "/paris/P1010022.JPG",
+								"CameraId": "",
+								"OwnerId": "12345678-1111-0000-0000-paris-------",
+								"ProviderAccountId": "4bbb38c6-1704-4102-be65-11a0f67883f5",
+								"BatchId": "1270599803",
+								"Keyword": "",
+								"Created": "2010-04-06 14:36:13"
+							},
+							"LayoutHint": {
+								"FocusCenter": {
+									"Scale": 4000,
+									"X": 2000,
+									"Y": 1500
+								},
+								"FocusVector": {
+									"Direction": 0,
+									"Magnitude": 0
+								}
+							},
+							"IsCast": false,
+							"lastPerformed": null,
+							"SubstitutionREF": "4ff911ee-96cc-4d77-8eaa-0b26f67883f5",
+							"Shot": {
+								"id": "4ff911ee-96cc-4d77-8eaa-0b26f67883f5",
+								"count": "2"
+							},
+							"Tags": [],
+							"Clusters": "",
+							"Credits": ""
+						},
+						{
 							"id": "4bbb38cc-6d14-4142-9ae8-11a0f67883f5",
 							"Photo": {
 								"id": "4bbb38cc-6d14-4142-9ae8-11a0f67883f5",
@@ -6390,11 +8101,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -6449,11 +8160,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -6508,11 +8219,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -6567,11 +8278,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -6626,11 +8337,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -6685,11 +8396,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -6744,11 +8455,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -6796,6 +8507,124 @@
 							"Credits": ""
 						},
 						{
+							"id": "4bbb38cc-79bc-4c46-bb27-11a0f67883f5",
+							"Photo": {
+								"id": "4bbb38cc-79bc-4c46-bb27-11a0f67883f5",
+								"W": 4000,
+								"H": 3000,
+								"Fix": {
+									"Crops": "",
+									"Rating": null,
+									"Rotate": 1,
+									"Scrub": "",
+									"Score": "0.0",
+									"Votes": null
+								},
+								"Img": {
+									"Src": {
+										"W": 640,
+										"H": 480,
+										"rootSrc": "stage0/4bbb38cc-79bc-4c46-bb27-11a0f67883f5.jpg",
+										"Orientation": 1
+									}
+								},
+								"isOwner": true,
+								"DateTaken": "2009-09-02 17:07:03",
+								"TS": 1251911223,
+								"ExifColorSpace": 1,
+								"ExifFlash": 0,
+								"ExifOrientation": 1,
+								"Caption": "P1010030",
+								"origSrc": "/paris/P1010030.JPG",
+								"CameraId": "",
+								"OwnerId": "12345678-1111-0000-0000-paris-------",
+								"ProviderAccountId": "4bbb38c6-1704-4102-be65-11a0f67883f5",
+								"BatchId": "1270599803",
+								"Keyword": "",
+								"Created": "2010-04-06 14:36:13"
+							},
+							"LayoutHint": {
+								"FocusCenter": {
+									"Scale": 4000,
+									"X": 2000,
+									"Y": 1500
+								},
+								"FocusVector": {
+									"Direction": 0,
+									"Magnitude": 0
+								}
+							},
+							"IsCast": false,
+							"lastPerformed": null,
+							"SubstitutionREF": "4ff911fc-2d54-48bf-b5c8-0d50f67883f5",
+							"Shot": {
+								"id": "4ff911fc-2d54-48bf-b5c8-0d50f67883f5",
+								"count": "4"
+							},
+							"Tags": [],
+							"Clusters": "",
+							"Credits": ""
+						},
+						{
+							"id": "4bbb38cc-c5c4-4510-9221-11a0f67883f5",
+							"Photo": {
+								"id": "4bbb38cc-c5c4-4510-9221-11a0f67883f5",
+								"W": 4000,
+								"H": 3000,
+								"Fix": {
+									"Crops": "",
+									"Rating": null,
+									"Rotate": 1,
+									"Scrub": "",
+									"Score": "0.0",
+									"Votes": null
+								},
+								"Img": {
+									"Src": {
+										"W": 640,
+										"H": 480,
+										"rootSrc": "stage4/4bbb38cc-c5c4-4510-9221-11a0f67883f5.jpg",
+										"Orientation": 1
+									}
+								},
+								"isOwner": true,
+								"DateTaken": "2009-09-02 17:07:48",
+								"TS": 1251911268,
+								"ExifColorSpace": 1,
+								"ExifFlash": 0,
+								"ExifOrientation": 1,
+								"Caption": "P1010031",
+								"origSrc": "/paris/P1010031.JPG",
+								"CameraId": "",
+								"OwnerId": "12345678-1111-0000-0000-paris-------",
+								"ProviderAccountId": "4bbb38c6-1704-4102-be65-11a0f67883f5",
+								"BatchId": "1270599803",
+								"Keyword": "",
+								"Created": "2010-04-06 14:36:13"
+							},
+							"LayoutHint": {
+								"FocusCenter": {
+									"Scale": 4000,
+									"X": 2000,
+									"Y": 1500
+								},
+								"FocusVector": {
+									"Direction": 0,
+									"Magnitude": 0
+								}
+							},
+							"IsCast": false,
+							"lastPerformed": null,
+							"SubstitutionREF": "4ff911fc-2d54-48bf-b5c8-0d50f67883f5",
+							"Shot": {
+								"id": "4ff911fc-2d54-48bf-b5c8-0d50f67883f5",
+								"count": "4"
+							},
+							"Tags": [],
+							"Clusters": "",
+							"Credits": ""
+						},
+						{
 							"id": "4bbb38cc-01c8-44bd-b71d-11a0f67883f5",
 							"Photo": {
 								"id": "4bbb38cc-01c8-44bd-b71d-11a0f67883f5",
@@ -6803,11 +8632,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "3.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "3.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -6855,6 +8684,65 @@
 							"Credits": ""
 						},
 						{
+							"id": "4bbb38cc-c6e8-4a7a-960f-11a0f67883f5",
+							"Photo": {
+								"id": "4bbb38cc-c6e8-4a7a-960f-11a0f67883f5",
+								"W": 4000,
+								"H": 3000,
+								"Fix": {
+									"Crops": "",
+									"Rating": null,
+									"Rotate": 1,
+									"Scrub": "",
+									"Score": "0.0",
+									"Votes": null
+								},
+								"Img": {
+									"Src": {
+										"W": 640,
+										"H": 480,
+										"rootSrc": "stage6/4bbb38cc-c6e8-4a7a-960f-11a0f67883f5.jpg",
+										"Orientation": 1
+									}
+								},
+								"isOwner": true,
+								"DateTaken": "2009-09-02 17:08:08",
+								"TS": 1251911288,
+								"ExifColorSpace": 1,
+								"ExifFlash": 0,
+								"ExifOrientation": 1,
+								"Caption": "P1010033",
+								"origSrc": "/paris/P1010033.JPG",
+								"CameraId": "",
+								"OwnerId": "12345678-1111-0000-0000-paris-------",
+								"ProviderAccountId": "4bbb38c6-1704-4102-be65-11a0f67883f5",
+								"BatchId": "1270599803",
+								"Keyword": "",
+								"Created": "2010-04-06 14:36:13"
+							},
+							"LayoutHint": {
+								"FocusCenter": {
+									"Scale": 4000,
+									"X": 2000,
+									"Y": 1500
+								},
+								"FocusVector": {
+									"Direction": 0,
+									"Magnitude": 0
+								}
+							},
+							"IsCast": false,
+							"lastPerformed": null,
+							"SubstitutionREF": "4ff911fc-2d54-48bf-b5c8-0d50f67883f5",
+							"Shot": {
+								"id": "4ff911fc-2d54-48bf-b5c8-0d50f67883f5",
+								"count": "4"
+							},
+							"Tags": [],
+							"Clusters": "",
+							"Credits": ""
+						},
+						{
 							"id": "4bbb38cc-a3dc-45c7-9e8a-11a0f67883f5",
 							"Photo": {
 								"id": "4bbb38cc-a3dc-45c7-9e8a-11a0f67883f5",
@@ -6862,11 +8750,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -6921,11 +8809,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -6980,11 +8868,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -7039,11 +8927,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -7091,6 +8979,65 @@
 							"Credits": ""
 						},
 						{
+							"id": "4bbb38cc-6b8c-4e00-81bf-11a0f67883f5",
+							"Photo": {
+								"id": "4bbb38cc-6b8c-4e00-81bf-11a0f67883f5",
+								"W": 4000,
+								"H": 3000,
+								"Fix": {
+									"Crops": "",
+									"Rating": null,
+									"Rotate": 1,
+									"Scrub": "",
+									"Score": "0.0",
+									"Votes": null
+								},
+								"Img": {
+									"Src": {
+										"W": 640,
+										"H": 480,
+										"rootSrc": "stage2/4bbb38cc-6b8c-4e00-81bf-11a0f67883f5.jpg",
+										"Orientation": 1
+									}
+								},
+								"isOwner": true,
+								"DateTaken": "2009-09-02 17:36:01",
+								"TS": 1251912961,
+								"ExifColorSpace": 1,
+								"ExifFlash": 0,
+								"ExifOrientation": 1,
+								"Caption": "P1010040",
+								"origSrc": "/paris/P1010040.JPG",
+								"CameraId": "",
+								"OwnerId": "12345678-1111-0000-0000-paris-------",
+								"ProviderAccountId": "4bbb38c6-1704-4102-be65-11a0f67883f5",
+								"BatchId": "1270599803",
+								"Keyword": "",
+								"Created": "2010-04-06 14:36:13"
+							},
+							"LayoutHint": {
+								"FocusCenter": {
+									"Scale": 4000,
+									"X": 2000,
+									"Y": 1500
+								},
+								"FocusVector": {
+									"Direction": 0,
+									"Magnitude": 0
+								}
+							},
+							"IsCast": false,
+							"lastPerformed": null,
+							"SubstitutionREF": "4ff91208-d23c-46fd-964a-0d61f67883f5",
+							"Shot": {
+								"id": "4ff91208-d23c-46fd-964a-0d61f67883f5",
+								"count": "2"
+							},
+							"Tags": [],
+							"Clusters": "",
+							"Credits": ""
+						},
+						{
 							"id": "4bbb38cc-c2e8-4589-a891-11a0f67883f5",
 							"Photo": {
 								"id": "4bbb38cc-c2e8-4589-a891-11a0f67883f5",
@@ -7098,11 +9045,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "3.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "3.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -7157,11 +9104,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -7216,11 +9163,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -7275,11 +9222,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -7334,11 +9281,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -7393,11 +9340,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -7452,11 +9399,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -7511,11 +9458,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -7570,11 +9517,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -7629,11 +9576,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -7681,6 +9628,65 @@
 							"Credits": ""
 						},
 						{
+							"id": "4bbb38cc-42fc-4d0a-b493-11a0f67883f5",
+							"Photo": {
+								"id": "4bbb38cc-42fc-4d0a-b493-11a0f67883f5",
+								"W": 4000,
+								"H": 3000,
+								"Fix": {
+									"Crops": "",
+									"Rating": null,
+									"Rotate": 1,
+									"Scrub": "",
+									"Score": "0.0",
+									"Votes": null
+								},
+								"Img": {
+									"Src": {
+										"W": 640,
+										"H": 480,
+										"rootSrc": "stage7/4bbb38cc-42fc-4d0a-b493-11a0f67883f5.jpg",
+										"Orientation": 1
+									}
+								},
+								"isOwner": true,
+								"DateTaken": "2009-09-03 11:34:07",
+								"TS": 1251977647,
+								"ExifColorSpace": 1,
+								"ExifFlash": 0,
+								"ExifOrientation": 1,
+								"Caption": "P1010053",
+								"origSrc": "/paris/P1010053.JPG",
+								"CameraId": "",
+								"OwnerId": "12345678-1111-0000-0000-paris-------",
+								"ProviderAccountId": "4bbb38c6-1704-4102-be65-11a0f67883f5",
+								"BatchId": "1270599803",
+								"Keyword": "",
+								"Created": "2010-04-06 14:36:14"
+							},
+							"LayoutHint": {
+								"FocusCenter": {
+									"Scale": 4000,
+									"X": 2000,
+									"Y": 1500
+								},
+								"FocusVector": {
+									"Direction": 0,
+									"Magnitude": 0
+								}
+							},
+							"IsCast": false,
+							"lastPerformed": null,
+							"SubstitutionREF": "4ff91229-a708-47d3-a9e6-0e2cf67883f5",
+							"Shot": {
+								"id": "4ff91229-a708-47d3-a9e6-0e2cf67883f5",
+								"count": "2"
+							},
+							"Tags": [],
+							"Clusters": "",
+							"Credits": ""
+						},
+						{
 							"id": "4bbb38cc-0308-44bc-bf47-11a0f67883f5",
 							"Photo": {
 								"id": "4bbb38cc-0308-44bc-bf47-11a0f67883f5",
@@ -7688,11 +9694,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -7740,6 +9746,65 @@
 							"Credits": ""
 						},
 						{
+							"id": "4bbb38cc-2a58-4e39-9570-11a0f67883f5",
+							"Photo": {
+								"id": "4bbb38cc-2a58-4e39-9570-11a0f67883f5",
+								"W": 4000,
+								"H": 3000,
+								"Fix": {
+									"Crops": "",
+									"Rating": null,
+									"Rotate": 1,
+									"Scrub": "",
+									"Score": "0.0",
+									"Votes": null
+								},
+								"Img": {
+									"Src": {
+										"W": 640,
+										"H": 480,
+										"rootSrc": "stage1/4bbb38cc-2a58-4e39-9570-11a0f67883f5.jpg",
+										"Orientation": 1
+									}
+								},
+								"isOwner": true,
+								"DateTaken": "2009-09-03 11:39:39",
+								"TS": 1251977979,
+								"ExifColorSpace": 1,
+								"ExifFlash": 0,
+								"ExifOrientation": 1,
+								"Caption": "P1010055",
+								"origSrc": "/paris/P1010055.JPG",
+								"CameraId": "",
+								"OwnerId": "12345678-1111-0000-0000-paris-------",
+								"ProviderAccountId": "4bbb38c6-1704-4102-be65-11a0f67883f5",
+								"BatchId": "1270599803",
+								"Keyword": "",
+								"Created": "2010-04-06 14:36:14"
+							},
+							"LayoutHint": {
+								"FocusCenter": {
+									"Scale": 4000,
+									"X": 2000,
+									"Y": 1500
+								},
+								"FocusVector": {
+									"Direction": 0,
+									"Magnitude": 0
+								}
+							},
+							"IsCast": false,
+							"lastPerformed": null,
+							"SubstitutionREF": "4ff91232-6ba8-47ff-8f0d-0cb3f67883f5",
+							"Shot": {
+								"id": "4ff91232-6ba8-47ff-8f0d-0cb3f67883f5",
+								"count": "2"
+							},
+							"Tags": [],
+							"Clusters": "",
+							"Credits": ""
+						},
+						{
 							"id": "4bbb38cc-ae3c-473e-b4ee-11a0f67883f5",
 							"Photo": {
 								"id": "4bbb38cc-ae3c-473e-b4ee-11a0f67883f5",
@@ -7747,11 +9812,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -7806,11 +9871,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -7865,11 +9930,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -7924,11 +9989,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -7983,11 +10048,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -8042,11 +10107,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -8101,11 +10166,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -8160,11 +10225,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "3.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "3.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -8219,11 +10284,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -8278,11 +10343,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -8330,6 +10395,65 @@
 							"Credits": ""
 						},
 						{
+							"id": "4bbb38cc-ec78-417d-94e5-11a0f67883f5",
+							"Photo": {
+								"id": "4bbb38cc-ec78-417d-94e5-11a0f67883f5",
+								"W": 4000,
+								"H": 3000,
+								"Fix": {
+									"Crops": "",
+									"Rating": null,
+									"Rotate": 1,
+									"Scrub": "",
+									"Score": "0.0",
+									"Votes": null
+								},
+								"Img": {
+									"Src": {
+										"W": 640,
+										"H": 480,
+										"rootSrc": "stage3/4bbb38cc-ec78-417d-94e5-11a0f67883f5.jpg",
+										"Orientation": 1
+									}
+								},
+								"isOwner": true,
+								"DateTaken": "2009-09-03 14:01:10",
+								"TS": 1251986470,
+								"ExifColorSpace": 1,
+								"ExifFlash": 0,
+								"ExifOrientation": 1,
+								"Caption": "P1010066",
+								"origSrc": "/paris/P1010066.JPG",
+								"CameraId": "",
+								"OwnerId": "12345678-1111-0000-0000-paris-------",
+								"ProviderAccountId": "4bbb38c6-1704-4102-be65-11a0f67883f5",
+								"BatchId": "1270599803",
+								"Keyword": "",
+								"Created": "2010-04-06 14:36:14"
+							},
+							"LayoutHint": {
+								"FocusCenter": {
+									"Scale": 4000,
+									"X": 2000,
+									"Y": 1500
+								},
+								"FocusVector": {
+									"Direction": 0,
+									"Magnitude": 0
+								}
+							},
+							"IsCast": false,
+							"lastPerformed": null,
+							"SubstitutionREF": "4ff91239-e84c-469d-9833-0cc8f67883f5",
+							"Shot": {
+								"id": "4ff91239-e84c-469d-9833-0cc8f67883f5",
+								"count": "2"
+							},
+							"Tags": [],
+							"Clusters": "",
+							"Credits": ""
+						},
+						{
 							"id": "4bbb38cc-0dec-41bb-b3d9-11a0f67883f5",
 							"Photo": {
 								"id": "4bbb38cc-0dec-41bb-b3d9-11a0f67883f5",
@@ -8337,11 +10461,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -8389,6 +10513,183 @@
 							"Credits": ""
 						},
 						{
+							"id": "4bbb38cc-2efc-4434-9b8c-11a0f67883f5",
+							"Photo": {
+								"id": "4bbb38cc-2efc-4434-9b8c-11a0f67883f5",
+								"W": 4000,
+								"H": 3000,
+								"Fix": {
+									"Crops": "",
+									"Rating": null,
+									"Rotate": 1,
+									"Scrub": "",
+									"Score": "0.0",
+									"Votes": null
+								},
+								"Img": {
+									"Src": {
+										"W": 640,
+										"H": 480,
+										"rootSrc": "stage2/4bbb38cc-2efc-4434-9b8c-11a0f67883f5.jpg",
+										"Orientation": 1
+									}
+								},
+								"isOwner": true,
+								"DateTaken": "2009-09-03 14:03:03",
+								"TS": 1251986583,
+								"ExifColorSpace": 1,
+								"ExifFlash": 0,
+								"ExifOrientation": 1,
+								"Caption": "P1010068",
+								"origSrc": "/paris/P1010068.JPG",
+								"CameraId": "",
+								"OwnerId": "12345678-1111-0000-0000-paris-------",
+								"ProviderAccountId": "4bbb38c6-1704-4102-be65-11a0f67883f5",
+								"BatchId": "1270599803",
+								"Keyword": "",
+								"Created": "2010-04-06 14:36:14"
+							},
+							"LayoutHint": {
+								"FocusCenter": {
+									"Scale": 4000,
+									"X": 2000,
+									"Y": 1500
+								},
+								"FocusVector": {
+									"Direction": 0,
+									"Magnitude": 0
+								}
+							},
+							"IsCast": false,
+							"lastPerformed": null,
+							"SubstitutionREF": "4ff91265-06fc-4bec-87a5-0d5ff67883f5",
+							"Shot": {
+								"id": "4ff91265-06fc-4bec-87a5-0d5ff67883f5",
+								"count": "4"
+							},
+							"Tags": [],
+							"Clusters": "",
+							"Credits": ""
+						},
+						{
+							"id": "4bbb38cc-9a44-4e61-aa43-11a0f67883f5",
+							"Photo": {
+								"id": "4bbb38cc-9a44-4e61-aa43-11a0f67883f5",
+								"W": 4000,
+								"H": 3000,
+								"Fix": {
+									"Crops": "",
+									"Rating": null,
+									"Rotate": 1,
+									"Scrub": "",
+									"Score": "0.0",
+									"Votes": null
+								},
+								"Img": {
+									"Src": {
+										"W": 640,
+										"H": 480,
+										"rootSrc": "stage2/4bbb38cc-9a44-4e61-aa43-11a0f67883f5.jpg",
+										"Orientation": 1
+									}
+								},
+								"isOwner": true,
+								"DateTaken": "2009-09-03 14:03:10",
+								"TS": 1251986590,
+								"ExifColorSpace": 1,
+								"ExifFlash": 0,
+								"ExifOrientation": 1,
+								"Caption": "P1010069",
+								"origSrc": "/paris/P1010069.JPG",
+								"CameraId": "",
+								"OwnerId": "12345678-1111-0000-0000-paris-------",
+								"ProviderAccountId": "4bbb38c6-1704-4102-be65-11a0f67883f5",
+								"BatchId": "1270599803",
+								"Keyword": "",
+								"Created": "2010-04-06 14:36:14"
+							},
+							"LayoutHint": {
+								"FocusCenter": {
+									"Scale": 4000,
+									"X": 2000,
+									"Y": 1500
+								},
+								"FocusVector": {
+									"Direction": 0,
+									"Magnitude": 0
+								}
+							},
+							"IsCast": false,
+							"lastPerformed": null,
+							"SubstitutionREF": "4ff91265-06fc-4bec-87a5-0d5ff67883f5",
+							"Shot": {
+								"id": "4ff91265-06fc-4bec-87a5-0d5ff67883f5",
+								"count": "4"
+							},
+							"Tags": [],
+							"Clusters": "",
+							"Credits": ""
+						},
+						{
+							"id": "4bbb38cc-1c98-4413-9acb-11a0f67883f5",
+							"Photo": {
+								"id": "4bbb38cc-1c98-4413-9acb-11a0f67883f5",
+								"W": 4000,
+								"H": 3000,
+								"Fix": {
+									"Crops": "",
+									"Rating": null,
+									"Rotate": 1,
+									"Scrub": "",
+									"Score": "0.0",
+									"Votes": null
+								},
+								"Img": {
+									"Src": {
+										"W": 640,
+										"H": 480,
+										"rootSrc": "stage5/4bbb38cc-1c98-4413-9acb-11a0f67883f5.jpg",
+										"Orientation": 1
+									}
+								},
+								"isOwner": true,
+								"DateTaken": "2009-09-03 14:03:13",
+								"TS": 1251986593,
+								"ExifColorSpace": 1,
+								"ExifFlash": 0,
+								"ExifOrientation": 1,
+								"Caption": "P1010070",
+								"origSrc": "/paris/P1010070.JPG",
+								"CameraId": "",
+								"OwnerId": "12345678-1111-0000-0000-paris-------",
+								"ProviderAccountId": "4bbb38c6-1704-4102-be65-11a0f67883f5",
+								"BatchId": "1270599803",
+								"Keyword": "",
+								"Created": "2010-04-06 14:36:14"
+							},
+							"LayoutHint": {
+								"FocusCenter": {
+									"Scale": 4000,
+									"X": 2000,
+									"Y": 1500
+								},
+								"FocusVector": {
+									"Direction": 0,
+									"Magnitude": 0
+								}
+							},
+							"IsCast": false,
+							"lastPerformed": null,
+							"SubstitutionREF": "4ff91265-06fc-4bec-87a5-0d5ff67883f5",
+							"Shot": {
+								"id": "4ff91265-06fc-4bec-87a5-0d5ff67883f5",
+								"count": "4"
+							},
+							"Tags": [],
+							"Clusters": "",
+							"Credits": ""
+						},
+						{
 							"id": "4bbb38cc-047c-4e99-b9e2-11a0f67883f5",
 							"Photo": {
 								"id": "4bbb38cc-047c-4e99-b9e2-11a0f67883f5",
@@ -8396,11 +10697,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -8455,11 +10756,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "4.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "4.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -8507,6 +10808,65 @@
 							"Credits": ""
 						},
 						{
+							"id": "4bbb38cc-5a24-4131-ae8e-11a0f67883f5",
+							"Photo": {
+								"id": "4bbb38cc-5a24-4131-ae8e-11a0f67883f5",
+								"W": 4000,
+								"H": 3000,
+								"Fix": {
+									"Crops": "",
+									"Rating": null,
+									"Rotate": 1,
+									"Scrub": "",
+									"Score": "0.0",
+									"Votes": null
+								},
+								"Img": {
+									"Src": {
+										"W": 480,
+										"H": 640,
+										"rootSrc": "stage6/4bbb38cc-5a24-4131-ae8e-11a0f67883f5.jpg",
+										"Orientation": 1
+									}
+								},
+								"isOwner": true,
+								"DateTaken": "2009-09-03 14:07:13",
+								"TS": 1251986833,
+								"ExifColorSpace": 1,
+								"ExifFlash": 0,
+								"ExifOrientation": 1,
+								"Caption": "P1010073",
+								"origSrc": "/paris/P1010073.JPG",
+								"CameraId": "",
+								"OwnerId": "12345678-1111-0000-0000-paris-------",
+								"ProviderAccountId": "4bbb38c6-1704-4102-be65-11a0f67883f5",
+								"BatchId": "1270599803",
+								"Keyword": "",
+								"Created": "2010-04-06 14:36:14"
+							},
+							"LayoutHint": {
+								"FocusCenter": {
+									"Scale": 4000,
+									"X": 2000,
+									"Y": 1500
+								},
+								"FocusVector": {
+									"Direction": 0,
+									"Magnitude": 0
+								}
+							},
+							"IsCast": false,
+							"lastPerformed": null,
+							"SubstitutionREF": "4ff9124b-a5a0-4869-b271-0d5ef67883f5",
+							"Shot": {
+								"id": "4ff9124b-a5a0-4869-b271-0d5ef67883f5",
+								"count": "2"
+							},
+							"Tags": [],
+							"Clusters": "",
+							"Credits": ""
+						},
+						{
 							"id": "4bbb38cc-d05c-4fc7-b757-11a0f67883f5",
 							"Photo": {
 								"id": "4bbb38cc-d05c-4fc7-b757-11a0f67883f5",
@@ -8514,11 +10874,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "3.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "3.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -8573,11 +10933,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -8632,11 +10992,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "3.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "3.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -8684,6 +11044,124 @@
 							"Credits": ""
 						},
 						{
+							"id": "4bbb38cc-aca4-4166-8181-11a0f67883f5",
+							"Photo": {
+								"id": "4bbb38cc-aca4-4166-8181-11a0f67883f5",
+								"W": 4000,
+								"H": 3000,
+								"Fix": {
+									"Crops": "",
+									"Rating": null,
+									"Rotate": 1,
+									"Scrub": "",
+									"Score": "0.0",
+									"Votes": null
+								},
+								"Img": {
+									"Src": {
+										"W": 480,
+										"H": 640,
+										"rootSrc": "stage6/4bbb38cc-aca4-4166-8181-11a0f67883f5.jpg",
+										"Orientation": 1
+									}
+								},
+								"isOwner": true,
+								"DateTaken": "2009-09-03 14:10:58",
+								"TS": 1251987058,
+								"ExifColorSpace": 1,
+								"ExifFlash": 0,
+								"ExifOrientation": 1,
+								"Caption": "P1010077",
+								"origSrc": "/paris/P1010077.JPG",
+								"CameraId": "",
+								"OwnerId": "12345678-1111-0000-0000-paris-------",
+								"ProviderAccountId": "4bbb38c6-1704-4102-be65-11a0f67883f5",
+								"BatchId": "1270599803",
+								"Keyword": "",
+								"Created": "2010-04-06 14:36:14"
+							},
+							"LayoutHint": {
+								"FocusCenter": {
+									"Scale": 4000,
+									"X": 2000,
+									"Y": 1500
+								},
+								"FocusVector": {
+									"Direction": 0,
+									"Magnitude": 0
+								}
+							},
+							"IsCast": false,
+							"lastPerformed": null,
+							"SubstitutionREF": "4ff91242-80d8-4a78-86ea-0d5ef67883f5",
+							"Shot": {
+								"id": "4ff91242-80d8-4a78-86ea-0d5ef67883f5",
+								"count": "2"
+							},
+							"Tags": [],
+							"Clusters": "",
+							"Credits": ""
+						},
+						{
+							"id": "4bbb38cc-c38c-4c36-9a38-11a0f67883f5",
+							"Photo": {
+								"id": "4bbb38cc-c38c-4c36-9a38-11a0f67883f5",
+								"W": 4000,
+								"H": 3000,
+								"Fix": {
+									"Crops": "",
+									"Rating": null,
+									"Rotate": 1,
+									"Scrub": "",
+									"Score": "0.0",
+									"Votes": null
+								},
+								"Img": {
+									"Src": {
+										"W": 480,
+										"H": 640,
+										"rootSrc": "stage0/4bbb38cc-c38c-4c36-9a38-11a0f67883f5.jpg",
+										"Orientation": 1
+									}
+								},
+								"isOwner": true,
+								"DateTaken": "2009-09-03 14:12:32",
+								"TS": 1251987152,
+								"ExifColorSpace": 1,
+								"ExifFlash": 0,
+								"ExifOrientation": 1,
+								"Caption": "P1010078",
+								"origSrc": "/paris/P1010078.JPG",
+								"CameraId": "",
+								"OwnerId": "12345678-1111-0000-0000-paris-------",
+								"ProviderAccountId": "4bbb38c6-1704-4102-be65-11a0f67883f5",
+								"BatchId": "1270599803",
+								"Keyword": "",
+								"Created": "2010-04-06 14:36:14"
+							},
+							"LayoutHint": {
+								"FocusCenter": {
+									"Scale": 4000,
+									"X": 2000,
+									"Y": 1500
+								},
+								"FocusVector": {
+									"Direction": 0,
+									"Magnitude": 0
+								}
+							},
+							"IsCast": false,
+							"lastPerformed": null,
+							"SubstitutionREF": "4ff91252-1fc0-4bfb-8f88-0d5df67883f5",
+							"Shot": {
+								"id": "4ff91252-1fc0-4bfb-8f88-0d5df67883f5",
+								"count": "2"
+							},
+							"Tags": [],
+							"Clusters": "",
+							"Credits": ""
+						},
+						{
 							"id": "4bbb38cc-2ce0-4722-91ea-11a0f67883f5",
 							"Photo": {
 								"id": "4bbb38cc-2ce0-4722-91ea-11a0f67883f5",
@@ -8691,11 +11169,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -8750,11 +11228,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -8809,11 +11287,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -8861,6 +11339,65 @@
 							"Credits": ""
 						},
 						{
+							"id": "4bbb38cc-3484-463c-af6b-11a0f67883f5",
+							"Photo": {
+								"id": "4bbb38cc-3484-463c-af6b-11a0f67883f5",
+								"W": 4000,
+								"H": 3000,
+								"Fix": {
+									"Crops": "",
+									"Rating": null,
+									"Rotate": 1,
+									"Scrub": "",
+									"Score": "0.0",
+									"Votes": null
+								},
+								"Img": {
+									"Src": {
+										"W": 480,
+										"H": 640,
+										"rootSrc": "stage4/4bbb38cc-3484-463c-af6b-11a0f67883f5.jpg",
+										"Orientation": 1
+									}
+								},
+								"isOwner": true,
+								"DateTaken": "2009-09-03 14:43:00",
+								"TS": 1251988980,
+								"ExifColorSpace": 1,
+								"ExifFlash": 1,
+								"ExifOrientation": 1,
+								"Caption": "P1010082",
+								"origSrc": "/paris/P1010082.JPG",
+								"CameraId": "",
+								"OwnerId": "12345678-1111-0000-0000-paris-------",
+								"ProviderAccountId": "4bbb38c6-1704-4102-be65-11a0f67883f5",
+								"BatchId": "1270599803",
+								"Keyword": "",
+								"Created": "2010-04-06 14:36:14"
+							},
+							"LayoutHint": {
+								"FocusCenter": {
+									"Scale": 4000,
+									"X": 2000,
+									"Y": 1500
+								},
+								"FocusVector": {
+									"Direction": 0,
+									"Magnitude": 0
+								}
+							},
+							"IsCast": false,
+							"lastPerformed": null,
+							"SubstitutionREF": "4ff91285-90fc-428f-908d-0cb3f67883f5",
+							"Shot": {
+								"id": "4ff91285-90fc-428f-908d-0cb3f67883f5",
+								"count": "2"
+							},
+							"Tags": [],
+							"Clusters": "",
+							"Credits": ""
+						},
+						{
 							"id": "4bbb38cc-8ce8-4042-b37f-11a0f67883f5",
 							"Photo": {
 								"id": "4bbb38cc-8ce8-4042-b37f-11a0f67883f5",
@@ -8868,11 +11405,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -8927,11 +11464,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -8979,6 +11516,65 @@
 							"Credits": ""
 						},
 						{
+							"id": "4bbb38cc-5374-488b-adee-11a0f67883f5",
+							"Photo": {
+								"id": "4bbb38cc-5374-488b-adee-11a0f67883f5",
+								"W": 4000,
+								"H": 3000,
+								"Fix": {
+									"Crops": "",
+									"Rating": null,
+									"Rotate": 1,
+									"Scrub": "",
+									"Score": "0.0",
+									"Votes": null
+								},
+								"Img": {
+									"Src": {
+										"W": 640,
+										"H": 480,
+										"rootSrc": "stage6/4bbb38cc-5374-488b-adee-11a0f67883f5.jpg",
+										"Orientation": 1
+									}
+								},
+								"isOwner": true,
+								"DateTaken": "2009-09-03 15:52:38",
+								"TS": 1251993158,
+								"ExifColorSpace": 1,
+								"ExifFlash": 0,
+								"ExifOrientation": 1,
+								"Caption": "P1010085",
+								"origSrc": "/paris/P1010085.JPG",
+								"CameraId": "",
+								"OwnerId": "12345678-1111-0000-0000-paris-------",
+								"ProviderAccountId": "4bbb38c6-1704-4102-be65-11a0f67883f5",
+								"BatchId": "1270599803",
+								"Keyword": "",
+								"Created": "2010-04-06 14:36:14"
+							},
+							"LayoutHint": {
+								"FocusCenter": {
+									"Scale": 4000,
+									"X": 2000,
+									"Y": 1500
+								},
+								"FocusVector": {
+									"Direction": 0,
+									"Magnitude": 0
+								}
+							},
+							"IsCast": false,
+							"lastPerformed": null,
+							"SubstitutionREF": "4ff91302-3690-4efe-b0ad-0fdaf67883f5",
+							"Shot": {
+								"id": "4ff91302-3690-4efe-b0ad-0fdaf67883f5",
+								"count": "2"
+							},
+							"Tags": [],
+							"Clusters": "",
+							"Credits": ""
+						},
+						{
 							"id": "4bbb38cc-bc64-48c4-82d3-11a0f67883f5",
 							"Photo": {
 								"id": "4bbb38cc-bc64-48c4-82d3-11a0f67883f5",
@@ -8986,11 +11582,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -9038,6 +11634,183 @@
 							"Credits": ""
 						},
 						{
+							"id": "4bbb38cc-8c74-4227-bbac-11a0f67883f5",
+							"Photo": {
+								"id": "4bbb38cc-8c74-4227-bbac-11a0f67883f5",
+								"W": 4000,
+								"H": 3000,
+								"Fix": {
+									"Crops": "",
+									"Rating": null,
+									"Rotate": 1,
+									"Scrub": "",
+									"Score": "0.0",
+									"Votes": null
+								},
+								"Img": {
+									"Src": {
+										"W": 480,
+										"H": 640,
+										"rootSrc": "stage1/4bbb38cc-8c74-4227-bbac-11a0f67883f5.jpg",
+										"Orientation": 1
+									}
+								},
+								"isOwner": true,
+								"DateTaken": "2009-09-03 15:53:52",
+								"TS": 1251993232,
+								"ExifColorSpace": 1,
+								"ExifFlash": 0,
+								"ExifOrientation": 1,
+								"Caption": "P1010087",
+								"origSrc": "/paris/P1010087.JPG",
+								"CameraId": "",
+								"OwnerId": "12345678-1111-0000-0000-paris-------",
+								"ProviderAccountId": "4bbb38c6-1704-4102-be65-11a0f67883f5",
+								"BatchId": "1270599803",
+								"Keyword": "",
+								"Created": "2010-04-06 14:36:14"
+							},
+							"LayoutHint": {
+								"FocusCenter": {
+									"Scale": 4000,
+									"X": 2000,
+									"Y": 1500
+								},
+								"FocusVector": {
+									"Direction": 0,
+									"Magnitude": 0
+								}
+							},
+							"IsCast": false,
+							"lastPerformed": null,
+							"SubstitutionREF": "4ff9128e-0768-4860-9053-0d5ff67883f5",
+							"Shot": {
+								"id": "4ff9128e-0768-4860-9053-0d5ff67883f5",
+								"count": "2"
+							},
+							"Tags": [],
+							"Clusters": "",
+							"Credits": ""
+						},
+						{
+							"id": "4bbb38cc-5b58-4544-b6ef-11a0f67883f5",
+							"Photo": {
+								"id": "4bbb38cc-5b58-4544-b6ef-11a0f67883f5",
+								"W": 4000,
+								"H": 3000,
+								"Fix": {
+									"Crops": "",
+									"Rating": null,
+									"Rotate": 1,
+									"Scrub": "",
+									"Score": "0.0",
+									"Votes": null
+								},
+								"Img": {
+									"Src": {
+										"W": 640,
+										"H": 480,
+										"rootSrc": "stage2/4bbb38cc-5b58-4544-b6ef-11a0f67883f5.jpg",
+										"Orientation": 1
+									}
+								},
+								"isOwner": true,
+								"DateTaken": "2009-09-03 15:54:28",
+								"TS": 1251993268,
+								"ExifColorSpace": 1,
+								"ExifFlash": 0,
+								"ExifOrientation": 1,
+								"Caption": "P1010088",
+								"origSrc": "/paris/P1010088.JPG",
+								"CameraId": "",
+								"OwnerId": "12345678-1111-0000-0000-paris-------",
+								"ProviderAccountId": "4bbb38c6-1704-4102-be65-11a0f67883f5",
+								"BatchId": "1270599803",
+								"Keyword": "",
+								"Created": "2010-04-06 14:36:14"
+							},
+							"LayoutHint": {
+								"FocusCenter": {
+									"Scale": 4000,
+									"X": 2000,
+									"Y": 1500
+								},
+								"FocusVector": {
+									"Direction": 0,
+									"Magnitude": 0
+								}
+							},
+							"IsCast": false,
+							"lastPerformed": null,
+							"SubstitutionREF": "4ff912ae-6854-4e99-b829-0fdbf67883f5",
+							"Shot": {
+								"id": "4ff912ae-6854-4e99-b829-0fdbf67883f5",
+								"count": "3"
+							},
+							"Tags": [],
+							"Clusters": "",
+							"Credits": ""
+						},
+						{
+							"id": "4bbb38cc-3e28-4541-a838-11a0f67883f5",
+							"Photo": {
+								"id": "4bbb38cc-3e28-4541-a838-11a0f67883f5",
+								"W": 4000,
+								"H": 3000,
+								"Fix": {
+									"Crops": "",
+									"Rating": null,
+									"Rotate": 1,
+									"Scrub": "",
+									"Score": "0.0",
+									"Votes": null
+								},
+								"Img": {
+									"Src": {
+										"W": 640,
+										"H": 480,
+										"rootSrc": "stage3/4bbb38cc-3e28-4541-a838-11a0f67883f5.jpg",
+										"Orientation": 1
+									}
+								},
+								"isOwner": true,
+								"DateTaken": "2009-09-03 15:54:34",
+								"TS": 1251993274,
+								"ExifColorSpace": 1,
+								"ExifFlash": 0,
+								"ExifOrientation": 1,
+								"Caption": "P1010089",
+								"origSrc": "/paris/P1010089.JPG",
+								"CameraId": "",
+								"OwnerId": "12345678-1111-0000-0000-paris-------",
+								"ProviderAccountId": "4bbb38c6-1704-4102-be65-11a0f67883f5",
+								"BatchId": "1270599803",
+								"Keyword": "",
+								"Created": "2010-04-06 14:36:14"
+							},
+							"LayoutHint": {
+								"FocusCenter": {
+									"Scale": 4000,
+									"X": 2000,
+									"Y": 1500
+								},
+								"FocusVector": {
+									"Direction": 0,
+									"Magnitude": 0
+								}
+							},
+							"IsCast": false,
+							"lastPerformed": null,
+							"SubstitutionREF": "4ff912ae-6854-4e99-b829-0fdbf67883f5",
+							"Shot": {
+								"id": "4ff912ae-6854-4e99-b829-0fdbf67883f5",
+								"count": "3"
+							},
+							"Tags": [],
+							"Clusters": "",
+							"Credits": ""
+						},
+						{
 							"id": "4bbb38cc-cef0-4ced-94e4-11a0f67883f5",
 							"Photo": {
 								"id": "4bbb38cc-cef0-4ced-94e4-11a0f67883f5",
@@ -9045,11 +11818,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "3.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "3.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -9104,11 +11877,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -9163,11 +11936,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -9222,11 +11995,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -9274,6 +12047,65 @@
 							"Credits": ""
 						},
 						{
+							"id": "4bbb38cc-9574-4c40-891e-11a0f67883f5",
+							"Photo": {
+								"id": "4bbb38cc-9574-4c40-891e-11a0f67883f5",
+								"W": 4000,
+								"H": 3000,
+								"Fix": {
+									"Crops": "",
+									"Rating": null,
+									"Rotate": 1,
+									"Scrub": "",
+									"Score": "0.0",
+									"Votes": null
+								},
+								"Img": {
+									"Src": {
+										"W": 640,
+										"H": 480,
+										"rootSrc": "stage1/4bbb38cc-9574-4c40-891e-11a0f67883f5.jpg",
+										"Orientation": 1
+									}
+								},
+								"isOwner": true,
+								"DateTaken": "2009-09-03 16:35:51",
+								"TS": 1251995751,
+								"ExifColorSpace": 1,
+								"ExifFlash": 0,
+								"ExifOrientation": 1,
+								"Caption": "P1010096",
+								"origSrc": "/paris/P1010096.JPG",
+								"CameraId": "",
+								"OwnerId": "12345678-1111-0000-0000-paris-------",
+								"ProviderAccountId": "4bbb38c6-1704-4102-be65-11a0f67883f5",
+								"BatchId": "1270599803",
+								"Keyword": "",
+								"Created": "2010-04-06 14:36:14"
+							},
+							"LayoutHint": {
+								"FocusCenter": {
+									"Scale": 4000,
+									"X": 2000,
+									"Y": 1500
+								},
+								"FocusVector": {
+									"Direction": 0,
+									"Magnitude": 0
+								}
+							},
+							"IsCast": false,
+							"lastPerformed": null,
+							"SubstitutionREF": "4ff912b7-4238-4eb1-b4bb-0dfdf67883f5",
+							"Shot": {
+								"id": "4ff912b7-4238-4eb1-b4bb-0dfdf67883f5",
+								"count": "2"
+							},
+							"Tags": [],
+							"Clusters": "",
+							"Credits": ""
+						},
+						{
 							"id": "4bbb38cc-55e4-4d14-9830-11a0f67883f5",
 							"Photo": {
 								"id": "4bbb38cc-55e4-4d14-9830-11a0f67883f5",
@@ -9281,11 +12113,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -9340,11 +12172,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "3.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "3.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -9399,11 +12231,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -9451,6 +12283,183 @@
 							"Credits": ""
 						},
 						{
+							"id": "4bbb38cc-2b00-40d5-b34d-11a0f67883f5",
+							"Photo": {
+								"id": "4bbb38cc-2b00-40d5-b34d-11a0f67883f5",
+								"W": 4000,
+								"H": 3000,
+								"Fix": {
+									"Crops": "",
+									"Rating": null,
+									"Rotate": 1,
+									"Scrub": "",
+									"Score": "0.0",
+									"Votes": null
+								},
+								"Img": {
+									"Src": {
+										"W": 480,
+										"H": 640,
+										"rootSrc": "stage7/4bbb38cc-2b00-40d5-b34d-11a0f67883f5.jpg",
+										"Orientation": 1
+									}
+								},
+								"isOwner": true,
+								"DateTaken": "2009-09-03 16:47:44",
+								"TS": 1251996464,
+								"ExifColorSpace": 1,
+								"ExifFlash": 0,
+								"ExifOrientation": 1,
+								"Caption": "P1010100",
+								"origSrc": "/paris/P1010100.JPG",
+								"CameraId": "",
+								"OwnerId": "12345678-1111-0000-0000-paris-------",
+								"ProviderAccountId": "4bbb38c6-1704-4102-be65-11a0f67883f5",
+								"BatchId": "1270599803",
+								"Keyword": "",
+								"Created": "2010-04-06 14:36:14"
+							},
+							"LayoutHint": {
+								"FocusCenter": {
+									"Scale": 4000,
+									"X": 2000,
+									"Y": 1500
+								},
+								"FocusVector": {
+									"Direction": 0,
+									"Magnitude": 0
+								}
+							},
+							"IsCast": false,
+							"lastPerformed": null,
+							"SubstitutionREF": "4ff912bf-4c9c-478b-a717-0d61f67883f5",
+							"Shot": {
+								"id": "4ff912bf-4c9c-478b-a717-0d61f67883f5",
+								"count": "4"
+							},
+							"Tags": [],
+							"Clusters": "",
+							"Credits": ""
+						},
+						{
+							"id": "4bbb38cc-bc2c-46ac-b641-11a0f67883f5",
+							"Photo": {
+								"id": "4bbb38cc-bc2c-46ac-b641-11a0f67883f5",
+								"W": 4000,
+								"H": 3000,
+								"Fix": {
+									"Crops": "",
+									"Rating": null,
+									"Rotate": 1,
+									"Scrub": "",
+									"Score": "0.0",
+									"Votes": null
+								},
+								"Img": {
+									"Src": {
+										"W": 480,
+										"H": 640,
+										"rootSrc": "stage1/4bbb38cc-bc2c-46ac-b641-11a0f67883f5.jpg",
+										"Orientation": 1
+									}
+								},
+								"isOwner": true,
+								"DateTaken": "2009-09-03 16:48:04",
+								"TS": 1251996484,
+								"ExifColorSpace": 1,
+								"ExifFlash": 0,
+								"ExifOrientation": 1,
+								"Caption": "P1010101",
+								"origSrc": "/paris/P1010101.JPG",
+								"CameraId": "",
+								"OwnerId": "12345678-1111-0000-0000-paris-------",
+								"ProviderAccountId": "4bbb38c6-1704-4102-be65-11a0f67883f5",
+								"BatchId": "1270599803",
+								"Keyword": "",
+								"Created": "2010-04-06 14:36:14"
+							},
+							"LayoutHint": {
+								"FocusCenter": {
+									"Scale": 4000,
+									"X": 2000,
+									"Y": 1500
+								},
+								"FocusVector": {
+									"Direction": 0,
+									"Magnitude": 0
+								}
+							},
+							"IsCast": false,
+							"lastPerformed": null,
+							"SubstitutionREF": "4ff912bf-4c9c-478b-a717-0d61f67883f5",
+							"Shot": {
+								"id": "4ff912bf-4c9c-478b-a717-0d61f67883f5",
+								"count": "4"
+							},
+							"Tags": [],
+							"Clusters": "",
+							"Credits": ""
+						},
+						{
+							"id": "4bbb38cc-6658-433d-b197-11a0f67883f5",
+							"Photo": {
+								"id": "4bbb38cc-6658-433d-b197-11a0f67883f5",
+								"W": 4000,
+								"H": 3000,
+								"Fix": {
+									"Crops": "",
+									"Rating": null,
+									"Rotate": 1,
+									"Scrub": "",
+									"Score": "0.0",
+									"Votes": null
+								},
+								"Img": {
+									"Src": {
+										"W": 480,
+										"H": 640,
+										"rootSrc": "stage4/4bbb38cc-6658-433d-b197-11a0f67883f5.jpg",
+										"Orientation": 1
+									}
+								},
+								"isOwner": true,
+								"DateTaken": "2009-09-03 16:48:07",
+								"TS": 1251996487,
+								"ExifColorSpace": 1,
+								"ExifFlash": 0,
+								"ExifOrientation": 1,
+								"Caption": "P1010102",
+								"origSrc": "/paris/P1010102.JPG",
+								"CameraId": "",
+								"OwnerId": "12345678-1111-0000-0000-paris-------",
+								"ProviderAccountId": "4bbb38c6-1704-4102-be65-11a0f67883f5",
+								"BatchId": "1270599803",
+								"Keyword": "",
+								"Created": "2010-04-06 14:36:14"
+							},
+							"LayoutHint": {
+								"FocusCenter": {
+									"Scale": 4000,
+									"X": 2000,
+									"Y": 1500
+								},
+								"FocusVector": {
+									"Direction": 0,
+									"Magnitude": 0
+								}
+							},
+							"IsCast": false,
+							"lastPerformed": null,
+							"SubstitutionREF": "4ff912bf-4c9c-478b-a717-0d61f67883f5",
+							"Shot": {
+								"id": "4ff912bf-4c9c-478b-a717-0d61f67883f5",
+								"count": "4"
+							},
+							"Tags": [],
+							"Clusters": "",
+							"Credits": ""
+						},
+						{
 							"id": "4bbb38cc-97ac-4616-a2d0-11a0f67883f5",
 							"Photo": {
 								"id": "4bbb38cc-97ac-4616-a2d0-11a0f67883f5",
@@ -9458,11 +12467,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "4.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "4.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -9510,6 +12519,124 @@
 							"Credits": ""
 						},
 						{
+							"id": "4bbb38cc-6118-47ee-8a38-11a0f67883f5",
+							"Photo": {
+								"id": "4bbb38cc-6118-47ee-8a38-11a0f67883f5",
+								"W": 4000,
+								"H": 3000,
+								"Fix": {
+									"Crops": "",
+									"Rating": null,
+									"Rotate": 1,
+									"Scrub": "",
+									"Score": "0.0",
+									"Votes": null
+								},
+								"Img": {
+									"Src": {
+										"W": 640,
+										"H": 480,
+										"rootSrc": "stage0/4bbb38cc-6118-47ee-8a38-11a0f67883f5.jpg",
+										"Orientation": 1
+									}
+								},
+								"isOwner": true,
+								"DateTaken": "2009-09-03 17:05:08",
+								"TS": 1251997508,
+								"ExifColorSpace": 1,
+								"ExifFlash": 0,
+								"ExifOrientation": 1,
+								"Caption": "P1010104",
+								"origSrc": "/paris/P1010104.JPG",
+								"CameraId": "",
+								"OwnerId": "12345678-1111-0000-0000-paris-------",
+								"ProviderAccountId": "4bbb38c6-1704-4102-be65-11a0f67883f5",
+								"BatchId": "1270599803",
+								"Keyword": "",
+								"Created": "2010-04-06 14:36:14"
+							},
+							"LayoutHint": {
+								"FocusCenter": {
+									"Scale": 4000,
+									"X": 2000,
+									"Y": 1500
+								},
+								"FocusVector": {
+									"Direction": 0,
+									"Magnitude": 0
+								}
+							},
+							"IsCast": false,
+							"lastPerformed": null,
+							"SubstitutionREF": "4ff912c8-5930-438f-8155-0cc8f67883f5",
+							"Shot": {
+								"id": "4ff912c8-5930-438f-8155-0cc8f67883f5",
+								"count": "3"
+							},
+							"Tags": [],
+							"Clusters": "",
+							"Credits": ""
+						},
+						{
+							"id": "4bbb38cc-ef24-40c4-b5c9-11a0f67883f5",
+							"Photo": {
+								"id": "4bbb38cc-ef24-40c4-b5c9-11a0f67883f5",
+								"W": 4000,
+								"H": 3000,
+								"Fix": {
+									"Crops": "",
+									"Rating": null,
+									"Rotate": 1,
+									"Scrub": "",
+									"Score": "0.0",
+									"Votes": null
+								},
+								"Img": {
+									"Src": {
+										"W": 640,
+										"H": 480,
+										"rootSrc": "stage7/4bbb38cc-ef24-40c4-b5c9-11a0f67883f5.jpg",
+										"Orientation": 1
+									}
+								},
+								"isOwner": true,
+								"DateTaken": "2009-09-03 17:05:21",
+								"TS": 1251997521,
+								"ExifColorSpace": 1,
+								"ExifFlash": 0,
+								"ExifOrientation": 1,
+								"Caption": "P1010105",
+								"origSrc": "/paris/P1010105.JPG",
+								"CameraId": "",
+								"OwnerId": "12345678-1111-0000-0000-paris-------",
+								"ProviderAccountId": "4bbb38c6-1704-4102-be65-11a0f67883f5",
+								"BatchId": "1270599803",
+								"Keyword": "",
+								"Created": "2010-04-06 14:36:14"
+							},
+							"LayoutHint": {
+								"FocusCenter": {
+									"Scale": 4000,
+									"X": 2000,
+									"Y": 1500
+								},
+								"FocusVector": {
+									"Direction": 0,
+									"Magnitude": 0
+								}
+							},
+							"IsCast": false,
+							"lastPerformed": null,
+							"SubstitutionREF": "4ff912c8-5930-438f-8155-0cc8f67883f5",
+							"Shot": {
+								"id": "4ff912c8-5930-438f-8155-0cc8f67883f5",
+								"count": "3"
+							},
+							"Tags": [],
+							"Clusters": "",
+							"Credits": ""
+						},
+						{
 							"id": "4bbb38cc-51d4-4184-9973-11a0f67883f5",
 							"Photo": {
 								"id": "4bbb38cc-51d4-4184-9973-11a0f67883f5",
@@ -9517,11 +12644,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -9576,11 +12703,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -9635,11 +12762,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -9687,6 +12814,65 @@
 							"Credits": ""
 						},
 						{
+							"id": "4bbb38cc-9e38-46d6-87ea-11a0f67883f5",
+							"Photo": {
+								"id": "4bbb38cc-9e38-46d6-87ea-11a0f67883f5",
+								"W": 4000,
+								"H": 3000,
+								"Fix": {
+									"Crops": "",
+									"Rating": null,
+									"Rotate": 1,
+									"Scrub": "",
+									"Score": "0.0",
+									"Votes": null
+								},
+								"Img": {
+									"Src": {
+										"W": 640,
+										"H": 480,
+										"rootSrc": "stage3/4bbb38cc-9e38-46d6-87ea-11a0f67883f5.jpg",
+										"Orientation": 1
+									}
+								},
+								"isOwner": true,
+								"DateTaken": "2009-09-03 17:08:14",
+								"TS": 1251997694,
+								"ExifColorSpace": 1,
+								"ExifFlash": 0,
+								"ExifOrientation": 1,
+								"Caption": "P1010109",
+								"origSrc": "/paris/P1010109.JPG",
+								"CameraId": "",
+								"OwnerId": "12345678-1111-0000-0000-paris-------",
+								"ProviderAccountId": "4bbb38c6-1704-4102-be65-11a0f67883f5",
+								"BatchId": "1270599803",
+								"Keyword": "",
+								"Created": "2010-04-06 14:36:14"
+							},
+							"LayoutHint": {
+								"FocusCenter": {
+									"Scale": 4000,
+									"X": 2000,
+									"Y": 1500
+								},
+								"FocusVector": {
+									"Direction": 0,
+									"Magnitude": 0
+								}
+							},
+							"IsCast": false,
+							"lastPerformed": null,
+							"SubstitutionREF": "4ff912d0-ac00-4c64-902c-0b26f67883f5",
+							"Shot": {
+								"id": "4ff912d0-ac00-4c64-902c-0b26f67883f5",
+								"count": "2"
+							},
+							"Tags": [],
+							"Clusters": "",
+							"Credits": ""
+						},
+						{
 							"id": "4bbb38cc-0d68-45fd-a315-11a0f67883f5",
 							"Photo": {
 								"id": "4bbb38cc-0d68-45fd-a315-11a0f67883f5",
@@ -9694,11 +12880,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -9753,11 +12939,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -9812,11 +12998,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -9871,11 +13057,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -9930,11 +13116,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -9982,6 +13168,65 @@
 							"Credits": ""
 						},
 						{
+							"id": "4bbb38cc-17c0-4fbd-98dd-11a0f67883f5",
+							"Photo": {
+								"id": "4bbb38cc-17c0-4fbd-98dd-11a0f67883f5",
+								"W": 4000,
+								"H": 3000,
+								"Fix": {
+									"Crops": "",
+									"Rating": null,
+									"Rotate": 1,
+									"Scrub": "",
+									"Score": "0.0",
+									"Votes": null
+								},
+								"Img": {
+									"Src": {
+										"W": 480,
+										"H": 640,
+										"rootSrc": "stage7/4bbb38cc-17c0-4fbd-98dd-11a0f67883f5.jpg",
+										"Orientation": 1
+									}
+								},
+								"isOwner": true,
+								"DateTaken": "2009-09-03 17:18:09",
+								"TS": 1251998289,
+								"ExifColorSpace": 1,
+								"ExifFlash": 0,
+								"ExifOrientation": 1,
+								"Caption": "P1010115",
+								"origSrc": "/paris/P1010115.JPG",
+								"CameraId": "",
+								"OwnerId": "12345678-1111-0000-0000-paris-------",
+								"ProviderAccountId": "4bbb38c6-1704-4102-be65-11a0f67883f5",
+								"BatchId": "1270599803",
+								"Keyword": "",
+								"Created": "2010-04-06 14:36:14"
+							},
+							"LayoutHint": {
+								"FocusCenter": {
+									"Scale": 4000,
+									"X": 2000,
+									"Y": 1500
+								},
+								"FocusVector": {
+									"Direction": 0,
+									"Magnitude": 0
+								}
+							},
+							"IsCast": false,
+							"lastPerformed": null,
+							"SubstitutionREF": "4ff912f1-f9a4-4a0c-bd45-0d5ff67883f5",
+							"Shot": {
+								"id": "4ff912f1-f9a4-4a0c-bd45-0d5ff67883f5",
+								"count": "2"
+							},
+							"Tags": [],
+							"Clusters": "",
+							"Credits": ""
+						},
+						{
 							"id": "4bbb38cc-8ba0-4ce3-bbd3-11a0f67883f5",
 							"Photo": {
 								"id": "4bbb38cc-8ba0-4ce3-bbd3-11a0f67883f5",
@@ -9989,11 +13234,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -10048,11 +13293,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "1.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "1.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -10107,11 +13352,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -10166,11 +13411,11 @@
 								"H": 3000,
 								"Fix": {
 									"Crops": "",
-									"Rating": "2.00",
-									"Rotate": "1",
+									"Rating": null,
+									"Rotate": 1,
 									"Scrub": "",
-									"Score": "2.0",
-									"Votes": "1"
+									"Score": "0.0",
+									"Votes": null
 								},
 								"Img": {
 									"Src": {
@@ -10218,20 +13463,60 @@
 							"Credits": ""
 						}
 					],
-					"Bestshot": [],
-					"Total": 173,
-					"Perpage": 500,
+					"Bestshot": {
+						"4ff910db-9b18-495c-b93e-0a20f67883f5": "4bbb38cc-db20-4eee-a7a5-11a0f67883f5",
+						"4ff910df-d6e0-4761-a642-0a20f67883f5": "4bbb38cc-0338-413d-bcea-11a0f67883f5",
+						"4ff910e9-b1ac-446f-8a29-0cb3f67883f5": "4bbb38cc-3498-4602-bbe4-11a0f67883f5",
+						"4ff910ee-7c6c-4827-9854-0cb3f67883f5": "4bbb38cc-7288-4e31-9b42-11a0f67883f5",
+						"4ff910fc-da5c-4da8-9307-0cc8f67883f5": "4bbb38cc-1e00-40d7-9d27-11a0f67883f5",
+						"4ff91100-f454-4201-a4fc-0cc8f67883f5": "4bbb38cc-aedc-4fd1-93b2-11a0f67883f5",
+						"4ff91112-3bfc-400f-bdc8-0d5cf67883f5": "4bbb38cc-db84-493d-8be9-11a0f67883f5",
+						"4ff91123-c708-4e7d-a94a-0d5df67883f5": "4bbb38cc-72dc-40df-a063-11a0f67883f5",
+						"4ff9112e-6264-45c8-b76e-0d5ef67883f5": "4bbb38cc-a670-437a-8549-11a0f67883f5",
+						"4ff91134-3224-4681-a777-0d5ff67883f5": "4bbb38cc-8b10-4471-b959-11a0f67883f5",
+						"4ff9113b-8c68-4d9c-ab49-0d61f67883f5": "4bbb38cc-bb78-4c58-b342-11a0f67883f5",
+						"4ff91144-7f84-45b1-8a40-0b26f67883f5": "4bbb38cc-1a54-4b8d-bff3-11a0f67883f5",
+						"4ff9115f-96d8-4026-890a-0d50f67883f5": "4bbb38cc-8ccc-4bc5-a9ac-11a0f67883f5",
+						"4ff9116c-7400-4dc2-8a80-0a20f67883f5": "4bbb38cc-cddc-4a4c-9e59-11a0f67883f5",
+						"4ff91172-24d4-4c84-a0a8-0cb3f67883f5": "4bbb38cc-29e0-47b9-93d5-11a0f67883f5",
+						"4ff91184-0c5c-4d57-baf2-0cc8f67883f5": "4bbb38cc-a690-4b77-81b8-11a0f67883f5",
+						"4ff91198-9a68-410f-8f69-0d5cf67883f5": "4bbb38cc-c958-43e9-80ec-11a0f67883f5",
+						"4ff911b8-7c68-46ab-a4a6-0cc8f67883f5": "4bbb38cc-1d4c-4f96-8850-11a0f67883f5",
+						"4ff911d3-3834-4dca-92de-0d5ff67883f5": "4bbb38cc-3854-4369-a441-11a0f67883f5",
+						"4ff911dd-bff8-4fe3-8ccc-0dfdf67883f5": "4bbb38cc-3008-457b-bc06-11a0f67883f5",
+						"4ff911e2-aeec-4948-b194-0dfdf67883f5": "4bbb38cc-2c74-4afe-8824-11a0f67883f5",
+						"4ff911ee-96cc-4d77-8eaa-0b26f67883f5": "4bbb38cc-0ce0-4879-a7e4-11a0f67883f5",
+						"4ff911fc-2d54-48bf-b5c8-0d50f67883f5": "4bbb38cc-01c8-44bd-b71d-11a0f67883f5",
+						"4ff91208-d23c-46fd-964a-0d61f67883f5": "4bbb38cc-c2e8-4589-a891-11a0f67883f5",
+						"4ff91229-a708-47d3-a9e6-0e2cf67883f5": "4bbb38cc-b2fc-40e5-a9af-11a0f67883f5",
+						"4ff91232-6ba8-47ff-8f0d-0cb3f67883f5": "4bbb38cc-ae3c-473e-b4ee-11a0f67883f5",
+						"4ff91239-e84c-469d-9833-0cc8f67883f5": "4bbb38cc-c7e4-450b-ae14-11a0f67883f5",
+						"4ff91265-06fc-4bec-87a5-0d5ff67883f5": "4bbb38cc-0dec-41bb-b3d9-11a0f67883f5",
+						"4ff9124b-a5a0-4869-b271-0d5ef67883f5": "4bbb38cc-2460-478b-9f44-11a0f67883f5",
+						"4ff91242-80d8-4a78-86ea-0d5ef67883f5": "4bbb38cc-7f14-46bf-8146-11a0f67883f5",
+						"4ff91252-1fc0-4bfb-8f88-0d5df67883f5": "4bbb38cc-2ce0-4722-91ea-11a0f67883f5",
+						"4ff91285-90fc-428f-908d-0cb3f67883f5": "4bbb38cc-8ce8-4042-b37f-11a0f67883f5",
+						"4ff91302-3690-4efe-b0ad-0fdaf67883f5": "4bbb38cc-f894-4ea1-af24-11a0f67883f5",
+						"4ff9128e-0768-4860-9053-0d5ff67883f5": "4bbb38cc-bc64-48c4-82d3-11a0f67883f5",
+						"4ff912ae-6854-4e99-b829-0fdbf67883f5": "4bbb38cc-cef0-4ced-94e4-11a0f67883f5",
+						"4ff912b7-4238-4eb1-b4bb-0dfdf67883f5": "4bbb38cc-05d8-4dfe-9b29-11a0f67883f5",
+						"4ff912bf-4c9c-478b-a717-0d61f67883f5": "4bbb38cc-97ac-4616-a2d0-11a0f67883f5",
+						"4ff912c8-5930-438f-8155-0cc8f67883f5": "4bbb38cc-51d4-4184-9973-11a0f67883f5",
+						"4ff912d0-ac00-4c64-902c-0b26f67883f5": "4bbb38cc-0d68-45fd-a315-11a0f67883f5",
+						"4ff912f1-f9a4-4a0c-bd45-0d5ff67883f5": "4bbb38cc-cb54-4689-a725-11a0f67883f5"
+					},
+					"Total": 228,
+					"Perpage": 2000,
 					"Pages": 1,
 					"Page": 1,
 					"Baseurl": "/svc/STAGING/",
 					"ShotType": "Usershot"
 				},
-				"Request": "/person/odesk_photos/12345678-1111-0000-0000-paris------- /page:1/perpage:500/.json",
-				"GroupAsShotPerm": false,
-				"ShowHidden": false
+				"Request": "/tasks_workorders/photos/4fe10b83-3498-49ed-a4c8-12a2f67883f5/perpage:2000/raw:1/sort:dateTaken/direction:asc/.json",
+				"GroupAsShotPerm": "Usershot",
+				"ShowHidden": true
 			},
 			"lookups": null
-		},
-		"filter": []
+		}
 	}
 }

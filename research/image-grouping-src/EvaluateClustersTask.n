@@ -99,10 +99,6 @@ public class EvaluateClustersTask: ITask
 			def b  = GetMarginalSum(l2);
 			def n2 = TotalPairsCount(l1);
 
-			// Integer index:
-			// MaxIndex - Index
-			// (a + b) / 2 - ab;
-
 			// Adjusted rand index:
 			// (Index - ExpectedIndex) / (MaxIndex - ExpectedIndex)
 			unchecked (n2 * ab - a * b) / (0.5 * n2 * (a + b) - a * b);

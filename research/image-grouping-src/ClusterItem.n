@@ -20,64 +20,18 @@ public class ClusterItem : ITaskItem
 
 	public Save() : void
 	{
-		def WriteClusters(clusters, path)
+		_ = Directory.CreateDirectory(Path.GetDirectoryName(path));
+
+		using (file = File.CreateText(path))
 		{
-			using (file = File.CreateText(path))
+			file.WriteLine(Clusters.Length);
+			foreach (cluster in Clusters)
 			{
-				file.WriteLine(clusters.Length);
-				foreach (cluster in clusters)
-				{
-					file.WriteLine(cluster.Length);
-					foreach (id in cluster)
-						file.WriteLine(id);
-				}
+				file.WriteLine(cluster.Length);
+				foreach (id in cluster)
+					file.WriteLine(id);
 			}
 		}
-
-		def WriteHtml(clusters, path, imageDir)
-		{
-			using (writer = File.CreateText(path))
-			{
-				[ "<html><body>"
-				, "<head><style type='text/css'>"
-				, "	.even { background-color : #C1B398 }"
-				, "	.odd  { background-color : #ACCEC0 }"
-				, "	span { display : block; padding : 8px; }"
-				, "</style></head>"
-				].Iter(writer.WriteLine);
-
-				writer.WriteLine("<body>");
-
-				foreach (cluster in clusters with i)
-				{
-					def spanClass = if (i % 2 == 0) "even" else "odd";
-					writer.WriteLine($"<span class='$spanClass'>");
-
-					foreach (id in cluster)
-					{
-						def src = Path.Combine(imageDir, id + ".jpg");
-						writer.WriteLine($"<img height='64' src='$src'>");
-					}
-
-					writer.WriteLine("</span>");
-				}
-
-				writer.WriteLine("</body></html>");
-			}
-		}
-
-		def MakeHtmlPath(path)
-		{
-			Path.Combine("clusters-html", Path.GetFileNameWithoutExtension(path) + ".html");
-		}
-
-		def imageDir = Path.Combine(@"..\images", Path.GetFileNameWithoutExtension(path));
-
-		_ = Directory.CreateDirectory("clusters");
-		_ = Directory.CreateDirectory("clusters-html");
-
-		WriteClusters(Clusters, path);
-		WriteHtml(Clusters, MakeHtmlPath(path), imageDir);
 	}
 
 	public Load() : void

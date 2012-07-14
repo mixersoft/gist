@@ -3,7 +3,6 @@ using Emgu.CV.Structure;
 using Emgu.CV;
 using Nemerle.Collections;
 using Nemerle.Utility;
-using Newtonsoft.Json.Linq;
 using Profiling;
 using System.IO;
 using System;

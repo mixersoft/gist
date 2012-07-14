@@ -1,0 +1,26 @@
+using System.IO;
+
+class CreateClusterHtmlTask : ITask
+{
+	public Name : string { get { "CreateClusterHtmlTask" } }
+
+	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
+	{
+		mutable mappings = [];
+		foreach (item is ClusterItem in items)
+		{
+			def result = ClusterHtmlItem(Path.ChangeExtension(item.Path, ".html"));
+			mappings ::= TaskMapping
+				( inputs  = [ item ]
+				, outputs = [ result ]
+				, compute = () => Compute(item, result)
+				);
+		}
+		mappings;
+	}
+
+	private Compute(clusterItem : ClusterItem, clusterHtmlItem : ClusterHtmlItem) : void
+	{
+		clusterHtmlItem.Clusters = clusterItem.Clusters;
+	}
+}

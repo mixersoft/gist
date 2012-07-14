@@ -7,6 +7,7 @@ using Newtonsoft.Json.Linq;
 using Nemerle.Collections;
 using Nemerle.Utility;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.IO;
 using System.Threading;
 using System;
@@ -164,13 +165,27 @@ def CreateForm(mutable name)
 		itemStates.Insert(dst, selection);
 		layout.Controls.SetChildIndex(selection.Control, dst);
 	}
+	def watch = Diagnostics.Stopwatch.StartNew();
 	foreach (id in ids with i)
 	{
+		def GetImage()
+		{
+			using (src = Bitmap(MakeImagePath(name, id)))
+			{
+				def dst = Bitmap(src.Width * 90 / src.Height, 90, src.PixelFormat);
+				using (gfx = Graphics.FromImage(dst))
+				{
+					gfx.InterpolationMode = InterpolationMode.Bilinear;
+					gfx.DrawImage(src, 0, 0, dst.Width, dst.Height)
+				}
+				dst;
+			}
+		}
 		def picture = PictureBox();
 		picture.AutoSize      = true;
 		picture.Height        = 90;
 		picture.Padding       = Padding(8);
-		picture.ImageLocation = MakeImagePath(name, id);
+		picture.Image         = GetImage();
 		picture.BackColor     = evenGroupColor;
 
 		def state = ItemState(id, picture, false);
@@ -197,6 +212,8 @@ def CreateForm(mutable name)
 			}
 		};
 	}
+	watch.Stop();
+	Console.WriteLine(watch.Elapsed);
 	LoadState(MakeSavePath(name), itemStates);
 	RecolorStates();
 

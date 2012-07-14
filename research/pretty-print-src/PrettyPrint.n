@@ -1,4 +1,4 @@
-// REFERENCE: lib\Newtonsoft.Json.dll
+// REFERENCE: Newtonsoft.Json.dll
 
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;

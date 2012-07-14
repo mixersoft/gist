@@ -1,0 +1,59 @@
+using Nemerle.Utility;
+using System.IO;
+
+class ClusterHtmlItem : ITaskItem
+{
+	[ Accessor ] private path : string;
+
+	public mutable Clusters : array[array[string]];
+
+	public this(path : string)
+	{
+		this.path = path;
+	}
+	
+	public HasCache() : bool
+	{
+		File.Exists(path);
+	}
+
+	public Save() : void
+	{
+		_ = Directory.CreateDirectory(Path.GetDirectoryName(path));
+
+		def imageDir = Path.Combine(@"..\images", Path.GetFileNameWithoutExtension(path));
+
+		using (writer = File.CreateText(path))
+		{
+			[ "<html><body>"
+			, "<head><style type='text/css'>"
+			, "	.even { background-color : #C1B398 }"
+			, "	.odd  { background-color : #ACCEC0 }"
+			, "	span { display : block; padding : 8px; }"
+			, "</style></head>"
+			].Iter(writer.WriteLine);
+
+			writer.WriteLine("<body>");
+
+			foreach (cluster in Clusters with i)
+			{
+				def spanClass = if (i % 2 == 0) "even" else "odd";
+				writer.WriteLine($"<span class='$spanClass'>");
+
+				foreach (id in cluster)
+				{
+					def src = Path.Combine(imageDir, id + ".jpg");
+					writer.WriteLine($"<img height='64' src='$src'>");
+				}
+
+				writer.WriteLine("</span>");
+			}
+
+			writer.WriteLine("</body></html>");
+		}
+	}
+
+	public Load() : void
+	{
+	}
+}
