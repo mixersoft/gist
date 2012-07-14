@@ -10,6 +10,7 @@ public interface IParameters
 	DownloadImagePrefix : string    { get }
 	ImageSize           : int * int { get }
 	ClusteringThreshold : double    { get }
+	ImageSampleSize     : int       { get }
 }
 
 /// <summary>Meta-parameter source that loads from "parameters.txt".</summary>
@@ -18,6 +19,7 @@ public class Parameters : IParameters
 	[ Accessor ] private downloadImagePrefix : string;
 	[ Accessor ] private imageSize           : int * int;
 	[ Accessor ] private clusteringThreshold : double;
+	[ Accessor ] private imageSampleSize     : int;
 
 	public this()
 	{
@@ -41,6 +43,7 @@ public class Parameters : IParameters
 		downloadImagePrefix = map["download image prefix"];
 		imageSize           = ParseSize(map["image size"]);
 		clusteringThreshold = double.Parse(map["clustering threshold"]);
+		imageSampleSize     = int.Parse(map["image sample size"]);
 	}
 }
 
@@ -51,4 +54,5 @@ public class MockParameters : IParameters
 	public DownloadImagePrefix : string    { get; set }
 	public ImageSize           : int * int { get; set }
 	public ClusteringThreshold : double    { get; set }
+	public ImageSampleSize     : int       { get; set }
 }

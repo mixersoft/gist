@@ -17,7 +17,7 @@ class ExtractDescriptorsTask : ITask
 	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
 	{
 		mutable mappings = [];
-		foreach (item is ImageCollectionItem in items)
+		foreach (item is ImageCollectionItem when item.Path.StartsWith(@"images\") in items)
 		{
 			def path = Path.Combine("descriptors", Path.GetFileName(item.Path));
 

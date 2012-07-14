@@ -1,0 +1,60 @@
+using Nemerle.Collections;
+using System.IO;
+using System;
+
+[ Record ]
+class SampleImagesTask : ITask
+{
+	private parameters : IParameters;
+
+	public Name : string { get { "SampleImagesTask" } }
+
+	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
+	{
+		mutable images = [];
+		foreach (item is ImageCollectionItem when item.Path.StartsWith(@"images\") in items)
+			images ::= item;
+		def sample = ImageCollectionItem("image-sample");
+		[ TaskMapping
+			( inputs  = images.Map(_ : ITaskItem)
+			, outputs = [ sample ]
+			, compute = () => Compute(images, sample)
+			)
+		];
+	}
+
+	private Compute(images : list[ImageCollectionItem], sample : ImageCollectionItem) : void
+	{
+		def random = Random(0);
+
+		def n = images.Fold(0, (item, sum) => sum + item.ImageIDs.Length);
+		mutable indices = Set();
+		while (indices.Count < parameters.ImageSampleSize)
+		{
+			def index = random.Next(n);
+			unless (indices.Contains(index))
+				indices = indices.Add(index);
+		}
+
+		_ = Directory.CreateDirectory(sample.Path);
+
+		mutable ids = [];
+		foreach (index in indices)
+		{
+			mutable l = images;
+			mutable i = index;
+			while (i > l.Head.ImageIDs.Length)
+			{
+				i -= l.Head.ImageIDs.Length;
+				l = l.Tail;
+			}
+			def id = l.Head.ImageIDs[i];
+			ids ::= id;
+			File.Copy
+				( sourceFileName = Path.Combine(l.Head.Path, id + ".jpg")
+				, destFileName   = Path.Combine(sample.Path, id + ".jpg")
+				);
+		}
+		sample.ImageIDs = ids.ToArray();
+	}
+}
