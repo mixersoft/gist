@@ -26,8 +26,12 @@ class GroupShotsTask : ITask
 
 	private Compute(jsonItem : JsonItem, clusterItem : ClusterItem) : void
 	{
-		clusterItem.Clusters =
-			jsonItem.Photos.GroupBy(_.ShotID)
-			.MapToArray(_.MapToArray(_.ID));
+		mutable id = 0;
+		def UniquePhoto(photo)
+		{
+		| _ when photo.ShotID == "" => ++id; JsonItem.PhotoInfo(photo.ID, photo.RootSrc, id + "-unique")
+		| _                         => photo
+		}
+		clusterItem.Clusters = jsonItem.Photos.Select(UniquePhoto).GroupBy(_.ShotID).MapToArray(_.MapToArray(_.ID));
 	}
 }
