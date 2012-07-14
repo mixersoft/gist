@@ -10,10 +10,10 @@
 
 	<ItemGroup>
 	<!-- source code -->
-		<ImageGroupingSrc     Include="image-grouping-src\*.n"      />
-		<ClusterUiSrc         Include="cluster-ui-src\*.n"          />
-		<ImageGroupingTestSrc Include="image-grouping-test-src\*.n" />
-		<PrettyPrintSrc       Include="pretty-print-src\*.n"        />
+		<ImageGroupingSrc     Include="src\image-grouping\*.n"      />
+		<ClusterUiSrc         Include="src\cluster-ui\*.n"          />
+		<ImageGroupingTestSrc Include="src\image-grouping-test\*.n" />
+		<PrettyPrintSrc       Include="src\pretty-print\*.n"        />
 	<!-- output -->
 		<ImageGroupingBin     Include="bin\ImageGrouping.exe"     />
 		<ClusterUiBin         Include="bin\ClusterUI.exe"         />
