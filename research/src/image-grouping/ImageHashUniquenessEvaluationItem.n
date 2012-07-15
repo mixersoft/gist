@@ -1,17 +1,18 @@
 using Nemerle.Utility;
 using System.IO;
 
-class ClusterHtmlItem : ITaskItem
+class ImageHashUniquenessEvaluationItem : ITaskItem
 {
 	[ Accessor ] private path : string;
 
-	public mutable Clusters : array[array[string]];
+	public mutable Conflicts           : array[array[string]];
+	public mutable MakeImagePathFromID : string -> string;
 
 	public this(path : string)
 	{
 		this.path = path;
 	}
-	
+
 	public HasCache() : bool
 	{
 		File.Exists(path);
@@ -20,9 +21,6 @@ class ClusterHtmlItem : ITaskItem
 	public Save() : void
 	{
 		_ = Directory.CreateDirectory(Path.GetDirectoryName(path));
-
-		def imageDir = Path.Combine(@"..\images", Path.GetFileNameWithoutExtension(path));
-
 		using (writer = File.CreateText(path))
 		{
 			[ "<html>"
@@ -32,22 +30,16 @@ class ClusterHtmlItem : ITaskItem
 			, "	span { display : block; padding : 8px; }"
 			, "</style></head>"
 			, "<body>"
+			, $"<p>Number of conflicts: $(Conflicts.Length)</p>"
 			].Iter(writer.WriteLine);
-
-			foreach (cluster in Clusters with i)
+			foreach (group in Conflicts with i)
 			{
 				def spanClass = if (i % 2 == 0) "even" else "odd";
 				writer.WriteLine($"<span class='$spanClass'>");
-
-				foreach (id in cluster)
-				{
-					def src = Path.Combine(imageDir, id + ".jpg");
-					writer.WriteLine($"<img height='64' src='$src'>");
-				}
-
+				foreach (id in group)
+					writer.WriteLine($"<img height='64' src='../$(MakeImagePathFromID(id))'>");
 				writer.WriteLine("</span>");
 			}
-
 			writer.WriteLine("</body></html>");
 		}
 	}

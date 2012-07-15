@@ -1,0 +1,41 @@
+using Nemerle.Collections;
+using System.IO;
+
+class EvaluateImageHashUniquenessTask : ITask
+{
+	public Name : string { get { "EvaluateImageHashUniquenessTask" } }
+
+	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
+	{
+		mutable mappings = [];
+		foreach (item is ImageCollectionItem when item.Path.StartsWith(@"images\") in items)
+		{
+			def name = Path.GetFileName(item.Path);
+			def result = ImageHashUniquenessEvaluationItem(Path.Combine("eval",  $"$name hash uniqueness.html"));
+			mappings ::= TaskMapping
+				( inputs  = [ item ]
+				, outputs = [ result ]
+				, compute = () => Compute(item, result)
+				);
+		}
+		mappings;
+	}
+
+	private Compute
+		( imageCollection : ImageCollectionItem
+		, evaluation      : ImageHashUniquenessEvaluationItem
+		) : void
+	{
+		def map = Hashtable();
+		foreach (id in imageCollection.ImageIDs)
+		{
+			def hash = ImageHash.GetHashCode(imageCollection.MakePath(id));
+			map[hash] = id :: map.GetValueOrDefault(hash);
+		}
+		evaluation.Conflicts = map.MapToArrayFiltered
+			( isMatch = pair => pair.Value.Length > 1
+			, convert = pair => pair.Value.ToArray()
+			);
+		evaluation.MakeImagePathFromID = imageCollection.MakePath;
+	}
+}

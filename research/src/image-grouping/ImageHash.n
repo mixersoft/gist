@@ -1,0 +1,8 @@
+module ImageHash
+{
+	public GetHashCode(path : string) : int
+	{
+		_ = path;
+		5;
+	}
+}

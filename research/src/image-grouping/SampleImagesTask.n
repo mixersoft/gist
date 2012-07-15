@@ -51,8 +51,8 @@ class SampleImagesTask : ITask
 			def id = l.Head.ImageIDs[i];
 			ids ::= id;
 			File.Copy
-				( sourceFileName = Path.Combine(l.Head.Path, id + ".jpg")
-				, destFileName   = Path.Combine(sample.Path, id + ".jpg")
+				( sourceFileName = l.Head.MakePath(id)
+				, destFileName   = sample.MakePath(id)
 				);
 		}
 		sample.ImageIDs = ids.ToArray();

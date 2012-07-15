@@ -34,15 +34,16 @@ module Main
 		def parameters = Parameters();
 		TaskManager
 			( tasks =
-				[ LoadJsonDataTask          ():ITask
-				, DownloadDataTask          (parameters)
-				, GroupShotsTask            ()
-				, SampleImagesTask          (parameters)
-				, ExtractDescriptorsTask    (parameters)
-				, ClusterDataTask           (parameters)
-				, CreateClusterHtmlTask     ()
-				, LoadReferenceClustersTask ()
-				, EvaluateClustersTask      ()
+				[ LoadJsonDataTask                ():ITask
+				, DownloadDataTask                (parameters)
+				, GroupShotsTask                  ()
+				, SampleImagesTask                (parameters)
+				, ExtractDescriptorsTask          (parameters)
+				, ClusterDataTask                 (parameters)
+				, CreateClusterHtmlTask           ()
+				, LoadReferenceClustersTask       ()
+				, EvaluateClustersTask            ()
+				, EvaluateImageHashUniquenessTask ()
 				]
 			, persistData     = true
 			, displayProgress = true
