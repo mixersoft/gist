@@ -68,7 +68,7 @@ public class EvaluateClustersTask: ITask
 		/// Number of discrepancies between two partitions of a set.
 		/// Similar to <a src="http://en.wikipedia.org/wiki/Rand_index">Rand index</a>.
 		/// </summary>
-		def EvaluateClusters(l1, l2)
+		def EvaluateClusters(l1, l2) : double
 		{
 			def PairsCount(n)
 			{
@@ -94,15 +94,14 @@ public class EvaluateClustersTask: ITask
 			def l1 = l1.Map(Set);
 			def l2 = l2.Map(Set);
 
-			def ab = GetContingencyTableSum(l1, l2);
-			def a  = GetMarginalSum(l1);
-			def b  = GetMarginalSum(l2);
-			def n2 = TotalPairsCount(l1);
+			def ab : int = GetContingencyTableSum(l1, l2);
+			def a  : int = GetMarginalSum(l1);
+			def b  : int = GetMarginalSum(l2);
+			def n2 : int = TotalPairsCount(l1);
 
 			// Adjusted rand index:
 			// (Index - ExpectedIndex) / (MaxIndex - ExpectedIndex)
 			unchecked (n2 * ab - a * b) / (0.5 * n2 * (a + b) - a * b);
-
 		}
 
 		def autoClusters = autoClusters.Clusters;

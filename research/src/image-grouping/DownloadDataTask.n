@@ -7,7 +7,7 @@ using System;
 [ Record ]
 class DownloadDataTask : ITask
 {
-	private parameters : IParameters;
+	private parameters : Parameters;
 
 	public Name : string { get { "DownloadDataTask" } }
 

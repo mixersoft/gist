@@ -34,16 +34,18 @@ module Main
 		def parameters = Parameters();
 		TaskManager
 			( tasks =
-				[ LoadJsonDataTask                ():ITask
-				, DownloadDataTask                (parameters)
-				, GroupShotsTask                  ()
-				, SampleImagesTask                (parameters)
-				, ExtractDescriptorsTask          (parameters)
-				, ClusterDataTask                 (parameters)
-				, CreateClusterHtmlTask           ()
-				, LoadReferenceClustersTask       ()
-				, EvaluateClustersTask            ()
-				, EvaluateImageHashUniquenessTask ()
+				[ LoadJsonDataTask                 ():ITask
+				, DownloadDataTask                 (parameters)
+				, ExtractDescriptorsTask           (parameters)
+				, ClusterDataTask                  (parameters)
+				, CreateClusterHtmlTask            ()
+				, LoadReferenceClustersTask        ()
+				, EvaluateClustersTask             ()
+
+				, SampleImagesTask                 (parameters)
+				, GroupShotsTask                   ()
+				, EvaluateImageHashUniquenessTask  ()
+				, EvaluateImageHashConsistencyTask (parameters)
 				]
 			, persistData     = true
 			, displayProgress = true
@@ -53,12 +55,7 @@ module Main
 
 	private RunThresholdOptimization(min : double, max : double, count : int) : void
 	{
-		def parameters = MockParameters
-			( downloadImagePrefix = ""
-			, imageSize           = (0, 0)
-			, clusteringThreshold = 0.2
-			, imageSampleSize     = 0
-			);
+		def parameters = Parameters();
 
 		def taskManager = TaskManager
 			( tasks =
@@ -101,12 +98,7 @@ module Main
 
 	private RunImageSizeOptimization() : void
 	{
-		def parameters = MockParameters
-			( downloadImagePrefix = ""
-			, imageSize           = (0, 0)
-			, clusteringThreshold = 0.0
-			, imageSampleSize     = 0
-			);
+		def parameters = Parameters();
 
 		def taskManager = TaskManager
 			( tasks =

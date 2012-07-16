@@ -1,25 +1,15 @@
-// TARGET: library
-
 using Nemerle.Collections;
 using Nemerle.Utility;
 using System.IO.File;
 
-/// <summary>Meta-parameter source.</summary>
-public interface IParameters
-{
-	DownloadImagePrefix : string    { get }
-	ImageSize           : int * int { get }
-	ClusteringThreshold : double    { get }
-	ImageSampleSize     : int       { get }
-}
-
 /// <summary>Meta-parameter source that loads from "parameters.txt".</summary>
-public class Parameters : IParameters
+public class Parameters
 {
-	[ Accessor ] private downloadImagePrefix : string;
-	[ Accessor ] private imageSize           : int * int;
-	[ Accessor ] private clusteringThreshold : double;
-	[ Accessor ] private imageSampleSize     : int;
+	public mutable DownloadImagePrefix : string;
+	public mutable ImageSize           : int * int;
+	public mutable ClusteringThreshold : double;
+	public mutable ImageSampleSize     : int;
+	public mutable HashedImageQuality  : int;
 
 	public this()
 	{
@@ -40,19 +30,10 @@ public class Parameters : IParameters
 			map.Add(name, value);
 		}
 
-		downloadImagePrefix = map["download image prefix"];
-		imageSize           = ParseSize(map["image size"]);
-		clusteringThreshold = double.Parse(map["clustering threshold"]);
-		imageSampleSize     = int.Parse(map["image sample size"]);
+		DownloadImagePrefix = map["download image prefix"];
+		ImageSize           = map["image size"]           |> ParseSize;
+		ClusteringThreshold = map["clustering threshold"] |> double.Parse;
+		ImageSampleSize     = map["image sample size"]    |> int.Parse;
+		HashedImageQuality  = map["hashed image quality"] |> int.Parse;
 	}
-}
-
-/// <summary>Meta-parameter source with fixed contents.</summary>
-[ Record ]
-public class MockParameters : IParameters
-{
-	public DownloadImagePrefix : string    { get; set }
-	public ImageSize           : int * int { get; set }
-	public ClusteringThreshold : double    { get; set }
-	public ImageSampleSize     : int       { get; set }
 }

@@ -12,7 +12,7 @@ using SCG = System.Collections.Generic;
 [ Record ]
 class ClusterDataTask : ITask
 {
-	private parameters : IParameters;
+	private parameters : Parameters;
 
 	public Name : string { get { "ClusterDataTask" } }
 

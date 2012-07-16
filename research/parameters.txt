@@ -2,3 +2,4 @@ download image prefix =
 image size = 120, 120
 clustering threshold = 0.43
 image sample size = 4
+hashed image quality = 50
