@@ -1,10 +1,67 @@
+using Emgu.CV.CvEnum;
+using Emgu.CV.Structure;
+using Emgu.CV;
+using System.Collections;
 using System.Drawing;
+using System.Security.Cryptography;
+using System;
 
 module ImageHash
 {
-	public GetHashCode(bmp : Bitmap) : int
+	mutable i : int;
+
+	public variant BlurMethod
 	{
-		_ = bmp;
-		5;
+	| Median   { size : int }
+	| Gaussian { size : int }
+	}
+
+	public GetHashCode(image : Bitmap, parameters : Parameters) : int
+	{
+		def Resize(src : Bitmap) : Image.[Gray, byte]
+		{
+			mutable dst = Image.[Gray, byte](src);
+			//match (parameters.HashedImageBlur)
+			//{
+			//| Median(size)   => dst = dst.SmoothMedian(size)
+			//| Gaussian(size) => dst = dst.SmoothGaussian(size)
+			//}
+			def n = parameters.HashedImageSize;
+			dst = dst.Resize(n, n, INTER.CV_INTER_LINEAR);
+			dst.Save($"$i.png"); ++i;
+			dst;
+		}
+		def ToByteArray(src : Image.[Gray, byte]) : array[byte]
+		{
+			def bpp = parameters.HashedImageBpp;
+
+			def data : array[3, byte] = src.Data;
+
+			def (w, h) = (src.Width, src.Height);
+			def bits = BitArray(bpp * w * h);
+			mutable i = 0;
+			for (mutable y = 0; y != h; ++y)
+			for (mutable x = 0; x != w; ++x)
+			{
+				def value = data[y, x, 0] >> (8 - bpp);
+				for (mutable bit = 0; bit != bpp; ++bit)
+				{
+					bits[i] = value & (1 << bit) != 0;
+					++i;
+				}
+			}
+			def bytes = array((bits.Count + 7) / 8); // divide rounding up
+			bits.CopyTo(bytes, index = 0);
+			bytes;
+		}
+		def Hash(data : array[byte]) : array[byte]
+		{
+			MD5.Create().ComputeHash(data)
+		}
+		def GetFirst32Bits(hash : array[byte]) : int
+		{
+			hash[0] | (hash[1] << 8) | (hash[2] << 16) | (hash[3] << 24)
+		}
+		image |> Resize |> ToByteArray |> Hash |> GetFirst32Bits;
 	}
 }

@@ -20,6 +20,7 @@ variant RunMode
 | Normal
 | OptimizeThreshold { min : double; max : double; count : int }
 | OptimizeImageSize
+| OptimizeImageHash
 }
 
 module Main
@@ -44,8 +45,8 @@ module Main
 
 				, SampleImagesTask                 (parameters)
 				, GroupShotsTask                   ()
-				, EvaluateImageHashUniquenessTask  ()
-				, EvaluateImageHashConsistencyTask ()
+				, EvaluateImageHashUniquenessTask  (parameters)
+				, EvaluateImageHashConsistencyTask (parameters)
 				]
 			, persistData     = true
 			, displayProgress = true
@@ -76,7 +77,7 @@ module Main
 			{
 			| Some(item is ClusterEvaluationItem) => item
 			| _                                   => throw Exception($"'$taskPath' not found.")
-			};
+			}
 
 		def Run(threshold)
 		{
@@ -120,8 +121,8 @@ module Main
 			match (taskManager.Items.Find(item => item.Path == taskPath))
 			{
 			| Some(item is ClusterEvaluationItem) => item
-			| _                                   => throw Exception($"'$taskPath' not found.")
-			};
+			| _ => throw Exception($"'$taskPath' not found.")
+			}
 
 		def (min, max, count) = (0.1, 0.9, 80);
 
@@ -152,6 +153,73 @@ module Main
 		[ (90, 90), (120, 120), (256, 256) ].Iter(Run);
 	}
 
+	public RunImageHashOptimization() : void
+	{
+		/*
+		def parameters = Parameters();
+
+		def taskManager = TaskManager
+			( tasks =
+				[ LoadJsonDataTask                 ():ITask
+				, DownloadDataTask                 (parameters)
+				, SampleImagesTask                 (parameters)
+				, GroupShotsTask                   ()
+				, EvaluateImageHashUniquenessTask  (parameters)
+				, EvaluateImageHashConsistencyTask (parameters)
+				]
+			, persistData     = false
+			, displayProgress = false
+			);
+
+		def dataSet = "paris";
+
+		def uniquenessTaskPath = $@"eval\\$dataSet hash uniqueness.txt";
+		def uniquenessTask =
+			match (taskManager.Items.Find(item => item.Path == taskPath))
+			{
+			| Some(item is ImageHashUniquenessEvaluationItem) => item
+			| _ => throw Exception($"'$uniquenessTaskPath' not found.")
+			}
+
+		def consistencyTaskPath =  @"eval\image sample.txt";
+		def uniquenessTask =
+			match (taskManager.Items.Find(item => item.Path == taskPath))
+			{
+			| Some(item is ImageHashUniquenessEvaluationItem) => item
+			| _ => throw Exception($"'$consistencyTaskPath' not found.")
+			}
+
+		def sizes = $[4,6..12];
+		def bpps  = $[1..6];
+
+		def Run(w, h)
+		{
+			def Run(threshold)
+			{
+				parameters.ClusteringThreshold = threshold;
+
+				taskManager.DiscardItemData($@"clusters\$dataSet.txt");
+				taskManager.Compute();
+
+				Console.WriteLine($"$(w)x$(h)\t$threshold\t$(task.Value)");
+			}
+
+			parameters.ImageSize = (w, h);
+
+			taskManager.DiscardItemData($@"descriptors\$dataSet");
+
+			def Lerp(step : int)
+			{
+				min + (max - min) * step / count
+			}
+			$[0 .. count].Map(Lerp).Iter(Run);
+		}
+
+		Console.WriteLine("Image size optimization:");
+		[ (90, 90), (120, 120), (256, 256) ].Iter(Run);
+		*/
+	}
+
 	public Main() : void
 	{
 		mutable runMode     = RunMode.Normal();
@@ -176,6 +244,11 @@ module Main
 				, () => runMode = RunMode.OptimizeImageSize()
 				)
 			, Getopt.CliOption.Flag
+				( "-optimize-image-hash"
+				, "Optimize the image hash."
+				, () => runMode = RunMode.OptimizeImageHash()
+				)
+			, Getopt.CliOption.Flag
 				( "-help"
 				, [ "-?" ]
 				, "Display this message."
@@ -195,6 +268,7 @@ module Main
 			| Normal                             => Run()
 			| OptimizeThreshold(min, max, count) => RunThresholdOptimization(min, max, count)
 			| OptimizeImageSize                  => RunImageSizeOptimization()
+			| OptimizeImageHash                  => RunImageHashOptimization()
 			}
 		}
 	}

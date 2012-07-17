@@ -1,25 +1,37 @@
 using Nemerle.Collections;
 using Nemerle.Utility;
 using System.IO.File;
+using System;
 
 /// <summary>Meta-parameter source that loads from "parameters.txt".</summary>
-public class Parameters
+class Parameters
 {
 	public mutable DownloadImagePrefix : string;
 	public mutable ImageSize           : int * int;
 	public mutable ClusteringThreshold : double;
 	public mutable ImageSampleSize     : int;
-	public mutable HashedImageQuality  : int;
+	public mutable HashedImageBpp      : int;
 	public mutable HashedImageSize     : int;
+	public mutable HashedImageBlur     : ImageHash.BlurMethod;
 
 	public this()
 	{
-		def ParseSize(str)
+		def ParseBlur(str : string) : ImageHash.BlurMethod
 		{
-			def i = str.IndexOf(',');
-			def w = int.Parse(str.Substring(0, i));
-			def h = int.Parse(str.Substring(i + 1));
-			(w, h);
+			match (str.SplitToList(' '))
+			{
+			| ["median",   size] => ImageHash.BlurMethod.Median(int.Parse(size))
+			| ["gaussian", size] => ImageHash.BlurMethod.Gaussian(int.Parse(size))
+			| _ => throw Exception($"Incorrect blur format: '$str'.")
+			}
+		}
+		def ParseSize(str : string) : int * int
+		{
+			match (str.SplitToList(' '))
+			{
+			| [ w, h] => (int.Parse(w), int.Parse(h))
+			| _ => throw Exception($"Incorrect size format: '$str'.")
+			}
 		}
 
 		def map = Hashtable();
@@ -35,7 +47,11 @@ public class Parameters
 		ImageSize           = map["image size"]           |> ParseSize;
 		ClusteringThreshold = map["clustering threshold"] |> double.Parse;
 		ImageSampleSize     = map["image sample size"]    |> int.Parse;
-		HashedImageQuality  = map["hashed image quality"] |> int.Parse;
+		HashedImageBpp      = map["hashed image bpp"]     |> int.Parse;
 		HashedImageSize     = map["hashed image size"]    |> int.Parse;
+		HashedImageBlur     = map["hashed image blur"]    |> ParseBlur;
+
+		when (HashedImageBpp < 0 || HashedImageBpp > 8)
+			throw ArgumentException("bpp must be between 0 and 8");
 	}
 }

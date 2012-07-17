@@ -1,6 +1,7 @@
 download image prefix = 
-image size = 120, 120
+image size = 120 120
 clustering threshold = 0.43
 image sample size = 10
-hashed image quality = 50
-hashed image size = 64
+hashed image bpp = 1
+hashed image size = 16
+hashed image blur = median 3

@@ -13,6 +13,8 @@ using System;
 [ Record ]
 class EvaluateImageHashConsistencyTask : ITask
 {
+	private parameters : Parameters;
+
 	public Name : string { get { "EvaluateImageHashConsistencyTask" } }
 
 	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
@@ -95,7 +97,7 @@ class EvaluateImageHashConsistencyTask : ITask
 					, stride     = data.Stride
 					);
 				bmp.UnlockBits(data);
-				ImageHash.GetHashCode(bmp);
+				ImageHash.GetHashCode(bmp, parameters);
 			}
 		}
 		def Score(hashes)
