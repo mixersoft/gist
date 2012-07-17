@@ -1,8 +1,10 @@
+using System.Drawing;
+
 module ImageHash
 {
-	public GetHashCode(path : string) : int
+	public GetHashCode(bmp : Bitmap) : int
 	{
-		_ = path;
+		_ = bmp;
 		5;
 	}
 }

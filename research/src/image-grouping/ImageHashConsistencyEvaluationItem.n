@@ -1,0 +1,33 @@
+using Nemerle.Collections;
+using Nemerle.Utility;
+using System.IO;
+
+class ImageHashConsistencyEvaluationItem : ITaskItem
+{
+	[ Accessor ] private path : string;
+
+	public mutable Scores : list[string * int];
+
+	public this(path : string)
+	{
+		this.path = path;
+	}
+
+	public HasCache() : bool
+	{
+		File.Exists(path);
+	}
+
+	public Save() : void
+	{
+		using (writer = File.CreateText(path))
+		{
+			foreach ((id, score) in Scores)
+				writer.WriteLine("{0}: {1}", id, score);
+		}
+	}
+
+	public Load() : void
+	{
+	}
+}

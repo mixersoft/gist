@@ -1,4 +1,5 @@
 using Nemerle.Collections;
+using System.Drawing;
 using System.IO;
 
 class EvaluateImageHashUniquenessTask : ITask
@@ -29,7 +30,9 @@ class EvaluateImageHashUniquenessTask : ITask
 		def map = Hashtable();
 		foreach (id in imageCollection.ImageIDs)
 		{
-			def hash = ImageHash.GetHashCode(imageCollection.MakePath(id));
+			def hash =
+				using (bmp = Bitmap(imageCollection.MakePath(id)))
+					ImageHash.GetHashCode(bmp);
 			map[hash] = id :: map.GetValueOrDefault(hash);
 		}
 		evaluation.Conflicts = map.MapToArrayFiltered

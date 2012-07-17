@@ -10,6 +10,7 @@ public class Parameters
 	public mutable ClusteringThreshold : double;
 	public mutable ImageSampleSize     : int;
 	public mutable HashedImageQuality  : int;
+	public mutable HashedImageSize     : int;
 
 	public this()
 	{
@@ -35,5 +36,6 @@ public class Parameters
 		ClusteringThreshold = map["clustering threshold"] |> double.Parse;
 		ImageSampleSize     = map["image sample size"]    |> int.Parse;
 		HashedImageQuality  = map["hashed image quality"] |> int.Parse;
+		HashedImageSize     = map["hashed image size"]    |> int.Parse;
 	}
 }

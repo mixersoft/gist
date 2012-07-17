@@ -24,6 +24,7 @@
 		<ImageGroupingRef     Include="System.Core.dll"          />
 		<ImageGroupingRef     Include="System.Drawing.dll"       />
 		<ImageGroupingRef     Include="System.Windows.Forms.dll" />
+		<ImageGroupingRef     Include="PresentationCore"         />
 		<ImageGroupingRef     Include="lib\ComputeGist.dll"      />
 		<ImageGroupingRef     Include="lib\Emgu.CV.dll"          />
 		<ImageGroupingRef     Include="lib\Emgu.Util.dll"        />

@@ -45,7 +45,7 @@ module Main
 				, SampleImagesTask                 (parameters)
 				, GroupShotsTask                   ()
 				, EvaluateImageHashUniquenessTask  ()
-				, EvaluateImageHashConsistencyTask (parameters)
+				, EvaluateImageHashConsistencyTask ()
 				]
 			, persistData     = true
 			, displayProgress = true

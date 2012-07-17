@@ -1,0 +1,117 @@
+using Nemerle.Collections;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Math;
+using System.Windows;
+using System.Windows.Media.Imaging;
+using System.Windows.Media;
+using System;
+
+[ Record ]
+class EvaluateImageHashConsistencyTask : ITask
+{
+	public Name : string { get { "EvaluateImageHashConsistencyTask" } }
+
+	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
+	{
+		match (items.Find(item => item.Path == "image-sample"))
+		{
+		| Some(item is ImageCollectionItem) =>
+			def result = ImageHashConsistencyEvaluationItem(@"eval\image sample.txt");
+			[ TaskMapping
+				( inputs  = [ item ]
+				, outputs = [ result ]
+				, compute = () => Compute(item, result)
+				)
+			]
+		| _ => []
+		}
+	}
+
+	public Compute
+		( imageCollection : ImageCollectionItem
+		, evaluation      : ImageHashConsistencyEvaluationItem
+		) : void
+	{
+		def Load(path)
+		{
+			BitmapImage(Uri(path, UriKind.RelativeOrAbsolute));
+		}
+		def Subsample(src : BitmapSource) : BitmapSource
+		{
+			def max = 120;
+			def (w, h) =
+				if (src.PixelWidth > src.PixelHeight)
+					(max, src.PixelHeight * max / src.PixelWidth)
+				else
+					(src.PixelWidth * max / src.PixelHeight, max);
+
+			def group = DrawingGroup();
+			RenderOptions.SetBitmapScalingMode(group, BitmapScalingMode.HighQuality);
+			group.Children.Add(ImageDrawing(src, Rect(0, 0, w, h)));
+
+			def visual = DrawingVisual();
+			using (drawingContext = visual.RenderOpen())
+				drawingContext.DrawDrawing(group);
+
+			def dst = RenderTargetBitmap(w, h, 96.0, 96.0, 	PixelFormats.Default);
+			dst.Render(visual);
+			dst;
+		}
+		def Compress(src : BitmapSource) : BitmapSource
+		{
+			def encoder = JpegBitmapEncoder();
+			encoder.QualityLevel = 50;
+			encoder.Frames.Add(BitmapFrame.Create(src));
+			using (stream = MemoryStream())
+			{
+				encoder.Save(stream);
+				stream.Position = 0L;
+
+				def dst = BitmapImage();
+				dst.BeginInit();
+				dst.StreamSource = stream;
+				dst.CacheOption = BitmapCacheOption.OnLoad;
+				dst.EndInit();
+				dst;
+			}
+		}
+		def GetHashCode(src : BitmapSource) : int
+		{
+			using (bmp = Bitmap(src.PixelWidth, src.PixelHeight, PixelFormat.Format32bppPArgb))
+			{
+				def data = bmp.LockBits
+					( rect   = Rectangle(Point.Empty, bmp.Size)
+					, flags  = ImageLockMode.WriteOnly
+					, format = PixelFormat.Format32bppPArgb
+					);
+				src.CopyPixels
+					( sourceRect = Int32Rect.Empty
+					, buffer     = data.Scan0
+					, bufferSize = data.Height * data.Stride
+					, stride     = data.Stride
+					);
+				bmp.UnlockBits(data);
+				ImageHash.GetHashCode(bmp);
+			}
+		}
+		def Score(hashes)
+		{
+			hashes.GroupBy(x => x).Map(_.Count()).Fold(0, Max : int * int -> int)
+		}
+		foreach (id in imageCollection.ImageIDs)
+		{
+			def largeHQ = Load(imageCollection.MakePath(id));
+			def smallHQ = Subsample(largeHQ);
+			def largeLQ = Compress(largeHQ);
+			def smallLQ = Compress(smallHQ);
+
+			def bitmaps = [ largeHQ, smallHQ, largeLQ, smallLQ ];
+
+			evaluation.Scores ::= (id, Score(bitmaps.Map(GetHashCode)));
+		}
+	}
+}
