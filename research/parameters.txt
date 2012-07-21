@@ -3,5 +3,5 @@ image size = 120 120
 clustering threshold = 0.43
 image sample size = 10
 hashed image bpp = 1
-hashed image size = 16
-hashed image blur = median 3
+hashed image size = 64
+hashed image blur = gaussian 20

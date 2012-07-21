@@ -20,8 +20,8 @@ class Parameters
 		{
 			match (str.SplitToList(' '))
 			{
-			| ["median",   size] => ImageHash.BlurMethod.Median(int.Parse(size))
-			| ["gaussian", size] => ImageHash.BlurMethod.Gaussian(int.Parse(size))
+			| ["median", size] => ImageHash.BlurMethod.Median(int.Parse(size))
+			| ["gaussian", σ]  => ImageHash.BlurMethod.Gaussian(double.Parse(σ))
 			| _ => throw Exception($"Incorrect blur format: '$str'.")
 			}
 		}

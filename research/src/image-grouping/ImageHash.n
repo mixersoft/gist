@@ -13,22 +13,30 @@ module ImageHash
 	public variant BlurMethod
 	{
 	| Median   { size : int }
-	| Gaussian { size : int }
+	| Gaussian { factor : double }
 	}
 
 	public GetHashCode(image : Bitmap, parameters : Parameters) : int
 	{
 		def Resize(src : Bitmap) : Image.[Gray, byte]
 		{
-			mutable dst = Image.[Gray, byte](src);
-			//match (parameters.HashedImageBlur)
-			//{
-			//| Median(size)   => dst = dst.SmoothMedian(size)
-			//| Gaussian(size) => dst = dst.SmoothGaussian(size)
-			//}
 			def n = parameters.HashedImageSize;
+
+			mutable dst = Image.[Gray, byte](src);
+			match (parameters.HashedImageBlur)
+			{
+			| Median(size)     => dst = dst.SmoothMedian(size)
+			| Gaussian(factor) => dst = dst.SmoothGaussian
+				( kernelWidth  = 11
+				, kernelHeight = 11
+				, sigma1       = src.Width  * factor / n - factor
+				, sigma2       = src.Height * factor / n - factor
+				);
+				Console.WriteLine($"$i sigma1: $(src.Width  * factor / n - factor)");
+				Console.WriteLine($"$i sigma2: $(src.Height * factor / n - factor)");
+			}
 			dst = dst.Resize(n, n, INTER.CV_INTER_LINEAR);
-			dst.Save($"$i.png"); ++i;
+			dst.Save($@"test\$i.png"); ++i;
 			dst;
 		}
 		def ToByteArray(src : Image.[Gray, byte]) : array[byte]
