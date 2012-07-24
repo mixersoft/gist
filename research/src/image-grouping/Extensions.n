@@ -1,0 +1,13 @@
+using SCG = System.Collections.Generic;
+
+public module Extensions
+{
+	public Filter[T1, T2]
+		( this l : SCG.IEnumerable[T1]
+		, filter : T2 -> bool
+		) : SCG.IEnumerable[T2] where T2 : T1
+	{
+		foreach (x is T2 when filter(x) in l)
+			yield x;
+	}
+}

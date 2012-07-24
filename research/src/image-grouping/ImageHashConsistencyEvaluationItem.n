@@ -6,7 +6,7 @@ class ImageHashConsistencyEvaluationItem : ITaskItem
 {
 	[ Accessor ] private path : string;
 
-	public mutable Scores : list[string * int];
+	public mutable Scores : list[string * string];
 
 	public this(path : string)
 	{
