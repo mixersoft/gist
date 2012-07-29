@@ -73,7 +73,7 @@ module Main
 
 		def taskPath = @"eval\peter-alice.txt";
 		def task =
-			match (taskManager.Items.Find(item => item.Path == taskPath))
+			match (taskManager.Items.Find(item : ITaskItem => item.Path == taskPath))
 			{
 			| Some(item is ClusterEvaluationItem) => item
 			| _                                   => throw Exception($"'$taskPath' not found.")
@@ -155,7 +155,8 @@ module Main
 
 	public RunImageHashOptimization() : void
 	{
-		/*
+		Console.WriteLine("Image hash optimization:");
+
 		def parameters = Parameters();
 
 		def taskManager = TaskManager
@@ -163,7 +164,6 @@ module Main
 				[ LoadJsonDataTask                 ():ITask
 				, DownloadDataTask                 (parameters)
 				, SampleImagesTask                 (parameters)
-				, GroupShotsTask                   ()
 				, EvaluateImageHashUniquenessTask  (parameters)
 				, EvaluateImageHashConsistencyTask (parameters)
 				]
@@ -171,8 +171,73 @@ module Main
 			, displayProgress = false
 			);
 
-		def dataSet = "paris";
+		def uniquenessItems =
+			[ @"eval\paris hash uniqueness.html"
+			, @"eval\saturday hash uniqueness.html"
+			].Map
+			( path => taskManager.Items.TypedFind
+				( item : ImageHashUniquenessEvaluationItem =>
+					item.Path == path
+				).Value
+			);
 
+		def consistencyItem = taskManager.Items.TypedFind
+			( item : ImageHashConsistencyEvaluationItem =>
+				item.Path == @"eval\image sample.txt"
+			).Value;
+
+		def itemsToDiscard = consistencyItem :: uniquenessItems.Map(_ : ITaskItem);
+
+		using (writer = File.CreateText("image hash.txt"))
+		{
+			writer.Write
+				( "size\tbpp\t{0}"
+				, Path.GetFileNameWithoutExtension(consistencyItem.Path)
+				);
+			foreach (item in uniquenessItems)
+				writer.Write("\t" + Path.GetFileNameWithoutExtension(item.Path));
+
+			writer.WriteLine();
+
+			foreach (size in [5 .. 15])
+			foreach (bpp  in [1 .. 4])
+			{
+				Console.WriteLine($"size = $size, bpp = $bpp");
+
+				parameters.HashedImageBpp  = bpp;
+				parameters.HashedImageSize = size;
+
+				foreach (item in itemsToDiscard)
+					taskManager.DiscardItemData(item.Path);
+				taskManager.Compute();
+
+				def CountUnique(l)
+				{
+					l.Fold(Set(), (x, union) => union.Replace(x)).Count
+				}
+
+				writer.Write
+					( "{0}\t{1}\t{2}"
+					, size
+					, bpp
+					, consistencyItem.Hashes
+						.Map((_, hashes) => CountUnique(hashes))
+						.Fold(0, _ + _) / (consistencyItem.Hashes.Length : double)
+					);
+
+				foreach (item in uniquenessItems)
+				{
+					def sum = item.Conflicts.Map(_.Length).Fold(0, _ + _);
+					writer.Write("\t{0}", sum);
+				}
+
+				writer.WriteLine();
+				writer.Flush();
+			}
+		}
+
+
+		/*
 		def uniquenessTaskPath = $@"eval\\$dataSet hash uniqueness.txt";
 		def uniquenessTask =
 			match (taskManager.Items.Find(item => item.Path == taskPath))

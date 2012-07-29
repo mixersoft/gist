@@ -100,11 +100,6 @@ class EvaluateImageHashConsistencyTask : ITask
 				ImageHash.GetHashCode(bmp, parameters);
 			}
 		}
-		def Score(hashes)
-		{
-			def hashes = hashes.ToArray();
-			hashes.Fold("", (hash, result) => result + Array.IndexOf(hashes, hash));
-		}
 		foreach (id in imageCollection.ImageIDs)
 		{
 			def largeHQ = Load(imageCollection.MakePath(id));
@@ -114,7 +109,7 @@ class EvaluateImageHashConsistencyTask : ITask
 
 			def bitmaps = [ largeHQ, smallHQ, largeLQ, smallLQ ];
 
-			evaluation.Scores ::= (id, Score(bitmaps.Map(GetHashCode)));
+			evaluation.Hashes ::= (id, bitmaps.Map(GetHashCode));
 		}
 	}
 }

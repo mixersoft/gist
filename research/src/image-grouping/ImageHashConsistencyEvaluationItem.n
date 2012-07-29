@@ -1,12 +1,13 @@
 using Nemerle.Collections;
 using Nemerle.Utility;
 using System.IO;
+using System;
 
 class ImageHashConsistencyEvaluationItem : ITaskItem
 {
 	[ Accessor ] private path : string;
 
-	public mutable Scores : list[string * string];
+	public mutable Hashes : list[string * list[int]];
 
 	public this(path : string)
 	{
@@ -20,10 +21,15 @@ class ImageHashConsistencyEvaluationItem : ITaskItem
 
 	public Save() : void
 	{
+		def Score(hashes)
+		{
+			def hashes = hashes.ToArray();
+			hashes.Fold("", (hash, result) => result + Array.IndexOf(hashes, hash).ToString());
+		}
 		using (writer = File.CreateText(path))
 		{
-			foreach ((id, score) in Scores)
-				writer.WriteLine("{0}: {1}", id, score);
+			foreach ((id, hashes) in Hashes)
+				writer.WriteLine("{0}: {1}", id, Score(hashes));
 		}
 	}
 
