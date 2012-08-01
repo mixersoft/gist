@@ -1,0 +1,52 @@
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.IO;
+
+class CreateThumbnailsTask : ITask
+{
+	public Name : string { get { "CreateThumbnailsTask" } }
+
+	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
+	{
+		mutable mappings = [];
+		foreach (item is ImageCollectionItem in items)
+		{
+			def result = ImageCollectionItem
+				(Path.Combine("thumbnails", Path.GetFileName(item.Path)));
+			mappings ::= TaskMapping
+				( inputs  = [ item ]
+				, outputs = [ result ]
+				, compute = () => Compute(item, result)
+				);
+		}
+		mappings;
+	}
+
+	private Compute(images : ImageCollectionItem, thumbnails : ImageCollectionItem) : void
+	{
+		def height = 64;
+
+		_ = Directory.CreateDirectory(Path.GetDirectoryName(thumbnails.Path));
+		_ = Directory.CreateDirectory(thumbnails.Path);
+		System.Console.WriteLine("directory: {0}", Path.GetDirectoryName(thumbnails.Path));
+		System.Console.WriteLine("filename: {0}", Path.GetFileName(thumbnails.Path));
+
+		foreach (id in images.ImageIDs)
+		{
+			using (src = Bitmap(images.MakePath(id)))
+			{
+				def width = src.Width * height / src.Height;
+				using (dst = Bitmap(width, height))
+				{
+					using (gfx = Graphics.FromImage(dst))
+					{
+						gfx.PixelOffsetMode   = PixelOffsetMode.HighQuality;
+						gfx.InterpolationMode = InterpolationMode.HighQualityBicubic;
+						gfx.DrawImage(src, 0, 0, width, height);
+					}
+					dst.Save(thumbnails.MakePath(id));
+				}
+			}
+		}
+	}
+}
