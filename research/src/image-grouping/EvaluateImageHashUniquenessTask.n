@@ -11,30 +11,43 @@ class EvaluateImageHashUniquenessTask : ITask
 
 	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
 	{
-		mutable mappings = [];
-		foreach (item is ImageCollectionItem when item.Path.StartsWith(@"images\") in items)
+		mutable images     = [];
+		mutable thumbnails = [];
+		foreach (item is ImageCollectionItem in items)
 		{
 			def name = Path.GetFileName(item.Path);
+			match (Path.GetDirectoryName(item.Path))
+			{
+			| "images"     => images     ::= (name, item)
+			| "thumbnails" => thumbnails ::= (name, item)
+			| _            => ()
+			}
+		}
+		mutable mappings = [];
+		foreach ((name, image) in images)
+		{
+			def thumbnail = thumbnails.Find(x => x[0] == name).Value[1];
 			def result = ImageHashUniquenessEvaluationItem(Path.Combine("eval",  $"$name hash uniqueness.html"));
 			mappings ::= TaskMapping
-				( inputs  = [ item ]
+				( inputs  = [ image, thumbnail ]
 				, outputs = [ result ]
-				, compute = () => Compute(item, result)
+				, compute = () => Compute(image, thumbnail, result)
 				);
 		}
 		mappings;
 	}
 
 	private Compute
-		( imageCollection : ImageCollectionItem
-		, evaluation      : ImageHashUniquenessEvaluationItem
+		( thumbnails : ImageCollectionItem
+		, images     : ImageCollectionItem
+		, evaluation : ImageHashUniquenessEvaluationItem
 		) : void
 	{
 		def map = Hashtable();
-		foreach (id in imageCollection.ImageIDs)
+		foreach (id in thumbnails.ImageIDs)
 		{
 			def hash =
-				using (bmp = Bitmap(imageCollection.MakePath(id)))
+				using (bmp = Bitmap(images.MakePath(id)))
 					ImageHash.GetHashCode(bmp, parameters);
 			map[hash] = id :: map.GetValueOrDefault(hash);
 		}
@@ -42,6 +55,6 @@ class EvaluateImageHashUniquenessTask : ITask
 			( isMatch = pair => pair.Value.Length > 1
 			, convert = pair => pair.Value.ToArray()
 			);
-		evaluation.MakeImagePathFromID = imageCollection.MakePath;
+		evaluation.MakeImagePathFromID = thumbnails.MakePath;
 	}
 }

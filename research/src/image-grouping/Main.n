@@ -37,6 +37,7 @@ module Main
 			( tasks =
 				[ LoadJsonDataTask                 ():ITask
 				, DownloadDataTask                 (parameters)
+				, CreateThumbnailsTask             ()
 				, ExtractDescriptorsTask           (parameters)
 				, ClusterDataTask                  (parameters)
 				, CreateClusterHtmlTask            ()

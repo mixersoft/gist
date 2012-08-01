@@ -21,7 +21,7 @@ class ClusterHtmlItem : ITaskItem
 	{
 		_ = Directory.CreateDirectory(Path.GetDirectoryName(path));
 
-		def imageDir = Path.Combine(@"..\images", Path.GetFileNameWithoutExtension(path));
+		def imageDir = Path.Combine(@"..\thumbnails", Path.GetFileNameWithoutExtension(path));
 
 		using (writer = File.CreateText(path))
 		{

@@ -27,25 +27,25 @@ class DownloadDataTask : ITask
 		mappings;
 	}
 
-	private Compute(jsonItem : JsonItem, result : ImageCollectionItem) : void
+	private Compute(jsonItem : JsonItem, images : ImageCollectionItem) : void
 	{
 		def downloadPrefix = "/" + parameters.DownloadImagePrefix;
 
 		def client = WebClient();
 
-		result.ImageIDs = array(jsonItem.Photos.Length);
+		images.ImageIDs = array(jsonItem.Photos.Length);
 
-		_ = Directory.CreateDirectory("images");
+		_ = Directory.CreateDirectory(Path.GetDirectoryName(images.Path));
+		_ = Directory.CreateDirectory(images.Path);
 
 		foreach (photo in jsonItem.Photos with i)
 		{
-			def path = result.MakePath(photo.ID);
-			_ = Directory.CreateDirectory(Path.GetDirectoryName(path));
+			_ = Directory.CreateDirectory(Path.GetDirectoryName(images.Path));
 			client.DownloadFile
 				( address  = jsonItem.BaseUrl + photo.RootSrc.Replace("/", downloadPrefix)
-				, fileName = result.MakePath(photo.ID)
+				, fileName = images.MakePath(photo.ID)
 				);
-			result.ImageIDs[i] = photo.ID;
+			images.ImageIDs[i] = photo.ID;
 		}
 	}
 }
