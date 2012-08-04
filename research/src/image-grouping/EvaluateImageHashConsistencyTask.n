@@ -19,23 +19,20 @@ class EvaluateImageHashConsistencyTask : ITask
 
 	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
 	{
-		match (items.Find(item => item.Path == "image-sample"))
-		{
-		| Some(item is ImageCollectionItem) =>
-			def result = ImageHashConsistencyEvaluationItem(@"eval\image sample.txt");
-			[ TaskMapping
-				( inputs  = [ item ]
-				, outputs = [ result ]
-				, compute = () => Compute(item, result)
-				)
-			]
-		| _ => []
-		}
+		def hashes = items.TypedFind
+			(item : ImageHashConsistencyEvaluationItem => item.Path == "image-sample");
+		def evaluation = ImageHashConsistencyEvaluationItem(@"eval\image sample.txt");
+		[ TaskMapping
+			( inputs  = [ images ]
+			, outputs = [ evaluation ]
+			, compute = () => Compute(images, evaluation)
+			)
+		]
 	}
 
 	private Compute
-		( imageCollection : ImageCollectionItem
-		, evaluation      : ImageHashConsistencyEvaluationItem
+		( images     : ImageCollectionItem
+		, evaluation : ImageHashConsistencyEvaluationItem
 		) : void
 	{
 		def Load(path)
@@ -100,9 +97,9 @@ class EvaluateImageHashConsistencyTask : ITask
 				ImageHash.GetHashCode(bmp, parameters);
 			}
 		}
-		foreach (id in imageCollection.ImageIDs)
+		foreach (id in images.ImageIDs)
 		{
-			def largeHQ = Load(imageCollection.MakePath(id));
+			def largeHQ = Load(images.MakePath(id));
 			def smallHQ = Subsample(largeHQ);
 			def largeLQ = Compress(largeHQ);
 			def smallLQ = Compress(smallHQ);
