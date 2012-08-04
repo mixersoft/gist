@@ -1,0 +1,48 @@
+using Nemerle.Collections;
+using Nemerle.Utility;
+using System.IO;
+using System;
+
+/// <summary>
+/// This data item holds image paths without the data.
+/// </summary>
+class ImageHashItem : ITaskItem
+{
+	[ Accessor ] private path : string;
+
+	public mutable ImageHashes : Map[string, int];
+
+	public this(path : string)
+	{
+		this.path = path;
+	}
+
+	public HasCache() : bool
+	{
+		File.Exists(path);
+	}
+
+	public Save() : void
+	{
+		_ = Directory.CreateDirectory(Path.GetDirectoryName(path));
+		using (writer = File.CreateText(path))
+		{
+			foreach ((id, hash) in ImageHashes)
+				writer.WriteLine("{0}|{1}", id, hash);
+		}
+	}
+
+	public Load() : void
+	{
+		ImageHashes = Map();
+		try
+		{
+			foreach ([id, hash] in File.ReadAllLines(path).Map(_.SplitToList('|')))
+				ImageHashes = ImageHashes.Add(id, int.Parse(hash));
+		}
+		catch
+		{
+		| e => throw Exception("Could not parse file: '$path'.", e)
+		}
+	}
+}

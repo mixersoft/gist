@@ -33,7 +33,7 @@ class EvaluateImageHashConsistencyTask : ITask
 		}
 	}
 
-	public Compute
+	private Compute
 		( imageCollection : ImageCollectionItem
 		, evaluation      : ImageHashConsistencyEvaluationItem
 		) : void

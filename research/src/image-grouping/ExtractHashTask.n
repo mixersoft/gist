@@ -1,0 +1,36 @@
+using Nemerle.Collections;
+using System.Drawing;
+using System;
+
+[ Record ]
+class ExtractHashTask : ITask
+{
+	private parameters : Parameters;
+
+	public Name : string { get { "ExtractHashTask" } }
+
+	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
+	{
+		def imageSample = items.TypedFind(item : ImageCollectionItem => item.Path == "image-sample").Value;
+		def hashes = ImageHashItem(@"eval\hashes.txt");
+		[ TaskMapping
+			( inputs  = [ imageSample ]
+			, outputs = [ hashes ]
+			, compute = () => Compute(imageSample, hashes)
+			)
+		]
+	}
+
+	private Compute
+		( imageSample : ImageCollectionItem
+		, hashes      : ImageHashItem
+		) : void
+	{
+		def Hash(id, map)
+		{
+			using (bmp = Bitmap(imageSample.MakePath(id)))
+				map.Add(id, ImageHash.GetHashCode(bmp, parameters));
+		}
+		hashes.ImageHashes = imageSample.ImageIDs.Fold(Map(), Hash);
+	}
+}

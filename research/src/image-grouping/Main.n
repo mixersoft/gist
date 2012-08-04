@@ -45,6 +45,7 @@ module Main
 				, EvaluateClustersTask             ()
 
 				, SampleImagesTask                 (parameters)
+				, ExtractHashTask                  (parameters)
 				, GroupShotsTask                   ()
 				, EvaluateImageHashUniquenessTask  (parameters)
 				, EvaluateImageHashConsistencyTask (parameters)
