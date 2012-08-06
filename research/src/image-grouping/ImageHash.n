@@ -8,8 +8,6 @@ using System;
 
 module ImageHash
 {
-	mutable i : int;
-
 	public variant BlurMethod
 	{
 	| Median   { size : int }
@@ -21,23 +19,7 @@ module ImageHash
 		def Resize(src : Bitmap) : Image.[Gray, byte]
 		{
 			def n = parameters.HashedImageSize;
-
-			mutable dst = Image.[Gray, byte](src);
-			//match (parameters.HashedImageBlur)
-			//{
-			//| Median(size)     => dst = dst.SmoothMedian(size)
-			//| Gaussian(factor) => dst = dst.SmoothGaussian
-			//	( kernelWidth  = 11
-			//	, kernelHeight = 11
-			//	, sigma1       = src.Width  * factor / n - factor
-			//	, sigma2       = src.Height * factor / n - factor
-			//	);
-			//	Console.WriteLine($"$i sigma1: $(src.Width  * factor / n - factor)");
-			//	Console.WriteLine($"$i sigma2: $(src.Height * factor / n - factor)");
-			//}
-			dst = dst.Resize(n, n, INTER.CV_INTER_AREA);
-			dst.Save($@"test\$i.png"); ++i;
-			dst;
+			Image.[Gray, byte](src).Resize(n, n, INTER.CV_INTER_AREA);
 		}
 		def ToByteArray(src : Image.[Gray, byte]) : array[byte]
 		{
