@@ -1,6 +1,9 @@
 #include "ImageHash.hpp"
 
-#include <bitset>
+#include "BitArray.hpp"
+
+#include <stdexcept>
+#include <iostream>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -26,21 +29,20 @@ int ExtractHash(const char * path)
 
 	// to byte array
 	const int bpp(2);
-	bitset<w * h * bpp> bits;
+	BitArray bits(w * h * bpp);
 	int i(0);
 	for (int y(0); y != h; ++y)
 	for (int x(0); x != w; ++x)
 	{
-		int value(resized.at<int>(y, x) >> (8 - bpp));
+		int value(resized.at<char>(y, x) >> (8 - bpp));
 		for (int bit(0); bit != bpp; ++bit)
-			bits[i++] = (value & (1 << bit)) != 0;
+			bits.Set(i++, (value & (1 << bit)) != 0);
 	}
-	string data(bits.to_string());
 
 	// hash the image
 	MD5_CTX md5;
 	MD5_Init(&md5);
-	MD5_Update(&md5, data.c_str(), data.size());
+	MD5_Update(&md5, bits.GetData(), bits.GetByteCount());
 
 	unsigned char digest[MD5_DIGEST_LENGTH];
 	MD5_Final(digest, &md5);

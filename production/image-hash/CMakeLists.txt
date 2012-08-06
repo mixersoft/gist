@@ -2,6 +2,7 @@ add_executable(
 	image-hash
 	Main.cpp
 	ImageHash.hpp ImageHash.cpp
+	BitArray.hpp BitArray.cpp
 	)
 
 set_target_properties(

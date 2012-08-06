@@ -19,8 +19,9 @@ class EvaluateImageHashConsistencyTask : ITask
 
 	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
 	{
-		def hashes = items.TypedFind
-			(item : ImageHashConsistencyEvaluationItem => item.Path == "image-sample");
+		def images = items
+			.TypedFind(item : ImageCollectionItem => item.Path == "image-sample")
+			.Value;
 		def evaluation = ImageHashConsistencyEvaluationItem(@"eval\image sample.txt");
 		[ TaskMapping
 			( inputs  = [ images ]
