@@ -60,7 +60,7 @@
 		>
 		<ncc
 			DefineConstants      = "$(Defines)"
-			EmitDebugInformation = "false"
+			EmitDebugInformation = "true"
 			NoLogo               = "true"
 			OutputAssembly       = "@(ImageGroupingBin)"
 			Platform             = "x64"

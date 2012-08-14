@@ -1,0 +1,53 @@
+using Nemerle.Collections;
+using Nemerle.Utility;
+using System.IO;
+using System;
+
+[ Record ]
+class AlignTimelinesTask : ITask
+{
+	public Name : string { get { "AlignTimelinesTask" } }
+
+	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
+	{
+		mutable mappings = [];
+		foreach (item is JsonItem when item.Path.StartsWith("simulation") in items)
+		{
+			def result = TimelineAlignmentItem(Path.Combine("timelines", Path.GetFileNameWithoutExtension(item.Path) + ".png"));
+			mappings ::= TaskMapping
+				( inputs  = [ item ]
+				, outputs = [ result ]
+				, compute = () => Compute(item, result)
+				);
+		}
+		mappings;
+	}
+
+	private Compute(json : JsonItem, timelineAlignments : TimelineAlignmentItem) : void
+	{
+		def random     = Random(0);
+		def eventCount = 5;
+		def MapPhoto(photo)
+		{
+			TimelineAlignmentItem.Photo
+				( photo.ID
+				, photo.DateTaken
+				, random.Next(eventCount)
+				)
+		}
+		def MapID(id)
+		{
+			TimelineAlignmentItem.Timeline
+				( offset = random.Next(24)
+				, photos = json.Photos
+					.FilterToArray(photo => photo.CameraID == id)
+					.Map(MapPhoto)
+				)
+		}
+
+		timelineAlignments.EventCount = eventCount;
+		timelineAlignments.Timelines  = json.Photos
+			.Fold(Set(), (photo, ids) => ids.Replace(photo.CameraID))
+			.MapToArray(MapID);
+	}
+}

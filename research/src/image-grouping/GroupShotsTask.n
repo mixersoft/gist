@@ -29,8 +29,16 @@ class GroupShotsTask : ITask
 		mutable id = 0;
 		def UniquePhoto(photo)
 		{
-		| _ when photo.ShotID == "" => ++id; JsonItem.PhotoInfo(photo.ID, photo.RootSrc, id + "-unique")
-		| _                         => photo
+		| _ when photo.ShotID == "" =>
+			++id;
+			JsonItem.PhotoInfo
+				( id        = photo.ID
+				, rootSrc   = photo.RootSrc
+				, shotID    = id + "-unique"
+				, cameraID  = photo.CameraID
+				, dateTaken = photo.DateTaken
+				)
+		| _ => photo
 		}
 		clusterItem.Clusters = jsonItem.Photos.Select(UniquePhoto).GroupBy(_.ShotID).MapToArray(_.MapToArray(_.ID));
 	}

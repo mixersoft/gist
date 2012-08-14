@@ -6,13 +6,14 @@ using System;
 /// <summary>Meta-parameter source that loads from "parameters.txt".</summary>
 class Parameters
 {
-	public mutable DownloadImagePrefix : string;
-	public mutable ImageSize           : int * int;
-	public mutable ClusteringThreshold : double;
-	public mutable ImageSampleSize     : int;
-	public mutable HashedImageBpp      : int;
-	public mutable HashedImageSize     : int;
-	public mutable HashedImageBlur     : ImageHash.BlurMethod;
+	public mutable DownloadImagePrefix    : string;
+	public mutable ImageSize              : int * int;
+	public mutable ClusteringThreshold    : double;
+	public mutable ImageSampleSize        : int;
+	public mutable HashedImageBpp         : int;
+	public mutable HashedImageSize        : int;
+	public mutable HashedImageBlur        : ImageHash.BlurMethod;
+	public mutable SimulatedTimelineCount : int;
 
 	public this()
 	{
@@ -43,13 +44,14 @@ class Parameters
 			map.Add(name, value);
 		}
 
-		DownloadImagePrefix = map["download image prefix"];
-		ImageSize           = map["image size"]           |> ParseSize;
-		ClusteringThreshold = map["clustering threshold"] |> double.Parse;
-		ImageSampleSize     = map["image sample size"]    |> int.Parse;
-		HashedImageBpp      = map["hashed image bpp"]     |> int.Parse;
-		HashedImageSize     = map["hashed image size"]    |> int.Parse;
-		HashedImageBlur     = map["hashed image blur"]    |> ParseBlur;
+		DownloadImagePrefix    = map["download image prefix"];
+		ImageSize              = map["image size"]               |> ParseSize;
+		ClusteringThreshold    = map["clustering threshold"]     |> double.Parse;
+		ImageSampleSize        = map["image sample size"]        |> int.Parse;
+		HashedImageBpp         = map["hashed image bpp"]         |> int.Parse;
+		HashedImageSize        = map["hashed image size"]        |> int.Parse;
+		HashedImageBlur        = map["hashed image blur"]        |> ParseBlur;
+		SimulatedTimelineCount = map["simulated timeline count"] |> int.Parse;
 
 		when (HashedImageBpp < 0 || HashedImageBpp > 8)
 			throw ArgumentException("bpp must be between 0 and 8");

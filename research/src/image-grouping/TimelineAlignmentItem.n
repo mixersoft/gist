@@ -1,0 +1,138 @@
+using Nemerle.Utility;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.IO;
+using System;
+
+public class TimelineAlignmentItem : ITaskItem
+{
+	[ Record ]
+	public class Photo
+	{
+		public ID    : string;
+		public Time  : DateTime;
+		public Event : int;
+	}
+
+	[ Record ]
+	public class Timeline
+	{
+		public Offset : int; // time offset in hours
+		public Photos : array[Photo];
+	}
+
+	public mutable EventCount : int;
+	public mutable Timelines  : array[Timeline];
+
+	[ Accessor ] private path : string;
+
+	public this(path : string)
+	{
+		this.path = path;
+	}
+
+	public HasCache() : bool
+	{
+		File.Exists(path);
+	}
+
+	public Save() : void
+	{
+		def CreateArray(n, x)
+		{
+			def a = array(n);
+			for (mutable i = 0; i != n; ++i)
+				a[i] = x;
+			a;
+		}
+		def minEvent    = CreateArray(EventCount, DateTime.MaxValue);
+		def maxEvent    = CreateArray(EventCount, DateTime.MinValue);
+		def minTimeline = CreateArray(Timelines.Length, DateTime.MaxValue);
+		def maxTimeline = CreateArray(Timelines.Length, DateTime.MinValue);
+		mutable minTime = DateTime.MaxValue;
+		mutable maxTime = DateTime.MinValue;
+
+		foreach (timeline in Timelines with i)
+		{
+			foreach (photo in timeline.Photos)
+			{
+				def time = photo.Time.AddHours(timeline.Offset);
+
+				when (time < minEvent[photo.Event]) minEvent[photo.Event] = time;
+				when (time > maxEvent[photo.Event]) maxEvent[photo.Event] = time;
+
+				when (time < minTimeline[i]) minTimeline[i] = time;
+				when (time > maxTimeline[i]) maxTimeline[i] = time;
+
+				when (time < minTime) minTime = time;
+				when (time > maxTime) maxTime = time;
+			}
+		}
+
+		def Hours(start, finish)
+		{
+			(finish - start).TotalHours :> float
+		}
+
+		def timelineThickness = 4.0f;
+		def notchHeight       = 4.0f;
+		def rowSpacing        = 8.0f;
+		def rowHeight = timelineThickness + notchHeight + rowSpacing;
+
+		_ = Directory.CreateDirectory(Path.GetDirectoryName(path));
+		using (bmp = Bitmap(1366, (rowHeight * Timelines.Length) :> int))
+		{
+			using (gfx = Graphics.FromImage(bmp))
+			{
+				gfx.InterpolationMode = InterpolationMode.HighQualityBicubic;
+				gfx.SmoothingMode = SmoothingMode.AntiAlias;
+				gfx.PixelOffsetMode = PixelOffsetMode.HighQuality;
+				gfx.PixelOffsetMode = PixelOffsetMode.HighQuality;
+
+				gfx.Clear(Color.White);
+
+				def pixelsPerHour = (bmp.Width - 1) / Hours(minTime, maxTime);
+
+				foreach (timeline in Timelines with i)
+				{
+					gfx.FillRectangle
+						( brush  = Brushes.Black
+						, x      = pixelsPerHour * Hours(minTime, minTimeline[i])
+						, y      = rowSpacing + notchHeight + i * rowHeight
+						, width  = pixelsPerHour * Hours(minTimeline[i], maxTimeline[i]) + 1
+						, height = timelineThickness
+						);
+
+					foreach (photo in timeline.Photos)
+					{
+						def time = Hours(minTime, photo.Time.AddHours(timeline.Offset));
+						gfx.FillRectangle
+							( brush  = Brushes.Black
+							, x      = pixelsPerHour * time
+							, y      = rowSpacing + i * rowHeight
+							, width  = 1.0f
+							, height = notchHeight
+							);
+					}
+				}
+
+				for (mutable i = 0; i != EventCount; ++i)
+				{
+					def (r, g, b) = Extensions.RandomRGB(i);
+					gfx.FillRectangle
+						( brush  = SolidBrush(Color.FromArgb(0x20, r, g, b))
+						, x      = pixelsPerHour * Hours(minTime, minEvent[i])
+						, y      = 0
+						, width  = pixelsPerHour * Hours(minEvent[i], maxEvent[i])
+						, height = bmp.Height
+						);
+				}
+			}
+			bmp.Save(path);
+		}
+	}
+
+	public Load() : void
+	{
+	}
+}

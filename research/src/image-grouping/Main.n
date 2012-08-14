@@ -35,7 +35,7 @@ module Main
 		def parameters = Parameters();
 		TaskManager
 			( tasks =
-				[ LoadJsonDataTask                 ():ITask
+				[ LoadJsonDataTask                 ("data")
 				, DownloadDataTask                 (parameters)
 				, CreateThumbnailsTask             ()
 				, ExtractDescriptorsTask           (parameters)
@@ -49,6 +49,9 @@ module Main
 				, GroupShotsTask                   ()
 				, EvaluateImageHashUniquenessTask  (parameters)
 				, EvaluateImageHashConsistencyTask (parameters)
+				
+				, SplitTimelineTask                (parameters, @"saturday.json")
+				, AlignTimelinesTask               ()
 				]
 			, persistData     = true
 			, displayProgress = true
@@ -62,7 +65,7 @@ module Main
 
 		def taskManager = TaskManager
 			( tasks =
-				[ LoadJsonDataTask          ():ITask
+				[ LoadJsonDataTask          ("data")
 				, DownloadDataTask          (parameters)
 				, ExtractDescriptorsTask    (parameters)
 				, ClusterDataTask           (parameters)
@@ -105,7 +108,7 @@ module Main
 
 		def taskManager = TaskManager
 			( tasks =
-				[ LoadJsonDataTask          ():ITask
+				[ LoadJsonDataTask          ("data")
 				, DownloadDataTask          (parameters)
 				, ExtractDescriptorsTask    (parameters)
 				, ClusterDataTask           (parameters)
@@ -163,7 +166,7 @@ module Main
 
 		def taskManager = TaskManager
 			( tasks =
-				[ LoadJsonDataTask                 ():ITask
+				[ LoadJsonDataTask                 ("data")
 				, DownloadDataTask                 (parameters)
 				, SampleImagesTask                 (parameters)
 				, EvaluateImageHashUniquenessTask  (parameters)
