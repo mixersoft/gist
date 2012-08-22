@@ -1,4 +1,4 @@
-#include "cluster.hpp"
+#include "Cluster.hpp"
 
 #include <cmath>
 #include <set>
