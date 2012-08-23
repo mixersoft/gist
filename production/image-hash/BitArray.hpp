@@ -11,11 +11,11 @@ private:
 
 public:
 
-	BitArray(size_t size);
+	BitArray(std::size_t size);
 
-	void Set(size_t i, bool value);
+	void Set(std::size_t i, bool value);
 
-	size_t GetByteCount() const;
+	std::size_t GetByteCount() const;
 
 	unsigned char * GetData();
 
