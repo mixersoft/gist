@@ -12,9 +12,10 @@ set_target_properties(
 
 find_package(Boost REQUIRED program_options)
 find_package(OpenCV REQUIRED)
+find_package(OpenSSL REQUIRED)
 
 include_directories(".")
 
 target_link_libraries(image-hash ${Boost_PROGRAM_OPTIONS_LIBRARY})
 target_link_libraries(image-hash ${OpenCV_LIBS})
-target_link_libraries(image-hash ssl)
+target_link_libraries(image-hash ${OPENSSL_LIBRARIES})
