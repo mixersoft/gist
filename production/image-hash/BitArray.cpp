@@ -1,5 +1,7 @@
 #include "BitArray.hpp"
 
+using namespace std;
+
 BitArray::BitArray(size_t size)
 	: data((size + 7) / 8) // ceil(size/8)
 {
