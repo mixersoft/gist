@@ -3,7 +3,6 @@
 #include "BitArray.hpp"
 
 #include <stdexcept>
-#include <string>
 #include <vector>
 
 #include <openssl/md5.h>
@@ -30,11 +29,13 @@ int ExtractHash(const char * path)
 	BitArray bits(w * h * bpp);
 	int i(0);
 	for (int y(0); y != h; ++y)
-	for (int x(0); x != w; ++x)
 	{
-		int value(resized.at<char>(y, x) >> (8 - bpp));
-		for (int bit(0); bit != bpp; ++bit)
-			bits.Set(i++, (value & (1 << bit)) != 0);
+		for (int x(0); x != w; ++x)
+		{
+			int value(resized.at<unsigned char>(y, x) >> (8 - bpp));
+			for (int bit(0); bit != bpp; ++bit)
+				bits.Set(i++, (value & (1 << bit)) != 0);
+		}
 	}
 
 	// hash the image

@@ -92,7 +92,7 @@ try
 		("help", "display this help message")
 		("base_path", po::value<string>()->default_value("./"), "base path for images")
 		("threshold", po::value<float>()->default_value(0.5f), "GIST difference threshold for separating groups")
-		("preserve_order", "Group photos without reordering them. Especially useful when input is ordered by time.")
+		("preserve_order", "group photos without reordering them; especially useful when input is ordered by time")
 		("pretty_print", "format output")
 		;
 
