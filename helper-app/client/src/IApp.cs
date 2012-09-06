@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Snaphappi
 {
-	interface IAppModel
+	interface IApp
 	{
 		event Action LoadUploadOriginals;
 

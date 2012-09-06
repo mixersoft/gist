@@ -7,8 +7,8 @@ namespace Snaphappi
 {
 	interface IUploadOriginalsModel
 	{
-		OriginalFileInfo[] FileInfo;
-		string[]           Folders;
+		OriginalFileInfo[] FileInfo { get; }
+		string[]           Folders  { get; }
 
 		event Action InfoDownloaded;
 		event Action FolderAdded;

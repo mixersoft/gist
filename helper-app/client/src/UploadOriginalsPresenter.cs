@@ -8,13 +8,13 @@ namespace Snaphappi
 {
 	class UploadOriginalsPresenter
 	{
-		private IAppModel             appModel;
+		private IApp             appModel;
 		private IUploadOriginalsModel uploadOriginalsModel;
 		private IOriginalFileManager  originalFileManager;
 		private IUploadOriginalsView uploadOriginalsView;
 
 		public UploadOriginalsPresenter
-			( IAppModel             appModel
+			( IApp             appModel
 			, IUploadOriginalsModel uploadOriginalsModel
 			, IUploadOriginalsView  uploadOriginalsView
 			, IOriginalFileManager  originalFileManager

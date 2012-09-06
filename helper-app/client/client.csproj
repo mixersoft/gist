@@ -51,13 +51,13 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="IOriginalFileManager.cs" />
-    <Compile Include="IUploadOriginalsView.cs" />
-    <Compile Include="OriginalFileInfo.cs" />
-    <Compile Include="UploadOriginalsPresenter.cs" />
-    <Compile Include="IAppModel.cs" />
-    <Compile Include="IUploadOriginalsModel.cs" />
-    <Compile Include="Main.cs" />
+    <Compile Include="src\IApp.cs" />
+    <Compile Include="src\IOriginalFileManager.cs" />
+    <Compile Include="src\IUploadOriginalsView.cs" />
+    <Compile Include="src\OriginalFileInfo.cs" />
+    <Compile Include="src\UploadOriginalsPresenter.cs" />
+    <Compile Include="src\IUploadOriginalsModel.cs" />
+    <Compile Include="src\Main.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
