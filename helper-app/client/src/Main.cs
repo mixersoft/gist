@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Windows.Forms;
 
 namespace Snaphappi
 {
@@ -9,6 +7,9 @@ namespace Snaphappi
 	{
 		public static void Main(string[] args)
 		{
+			var form = new Form();
+			form.Text = args.Length > 0 ? args[0] : "<no args>";
+			Application.Run(form);
 		}
 	}
 }

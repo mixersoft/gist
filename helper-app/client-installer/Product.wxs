@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Product
+		Id           = "8ED4EAEB-A127-49A3-B8AE-18066F17A6FF"
+		Name         = "Snaphappi Helper"
+		Language     = "1033"
+		Version      = "1.0.0.0"
+		Manufacturer = "Snaphappi"
+		UpgradeCode  = "3C0A9E56-59BB-4609-B137-6FFBD6B0C979"
+		>
+		<Package
+			InstallerVersion = "200"
+			Compressed       = "yes"
+			InstallScope     = "perMachine"
+			/>
+
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+
+		<MediaTemplate />
+
+		<Feature Id="ProductFeature" Title="Snaphappi helper app" Level="1">
+			<ComponentGroupRef Id="ProductComponents" />
+		</Feature>
+
+		<UIRef Id="WixUI_Minimal" />
+		<WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
+	</Product>
+
+	<Fragment>
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="ProgramFilesFolder">
+				<Directory Id="INSTALLFOLDER" Name="Snaphappi">
+					<Component Id="ProductComponent">
+						<!-- Main application file. -->
+						<File Id="ProductExe" Source="$(var.client.TargetPath)" />
+						<!-- Protocol handler registry entry. -->
+						<RegistryKey Key="snaphappi" Root="HKCR">
+							<RegistryValue Value="URL:Snaphappi Protocol" Type="string" />
+							<RegistryValue Name="URL Protocol" Value="" Type="string" />
+							<RegistryKey Key="DefaultIcon">
+								<RegistryValue Value='"[#ProductExe]",0' Type="string" />
+							</RegistryKey>
+							<RegistryKey Key="shell">
+								<RegistryKey Key="open">
+									<RegistryKey Key="command">
+										<RegistryValue Value='"[#ProductExe]" "%1"' Type="string" />
+									</RegistryKey>
+								</RegistryKey>
+							</RegistryKey>
+						</RegistryKey>
+					</Component>
+				</Directory>
+			</Directory>
+		</Directory>
+	</Fragment>
+
+	<Fragment>
+		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+			<ComponentRef Id="ProductComponent" />
+		</ComponentGroup>
+	</Fragment>
+</Wix>

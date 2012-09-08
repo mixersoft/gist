@@ -3,6 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "client", "client\client.csproj", "{AD749989-9A56-48AA-8393-11B033147BD8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "client-test", "client-test\client-test.csproj", "{0A4685F0-8F16-4C38-B011-B55C27BE07B8}"
+EndProject
+Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "client-installer", "client-installer\client-installer.wixproj", "{33B809D8-1A19-413B-A03B-91CA030DFEB0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{AD749989-9A56-48AA-8393-11B033147BD8} = {AD749989-9A56-48AA-8393-11B033147BD8}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -13,6 +20,14 @@ Global
 		{AD749989-9A56-48AA-8393-11B033147BD8}.Debug|x86.Build.0 = Debug|x86
 		{AD749989-9A56-48AA-8393-11B033147BD8}.Release|x86.ActiveCfg = Release|x86
 		{AD749989-9A56-48AA-8393-11B033147BD8}.Release|x86.Build.0 = Release|x86
+		{0A4685F0-8F16-4C38-B011-B55C27BE07B8}.Debug|x86.ActiveCfg = Debug|x86
+		{0A4685F0-8F16-4C38-B011-B55C27BE07B8}.Debug|x86.Build.0 = Debug|x86
+		{0A4685F0-8F16-4C38-B011-B55C27BE07B8}.Release|x86.ActiveCfg = Release|x86
+		{0A4685F0-8F16-4C38-B011-B55C27BE07B8}.Release|x86.Build.0 = Release|x86
+		{33B809D8-1A19-413B-A03B-91CA030DFEB0}.Debug|x86.ActiveCfg = Debug|x86
+		{33B809D8-1A19-413B-A03B-91CA030DFEB0}.Debug|x86.Build.0 = Debug|x86
+		{33B809D8-1A19-413B-A03B-91CA030DFEB0}.Release|x86.ActiveCfg = Release|x86
+		{33B809D8-1A19-413B-A03B-91CA030DFEB0}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
