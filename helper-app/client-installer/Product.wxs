@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+<Wix
+	xmlns       = "http://schemas.microsoft.com/wix/2006/wi"
+	xmlns:netfx = "http://schemas.microsoft.com/wix/NetFxExtension"
+	>
 	<Product
 		Id           = "8ED4EAEB-A127-49A3-B8AE-18066F17A6FF"
 		Name         = "Snaphappi Helper"
@@ -55,6 +58,11 @@
 	</Fragment>
 
 	<Fragment>
+		<PropertyRef Id="NETFRAMEWORK35" />
+		<Condition Message="This application requires .NET Framework 3.5. Please install the .NET Framework then run this installer again.">
+			<![CDATA[Installed OR NETFRAMEWORK35]]>
+		</Condition>
+		
 		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
 			<ComponentRef Id="ProductComponent" />
 		</ComponentGroup>
