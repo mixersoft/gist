@@ -6,61 +6,55 @@ using System.Text;
 
 namespace Snaphappi
 {
-	class UploadOriginalsPresenter
+	public class UploadOriginalsPresenter
 	{
-		private IApp             appModel;
-		private IUploadOriginalsModel uploadOriginalsModel;
-		private IOriginalFileManager  originalFileManager;
-		private IUploadOriginalsView uploadOriginalsView;
+		private readonly IApp                  app;
+		private readonly IUploadOriginalsModel uploadOriginalsModel;
+		private readonly IUploadOriginalsView  uploadOriginalsView;
+		private readonly IFileFinder           fileFinder;
 
 		public UploadOriginalsPresenter
-			( IApp             appModel
+			( IApp                  app
 			, IUploadOriginalsModel uploadOriginalsModel
 			, IUploadOriginalsView  uploadOriginalsView
-			, IOriginalFileManager  originalFileManager
+			, IFileFinder           fileFinder
 			)
 		{
-			this.appModel             = appModel;
+			this.app                  = app;
 			this.uploadOriginalsModel = uploadOriginalsModel;
 			this.uploadOriginalsView  = uploadOriginalsView;
-			this.originalFileManager  = originalFileManager;
+			this.fileFinder           = fileFinder;
 
-			appModel.LoadUploadOriginals += OnLoadUploadOriginals;
+			app.LoadUploadOriginals += OnLoad;
 
 			uploadOriginalsModel.InfoDownloaded += OnInfoDownloaded;
-			uploadOriginalsModel.FolderAdded    += OnFolderAdded;
 			uploadOriginalsModel.TaskCancelled  += OnTaskCancelled;
+			uploadOriginalsModel.UploadFailed   += OnUploadFailed;
 
-			originalFileManager.FolderNotFound += OnFolderNotFound;
-			originalFileManager.FileNotFound   += OnFileNotFound;
-			originalFileManager.UploadFailed   += OnUploadFailed;
+			fileFinder.FileFound    += OnFileFound;
+			fileFinder.FileNotFound += OnFileNotFound;
 		}
 
-		private void OnLoadUploadOriginals()
+		private void OnLoad()
 		{
 			uploadOriginalsModel.DownloadInformation();
 		}
 
 		private void OnInfoDownloaded()
 		{
-			originalFileManager.FileInfo = uploadOriginalsModel.FileInfo;
-			originalFileManager.Start();
-		}
-
-		private void OnFolderAdded()
-		{
-			originalFileManager.Folders = uploadOriginalsModel.Folders;
+			fileFinder.FileInfo = uploadOriginalsModel.FileInfo;
+			fileFinder.Start();
 		}
 
 		private void OnTaskCancelled()
 		{
-			originalFileManager.Stop();
-			appModel.Quit();
+			fileFinder.Stop();
+			app.Quit();
 		}
 
-		private void OnFolderNotFound(string folder)
+		private void OnFileFound(OriginalFileInfo file)
 		{
-			uploadOriginalsView.ReportFolderNotFound(folder);
+			uploadOriginalsModel.UploadFile(file);
 		}
 
 		private void OnFileNotFound(OriginalFileInfo file)

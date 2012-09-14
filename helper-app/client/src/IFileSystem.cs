@@ -5,11 +5,8 @@ using System.Text;
 
 namespace Snaphappi
 {
-	public interface IApp
+	public interface IFileSystem
 	{
-		event Action LoadUploadResampled;
-		event Action LoadUploadOriginals;
-
-		void Quit();
+		bool FileExists(string path);
 	}
 }

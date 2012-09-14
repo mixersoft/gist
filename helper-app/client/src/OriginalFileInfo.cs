@@ -5,9 +5,21 @@ using System.Text;
 
 namespace Snaphappi
 {
-	class OriginalFileInfo
+	public class OriginalFileInfo
 	{
-		public string relativePath;
-		public int    hash;
+		public readonly string directory;
+		public readonly string relativePath;
+		public readonly int    hash;
+
+		public OriginalFileInfo
+			( string directory
+			, string relativePath
+			, int    hash
+			)
+		{
+			this.directory    = directory;
+			this.relativePath = relativePath;
+			this.hash         = hash;
+		}
 	}
 }

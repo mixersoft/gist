@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Snaphappi
 {
-	public interface IUploadOriginalsView
+	interface IUploadResampledView
 	{
 		void ReportFolderNotFound(string folder);
 
