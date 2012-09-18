@@ -71,9 +71,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="src\FileFinder.cs" />
+    <Compile Include="src\FileLister.cs" />
+    <Compile Include="src\FileSystem.cs" />
     <Compile Include="src\FolderMoveInfo.cs" />
     <Compile Include="src\IApp.cs" />
     <Compile Include="src\IFileFinder.cs" />
+    <Compile Include="src\IFileLister.cs" />
     <Compile Include="src\IFileSystem.cs" />
     <Compile Include="src\IUploadOriginalsView.cs" />
     <Compile Include="src\IUploadResampledModel.cs" />

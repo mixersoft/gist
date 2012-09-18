@@ -12,8 +12,7 @@ namespace Snaphappi
 
 		private OriginalFileInfo[] files;
 
-		private Thread downloadThread;
-		private Thread uploadThread;
+		private Thread workerThread;
 
 		private bool stopRequested;
 
@@ -27,29 +26,26 @@ namespace Snaphappi
 		{
 			this.fileSystem = fileSystem;
 
-			downloadThread = new Thread(DownloadProc);
-			uploadThread   = new Thread(UploadProc);
+			workerThread = new Thread(WorkerProc);
 		}
 
 		public void Wait()
 		{
-			downloadThread.Join();
-			uploadThread.Join();
+			workerThread.Join();
 		}
 
 		#endregion
 
-		#region IOriginalFileManager Members
+		#region IFileFinder Members
 
-		public OriginalFileInfo[] FileInfo
+		public void SetFiles(OriginalFileInfo[] files)
 		{
-			set { files = value; }
+			this.files = files;
 		}
 
 		public void Start()
 		{
-			downloadThread.Start();
-			uploadThread.Start();
+			workerThread.Start();
 		}
 
 		public void Stop()
@@ -60,7 +56,7 @@ namespace Snaphappi
 			}
 		}
 
-		public event Action Done;
+		public event Action Finished;
 
 		public event Action<OriginalFileInfo> FileFound;
 		public event Action<OriginalFileInfo> FileNotFound;
@@ -74,7 +70,7 @@ namespace Snaphappi
 			throw new NotImplementedException();
 		}
 
-		private void DownloadProc()
+		private void WorkerProc()
 		{
 			OriginalFileInfo[] files;
 			lock (mainLock)
@@ -95,11 +91,7 @@ namespace Snaphappi
 					FileNotFound(file);
 			}
 
-			Done();
-		}
-
-		private void UploadProc()
-		{
+			Finished();
 		}
 
 		#endregion

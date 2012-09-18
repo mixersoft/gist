@@ -7,19 +7,19 @@ namespace Snaphappi
 		private readonly IApp                  app;
 		private readonly IUploadResampledModel uploadResampledModel;
 		private readonly IUploadResampledView  uploadResampledView;
-		private readonly IFileFinder           fileFinder;
+		private readonly IFileLister           fileLister;
 
 		public UploadResampledPresenter
 			( IApp app
 			, IUploadResampledModel uploadResampledModel
 			, IUploadResampledView  uploadResampledView
-			, IFileFinder           fileFinder
+			, IFileLister           fileLister
 			)
 		{
 			this.app                  = app;
 			this.uploadResampledModel = uploadResampledModel;
 			this.uploadResampledView  = uploadResampledView;
-			this.fileFinder           = fileFinder;
+			this.fileLister           = fileLister;
 
 			app.LoadUploadResampled += OnLoad;
 
@@ -27,8 +27,8 @@ namespace Snaphappi
 			uploadResampledModel.TaskCancelled  += OnTaskCancelled;
 			uploadResampledModel.UploadFailed   += OnUploadFailed;
 
-			fileFinder.FileFound    += OnFileFound;
-			fileFinder.FileNotFound += OnFileNotFound;
+			fileLister.FileFound += OnFileFound;
+			fileLister.FolderNotFound += OnFolderNotFound;
 		}
 
 		private void OnLoad()
@@ -38,29 +38,29 @@ namespace Snaphappi
 
 		private void OnInfoDownloaded()
 		{
-			fileFinder.FileInfo = uploadResampledModel.FileInfo;
-			fileFinder.Start();
+			fileLister.UpdateFolders(uploadResampledModel.Folders);
+			fileLister.Start();
 		}
 
 		private void OnTaskCancelled()
 		{
-			fileFinder.Stop();
+			fileLister.Stop();
 			app.Quit();
 		}
 
-		private void OnFileFound(OriginalFileInfo file)
+		private void OnFileFound(string file)
 		{
 			uploadResampledModel.UploadFile(file);
 		}
-
-		private void OnFileNotFound(OriginalFileInfo file)
-		{
-			uploadResampledView.ReportFileNotFound(file);
-		}
-
-		private void OnUploadFailed(OriginalFileInfo file)
+		
+		private void OnUploadFailed(string file)
 		{
 			uploadResampledView.ReportUploadFailed(file);
+		}
+
+		private void OnFolderNotFound(string path)
+		{
+			uploadResampledView.ReportFolderNotFound(path);
 		}
 	}
 }

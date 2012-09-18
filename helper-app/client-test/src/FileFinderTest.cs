@@ -21,7 +21,7 @@ namespace SnaphappiTest
 		}
 
 		[ Test ]
-		public void TestFiles()
+		public void TestFinding()
 		{
 			var found = new List<string>();
 			fileFinder.FileFound += file => found.Add(MakePath(file));
@@ -31,15 +31,17 @@ namespace SnaphappiTest
 
 			fileSystem.filePaths.Add(@"dir\file");
 
-			fileFinder.FileInfo = new OriginalFileInfo[]
-				{ new OriginalFileInfo("",    "file", 0)
-				, new OriginalFileInfo("dir", "",     0)
-				, new OriginalFileInfo("dir", "file", 0)
-				, new OriginalFileInfo("",    "",     0)
-				};
+			fileFinder.SetFiles(
+				new OriginalFileInfo[]
+					{ new OriginalFileInfo("",    "file", 0)
+					, new OriginalFileInfo("dir", "",     0)
+					, new OriginalFileInfo("dir", "file", 0)
+					, new OriginalFileInfo("",    "",     0)
+					}
+				);
 
-			bool isDone = false;
-			fileFinder.Done += () => { isDone = true; };
+			bool isFinished = false;
+			fileFinder.Finished += () => isFinished = true;
 
 			fileFinder.Start();
 			fileFinder.Wait();
@@ -54,7 +56,7 @@ namespace SnaphappiTest
 				, notFound
 				, "Were all the expected files not found?"
 				);
-			Assert.IsTrue(isDone, "Did the search complete?");
+			Assert.IsTrue(isFinished, "Did the search complete?");
 		}
 
 		private string MakePath(OriginalFileInfo file)

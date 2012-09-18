@@ -70,6 +70,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="src\FileFinderTest.cs" />
+    <Compile Include="src\FileListerTester.cs" />
     <Compile Include="src\MockFileSystem.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

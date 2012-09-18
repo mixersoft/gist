@@ -7,7 +7,7 @@ namespace Snaphappi
 {
 	public interface IFileFinder
 	{
-		OriginalFileInfo[] FileInfo { set; }
+		void SetFiles(OriginalFileInfo[] files);
 
 		void Start();
 

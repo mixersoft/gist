@@ -7,16 +7,16 @@ namespace Snaphappi
 {
 	interface IUploadResampledModel
 	{
-		OriginalFileInfo[] FileInfo { get; }
+		string[] Folders { get; }
 
 		event Action TaskCancelled;
 		event Action InfoDownloaded;
 
-		event Action<OriginalFileInfo> UploadFailed;
+		event Action<string> UploadFailed;
 
 		void DownloadInformation();
 
-		void UploadFile(OriginalFileInfo file);
+		void UploadFile(string file);
 
 	}
 }

@@ -9,8 +9,6 @@ namespace Snaphappi
 	{
 		void ReportFolderNotFound(string folder);
 
-		void ReportFileNotFound(OriginalFileInfo file);
-
-		void ReportUploadFailed(OriginalFileInfo file);
+		void ReportUploadFailed(string path);
 	}
 }

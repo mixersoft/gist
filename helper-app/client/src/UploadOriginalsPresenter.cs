@@ -42,7 +42,7 @@ namespace Snaphappi
 
 		private void OnInfoDownloaded()
 		{
-			fileFinder.FileInfo = uploadOriginalsModel.FileInfo;
+			fileFinder.SetFiles(uploadOriginalsModel.FileInfo);
 			fileFinder.Start();
 		}
 
