@@ -12,7 +12,7 @@ done
 
 # generate new API
 
-src=tutorial.thrift
+src=Tasks.thrift
 
 thrift --gen php:server -out php-server $src
 thrift --gen csharp -out cs-client $src
