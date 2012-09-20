@@ -1,5 +1,5 @@
-namespace csharp Snaphappi.Tasks
-namespace php snaphappi_tasks
+namespace csharp Snaphappi.API
+namespace php snaphappi_api
 
 /**
  * The major version number for the current revision of the Snaphappi protocol.
@@ -14,13 +14,46 @@ const i16 SNAPHAPPI_VERSION_MINOR = 1
 /**
  * ID used to make sure the web page and the app stay in sync with each other.
  */
-typedef string SessionID
+struct TaskID
+{
+	1: required i32    Task;
+	2: required string Session;
+}
+
+/**
+ * Flags indicating the state of the task.
+ */
+struct URTaskState
+{
+	1: optional bool IsCancelled;
+}
 
 /**
  * Service for working with the task of servicing the initial upload of files
  * from the user's computer to the server.
  */
-service InitialUploadTask
+service URTask
 {
-	 list<string> GetFolders(1: SessionID sessionID)
+	/**
+	 * Return the list of folders to scan for images.
+	 */
+	list<string> GetFolders(1: TaskID id);
+
+	/**
+	 * Retrieves flags indicating the state of the task.
+	 */
+	URTaskState GetState();
+}
+
+service URTaskUpload
+{
+	/**
+	 * Upload file contents, along with its path and the folder in which it
+	 * was found.
+	 */
+	void UploadFile
+		( 1: string path
+		, 2: string folder
+		, 3: binary data
+		);
 }

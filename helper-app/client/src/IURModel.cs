@@ -5,18 +5,17 @@ using System.Text;
 
 namespace Snaphappi
 {
-	interface IUploadResampledModel
+	interface IURModel
 	{
 		string[] Folders { get; }
-
-		event Action TaskCancelled;
-		event Action InfoDownloaded;
-
-		event Action<string> UploadFailed;
 
 		void DownloadInformation();
 
 		void UploadFile(string file);
+		
+		event Action TaskCancelled;
+
+		event Action<string> UploadFailed;
 
 	}
 }

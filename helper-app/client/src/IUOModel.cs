@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Snaphappi
 {
-	public interface IUploadOriginalsModel
+	public interface IUOModel
 	{
 		OriginalFileInfo[] FileInfo { get; }
 		FolderMoveInfo[]   Folders  { get; }

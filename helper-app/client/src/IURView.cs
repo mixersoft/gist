@@ -5,12 +5,10 @@ using System.Text;
 
 namespace Snaphappi
 {
-	public interface IUploadOriginalsView
+	interface IURView
 	{
 		void ReportFolderNotFound(string folder);
 
-		void ReportFileNotFound(OriginalFileInfo file);
-
-		void ReportUploadFailed(OriginalFileInfo file);
+		void ReportUploadFailed(string path);
 	}
 }

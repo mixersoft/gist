@@ -78,15 +78,19 @@
     <Compile Include="src\IFileFinder.cs" />
     <Compile Include="src\IFileLister.cs" />
     <Compile Include="src\IFileSystem.cs" />
-    <Compile Include="src\IUploadOriginalsView.cs" />
-    <Compile Include="src\IUploadResampledModel.cs" />
-    <Compile Include="src\IUploadResampledView.cs" />
+    <Compile Include="src\IUOView.cs" />
+    <Compile Include="src\IURModel.cs" />
+    <Compile Include="src\IURTaskService.cs" />
+    <Compile Include="src\IURView.cs" />
+    <Compile Include="src\IUploadService.cs" />
     <Compile Include="src\OriginalFileInfo.cs" />
-    <Compile Include="src\UploadOriginalsPresenter.cs" />
-    <Compile Include="src\IUploadOriginalsModel.cs" />
+    <Compile Include="src\UOPresenter.cs" />
+    <Compile Include="src\IUOModel.cs" />
     <Compile Include="src\Main.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="src\UploadResampledPresenter.cs" />
+    <Compile Include="src\URModel.cs" />
+    <Compile Include="src\URPresenter.cs" />
+    <Compile Include="src\URTaskStatus.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
