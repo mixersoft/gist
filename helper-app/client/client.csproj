@@ -71,6 +71,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\api\cs-client\**" />
+    <Compile Include="src\ApiHelper.cs" />
+    <Compile Include="src\BlockingQueue.cs" />
     <Compile Include="src\FileFinder.cs" />
     <Compile Include="src\FileLister.cs" />
     <Compile Include="src\FileSystem.cs" />

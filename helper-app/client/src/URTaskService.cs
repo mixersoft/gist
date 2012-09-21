@@ -22,11 +22,7 @@ namespace Snaphappi
 
 		public URTaskService(int taskID, string sessionID)
 		{
-			this.id = new TaskID();
-			id.Task    = taskID;
-			id.Session = sessionID;
-			id.__isset.Session = true;
-			id.__isset.Task    = true;
+			this.id = ApiHelper.MakeTaskID(taskID, sessionID);
 
 			var uri = new Uri(""); // FIXME
 			task = new URTask.Client(new TBinaryProtocol(new THttpClient(uri)));

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 
 namespace Snaphappi
@@ -40,7 +41,7 @@ namespace Snaphappi
 
 		public void UploadFile(string filePath)
 		{
-			uploadService.UploadFile(filePath);
+			uploadService.UploadFile(filePath, () => File.ReadAllBytes(filePath));
 		}
 
 		public event Action TaskCancelled
