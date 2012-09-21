@@ -15,10 +15,15 @@ namespace Snaphappi
 
 		#region interface
 
-		public URModel(IURTaskService taskService, IURUploadService uploadService)
+		public URModel
+			( IURTaskService   taskService
+			, IURUploadService uploadService
+			)
 		{
 			this.taskService   = taskService;
 			this.uploadService = uploadService;
+
+			this.taskService.TaskCancelled += OnTaskCancelled;
 		}
 
 		#endregion
@@ -30,11 +35,12 @@ namespace Snaphappi
 		public void DownloadInformation()
 		{
 			Folders = taskService.GetFolders();
+			taskService.StartPolling(1000);
 		}
 
 		public void UploadFile(string filePath)
 		{
-			uploadService.UploadFile(filePath, null, null); // FIXME
+			uploadService.UploadFile(filePath);
 		}
 
 		public event Action TaskCancelled
@@ -47,6 +53,15 @@ namespace Snaphappi
 		{
 			add    { uploadService.UploadFailed += value; }
 			remove { uploadService.UploadFailed -= value; }
+		}
+
+		#endregion
+
+		#region implementation
+
+		private void OnTaskCancelled()
+		{
+			taskService.StopPolling();
 		}
 
 		#endregion

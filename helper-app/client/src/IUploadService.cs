@@ -2,7 +2,7 @@
 
 public interface IURUploadService
 {
-	void UploadFile(string path, string SessionID, string TaskID);
+	void UploadFile(string path);
 
 	event Action<string> UploadFailed;
 }

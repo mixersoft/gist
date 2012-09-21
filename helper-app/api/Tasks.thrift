@@ -42,7 +42,7 @@ service URTask
 	/**
 	 * Retrieves flags indicating the state of the task.
 	 */
-	URTaskState GetState();
+	URTaskState GetState(1: TaskID id);
 }
 
 service URTaskUpload
@@ -52,8 +52,8 @@ service URTaskUpload
 	 * was found.
 	 */
 	void UploadFile
-		( 1: string path
-		, 2: string folder
+		( 1: TaskID id
+		, 2: string path
 		, 3: binary data
 		);
 }
