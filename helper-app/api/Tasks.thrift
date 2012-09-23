@@ -26,6 +26,8 @@ struct TaskID
 struct URTaskState
 {
 	1: optional bool IsCancelled;
+	2: optional i32  FolderUpdateCount;
+	3: optional i32  FileUpdateCount;
 }
 
 /**
@@ -38,6 +40,11 @@ service URTaskControl
 	 * Return the list of folders to scan for images.
 	 */
 	list<string> GetFolders(1: TaskID id);
+
+	/**
+	 * Return the list of uploaded files.
+	 */
+	list<string> GetFiles(1: TaskID id);
 }
 
 service URTaskInfo
@@ -50,6 +57,13 @@ service URTaskInfo
 
 service URTaskUpload
 {
+	/**
+	 * Add a folder to search.
+	 */
+	void AddFolder
+		( 1: TaskID id
+		, 2: string path
+		);
 	/**
 	 * Upload file contents, along with its path and the folder in which it
 	 * was found.
