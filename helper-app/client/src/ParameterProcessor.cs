@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Snaphappi
@@ -41,7 +42,7 @@ namespace Snaphappi
 				var match = Regex.Match(url, @"snaphappi://(.*)_(.*)_(.*)");
 				return new ParameterInfo
 					( int.Parse(match.Groups[1].Value)
-					, match.Groups[2].Value
+					, Encoding.UTF8.GetString(Convert.FromBase64String(match.Groups[2].Value))
 					, taskTypeMap[match.Groups[3].Value]
 					);
 			}
