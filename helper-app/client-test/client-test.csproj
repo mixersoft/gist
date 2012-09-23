@@ -8,7 +8,7 @@
     <ProjectGuid>{0A4685F0-8F16-4C38-B011-B55C27BE07B8}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>client_test</RootNamespace>
+    <RootNamespace>SnaphappiTest</RootNamespace>
     <AssemblyName>client-test</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -57,9 +57,7 @@
     <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.framework, Version=2.6.0.12051, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-      <Private>True</Private>
-    </Reference>
+    <Reference Include="nunit.framework, Version=2.6.1.12217, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL" />
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
@@ -72,6 +70,7 @@
     <Compile Include="src\FileFinderTest.cs" />
     <Compile Include="src\FileListerTester.cs" />
     <Compile Include="src\MockFileSystem.cs" />
+    <Compile Include="src\ParameterProcessorTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

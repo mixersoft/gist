@@ -32,13 +32,16 @@ struct URTaskState
  * Service for working with the task of servicing the initial upload of files
  * from the user's computer to the server.
  */
-service URTask
+service URTaskControl
 {
 	/**
 	 * Return the list of folders to scan for images.
 	 */
 	list<string> GetFolders(1: TaskID id);
+}
 
+service URTaskInfo
+{
 	/**
 	 * Retrieves flags indicating the state of the task.
 	 */
