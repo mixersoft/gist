@@ -35,10 +35,11 @@ namespace Snaphappi
 		{
 			var app = new App();
 
-			var taskService   = new URTaskService(taskID, sessionID);
-			var uploadService = new URUploadService(taskID, sessionID);
+			var controlService = new URTaskControlService(taskID, sessionID);
+			var infoService    = new URTaskInfoService(taskID, sessionID);
+			var uploadService  = new URTaskUploadService(taskID, sessionID);
 
-			var urModel = new URModel(taskService, uploadService);
+			var urModel = new URModel(controlService, infoService, uploadService);
 			var urView  = new URView();
 
 			var fileSystem = new FileSystem();

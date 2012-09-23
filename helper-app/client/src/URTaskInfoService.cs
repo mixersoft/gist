@@ -1,16 +1,16 @@
-﻿using Thrift.Protocol;
-using Thrift.Transport;
-using Snaphappi.API;
+﻿using Snaphappi.API;
 using System;
 using System.Threading;
+using Thrift.Protocol;
+using Thrift.Transport;
 
 namespace Snaphappi
 {
-	public class URTaskService : IURTaskService
+	public class URTaskInfoService : IURTaskInfoService
 	{
 		#region data
 
-		private readonly URTask.Client task;
+		private readonly URTaskInfo.Client task;
 
 		private readonly TaskID id;
 
@@ -20,12 +20,12 @@ namespace Snaphappi
 
 		#region interface
 
-		public URTaskService(int taskID, string sessionID)
+		public URTaskInfoService(int taskID, string sessionID)
 		{
 			this.id = ApiHelper.MakeTaskID(taskID, sessionID);
 
 			var uri = new Uri(""); // FIXME
-			task = new URTask.Client(new TBinaryProtocol(new THttpClient(uri)));
+			task = new URTaskInfo.Client(new TBinaryProtocol(new THttpClient(uri)));
 
 			timer = new Timer(OnTimer);
 		}
@@ -33,11 +33,6 @@ namespace Snaphappi
 		#endregion
 
 		#region IURTaskService Members
-
-		public string[] GetFolders()
-		{
-			return task.GetFolders(id).ToArray();
-		}
 
 		public void StartPolling(int period)
 		{

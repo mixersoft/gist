@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace Snaphappi
 {
-	public class URUploadService : IURUploadService
+	public class URTaskUploadService : IURTaskUploadService
 	{
 		#region nested types
 
@@ -38,7 +38,7 @@ namespace Snaphappi
 
 		#region interface
 
-		public URUploadService(int taskID, string sessionID)
+		public URTaskUploadService(int taskID, string sessionID)
 		{
 			this.id = ApiHelper.MakeTaskID(taskID, sessionID);
 			

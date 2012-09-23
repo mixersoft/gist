@@ -1,6 +1,6 @@
 ﻿using System;
 
-public interface IURUploadService
+public interface IURTaskUploadService
 {
 	void UploadFile(string path, Func<byte[]> LoadFile);
 

@@ -8,23 +8,26 @@ namespace Snaphappi
 	public class URModel : IURModel
 	{
 		#region data
-
-		private readonly IURTaskService   taskService;
-		private readonly IURUploadService uploadService;
+		
+		private readonly IURTaskControlService controlService;
+		private readonly IURTaskInfoService   infoService;
+		private readonly IURTaskUploadService uploadService;
 
 		#endregion
 
 		#region interface
 
 		public URModel
-			( IURTaskService   taskService
-			, IURUploadService uploadService
+			( IURTaskControlService controlService
+			, IURTaskInfoService    infoService
+			, IURTaskUploadService  uploadService
 			)
 		{
-			this.taskService   = taskService;
-			this.uploadService = uploadService;
+			this.controlService = controlService;
+			this.infoService    = infoService;
+			this.uploadService  = uploadService;
 
-			this.taskService.TaskCancelled += OnTaskCancelled;
+			this.infoService.TaskCancelled += OnTaskCancelled;
 		}
 
 		#endregion
@@ -35,8 +38,8 @@ namespace Snaphappi
 
 		public void DownloadInformation()
 		{
-			Folders = taskService.GetFolders();
-			taskService.StartPolling(1000);
+			Folders = controlService.GetFolders();
+			infoService.StartPolling(1000);
 		}
 
 		public void UploadFile(string filePath)
@@ -46,8 +49,8 @@ namespace Snaphappi
 
 		public event Action TaskCancelled
 		{
-			add    { taskService.TaskCancelled += value; }
-			remove { taskService.TaskCancelled -= value; }
+			add    { infoService.TaskCancelled += value; }
+			remove { infoService.TaskCancelled -= value; }
 		}
 
 		public event Action<string> UploadFailed
@@ -62,7 +65,7 @@ namespace Snaphappi
 
 		private void OnTaskCancelled()
 		{
-			taskService.StopPolling();
+			infoService.StopPolling();
 		}
 
 		#endregion

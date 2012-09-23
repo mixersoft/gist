@@ -2,10 +2,8 @@
 
 namespace Snaphappi
 {
-	public interface IURTaskService
+	public interface IURTaskInfoService
 	{
-		string[] GetFolders();
-		
 		/// <summary>
 		/// Start polling the server.
 		/// </summary>
