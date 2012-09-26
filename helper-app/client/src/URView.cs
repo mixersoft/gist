@@ -4,16 +4,31 @@ namespace Snaphappi
 {
 	public class URView : IURView
 	{
+		#region data
+
+		private readonly IURTaskControlService taskControl;
+
+		#endregion
+
+		#region interface
+
+		public URView(IURTaskControlService taskControl)
+		{
+			this.taskControl = taskControl;
+		}
+
+		#endregion
+
 		#region IURView Members
 
 		public void ReportFolderNotFound(string folder)
 		{
-			throw new NotImplementedException();
+			taskControl.ReportFolderNotFound(folder);
 		}
 
-		public void ReportUploadFailed(string path)
+		public void ReportUploadFailed(string folder, string path)
 		{
-			throw new NotImplementedException();
+			taskControl.ReportUploadFailed(folder, path);
 		}
 
 		#endregion

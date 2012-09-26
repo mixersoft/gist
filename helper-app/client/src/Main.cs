@@ -40,7 +40,7 @@ namespace Snaphappi
 			var uploadService  = new URTaskUploadService(taskID, sessionID);
 
 			var urModel = new URModel(controlService, infoService, uploadService);
-			var urView  = new URView();
+			var urView  = new URView(controlService);
 
 			var fileSystem = new FileSystem();
 			var fileLister = new FileLister(fileSystem);

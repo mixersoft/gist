@@ -12,11 +12,13 @@ namespace Snaphappi
 
 		private struct UploadTask
 		{
+			public readonly string       Folder;
 			public readonly string       Path;
 			public readonly Func<byte[]> LoadFile;
 
-			public UploadTask(string path, Func<byte[]> LoadFile)
+			public UploadTask(string folder, string path, Func<byte[]> LoadFile)
 			{
+				this.Folder   = folder;
 				this.Path     = path;
 				this.LoadFile = LoadFile;
 			}
@@ -42,7 +44,7 @@ namespace Snaphappi
 		{
 			this.id = ApiHelper.MakeTaskID(taskID, sessionID);
 			
-			var uri = new Uri(""); // FIXME
+			var uri = new Uri("http://dev.snaphappi.com/thrift/service/URTaskUpload");
 			taskUpload = new URTaskUpload.Client(new TBinaryProtocol(new THttpClient(uri)));
 
 			uploadTaskQueue = new BlockingQueue<UploadTask>();
@@ -55,12 +57,12 @@ namespace Snaphappi
 
 		#region IURUploadService Members
 
-		public void UploadFile(string path, Func<byte[]> LoadFile)
+		public void UploadFile(string folder, string path, Func<byte[]> LoadFile)
 		{
-			uploadTaskQueue.Enqueue(new UploadTask(path, LoadFile));
+			uploadTaskQueue.Enqueue(new UploadTask(folder, path, LoadFile));
 		}
 
-		public event Action<string> UploadFailed;
+		public event Action<string, string> UploadFailed;
 
 		#endregion
 
@@ -68,16 +70,15 @@ namespace Snaphappi
 
 		private void UploadProc()
 		{
-			for (;;)
+			foreach (var uploadTask in uploadTaskQueue)
 			{
-				var uploadTask = uploadTaskQueue.Dequeue();
 				try
 				{
 					taskUpload.UploadFile(id, uploadTask.Path, uploadTask.LoadFile());
 				}
 				catch (Exception)
 				{
-					UploadFailed(uploadTask.Path);
+					UploadFailed(uploadTask.Folder, uploadTask.Path);
 				}
 			}
 		}

@@ -8,39 +8,41 @@ namespace Snaphappi
 	{
 		#region data
 
-		private string[] folders;
-
 		private readonly IFileSystem fileSystem;
 
 		private Thread workerThread;
 
 		private bool stopRequested;
 
-		private object mainLock = new object();
+		private bool multithread;
+
+		private readonly object mainLock = new object();
+
+		private readonly BlockingQueue<string> folders = new BlockingQueue<string>();
 
 		#endregion
 
 		#region interface
 
-		public FileLister(IFileSystem fileSystem)
+		public FileLister(IFileSystem fileSystem, bool multithread = true)
 		{
-			this.fileSystem = fileSystem;
+			this.fileSystem  = fileSystem;
+			this.multithread = multithread;
 
-			workerThread = new Thread(WorkerProc);
-		}
-
-		public void Wait()
-		{
-			workerThread.Join();
+			if (multithread)
+				workerThread = new Thread(WorkerProc);
 		}
 
 		#endregion
 
 		#region IFileLister Members
 
-		public void UpdateFolders(string[] paths)
+		public void AddFolder(string folderPath)
 		{
-			this.folders = paths;
+			if (multithread)
+				folders.Enqueue(folderPath);
+			else
+				SearchFolder(folderPath);
 		}
 
 		public void Start()
@@ -56,11 +58,9 @@ namespace Snaphappi
 			}
 		}
 
-		public event Action<string> FileFound;
+		public event Action<string, string> FileFound;
 
 		public event Action<string> FolderNotFound;
-
-		public event Action Finished;
 
 		#endregion
 
@@ -68,26 +68,28 @@ namespace Snaphappi
 
 		private void WorkerProc()
 		{
-			foreach (var folder in folders)
+			foreach (var folderPath in folders)
+				SearchFolder(folderPath);
+		}
+
+		private void SearchFolder(string folderPath)
+		{
+			try
 			{
-				try
+				foreach (var filePath in fileSystem.ListFiles(folderPath))
 				{
-					foreach (var file in fileSystem.ListFiles(folder))
+					lock (mainLock)
 					{
-						lock (mainLock)
-						{
-							if (stopRequested)
-								return;
-						}
-						FileFound(file);
+						if (stopRequested)
+							return;
 					}
-				}
-				catch (DirectoryNotFoundException)
-				{
-					FolderNotFound(folder);
+					FileFound(folderPath, filePath);
 				}
 			}
-			Finished();
+			catch (DirectoryNotFoundException)
+			{
+				FolderNotFound(folderPath);
+			}
 		}
 
 		#endregion

@@ -42,9 +42,35 @@ service URTaskControl
 	list<string> GetFolders(1: TaskID id);
 
 	/**
-	 * Return the list of uploaded files.
+	 * Return the list of all files uploaded from the given folder within
+	 * the given task.
 	 */
-	list<string> GetFiles(1: TaskID id);
+	list<string> GetFiles(1: TaskID id, 2: string folder);
+
+	/**
+	 * Report that a folder could not be searched.
+	 */
+	void ReportFolderNotFound(1: TaskID id, 2: string folder);
+
+	/**
+	 * Report a failed upload.
+	 */
+	void ReportUploadFailed(1: TaskID id, 2: string folder, 3: string path);
+
+	/**
+	 * Report that all files in a folder have been uploaded.
+	 */
+	void ReportFolderUploadComplete(1: TaskID id, 2: string folder);
+
+	/**
+	 * Report the number of files to be uploaded from a folder.
+	 */
+	void ReportFileCount(1: TaskID id, 2: string folder, 3: i32 count);
+
+	/**
+	 * Return the number of files to be uploaded from a folder.
+	 */
+	i32 GetFileCount(1: TaskID id, 2: string folder);
 }
 
 service URTaskInfo

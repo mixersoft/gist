@@ -8,6 +8,24 @@ namespace SnaphappiTest
 	[ TestFixture ]
 	class FileListerTester
 	{
+		private struct FoundFile : IEquatable<FoundFile>
+		{
+			public readonly string FolderPath;
+			public readonly string FilePath;
+
+			public FoundFile(string folderPath, string filePath)
+			{
+				FolderPath = folderPath;
+				FilePath   = filePath;
+			}
+
+			public bool Equals(FoundFile other)
+			{
+				return other.FolderPath == FolderPath
+					&& other.FilePath == FilePath;
+			}
+		}
+
 		private MockFileSystem fileSystem;
 
 		private FileLister fileLister;
@@ -16,20 +34,17 @@ namespace SnaphappiTest
 		public void Setup()
 		{
 			fileSystem = new MockFileSystem();
-			fileLister = new FileLister(fileSystem);
+			fileLister = new FileLister(fileSystem, false);
 		}
 
 		[ Test ]
 		public void TestListing()
 		{
-			var foundFiles = new List<string>();
-			fileLister.FileFound += foundFiles.Add;
+			var foundFiles = new List<FoundFile>();
+			fileLister.FileFound += (folderPath, filePath) => foundFiles.Add(new FoundFile(folderPath, filePath));
 
 			var notFoundFolders = new List<string>();
 			fileLister.FolderNotFound += notFoundFolders.Add;
-
-			bool isFinished = false;
-			fileLister.Finished += () => isFinished = true;
 
 			var files = new string[]
 				{ @"file0"
@@ -40,13 +55,11 @@ namespace SnaphappiTest
 			foreach (var file in files)
 				fileSystem.filePaths.Add(file);
 
-			fileLister.UpdateFolders(new string[] { "dir0", "dir2", "dir3" });
-
-			fileLister.Start();
-			fileLister.Wait();
+			foreach (var folder in new string[] { "dir0", "dir2", "dir3" })
+				fileLister.AddFolder(folder);
 
 			CollectionAssert.AreEquivalent
-				( new string[] { @"dir0\file0", @"dir0\file1" }
+				( new FoundFile[] { new FoundFile("dir0", @"dir0\file0"), new FoundFile("dir0", @"dir0\file1") }
 				, foundFiles
 				, "Where the files found?"
 				);
@@ -55,7 +68,6 @@ namespace SnaphappiTest
 				, notFoundFolders
 				, "Where the non-existent folders reported?"
 				);
-			Assert.IsTrue(isFinished, "Did the search complete?");
 		}
 	}
 }

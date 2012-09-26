@@ -12,8 +12,7 @@ namespace Snaphappi
 
 		void StopPolling();
 
-		UploadResampledTaskStatus GetStatus();
-
 		event Action TaskCancelled;
+		event Action FoldersUpdated;
 	}
 }

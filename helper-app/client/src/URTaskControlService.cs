@@ -9,6 +9,9 @@ namespace Snaphappi
 	{
 		#region data
 
+		/// <summary>
+		/// The generated task class. All access to it is serialized between threads.
+		/// </summary>
 		private readonly URTaskControl.Client task;
 
 		private readonly TaskID id;
@@ -21,7 +24,7 @@ namespace Snaphappi
 		{
 			this.id = ApiHelper.MakeTaskID(taskID, sessionID);
 
-			var uri = new Uri(""); // FIXME
+			var uri = new Uri("http://dev.snaphappi.com/thrift/service/URTaskControl");
 			task = new URTaskControl.Client(new TBinaryProtocol(new THttpClient(uri)));
 		}
 
@@ -33,6 +36,30 @@ namespace Snaphappi
 		{
 			lock (task)
 				return task.GetFolders(id).ToArray();
+		}
+
+		public void ReportFolderNotFound(string folder)
+		{
+			lock (task)
+				task.ReportFolderNotFound(id, folder);
+		}
+
+		public void ReportUploadFailed(string folder, string path)
+		{
+			lock (task)
+				task.ReportUploadFailed(id, folder, path);
+		}
+
+		public void ReportFolderUploadComplete(string folder)
+		{
+			lock (task)
+				task.ReportFolderUploadComplete(id, folder);
+		}
+
+		public void ReportFolderFileCount(string folder, int count)
+		{
+			lock (task)
+				task.ReportFileCount(id, folder, count);
 		}
 
 		#endregion

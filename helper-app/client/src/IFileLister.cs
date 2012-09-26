@@ -4,15 +4,14 @@ namespace Snaphappi
 {
 	public interface IFileLister
 	{
-		void UpdateFolders(string[] paths);
+		void AddFolder(string folderPath);
 
 		void Start();
 
 		void Stop();
 
-		event Action<string> FileFound;
-		event Action<string> FolderNotFound;
+		event Action<string, string> FileFound;
 
-		event Action Finished;
+		event Action<string> FolderNotFound;
 	}
 }

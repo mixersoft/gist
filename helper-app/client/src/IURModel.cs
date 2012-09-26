@@ -7,15 +7,15 @@ namespace Snaphappi
 {
 	interface IURModel
 	{
-		string[] Folders { get; }
-
 		void DownloadInformation();
 
-		void UploadFile(string file);
+		void UploadFile(string folderPath, string filePath);
+
+		event Action<string> FolderAdded;
 		
 		event Action TaskCancelled;
 
-		event Action<string> UploadFailed;
+		event Action<string, string> UploadFailed;
 
 	}
 }

@@ -16,6 +16,8 @@ namespace Snaphappi
 
 		private Timer timer;
 
+		private int folderUpdateCount = 0;
+
 		#endregion
 
 		#region interface
@@ -44,12 +46,8 @@ namespace Snaphappi
 			timer.Change(Timeout.Infinite, Timeout.Infinite);
 		}
 
-		public UploadResampledTaskStatus GetStatus()
-		{
-			throw new NotImplementedException();
-		}
-
 		public event Action TaskCancelled;
+		public event Action FoldersUpdated;
 
 		#endregion
 
@@ -60,6 +58,11 @@ namespace Snaphappi
 			var state = task.GetState(id);
 			if (state.IsCancelled)
 				TaskCancelled();
+			if (state.FolderUpdateCount > folderUpdateCount)
+			{
+				folderUpdateCount = state.FolderUpdateCount;
+				FoldersUpdated();
+			}
 		}
 
 		#endregion
