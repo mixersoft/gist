@@ -69,11 +69,31 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'LocalTest|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\LocalTest\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'LocalTest|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\LocalTest\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\api\cs-client\**" />
     <Compile Include="src\ApiHelper.cs" />
     <Compile Include="src\App.cs" />
     <Compile Include="src\BlockingQueue.cs" />
+    <Compile Include="src\ConsoleHelper.cs" />
     <Compile Include="src\FileFinder.cs" />
     <Compile Include="src\FileLister.cs" />
     <Compile Include="src\FileSystem.cs" />
@@ -90,6 +110,7 @@
     <Compile Include="src\IURTaskUploadService.cs" />
     <Compile Include="src\OriginalFileInfo.cs" />
     <Compile Include="src\ParameterProcessor.cs" />
+    <Compile Include="src\Server.cs" />
     <Compile Include="src\UOPresenter.cs" />
     <Compile Include="src\IUOModel.cs" />
     <Compile Include="src\Main.cs" />
@@ -103,6 +124,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="Thrift">
       <HintPath>lib\Thrift.dll</HintPath>
     </Reference>

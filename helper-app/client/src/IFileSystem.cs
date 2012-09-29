@@ -8,5 +8,7 @@ namespace Snaphappi
 		bool FileExists(string path);
 
 		IEnumerable<string> ListFiles(string folderPath);
+
+		IEnumerable<string> ListFolders(string folderPath);
 	}
 }

@@ -26,6 +26,11 @@ namespace Snaphappi
 			taskControl.ReportFolderNotFound(folder);
 		}
 
+		public void ReportFileCount(string folderPath, int count)
+		{
+			taskControl.ReportFolderFileCount(folderPath, count);
+		}
+
 		public void ReportUploadFailed(string folder, string path)
 		{
 			taskControl.ReportUploadFailed(folder, path);

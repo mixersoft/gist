@@ -10,51 +10,29 @@ namespace Snaphappi
 
 		private readonly IFileSystem fileSystem;
 
-		private Thread workerThread;
-
-		private bool stopRequested;
-
-		private bool multithread;
-
-		private readonly object mainLock = new object();
-
-		private readonly BlockingQueue<string> folders = new BlockingQueue<string>();
-
 		#endregion
 
 		#region interface
 
 		public FileLister(IFileSystem fileSystem, bool multithread = true)
 		{
-			this.fileSystem  = fileSystem;
-			this.multithread = multithread;
-
-			if (multithread)
-				workerThread = new Thread(WorkerProc);
+			this.fileSystem = fileSystem;
 		}
 
 		#endregion
 
 		#region IFileLister Members
 
-		public void AddFolder(string folderPath)
+		public void SearchFolder(string folderPath)
 		{
-			if (multithread)
-				folders.Enqueue(folderPath);
-			else
-				SearchFolder(folderPath);
-		}
-
-		public void Start()
-		{
-			workerThread.Start();
-		}
-
-		public void Stop()
-		{
-			lock (mainLock)
+			if (Directory.Exists(folderPath))
 			{
-				stopRequested = true;
+				SearchFolder(folderPath, folderPath, 1);
+				FolderSearchComplete(folderPath);
+			}
+			else
+			{
+				FolderNotFound(folderPath);
 			}
 		}
 
@@ -62,36 +40,36 @@ namespace Snaphappi
 
 		public event Action<string> FolderNotFound;
 
+		public event Action<string> FolderSearchComplete;
+
 		#endregion
 
-		#region utility functions
-
-		private void WorkerProc()
+		private void SearchFolder(string rootFolder, string folderPath, int depth)
 		{
-			foreach (var folderPath in folders)
-				SearchFolder(folderPath);
-		}
-
-		private void SearchFolder(string folderPath)
-		{
+			const int maxSearchDepth = 8;
+			if (depth > maxSearchDepth)
+				return;
 			try
 			{
 				foreach (var filePath in fileSystem.ListFiles(folderPath))
 				{
-					lock (mainLock)
-					{
-						if (stopRequested)
-							return;
-					}
-					FileFound(folderPath, filePath);
+					if (IsImagePath(filePath))
+						FileFound(rootFolder, filePath);
+				}
+				foreach (var subfolderPath in fileSystem.ListFolders(folderPath))
+				{
+					SearchFolder(rootFolder, subfolderPath, depth + 1);
 				}
 			}
-			catch (DirectoryNotFoundException)
+			catch (UnauthorizedAccessException)
 			{
-				FolderNotFound(folderPath);
+				// we can safely ignore inaccessible folders
 			}
 		}
 
-		#endregion
+		private bool IsImagePath(string path)
+		{
+			return true;
+		}
 	}
 }

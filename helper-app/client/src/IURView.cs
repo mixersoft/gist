@@ -10,5 +10,7 @@ namespace Snaphappi
 		void ReportFolderNotFound(string folder);
 
 		void ReportUploadFailed(string folder, string path);
+
+		void ReportFileCount(string folderPath, int count);
 	}
 }

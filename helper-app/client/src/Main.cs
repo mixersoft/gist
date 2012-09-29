@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 
 namespace Snaphappi
 {
@@ -13,14 +14,21 @@ namespace Snaphappi
 				return ExitFailure;
 			try
 			{
-				var info = ParameterProcessor.SplitUrl(args[0]);
-				switch (info.Type)
+				switch (args[0])
 				{
-					case ParameterProcessor.TaskType.UploadOriginals:
-						UploadOriginals(info.TaskID, info.SessionID);
-						break;
-					case ParameterProcessor.TaskType.UploadResampled:
-						UploadResampled(info.TaskID, info.SessionID);
+					case "-ur": TestUploadResampled(); break;
+					case "-uo": TestUploadOriginals(); break;
+					default:
+						var info = ParameterProcessor.SplitUrl(args[0]);
+						switch (info.Type)
+						{
+							case ParameterProcessor.TaskType.UploadOriginals:
+								UploadOriginals(info.TaskID, info.SessionID);
+								break;
+							case ParameterProcessor.TaskType.UploadResampled:
+								UploadResampled(info.TaskID, info.SessionID);
+								break;
+						}
 						break;
 				}
 				return ExitSuccess;
@@ -54,5 +62,30 @@ namespace Snaphappi
 		{
 			throw new NotImplementedException();
 		}
+
+		private static void TestUploadResampled()
+		{
+			ConsoleHelper.Alloc();
+			ConsoleHelper.Title = "Snaphappi Helper Console";
+
+			var app = new App();
+
+			var server = new Server(Server.TaskType.UploadResampled);
+
+			var urModel = new URModel(server, server, server);
+			var urView  = new URView(server);
+
+			var fileSystem = new FileSystem();
+			var fileLister = new FileLister(fileSystem);
+
+			new URPresenter(app, urModel, urView, fileLister);
+
+			app.LoadUR();
+		}
+
+		private static void TestUploadOriginals()
+		{
+		}
+		
 	}
 }

@@ -13,7 +13,11 @@ namespace Snaphappi
 		private readonly IURTaskInfoService   infoService;
 		private readonly IURTaskUploadService uploadService;
 
-		private readonly HashSet<string> folders = new HashSet<string>();
+		private readonly HashSet<string> folders
+			= new HashSet<string>();
+
+		private readonly Dictionary<string, int> uploadedFileCounts
+			= new Dictionary<string,int>();
 
 		#endregion
 
@@ -29,7 +33,8 @@ namespace Snaphappi
 			this.infoService    = infoService;
 			this.uploadService  = uploadService;
 
-			this.infoService.TaskCancelled += OnTaskCancelled;
+			this.infoService.TaskCancelled  += OnTaskCancelled;
+			this.infoService.FoldersUpdated += OnFoldersUpdated;
 		}
 
 		#endregion
@@ -44,8 +49,17 @@ namespace Snaphappi
 			infoService.StartPolling(1000);
 		}
 
+		public int GetFileCount(string folderPath)
+		{
+			int count = 0;
+			uploadedFileCounts.TryGetValue(folderPath, out count);
+			return count;
+		}
+
 		public void UploadFile(string folderPath, string filePath)
 		{
+			IncrementUploadedFileCount(folderPath);
+
 			uploadService.UploadFile(folderPath, filePath, () => File.ReadAllBytes(filePath));
 		}
 
@@ -77,6 +91,18 @@ namespace Snaphappi
 					FolderAdded(folderPath);
 				}
 			}
+		}
+
+		private void IncrementUploadedFileCount(string folderPath)
+		{
+			int count = 0;
+			uploadedFileCounts.TryGetValue(folderPath, out count);
+			uploadedFileCounts[folderPath] = count + 1;
+		}
+
+		private void OnFoldersUpdated()
+		{
+			AddFolders(controlService.GetFolders());
 		}
 
 		private void OnTaskCancelled()

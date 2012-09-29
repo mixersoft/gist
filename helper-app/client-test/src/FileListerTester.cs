@@ -56,7 +56,7 @@ namespace SnaphappiTest
 				fileSystem.filePaths.Add(file);
 
 			foreach (var folder in new string[] { "dir0", "dir2", "dir3" })
-				fileLister.AddFolder(folder);
+				fileLister.SearchFolder(folder);
 
 			CollectionAssert.AreEquivalent
 				( new FoundFile[] { new FoundFile("dir0", @"dir0\file0"), new FoundFile("dir0", @"dir0\file1") }

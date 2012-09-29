@@ -13,9 +13,14 @@ namespace Snaphappi
 			return File.Exists(path);
 		}
 
-		public IEnumerable<string> ListFiles(string folder)
+		public IEnumerable<string> ListFiles(string folderPath)
 		{
-			return Directory.GetFiles(folder);
+			return Directory.GetFiles(folderPath);
+		}
+
+		public IEnumerable<string> ListFolders(string folderPath)
+		{
+			return Directory.GetDirectories(folderPath);
 		}
 
 		#endregion

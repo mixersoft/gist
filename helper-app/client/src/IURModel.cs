@@ -9,6 +9,8 @@ namespace Snaphappi
 	{
 		void DownloadInformation();
 
+		int GetFileCount(string folderPath);
+
 		void UploadFile(string folderPath, string filePath);
 
 		event Action<string> FolderAdded;
