@@ -40,11 +40,10 @@ namespace Snaphappi
 
 		#region interface
 
-		public URTaskUploadService(int taskID, string sessionID)
+		public URTaskUploadService(int taskID, string sessionID, Uri uri)
 		{
 			this.id = ApiHelper.MakeTaskID(taskID, sessionID);
 			
-			var uri = new Uri("http://dev.snaphappi.com/thrift/service/URTaskUpload");
 			taskUpload = new URTaskUpload.Client(new TBinaryProtocol(new THttpClient(uri)));
 
 			uploadTaskQueue = new BlockingQueue<UploadTask>();

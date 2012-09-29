@@ -20,11 +20,10 @@ namespace Snaphappi
 
 		#region interface
 
-		public URTaskControlService(int taskID, string sessionID)
+		public URTaskControlService(int taskID, string sessionID, Uri uri)
 		{
 			this.id = ApiHelper.MakeTaskID(taskID, sessionID);
 
-			var uri = new Uri("http://dev.snaphappi.com/thrift/service/URTaskControl");
 			task = new URTaskControl.Client(new TBinaryProtocol(new THttpClient(uri)));
 		}
 
