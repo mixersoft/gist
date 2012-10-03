@@ -10,13 +10,18 @@ namespace Snaphappi
 
 		private readonly IFileSystem fileSystem;
 
+		private readonly string[] photoExtensions;
+
 		#endregion
 
 		#region interface
 
-		public FileLister(IFileSystem fileSystem, bool multithread = true)
+		public FileLister(IFileSystem fileSystem)
 		{
 			this.fileSystem = fileSystem;
+
+			this.photoExtensions
+				= new string[] {"bmp", "jpg", "jpeg", "gif", "png", "tif", "tiff"};
 		}
 
 		#endregion
@@ -69,7 +74,11 @@ namespace Snaphappi
 
 		private bool IsImagePath(string path)
 		{
-			return true;
+			var extension = Path.GetExtension(path).ToLowerInvariant();
+			if (extension.Length <= 1)
+				return false;
+			extension = extension.Substring(1);
+			return Array.Exists(photoExtensions, extension.Equals);
 		}
 	}
 }

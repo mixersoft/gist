@@ -34,7 +34,7 @@ namespace SnaphappiTest
 		public void Setup()
 		{
 			fileSystem = new MockFileSystem();
-			fileLister = new FileLister(fileSystem, false);
+			fileLister = new FileLister(fileSystem);
 		}
 
 		[ Test ]
