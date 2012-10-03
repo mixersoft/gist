@@ -10,10 +10,10 @@ namespace Snaphappi
 		private readonly IFileLister fileLister;
 
 		public URPresenter
-			( IApp app
-			, IURModel urModel
-			, IURView  urView
-			, IFileLister           fileLister
+			( IApp        app
+			, IURModel    urModel
+			, IURView     urView
+			, IFileLister fileLister
 			)
 		{
 			this.app        = app;

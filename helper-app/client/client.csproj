@@ -102,6 +102,8 @@
     <Compile Include="src\IFileFinder.cs" />
     <Compile Include="src\IFileLister.cs" />
     <Compile Include="src\IFileSystem.cs" />
+    <Compile Include="src\ImageMagick.cs" />
+    <Compile Include="src\IPhotoLoader.cs" />
     <Compile Include="src\IUOView.cs" />
     <Compile Include="src\IURModel.cs" />
     <Compile Include="src\IURTaskControlService.cs" />
@@ -110,6 +112,7 @@
     <Compile Include="src\IURTaskUploadService.cs" />
     <Compile Include="src\OriginalFileInfo.cs" />
     <Compile Include="src\ParameterProcessor.cs" />
+    <Compile Include="src\PhotoLoader.cs" />
     <Compile Include="src\Server.cs" />
     <Compile Include="src\UOPresenter.cs" />
     <Compile Include="src\IUOModel.cs" />
@@ -121,6 +124,7 @@
     <Compile Include="src\URPresenter.cs" />
     <Compile Include="src\URTaskInfoService.cs" />
     <Compile Include="src\URView.cs" />
+    <Compile Include="src\TempFile.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

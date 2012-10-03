@@ -52,7 +52,9 @@ namespace Snaphappi
 			var infoService    = new URTaskInfoService    (taskID, sessionID, urTaskInfoUri);
 			var uploadService  = new URTaskUploadService  (taskID, sessionID, urTaskUploadUri);
 
-			var urModel = new URModel (controlService, infoService, uploadService);
+			var photoLoader = new PhotoLoader();
+
+			var urModel = new URModel (controlService, infoService, uploadService, photoLoader);
 			var urView  = new URView  (controlService);
 
 			var fileSystem = new FileSystem();
@@ -77,7 +79,9 @@ namespace Snaphappi
 
 			var server = new Server(Server.TaskType.UploadResampled);
 
-			var urModel = new URModel(server, server, server);
+			var photoLoader = new PhotoLoader();
+
+			var urModel = new URModel(server, server, server, photoLoader);
 			var urView  = new URView(server);
 
 			var fileSystem = new FileSystem();

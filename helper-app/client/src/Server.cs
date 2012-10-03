@@ -89,7 +89,8 @@ namespace Snaphappi
 
 		public void UploadFile(string folder, string path, Func<byte[]> LoadFile)
 		{
-			Console.WriteLine("uploaded '{1}' from '{0}'", folder, path);
+			var size = LoadFile().Length;
+			Console.WriteLine("uploaded '{1}' ({2} bytes) from '{0}'", folder, path, size);
 		}
 
 		public event Action<string, string> UploadFailed;

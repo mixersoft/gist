@@ -10,8 +10,9 @@ namespace Snaphappi
 		#region data
 		
 		private readonly IURTaskControlService controlService;
-		private readonly IURTaskInfoService   infoService;
-		private readonly IURTaskUploadService uploadService;
+		private readonly IURTaskInfoService    infoService;
+		private readonly IURTaskUploadService  uploadService;
+		private readonly IPhotoLoader          photoLoader;
 
 		private readonly HashSet<string> folders
 			= new HashSet<string>();
@@ -27,11 +28,13 @@ namespace Snaphappi
 			( IURTaskControlService controlService
 			, IURTaskInfoService    infoService
 			, IURTaskUploadService  uploadService
+			, IPhotoLoader          photoLoader
 			)
 		{
 			this.controlService = controlService;
 			this.infoService    = infoService;
 			this.uploadService  = uploadService;
+			this.photoLoader    = photoLoader;
 
 			this.infoService.TaskCancelled  += OnTaskCancelled;
 			this.infoService.FoldersUpdated += OnFoldersUpdated;
@@ -60,7 +63,7 @@ namespace Snaphappi
 		{
 			IncrementUploadedFileCount(folderPath);
 
-			uploadService.UploadFile(folderPath, filePath, () => File.ReadAllBytes(filePath));
+			uploadService.UploadFile(folderPath, filePath, () => photoLoader.GetPreview(filePath));
 		}
 
 		public event Action<string> FolderAdded;
