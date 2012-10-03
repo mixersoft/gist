@@ -16,32 +16,33 @@ namespace Snaphappi
 		{
 			if (args.Length != 1)
 				return ExitFailure;
-			try
+
+			AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
+
+			// choose execution path based on the command line parameter
+			switch (args[0])
 			{
-				// choose execution path based on the command line parameter
-				switch (args[0])
-				{
-					case "-ur": TestUploadResampled(); break;
-					case "-uo": TestUploadOriginals(); break;
-					default:
-						var info = ParameterProcessor.SplitUrl(args[0]);
-						switch (info.Type)
-						{
-							case ParameterProcessor.TaskType.UploadOriginals:
-								UploadOriginals(info.TaskID, info.SessionID);
-								break;
-							case ParameterProcessor.TaskType.UploadResampled:
-								UploadResampled(info.TaskID, info.SessionID);
-								break;
-						}
-						break;
-				}
-				return ExitSuccess;
+				case "-ur": TestUploadResampled(); break;
+				case "-uo": TestUploadOriginals(); break;
+				default:
+					var info = ParameterProcessor.SplitUrl(args[0]);
+					switch (info.Type)
+					{
+						case ParameterProcessor.TaskType.UploadOriginals:
+							UploadOriginals(info.TaskID, info.SessionID);
+							break;
+						case ParameterProcessor.TaskType.UploadResampled:
+							UploadResampled(info.TaskID, info.SessionID);
+							break;
+					}
+					break;
 			}
-			catch (Exception)
-			{
-				return ExitFailure;
-			}
+			return ExitSuccess;
+		}
+
+		private static void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
+		{
+			Environment.Exit(ExitFailure);
 		}
 
 		private static void UploadResampled(int taskID, string sessionID)
