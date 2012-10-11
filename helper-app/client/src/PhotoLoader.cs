@@ -11,7 +11,7 @@ namespace Snaphappi
 		{
 			using (var temp = new TempFile())
 			{
-				ImageMagick.Convert(path, temp.Path, "-resize 480x640 -auto-orient -quality 80");
+                ImageMagick.Convert(path, temp.Path, "-filter Lanczos -resize 640x640> -quality 80");
 				return File.ReadAllBytes(temp.Path);
 			}
 		}
