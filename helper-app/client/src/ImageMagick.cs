@@ -6,7 +6,13 @@ namespace Snaphappi
 {
 	public static class ImageMagick
 	{
-		private const string root = "ImageMagick";
+		private static readonly string root;
+
+		static ImageMagick()
+		{
+			var appDirectory = Path.GetDirectoryName(typeof(ImageMagick).Assembly.Location);
+			root = Path.Combine(appDirectory, "ImageMagick");
+		}
 
 		public static void Convert(string srcPath, string dstPath, string options)
 		{

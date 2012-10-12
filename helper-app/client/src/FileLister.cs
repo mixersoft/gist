@@ -20,8 +20,7 @@ namespace Snaphappi
 		{
 			this.fileSystem = fileSystem;
 
-			this.photoExtensions
-				= new string[] {"bmp", "jpg", "jpeg", "gif", "png", "tif", "tiff"};
+			this.photoExtensions = new string[] {"jpg", "jpeg"};
 		}
 
 		#endregion

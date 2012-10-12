@@ -39,7 +39,7 @@ namespace Snaphappi
 
 			try
 			{
-				var match = Regex.Match(url, @"snaphappi://(.*)_(.*)_(.*)");
+				var match = Regex.Match(url, @"snaphappi://([0-9]+)_(.+)_([a-z]+)");
 				return new ParameterInfo
 					( int.Parse(match.Groups[1].Value)
 					, Encoding.UTF8.GetString(Convert.FromBase64String(match.Groups[2].Value))

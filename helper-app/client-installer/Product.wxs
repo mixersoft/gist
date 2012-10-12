@@ -52,6 +52,9 @@
 							</RegistryKey>
 						</RegistryKey>
 					</Component>
+					<Component Id="ThriftComponent">
+						<File Id="ThriftDll" Source="$(var.client.ProjectDir)lib\Thrift.dll" />
+					</Component>
 					<Directory Id="ImageMagickDir" Name="ImageMagick" >
 						<Component Id="ImageMagick" Guid="67A00421-C52C-4213-91AD-FF84833CAD13">
 							<File Source="ImageMagick\atl90.dll" />
@@ -96,6 +99,7 @@
 		
 		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
 			<ComponentRef Id="ProductComponent" />
+			<ComponentRef Id="ThriftComponent" />
 			<ComponentRef Id="ImageMagick" />
 		</ComponentGroup>
 	</Fragment>
