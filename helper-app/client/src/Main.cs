@@ -17,8 +17,6 @@ namespace Snaphappi
 			if (args.Length != 1)
 				return ExitFailure;
 
-			System.Diagnostics.Trace.Fail("Nyu!");
-
 			AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
 
 			// choose execution path based on the command line parameter

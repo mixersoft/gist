@@ -16,9 +16,9 @@ set Obj=%ObjDir%\%Src%.wixobj
 set BinDir=bin\Debug
 set Bin=%BinDir%\%Project%.msi
 
-set Target=bin\%Config%\SnaphappiHelper.exe
+set Target=..\client\bin\%Config%\SnaphappiHelper.exe
 
-set ProjectDir=.\
+set ProjectDir=..\client
 
 set ExtDir=C:\Program Files (x86)\WiX Toolset v3.6\bin
 

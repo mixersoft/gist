@@ -53,7 +53,7 @@
 						</RegistryKey>
 					</Component>
 					<Component Id="ThriftComponent">
-						<File Id="ThriftDll" Source="$(var.client.ProjectDir)lib\Thrift.dll" />
+						<File Id="ThriftDll" Source="$(var.client.ProjectDir)\lib\Thrift.dll" />
 					</Component>
 					<Directory Id="ImageMagickDir" Name="ImageMagick" >
 						<Component Id="ImageMagick" Guid="67A00421-C52C-4213-91AD-FF84833CAD13">
