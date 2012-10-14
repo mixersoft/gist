@@ -88,9 +88,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="src\FileFinderTest.cs" />
-    <Compile Include="src\FileListerTester.cs" />
+    <Compile Include="src\FileListerTest.cs" />
     <Compile Include="src\MockFileSystem.cs" />
+    <Compile Include="src\MockRegistry.cs" />
     <Compile Include="src\ParameterProcessorTest.cs" />
+    <Compile Include="src\UserIDTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

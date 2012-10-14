@@ -104,6 +104,7 @@
     <Compile Include="src\IFileSystem.cs" />
     <Compile Include="src\ImageMagick.cs" />
     <Compile Include="src\IPhotoLoader.cs" />
+    <Compile Include="src\IRegistry.cs" />
     <Compile Include="src\IUOView.cs" />
     <Compile Include="src\IURModel.cs" />
     <Compile Include="src\IURTaskControlService.cs" />
@@ -125,6 +126,7 @@
     <Compile Include="src\URTaskInfoService.cs" />
     <Compile Include="src\URView.cs" />
     <Compile Include="src\TempFile.cs" />
+    <Compile Include="src\UserID.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

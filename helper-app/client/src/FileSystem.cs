@@ -13,6 +13,11 @@ namespace Snaphappi
 			return File.Exists(path);
 		}
 
+		public bool FolderExists(string path)
+		{
+			return Directory.Exists(path);
+		}
+
 		public IEnumerable<string> ListFiles(string folderPath)
 		{
 			return Directory.GetFiles(folderPath);

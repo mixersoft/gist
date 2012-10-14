@@ -27,24 +27,26 @@ namespace SnaphappiTest
 		}
 
 		private MockFileSystem fileSystem;
-
-		private FileLister fileLister;
+		private FileLister     fileLister;
 
 		[ SetUp ]
 		public void Setup()
 		{
 			fileSystem = new MockFileSystem();
-			fileLister = new FileLister(fileSystem);
 		}
 
 		[ Test ]
 		public void TestListing()
 		{
+			fileLister = new FileLister(fileSystem, new string[] { "" });
+
 			var foundFiles = new List<FoundFile>();
 			fileLister.FileFound += (folderPath, filePath) => foundFiles.Add(new FoundFile(folderPath, filePath));
 
 			var notFoundFolders = new List<string>();
 			fileLister.FolderNotFound += notFoundFolders.Add;
+
+			fileLister.FolderSearchComplete += path => {};
 
 			var files = new string[]
 				{ @"file0"
@@ -67,6 +69,32 @@ namespace SnaphappiTest
 				( new string[] { "dir3" }
 				, notFoundFolders
 				, "Where the non-existent folders reported?"
+				);
+		}
+
+		[ Test ]
+		public void TestListingWithExtensions()
+		{
+			fileLister = new FileLister(fileSystem, new string[] { "1", "2" });
+
+			var foundFiles = new List<FoundFile>();
+			fileLister.FileFound += (folderPath, filePath) => foundFiles.Add(new FoundFile(folderPath, filePath));
+
+			fileLister.FolderNotFound += path => {};
+
+			fileLister.FolderSearchComplete += path => {};
+
+			var files = new string[] { "file", "file.1", "file.2", "file.3" };
+
+			foreach (var file in files)
+				fileSystem.filePaths.Add(file);
+
+			fileLister.SearchFolder("");
+
+			CollectionAssert.AreEquivalent
+				( new FoundFile[] { new FoundFile("", "file.1"), new FoundFile("", "file.2") }
+				, foundFiles
+				, "Where the files found?"
 				);
 		}
 	}

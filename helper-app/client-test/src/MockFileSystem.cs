@@ -22,16 +22,20 @@ namespace SnaphappiTest
 
 		public IEnumerable<string> ListFolders(string folderPath)
 		{
-			var folders = filePaths.Select(Path.GetDirectoryName).Distinct();
-			folders = this.filePaths.Where(path => Path.GetDirectoryName(path) == folderPath);
-			if (folders.Count() == 0)
-				throw new DirectoryNotFoundException(folderPath);
-			return folders;
+			return filePaths
+				.Select(Path.GetDirectoryName)
+				.Distinct()
+				.Where(path => path != "" && Path.GetDirectoryName(path) == folderPath);
 		}
 
 		public bool FileExists(string path)
 		{
 			return filePaths.Contains(path);
+		}
+
+		public bool FolderExists(string path)
+		{
+			return filePaths.Any(p => Path.GetDirectoryName(p) == path);
 		}
 
 		#endregion

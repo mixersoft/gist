@@ -1,6 +1,5 @@
 ﻿using System.Threading;
 using System;
-using System.IO;
 
 namespace Snaphappi
 {
@@ -10,17 +9,17 @@ namespace Snaphappi
 
 		private readonly IFileSystem fileSystem;
 
-		private readonly string[] photoExtensions;
+		private readonly string[] extensionWhitelist;
 
 		#endregion
 
 		#region interface
 
-		public FileLister(IFileSystem fileSystem)
+		public FileLister(IFileSystem fileSystem, string[] extensionWhitelist)
 		{
 			this.fileSystem = fileSystem;
 
-			this.photoExtensions = new string[] {"jpg", "jpeg"};
+			this.extensionWhitelist = extensionWhitelist;
 		}
 
 		#endregion
@@ -29,7 +28,7 @@ namespace Snaphappi
 
 		public void SearchFolder(string folderPath)
 		{
-			if (Directory.Exists(folderPath))
+			if (fileSystem.FolderExists(folderPath))
 			{
 				SearchFolder(folderPath, folderPath, 1);
 				FolderSearchComplete(folderPath);
@@ -73,11 +72,10 @@ namespace Snaphappi
 
 		private bool IsImagePath(string path)
 		{
-			var extension = Path.GetExtension(path).ToLowerInvariant();
-			if (extension.Length <= 1)
-				return false;
-			extension = extension.Substring(1);
-			return Array.Exists(photoExtensions, extension.Equals);
+			var extension = System.IO.Path.GetExtension(path).ToLowerInvariant();
+			if (extension.Length > 1)
+				extension = extension.Substring(1);
+			return Array.Exists(extensionWhitelist, extension.Equals);
 		}
 	}
 }
