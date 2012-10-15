@@ -8,14 +8,15 @@ namespace Snaphappi
 		private const int ExitSuccess = 0;
 		private const int ExitFailure = 1;
 
-		private static readonly Uri urTaskControlUri = new Uri(@"http://dev.snaphappi.com/thrift/service/api:1-0/URTaskControl");
-		private static readonly Uri urTaskInfoUri    = new Uri(@"http://dev.snaphappi.com/thrift/service/api:1-0/URTaskInfo");
-		private static readonly Uri urTaskUploadUri  = new Uri(@"http://dev.snaphappi.com/thrift/service/api:1-0/URTaskUpload");
+        // connect to server
+        private static readonly Uri urTaskControlUri = new Uri(@"http://dev.snaphappi.com/thrift/service/api:1-0/URTaskControl");
+        private static readonly Uri urTaskInfoUri = new Uri(@"http://dev.snaphappi.com/thrift/service/api:1-0/URTaskInfo");
+        private static readonly Uri urTaskUploadUri = new Uri(@"http://dev.snaphappi.com/thrift/service/api:1-0/URTaskUpload");
 
-		// connect to localhost
-		//private static readonly Uri urTaskControlUri = new Uri(@"http://snappi-dev/thrift/service/api:1-0/URTaskControl");
-		//private static readonly Uri urTaskInfoUri    = new Uri(@"http://snappi-dev/thrift/service/api:1-0/URTaskInfo");
-		//private static readonly Uri urTaskUploadUri = new Uri(@"http://snappi-dev/thrift/service/api:1-0/URTaskUpload");
+        // connect to localhost
+        //private static readonly Uri urTaskControlUri = new Uri(@"http://snappi-dev/thrift/service/api:1-0/URTaskControl");
+        //private static readonly Uri urTaskInfoUri = new Uri(@"http://snappi-dev/thrift/service/api:1-0/URTaskInfo");
+        //private static readonly Uri urTaskUploadUri = new Uri(@"http://snappi-dev/thrift/service/api:1-0/URTaskUpload");
 
 		private static readonly string[] photoExtensions = new string[] {"jpg", "jpeg"};
 
