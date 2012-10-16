@@ -10,24 +10,25 @@ namespace SnaphappiTest
 		[ Test ]
 		public void TestSplitParameter1()
 		{
-			var info = ParameterProcessor.SplitUrl(@"snaphappi://5_aHR0cDovL3d3dy5zbmFwaGFwcGkuY29t_ur");
+			var info = ParameterProcessor.SplitUrl(@"snaphappi://SGVsbG8gV29ybGQh_aHR0cDovL3d3dy5zbmFwaGFwcGkuY29t_ur");
 
-			var taskType = ParameterProcessor.TaskType.UploadResampled;
-			var url      = "http://www.snaphappi.com";
+			var taskType  = ParameterProcessor.TaskType.UploadResampled;
+			var authToken = "Hello World!";
+			var sessionID = "http://www.snaphappi.com";
 
-			Assert.AreEqual(5,        info.TaskID,    "Is task ID correct?");
-			Assert.AreEqual(url,      info.SessionID, "Is session ID correct?");
-			Assert.AreEqual(taskType, info.Type,      "Is task type correct?");
+			Assert.AreEqual(authToken, info.AuthToken, "Is task auth token correct?");
+			Assert.AreEqual(sessionID, info.SessionID, "Is session ID correct?");
+			Assert.AreEqual(taskType,  info.Type,      "Is task type correct?");
 		}
 
 		[ Test ]
 		public void TestSplitParameter2()
 		{
-			var info = ParameterProcessor.SplitUrl(@"snaphappi://0_MQ==_uo");
+			var info = ParameterProcessor.SplitUrl(@"snaphappi://MA==_MQ==_uo");
 
 			var taskType = ParameterProcessor.TaskType.UploadOriginals;
 
-			Assert.AreEqual(0,        info.TaskID,    "Is task ID correct?");
+			Assert.AreEqual("0",      info.AuthToken, "Is authToken correct?");
 			Assert.AreEqual("1",      info.SessionID, "Is session ID correct?");
 			Assert.AreEqual(taskType, info.Type,      "Is task type correct?");
 		}

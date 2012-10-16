@@ -33,6 +33,8 @@
 		<Directory Id="TARGETDIR" Name="SourceDir">
 			<Directory Id="ProgramFilesFolder">
 				<Directory Id="INSTALLFOLDER" Name="Snaphappi">
+					
+					<!-- The executable together with its protocol handler. -->
 					<Component Id="ProductComponent">
 						<!-- Main application file. -->
 						<File Id="ProductExe" Source="$(var.client.TargetPath)" />
@@ -52,9 +54,18 @@
 							</RegistryKey>
 						</RegistryKey>
 					</Component>
+					
+					<!-- The main configuration file. -->
+					<Component Id="ProductConfigComponent">
+						<File Id="ProductConfig" Source="$(var.client.TargetPath).config" />
+					</Component>
+					
+					<!-- The Thrift library. -->
 					<Component Id="ThriftComponent">
 						<File Id="ThriftDll" Source="$(var.client.ProjectDir)\lib\Thrift.dll" />
 					</Component>
+					
+					<!-- The ImageMagick app. -->
 					<Directory Id="ImageMagickDir" Name="ImageMagick" >
 						<Component Id="ImageMagick" Guid="67A00421-C52C-4213-91AD-FF84833CAD13">
 							<File Source="ImageMagick\atl90.dll" />
@@ -86,6 +97,7 @@
 							<File Source="ImageMagick\Xext.dll" />
 						</Component>
 					</Directory>
+					
 				</Directory>
 			</Directory>
 		</Directory>
@@ -99,6 +111,7 @@
 		
 		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
 			<ComponentRef Id="ProductComponent" />
+			<ComponentRef Id="ProductConfigComponent" />
 			<ComponentRef Id="ThriftComponent" />
 			<ComponentRef Id="ImageMagick" />
 		</ComponentGroup>

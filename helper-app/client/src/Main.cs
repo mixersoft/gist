@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using Snaphappi.Properties;
 
 namespace Snaphappi
 {
 	class SnaphappiHelper
 	{
+		#region settings
+
 		private const int ExitSuccess = 0;
 		private const int ExitFailure = 1;
 
@@ -16,9 +19,9 @@ namespace Snaphappi
         // connect to localhost
         //private static readonly Uri urTaskControlUri = new Uri(@"http://snappi-dev/thrift/service/api:1-0/URTaskControl");
         //private static readonly Uri urTaskInfoUri = new Uri(@"http://snappi-dev/thrift/service/api:1-0/URTaskInfo");
-        //private static readonly Uri urTaskUploadUri = new Uri(@"http://snappi-dev/thrift/service/api:1-0/URTaskUpload");
+		//private static readonly Uri urTaskUploadUri  = new Uri(@"http://snappi-dev/thrift/service/api:1-0/URTaskUpload");
 
-		private static readonly string[] photoExtensions = new string[] {"jpg", "jpeg"};
+		#endregion
 
 		public static int Main(string[] args)
 		{
@@ -37,10 +40,10 @@ namespace Snaphappi
 					switch (info.Type)
 					{
 						case ParameterProcessor.TaskType.UploadOriginals:
-							UploadOriginals(info.TaskID, info.SessionID);
+							UploadOriginals(info.AuthToken, info.SessionID);
 							break;
 						case ParameterProcessor.TaskType.UploadResampled:
-							UploadResampled(info.TaskID, info.SessionID);
+							UploadResampled(info.AuthToken, info.SessionID);
 							break;
 					}
 					break;
@@ -53,13 +56,13 @@ namespace Snaphappi
 			Environment.Exit(ExitFailure);
 		}
 
-		private static void UploadResampled(int taskID, string sessionID)
+		private static void UploadResampled(string authToken, string sessionID)
 		{
 			var app = new App();
 
-			var controlService = new URTaskControlService (taskID, sessionID, urTaskControlUri);
-			var infoService    = new URTaskInfoService    (taskID, sessionID, urTaskInfoUri);
-			var uploadService  = new URTaskUploadService  (taskID, sessionID, urTaskUploadUri);
+			var controlService = new URTaskControlService (authToken, sessionID, urTaskControlUri);
+			var infoService    = new URTaskInfoService    (authToken, sessionID, urTaskInfoUri);
+			var uploadService  = new URTaskUploadService  (authToken, sessionID, urTaskUploadUri);
 
 			var photoLoader = new PhotoLoader();
 
@@ -67,14 +70,14 @@ namespace Snaphappi
 			var urView  = new URView  (controlService);
 
 			var fileSystem = new FileSystem();
-			var fileLister = new FileLister(fileSystem, photoExtensions);
+			var fileLister = new FileLister(fileSystem, Settings.Default.PhotoExtensions);
 
 			new URPresenter(app, urModel, urView, fileLister);
 
 			app.LoadUR();
 		}
 
-		private static void UploadOriginals(int taskID, string sessionID)
+		private static void UploadOriginals(string authToken, string sessionID)
 		{
 			throw new NotImplementedException();
 		}
@@ -94,7 +97,7 @@ namespace Snaphappi
 			var urView  = new URView(server);
 
 			var fileSystem = new FileSystem();
-			var fileLister = new FileLister(fileSystem, photoExtensions);
+			var fileLister = new FileLister(fileSystem, Settings.Default.PhotoExtensions);
 
 			new URPresenter(app, urModel, urView, fileLister);
 

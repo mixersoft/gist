@@ -73,8 +73,6 @@ namespace Snaphappi
 		private bool IsImagePath(string path)
 		{
 			var extension = System.IO.Path.GetExtension(path).ToLowerInvariant();
-			if (extension.Length > 1)
-				extension = extension.Substring(1);
 			return Array.Exists(extensionWhitelist, extension.Equals);
 		}
 	}

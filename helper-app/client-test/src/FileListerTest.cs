@@ -75,7 +75,7 @@ namespace SnaphappiTest
 		[ Test ]
 		public void TestListingWithExtensions()
 		{
-			fileLister = new FileLister(fileSystem, new string[] { "1", "2" });
+			fileLister = new FileLister(fileSystem, new string[] { ".1", ".2" });
 
 			var foundFiles = new List<FoundFile>();
 			fileLister.FileFound += (folderPath, filePath) => foundFiles.Add(new FoundFile(folderPath, filePath));

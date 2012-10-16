@@ -5,16 +5,16 @@ using System;
 namespace SnaphappiTest.src
 {
 	[ TestFixture ]
-	public class UserIDTest
+	public class DeviceIDTest
 	{
 		private MockRegistry registry;
-		private UserID       userID;
+		private DeviceID       userID;
 
 		[ SetUp ]
 		public void Setup()
 		{
 			registry = new MockRegistry();
-			userID   = new UserID(registry);
+			userID   = new DeviceID(registry, @"HKCU\Software\Snaphappi");
 		}
 
 		[ Test ]
