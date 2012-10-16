@@ -12,15 +12,6 @@ namespace Snaphappi
 		private const int ExitSuccess = 0;
 		private const int ExitFailure = 1;
 
-		private static readonly Uri urTaskControlUri = new Uri(@"http://dev.snaphappi.com/thrift/service/api:1-0/URTaskControl");
-		private static readonly Uri urTaskInfoUri    = new Uri(@"http://dev.snaphappi.com/thrift/service/api:1-0/URTaskInfo");
-		private static readonly Uri urTaskUploadUri  = new Uri(@"http://dev.snaphappi.com/thrift/service/api:1-0/URTaskUpload");
-
-		// connect to localhost
-		//private static readonly Uri urTaskControlUri = new Uri(@"http://snappi-dev/thrift/service/api:1-0/URTaskControl");
-		//private static readonly Uri urTaskInfoUri    = new Uri(@"http://snappi-dev/thrift/service/api:1-0/URTaskInfo");
-		//private static readonly Uri urTaskUploadUri  = new Uri(@"http://snappi-dev/thrift/service/api:1-0/URTaskUpload");
-
 		#endregion
 
 		public static int Main(string[] args)
@@ -58,6 +49,9 @@ namespace Snaphappi
 			Environment.Exit(ExitFailure);
 		}
 
+		/// <summary>
+		/// Check the command line of every other running instance to see whether it has the same task ID.
+		/// </summary>
 		private static bool IsUnique(ParameterProcessor.ParameterInfo info)
 		{
 			foreach (var args in Wmi.GetCommandLines(Path.GetFileName(typeof(HelperApp).Assembly.Location)))
@@ -86,9 +80,9 @@ namespace Snaphappi
 		{
 			var app = new App();
 
-			var controlService = new URTaskControlService (authToken, sessionID, urTaskControlUri);
-			var infoService    = new URTaskInfoService    (authToken, sessionID, urTaskInfoUri);
-			var uploadService  = new URTaskUploadService  (authToken, sessionID, urTaskUploadUri);
+			var controlService = new URTaskControlService (authToken, sessionID, Settings.Default.TaskURI);
+			var infoService    = new URTaskInfoService    (authToken, sessionID, Settings.Default.TaskURI);
+			var uploadService  = new URTaskUploadService  (authToken, sessionID, Settings.Default.TaskURI);
 
 			var photoLoader = new PhotoLoader();
 
