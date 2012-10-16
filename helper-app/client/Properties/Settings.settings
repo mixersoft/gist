@@ -12,5 +12,8 @@
   &lt;string&gt;.jpeg&lt;/string&gt;
 &lt;/ArrayOfString&gt;</Value>
     </Setting>
+    <Setting Name="TaskURI" Type="System.Uri" Scope="Application">
+      <Value Profile="(Default)">http://dev.snaphappi.com/thrift/service/api:1-0/Task</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

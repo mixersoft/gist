@@ -15,15 +15,15 @@ namespace Snaphappi
 
 		public class ParameterInfo
 		{
-			public readonly int      TaskID;
+			public readonly string   AuthToken;
 			public readonly string   SessionID;
 			public readonly TaskType Type;
 
-			public ParameterInfo(int task, string session, TaskType type)
+			public ParameterInfo(string authToken, string session, TaskType type)
 			{
-				this.TaskID    = task;
+				this.AuthToken = authToken;
 				this.SessionID = session;
-				this.Type    = type;
+				this.Type      = type;
 			}
 		}
 
@@ -39,10 +39,10 @@ namespace Snaphappi
 
 			try
 			{
-				var match = Regex.Match(url, @"snaphappi://([0-9]+)_(.+)_([a-z]+)");
+				var match = Regex.Match(url, @"snaphappi://(.+)_(.+)_([a-z]+)");
 				return new ParameterInfo
-					( int.Parse(match.Groups[1].Value)
-					, Encoding.UTF8.GetString(Convert.FromBase64String(match.Groups[2].Value))
+					( DecodeString(match.Groups[1].Value)
+					, DecodeString(match.Groups[2].Value)
 					, taskTypeMap[match.Groups[3].Value]
 					);
 			}
@@ -50,6 +50,11 @@ namespace Snaphappi
 			{
 				throw new FormatException(url, e);
 			}
+		}
+
+		private static string DecodeString(string str)
+		{
+			return Encoding.UTF8.GetString(Convert.FromBase64String(str));
 		}
 	}
 }

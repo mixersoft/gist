@@ -13,10 +13,18 @@ const i16 SNAPHAPPI_VERSION_MINOR = 1
 
 /**
  * ID used to make sure the web page and the app stay in sync with each other.
+ * At most one app instance could be running for any given ID.
  */
 struct TaskID
 {
-	1: required i32    Task;
+	/**
+	 * An authentication token for the user.
+	 */
+	1: required string AuthToken;
+
+	/**
+	 * A session ID, which should be reset when the user restarts a given task.
+	 */
 	2: required string Session;
 }
 
@@ -25,8 +33,19 @@ struct TaskID
  */
 struct URTaskState
 {
+	/**
+	 * To be set at when the task is completed or cancelled.
+	 */
 	1: optional bool IsCancelled;
+
+	/**
+	 * A strictly increasing change counter for the folder list in a given task.
+	 */
 	2: optional i32  FolderUpdateCount;
+
+	/**
+	 * A strictly increasing change counter for the file list in a given task.
+	 */
 	3: optional i32  FileUpdateCount;
 }
 
@@ -34,7 +53,7 @@ struct URTaskState
  * Service for working with the task of servicing the initial upload of files
  * from the user's computer to the server.
  */
-service URTaskControl
+service Task
 {
 	/**
 	 * Return the list of folders to scan for images.
@@ -71,18 +90,12 @@ service URTaskControl
 	 * Return the number of files to be uploaded from a folder.
 	 */
 	i32 GetFileCount(1: TaskID id, 2: string folder);
-}
 
-service URTaskInfo
-{
 	/**
 	 * Retrieves flags indicating the state of the task.
 	 */
 	URTaskState GetState(1: TaskID id);
-}
 
-service URTaskUpload
-{
 	/**
 	 * Add a folder to search.
 	 */

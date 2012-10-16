@@ -12,7 +12,7 @@ namespace Snaphappi
 		/// <summary>
 		/// The generated task class. All access to it is serialized between threads.
 		/// </summary>
-		private readonly URTaskControl.Client task;
+		private readonly Task.Client task;
 
 		private readonly TaskID id;
 		
@@ -20,11 +20,11 @@ namespace Snaphappi
 
 		#region interface
 
-		public URTaskControlService(int taskID, string sessionID, Uri uri)
+		public URTaskControlService(string authToken, string sessionID, Uri uri)
 		{
-			this.id = ApiHelper.MakeTaskID(taskID, sessionID);
+			this.id = ApiHelper.MakeTaskID(authToken, sessionID);
 
-			task = new URTaskControl.Client(new TBinaryProtocol(new THttpClient(uri)));
+			task = new Task.Client(new TBinaryProtocol(new THttpClient(uri)));
 		}
 
 		#endregion

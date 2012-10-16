@@ -42,5 +42,14 @@ namespace Snaphappi.Properties {
                 return ((string[])(this["PhotoExtensions"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://dev.snaphappi.com/thrift/service/api:1-0/Task")]
+        public global::System.Uri TaskURI {
+            get {
+                return ((global::System.Uri)(this["TaskURI"]));
+            }
+        }
     }
 }

@@ -5,13 +5,13 @@ namespace Snaphappi
 {
 	public class ApiHelper
 	{
-		public static TaskID MakeTaskID(int taskID, string sessionID)
+		public static TaskID MakeTaskID(string authToken, string sessionID)
 		{
 			var id = new TaskID();
-			id.Task    = taskID;
-			id.Session = sessionID;
-			id.__isset.Session = true;
-			id.__isset.Task    = true;
+			id.AuthToken = authToken;
+			id.Session   = sessionID;
+			id.__isset.AuthToken = true;
+			id.__isset.Session   = true;
 			return id;
 		}
 	}
