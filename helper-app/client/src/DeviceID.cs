@@ -2,16 +2,18 @@
 
 namespace Snaphappi
 {
-	public class UserID
+	public class DeviceID
 	{
 		private readonly IRegistry registry;
 
-		private const string key   = @"HKCU\Software\Snaphappi";
-		private const string value = @"User ID";
+		private readonly string key;
 
-		public UserID(IRegistry registry)
+		private const string value = @"Device ID";
+
+		public DeviceID(IRegistry registry, string key)
 		{
 			this.registry = registry;
+			this.key      = key;
 		}
 
 		public string GetID()

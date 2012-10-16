@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using Snaphappi.Properties;
 
 namespace Snaphappi
 {
 	class SnaphappiHelper
 	{
+		#region settings
+
 		private const int ExitSuccess = 0;
 		private const int ExitFailure = 1;
 
@@ -17,7 +20,7 @@ namespace Snaphappi
 		//private static readonly Uri urTaskInfoUri    = new Uri(@"http://snappi-dev/thrift/service/api:1-0/URTaskInfo");
 		//private static readonly Uri urTaskUploadUri = new Uri(@"http://snappi-dev/thrift/service/api:1-0/URTaskUpload");
 
-		private static readonly string[] photoExtensions = new string[] {"jpg", "jpeg"};
+		#endregion
 
 		public static int Main(string[] args)
 		{
@@ -66,7 +69,7 @@ namespace Snaphappi
 			var urView  = new URView  (controlService);
 
 			var fileSystem = new FileSystem();
-			var fileLister = new FileLister(fileSystem, photoExtensions);
+			var fileLister = new FileLister(fileSystem, Settings.Default.PhotoExtensions);
 
 			new URPresenter(app, urModel, urView, fileLister);
 
@@ -93,7 +96,7 @@ namespace Snaphappi
 			var urView  = new URView(server);
 
 			var fileSystem = new FileSystem();
-			var fileLister = new FileLister(fileSystem, photoExtensions);
+			var fileLister = new FileLister(fileSystem, Settings.Default.PhotoExtensions);
 
 			new URPresenter(app, urModel, urView, fileLister);
 

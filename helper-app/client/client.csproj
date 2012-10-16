@@ -90,6 +90,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\api\cs-client\**" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Settings.cs" />
     <Compile Include="src\ApiHelper.cs" />
     <Compile Include="src\App.cs" />
     <Compile Include="src\BlockingQueue.cs" />
@@ -114,6 +120,7 @@
     <Compile Include="src\OriginalFileInfo.cs" />
     <Compile Include="src\ParameterProcessor.cs" />
     <Compile Include="src\PhotoLoader.cs" />
+    <Compile Include="src\Registry.cs" />
     <Compile Include="src\Server.cs" />
     <Compile Include="src\UOPresenter.cs" />
     <Compile Include="src\IUOModel.cs" />
@@ -126,7 +133,7 @@
     <Compile Include="src\URTaskInfoService.cs" />
     <Compile Include="src\URView.cs" />
     <Compile Include="src\TempFile.cs" />
-    <Compile Include="src\UserID.cs" />
+    <Compile Include="src\DeviceID.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -151,6 +158,13 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
