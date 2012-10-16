@@ -13,7 +13,7 @@ namespace Snaphappi
 			UploadOriginals,
 		}
 
-		public class ParameterInfo
+		public class ParameterInfo : IEquatable<ParameterInfo>
 		{
 			public readonly string   AuthToken;
 			public readonly string   SessionID;
@@ -24,6 +24,13 @@ namespace Snaphappi
 				this.AuthToken = authToken;
 				this.SessionID = session;
 				this.Type      = type;
+			}
+
+			public bool Equals(ParameterInfo other)
+			{
+				return Type == other.Type
+					&& AuthToken == other.AuthToken
+					&& SessionID == other.SessionID;
 			}
 		}
 

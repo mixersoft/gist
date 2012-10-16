@@ -1,10 +1,11 @@
 ﻿using System;
+using System.IO;
 using System.Runtime.InteropServices;
 using Snaphappi.Properties;
 
 namespace Snaphappi
 {
-	class SnaphappiHelper
+	class HelperApp
 	{
 		#region settings
 
@@ -36,6 +37,8 @@ namespace Snaphappi
 				case "-uo": TestUploadOriginals(); break;
 				default:
 					var info = ParameterProcessor.SplitUrl(args[0]);
+					if (!IsUnique(info))
+						return ExitSuccess;
 					switch (info.Type)
 					{
 						case ParameterProcessor.TaskType.UploadOriginals:
@@ -53,6 +56,30 @@ namespace Snaphappi
 		private static void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
 		{
 			Environment.Exit(ExitFailure);
+		}
+
+		private static bool IsUnique(ParameterProcessor.ParameterInfo info)
+		{
+			foreach (var args in Wmi.GetCommandLines(Path.GetFileName(typeof(HelperApp).Assembly.Location)))
+			{
+				switch (args)
+				{
+					case "-ur": break;
+					case "-uo": break;
+					default:
+						try
+						{
+							if (ParameterProcessor.SplitUrl(args) == info)
+								return false;
+						}
+						catch (FormatException)
+						{
+							// if we can't parse the args, then we don't care about them
+						}
+						break;
+				}
+			}
+			return true;
 		}
 
 		private static void UploadResampled(string authToken, string sessionID)
