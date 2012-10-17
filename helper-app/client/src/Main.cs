@@ -30,7 +30,6 @@ namespace Snaphappi
 					var info = ParameterProcessor.SplitUrl(args[0]);
 					if (!IsUnique(info))
 						return ExitSuccess;
-					System.Threading.Thread.Sleep(System.Threading.Timeout.Infinite);
 					switch (info.Type)
 					{
 						case ParameterProcessor.TaskType.UploadOriginals:
@@ -55,7 +54,7 @@ namespace Snaphappi
 		/// </summary>
 		private static bool IsUnique(ParameterProcessor.ParameterInfo info)
 		{
-			foreach (var args in Wmi.GetCommandLines())
+			foreach (var args in Wmi.GetOtherCommandLines())
 			{
 				if (args.Length != 2)
 					continue;

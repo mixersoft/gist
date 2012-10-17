@@ -16,7 +16,7 @@ namespace Snaphappi
 		/// <param name="processName">Image name, e.g. WebDev.WebServer.exe</param>
 		/// Adapted from: http://stackoverflow.com/questions/504208/how-to-read-command-line-arguments-of-another-process-in-c/504378%23504378
 		/// Original code by: http://stackoverflow.com/users/61396/xcud
-		public static IEnumerable<string[]> GetCommandLines()
+		public static IEnumerable<string[]> GetOtherCommandLines()
 		{
 			var wmiQuery = string.Format
 				( "SELECT CommandLine FROM Win32_Process WHERE Name = '{0}' AND ProcessID != {1}"
