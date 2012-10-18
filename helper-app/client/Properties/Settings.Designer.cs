@@ -51,5 +51,23 @@ namespace Snaphappi.Properties {
                 return ((global::System.Uri)(this["TaskURI"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Watched folder scan")]
+        public string WatchedFolderTaskName {
+            get {
+                return ((string)(this["WatchedFolderTaskName"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("02:00:00")]
+        public global::System.TimeSpan WatchedFolderTaskRepetitionRate {
+            get {
+                return ((global::System.TimeSpan)(this["WatchedFolderTaskRepetitionRate"]));
+            }
+        }
     }
 }

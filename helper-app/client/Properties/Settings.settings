@@ -15,5 +15,11 @@
     <Setting Name="TaskURI" Type="System.Uri" Scope="Application">
       <Value Profile="(Default)">http://dev.snaphappi.com/thrift/service/api:1-0/Task</Value>
     </Setting>
+    <Setting Name="WatchedFolderTaskName" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Watched folder scan</Value>
+    </Setting>
+    <Setting Name="WatchedFolderTaskRepetitionRate" Type="System.TimeSpan" Scope="Application">
+      <Value Profile="(Default)">02:00:00</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
