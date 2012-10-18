@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Microsoft.Win32.TaskScheduler;
+using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using Snaphappi.Properties;
+using System.Text.RegularExpressions;
 
 namespace Snaphappi
 {
@@ -48,6 +50,27 @@ namespace Snaphappi
 		private static void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
 		{
 			Environment.Exit(ExitFailure);
+		}
+
+		private static void RegisterWatcher()
+		{
+			using (var taskService = new TaskService())
+			{
+				var timeTrigger = new TimeTrigger();
+				timeTrigger.StartBoundary = DateTime.Now + TimeSpan.FromMinutes(1.0);
+				timeTrigger.Repetition.Interval = Settings.Default.WatchedFolderTaskRepetitionRate;
+
+				var execAction = new ExecAction(typeof(HelperApp).Assembly.Location);
+
+				var definition = taskService.NewTask();
+				definition.Triggers.Add(timeTrigger);
+				definition.Actions.Add(execAction);
+
+				taskService.RootFolder.RegisterTaskDefinition
+					( @"Snaphappi\" + Settings.Default.WatchedFolderTaskName
+					, definition
+					);
+			}
 		}
 
 		/// <summary>

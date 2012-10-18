@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using Snaphappi.Properties;
 
 namespace Snaphappi
 {
@@ -49,7 +50,7 @@ namespace Snaphappi
 		public void DownloadInformation()
 		{
 			AddFolders(controlService.GetFolders());
-			infoService.StartPolling(1000);
+			infoService.StartPolling((int)Math.Floor(Settings.Default.InfoPollingRate.TotalMilliseconds));
 		}
 
 		public int GetFileCount(string folderPath)
