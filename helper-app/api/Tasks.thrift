@@ -25,7 +25,12 @@ struct TaskID
 	/**
 	 * A session ID, which should be reset when the user restarts a given task.
 	 */
-	2: required string Session;
+	2: optional string Session;
+
+	/**
+	 * An ID unique to every device.
+	 */
+	3: required string DeviceID;
 }
 
 /**
@@ -87,7 +92,7 @@ service Task
 	/**
 	 * Retrieves the list of folders this user has set to be watched.
 	 */
-	list<string> GetWatchedFolders(1: string AuthToken);
+	list<string> GetWatchedFolders(1: TaskID id);
 
 	/**
 	 * Report the number of files to be uploaded from a folder.
