@@ -12,7 +12,7 @@ namespace Snaphappi
 
 		private readonly Task.Client task;
 
-		private readonly TaskID id;
+		private readonly Snaphappi.API.TaskID id;
 
 		private Timer timer;
 
@@ -22,9 +22,9 @@ namespace Snaphappi
 
 		#region interface
 
-		public URTaskInfoService(string authToken, string sessionID, Uri uri)
+		public URTaskInfoService(TaskID taskID, Uri uri)
 		{
-			this.id = ApiHelper.MakeTaskID(authToken, sessionID);
+			this.id = ApiHelper.ConvertTaskID(taskID);
 
 			task = new Task.Client(new TBinaryProtocol(new THttpClient(uri)));
 

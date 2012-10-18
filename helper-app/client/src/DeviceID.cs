@@ -10,10 +10,10 @@ namespace Snaphappi
 
 		private const string value = @"Device ID";
 
-		public DeviceID(IRegistry registry, string key)
+		public DeviceID(IRegistry registry, string registryKey)
 		{
 			this.registry = registry;
-			this.key      = key;
+			this.key      = registryKey;
 		}
 
 		public string GetID()

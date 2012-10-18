@@ -106,9 +106,14 @@ namespace Snaphappi
 		{
 			var app = new App();
 
-			var controlService = new URTaskControlService (authToken, sessionID, Settings.Default.TaskURI);
-			var infoService    = new URTaskInfoService    (authToken, sessionID, Settings.Default.TaskURI);
-			var uploadService  = new URTaskUploadService  (authToken, sessionID, Settings.Default.TaskURI);
+			var registry = new Registry();
+			var deviceID = new DeviceID(registry, Settings.Default.RegistryKey).GetID();
+
+			var taskID = new TaskID(authToken, sessionID, deviceID);
+
+			var controlService = new URTaskControlService (taskID, Settings.Default.TaskURI);
+			var infoService    = new URTaskInfoService    (taskID, Settings.Default.TaskURI);
+			var uploadService  = new URTaskUploadService  (taskID, Settings.Default.TaskURI);
 
 			var photoLoader = new PhotoLoader();
 
