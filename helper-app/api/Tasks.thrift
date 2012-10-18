@@ -56,9 +56,17 @@ struct URTaskState
 service Task
 {
 	/**
-	 * Return the list of folders to scan for images.
+	 * Add a folder to search.
 	 */
-	list<string> GetFolders(1: TaskID id);
+	void AddFolder
+		( 1: TaskID id
+		, 2: string path
+		);
+
+	/**
+	 * Return the number of files to be uploaded from a folder.
+	 */
+	i32 GetFileCount(1: TaskID id, 2: string folder);
 
 	/**
 	 * Return the list of all files uploaded from the given folder within
@@ -67,29 +75,9 @@ service Task
 	list<string> GetFiles(1: TaskID id, 2: string folder);
 
 	/**
-	 * Report that a folder could not be searched.
+	 * Return the list of folders to scan for images.
 	 */
-	void ReportFolderNotFound(1: TaskID id, 2: string folder);
-
-	/**
-	 * Report a failed upload.
-	 */
-	void ReportUploadFailed(1: TaskID id, 2: string folder, 3: string path);
-
-	/**
-	 * Report that all files in a folder have been uploaded.
-	 */
-	void ReportFolderUploadComplete(1: TaskID id, 2: string folder);
-
-	/**
-	 * Report the number of files to be uploaded from a folder.
-	 */
-	void ReportFileCount(1: TaskID id, 2: string folder, 3: i32 count);
-
-	/**
-	 * Return the number of files to be uploaded from a folder.
-	 */
-	i32 GetFileCount(1: TaskID id, 2: string folder);
+	list<string> GetFolders(1: TaskID id);
 
 	/**
 	 * Retrieves flags indicating the state of the task.
@@ -97,12 +85,30 @@ service Task
 	URTaskState GetState(1: TaskID id);
 
 	/**
-	 * Add a folder to search.
+	 * Retrieves the list of folders this user has set to be watched.
 	 */
-	void AddFolder
-		( 1: TaskID id
-		, 2: string path
-		);
+	list<string> GetWatchedFolders(1: string AuthToken);
+
+	/**
+	 * Report the number of files to be uploaded from a folder.
+	 */
+	void ReportFileCount(1: TaskID id, 2: string folder, 3: i32 count);
+
+	/**
+	 * Report that a folder could not be searched.
+	 */
+	void ReportFolderNotFound(1: TaskID id, 2: string folder);
+
+	/**
+	 * Report that all files in a folder have been uploaded.
+	 */
+	void ReportFolderUploadComplete(1: TaskID id, 2: string folder);
+
+	/**
+	 * Report a failed upload.
+	 */
+	void ReportUploadFailed(1: TaskID id, 2: string folder, 3: string path);
+
 	/**
 	 * Upload file contents, along with its path and the folder in which it
 	 * was found.
