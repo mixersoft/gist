@@ -165,8 +165,6 @@ namespace Snaphappi
 
 		private static void WatchFolders(string p)
 		{
-			ConsoleHelper.Alloc();
-			ConsoleHelper.Title = "Snaphappi Folder Watcher";
 		}
 	}
 }
