@@ -18,7 +18,7 @@ namespace Snaphappi
 
 		public static int Main(string[] args)
 		{
-			if (args.Length != 1)
+			if (args.Length < 1)
 				return ExitFailure;
 
 			AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
@@ -26,8 +26,9 @@ namespace Snaphappi
 			// choose execution path based on the command line parameter
 			switch (args[0])
 			{
-				case "-ur": TestUploadResampled(); break;
-				case "-uo": TestUploadOriginals(); break;
+				case "-ur":    TestUploadResampled(); break;
+				case "-uo":    TestUploadOriginals(); break;
+				case "-watch": WatchFolders(args[1]);        break;
 				default:
 					var info = ParameterProcessor.SplitUrl(args[0]);
 					if (!IsUnique(info))
@@ -40,6 +41,9 @@ namespace Snaphappi
 						case ParameterProcessor.TaskType.UploadResampled:
 							UploadResampled(info.AuthToken, info.SessionID);
 							break;
+						case ParameterProcessor.TaskType.SetWatcher:
+							SetWatcher(info.AuthToken);
+							break;
 					}
 					break;
 			}
@@ -51,7 +55,7 @@ namespace Snaphappi
 			Environment.Exit(ExitFailure);
 		}
 
-		private static void RegisterWatcher()
+		private static void SetWatcher(string authToken)
 		{
 			using (var taskService = new TaskService())
 			{
@@ -59,7 +63,7 @@ namespace Snaphappi
 				timeTrigger.StartBoundary = DateTime.Now + TimeSpan.FromMinutes(1.0);
 				timeTrigger.Repetition.Interval = Settings.Default.WatchedFolderTaskRepetitionRate;
 
-				var execAction = new ExecAction(typeof(HelperApp).Assembly.Location);
+				var execAction = new ExecAction(typeof(HelperApp).Assembly.Location, "-watch " + authToken);
 
 				var definition = taskService.NewTask();
 				definition.Triggers.Add(timeTrigger);
@@ -157,6 +161,12 @@ namespace Snaphappi
 
 		private static void TestUploadOriginals()
 		{
+		}
+
+		private static void WatchFolders(string p)
+		{
+			ConsoleHelper.Alloc();
+			ConsoleHelper.Title = "Snaphappi Folder Watcher";
 		}
 	}
 }

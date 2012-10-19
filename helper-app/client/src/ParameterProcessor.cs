@@ -11,6 +11,7 @@ namespace Snaphappi
 		{
 			UploadResampled,
 			UploadOriginals,
+			SetWatcher,
 		}
 
 		public class ParameterInfo : IEquatable<ParameterInfo>
@@ -43,6 +44,7 @@ namespace Snaphappi
 			var taskTypeMap = new Dictionary<string, TaskType>();
 			taskTypeMap["ur"] = TaskType.UploadResampled;
 			taskTypeMap["uo"] = TaskType.UploadOriginals;
+			taskTypeMap["sw"] = TaskType.SetWatcher;
 
 			try
 			{
