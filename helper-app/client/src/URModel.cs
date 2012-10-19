@@ -15,7 +15,7 @@ namespace Snaphappi
 		private readonly IURTaskUploadService  uploadService;
 		private readonly IPhotoLoader          photoLoader;
 
-		private readonly HashSet<string> folders
+		private readonly HashSet<string> folders	
 			= new HashSet<string>();
 
 		private readonly Dictionary<string, int> uploadedFileCounts

@@ -123,6 +123,7 @@
     <Compile Include="src\PhotoLoader.cs" />
     <Compile Include="src\Registry.cs" />
     <Compile Include="src\Server.cs" />
+    <Compile Include="src\TaskID.cs" />
     <Compile Include="src\UOPresenter.cs" />
     <Compile Include="src\IUOModel.cs" />
     <Compile Include="src\Main.cs" />

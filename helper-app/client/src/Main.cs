@@ -19,7 +19,7 @@ namespace Snaphappi
 
 		public static int Main(string[] args)
 		{
-			if (args.Length != 1)
+			if (args.Length < 1)
 				return ExitFailure;
 
 			AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
@@ -27,8 +27,9 @@ namespace Snaphappi
 			// choose execution path based on the command line parameter
 			switch (args[0])
 			{
-				case "-ur": TestUploadResampled(); break;
-				case "-uo": TestUploadOriginals(); break;
+				case "-ur":    TestUploadResampled(); break;
+				case "-uo":    TestUploadOriginals(); break;
+				case "-watch": WatchFolders(args[1]);        break;
 				default:
 					var info = ParameterProcessor.SplitUrl(args[0]);
 					if (!IsUnique(info))
@@ -41,6 +42,9 @@ namespace Snaphappi
 						case ParameterProcessor.TaskType.UploadResampled:
 							UploadResampled(info.AuthToken, info.SessionID);
 							break;
+						case ParameterProcessor.TaskType.SetWatcher:
+							SetWatcher(info.AuthToken);
+							break;
 					}
 					break;
 			}
@@ -52,7 +56,7 @@ namespace Snaphappi
 			Environment.Exit(ExitFailure);
 		}
 
-		private static void RegisterWatcher()
+		private static void SetWatcher(string authToken)
 		{
 			using (var taskService = new TaskService())
 			{
@@ -60,7 +64,7 @@ namespace Snaphappi
 				timeTrigger.StartBoundary = DateTime.Now + TimeSpan.FromMinutes(1.0);
 				timeTrigger.Repetition.Interval = Settings.Default.WatchedFolderTaskRepetitionRate;
 
-				var execAction = new ExecAction(typeof(HelperApp).Assembly.Location);
+				var execAction = new ExecAction(typeof(HelperApp).Assembly.Location, "-watch " + authToken);
 
 				var definition = taskService.NewTask();
 				definition.Triggers.Add(timeTrigger);
@@ -107,9 +111,14 @@ namespace Snaphappi
 		{
 			var app = new App();
 
-			var controlService = new URTaskControlService (authToken, sessionID, Settings.Default.TaskURI);
-			var infoService    = new URTaskInfoService    (authToken, sessionID, Settings.Default.TaskURI);
-			var uploadService  = new URTaskUploadService  (authToken, sessionID, Settings.Default.TaskURI);
+			var registry = new Registry();
+			var deviceID = new DeviceID(registry, Settings.Default.RegistryKey).GetID();
+
+			var taskID = new TaskID(authToken, sessionID, deviceID);
+
+			var controlService = new URTaskControlService (taskID, Settings.Default.TaskURI);
+			var infoService    = new URTaskInfoService    (taskID, Settings.Default.TaskURI);
+			var uploadService  = new URTaskUploadService  (taskID, Settings.Default.TaskURI);
 
 			var photoLoader = new PhotoLoader();
 
@@ -152,6 +161,10 @@ namespace Snaphappi
 		}
 
 		private static void TestUploadOriginals()
+		{
+		}
+
+		private static void WatchFolders(string p)
 		{
 		}
 	}

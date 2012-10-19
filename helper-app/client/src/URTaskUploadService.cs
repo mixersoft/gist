@@ -30,7 +30,7 @@ namespace Snaphappi
 
 		private readonly Task.Client taskUpload;
 
-		private readonly TaskID id;
+		private readonly Snaphappi.API.TaskID id;
 
 		private Thread uploadThread;
 
@@ -40,9 +40,9 @@ namespace Snaphappi
 
 		#region interface
 
-		public URTaskUploadService(string authToken, string sessionID, Uri uri)
+		public URTaskUploadService(TaskID taskID, Uri uri)
 		{
-			this.id = ApiHelper.MakeTaskID(authToken, sessionID);
+			this.id = ApiHelper.ConvertTaskID(taskID);
 			
 			taskUpload = new Task.Client(new TBinaryProtocol(new THttpClient(uri)));
 
