@@ -93,3 +93,22 @@ BOOST_FIXTURE_TEST_CASE(OrderedSplitPoint, ClusteringFixture)
 	BOOST_REQUIRE_EQUAL(groups[1][0]->Path, "3");
 	BOOST_REQUIRE_EQUAL(groups[1][1]->Path, "4");
 }
+
+// Check for duplicates across groups with unordered clustering.
+BOOST_FIXTURE_TEST_CASE(UnorderedCrossGroupDuplicates, ClusteringFixture)
+{
+	AddPhoto("1", -0.5);
+	AddPhoto("2",  0.0);
+	AddPhoto("3",  0.5);
+	AddPhoto("4",  1.0);
+
+	ClusterUnordered(photos, groups, 0.6, loader);
+
+	BOOST_REQUIRE_EQUAL(groups.size(), 2);
+	BOOST_REQUIRE_EQUAL(groups[0].size(), 3);
+	BOOST_REQUIRE_EQUAL(groups[0][0]->Path, "1");
+	BOOST_REQUIRE_EQUAL(groups[0][1]->Path, "2");
+	BOOST_REQUIRE_EQUAL(groups[0][2]->Path, "3");
+	BOOST_REQUIRE_EQUAL(groups[1].size(), 1);
+	BOOST_REQUIRE_EQUAL(groups[1][0]->Path, "4");
+}

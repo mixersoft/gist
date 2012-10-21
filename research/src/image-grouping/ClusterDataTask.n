@@ -62,7 +62,7 @@ class ClusterDataTask : ITask
 			def CountNear(i)
 			{
 				mutable count = 0;
-				foreach (j when withinThreshold[i, j] in indices)
+				foreach (j when indices.Contains(j) && withinThreshold[i, j] in indices)
 					++count;
 				count;
 			}
@@ -81,7 +81,7 @@ class ClusterDataTask : ITask
 				}
 				mutable cluster = array(maxCount);
 				mutable k       = 0;
-				foreach (j when withinThreshold[maxIndex, j] in indices)
+				foreach (j when indices.Contains(j) && withinThreshold[maxIndex, j] in indices)
 				{
 					cluster[k] = j;
 					++k;
