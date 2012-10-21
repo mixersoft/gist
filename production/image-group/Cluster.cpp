@@ -106,7 +106,8 @@ void ClusterUnordered
 			int count(0);
 			for (int j(0); j != n; ++j)
 			{
-				if (withinThreshold[*i * n + j])
+				bool isValid(indices.find(j) != indices.end());
+				if (isValid && withinThreshold[*i * n + j])
 					++count;
 			}
 			if (count > maxCount)
@@ -121,7 +122,8 @@ void ClusterUnordered
 		groups.push_back(PhotoGroup());
 		for (int j(0); j != n; ++j)
 		{
-			if (withinThreshold[maxIndex * n + j])
+			bool isValid(indices.find(j) != indices.end());
+			if (isValid && withinThreshold[maxIndex * n + j])
 			{
 				groups.back().push_back(&photos[j]);
 				indices.erase(j);
