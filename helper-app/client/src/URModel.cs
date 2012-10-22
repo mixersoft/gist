@@ -15,6 +15,9 @@ namespace Snaphappi
 		private readonly IURTaskUploadService  uploadService;
 		private readonly IPhotoLoader          photoLoader;
 
+		private readonly HashSet<string> files
+			= new HashSet<string>();
+
 		private readonly HashSet<string> folders	
 			= new HashSet<string>();
 
@@ -50,6 +53,7 @@ namespace Snaphappi
 		public void DownloadInformation()
 		{
 			AddFolders(controlService.GetFolders());
+			AddFiles(controlService.GetFiles());
 			infoService.StartPolling((int)Math.Floor(Settings.Default.InfoPollingRate.TotalMilliseconds));
 		}
 
@@ -62,6 +66,9 @@ namespace Snaphappi
 
 		public void UploadFile(string folderPath, string filePath)
 		{
+			if (files.Contains(filePath))
+				return;
+
 			IncrementUploadedFileCount(folderPath);
 
 			uploadService.UploadFile(folderPath, filePath, () => photoLoader.GetPreview(filePath));
@@ -84,6 +91,15 @@ namespace Snaphappi
 		#endregion
 
 		#region implementation
+
+		private void AddFiles(string[] files)
+		{
+			foreach (var filePath in files)
+			{
+				if (!this.files.Contains(filePath))
+					this.files.Add(filePath);
+			}
+		}
 
 		private void AddFolders(string[] folders)
 		{

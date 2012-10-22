@@ -74,10 +74,9 @@ service Task
 	i32 GetFileCount(1: TaskID id, 2: string folder);
 
 	/**
-	 * Return the list of all files uploaded from the given folder within
-	 * the given task.
+	 * Return the list of all files uploaded within the given task.
 	 */
-	list<string> GetFiles(1: TaskID id, 2: string folder);
+	list<string> GetFiles(1: TaskID id);
 
 	/**
 	 * Return the list of folders to scan for images.
