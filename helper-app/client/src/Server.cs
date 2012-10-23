@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 
 namespace Snaphappi
@@ -24,7 +25,8 @@ namespace Snaphappi
 		private readonly Thread inputThread;
 
 		private List<string> folders = new List<string>();
-		private List<string> files   = new List<string>();
+
+		private Multimap<string, string> files = new Multimap<string,string>();
 
 		#endregion
 
@@ -42,9 +44,9 @@ namespace Snaphappi
 
 		#region IURTaskControlService Members
 
-		public string[] GetFiles()
+		public string[] GetFiles(string folder)
 		{
-			return files.ToArray();
+			return files.Get(folder).ToArray();
 		}
 
 		public string[] GetFolders()
@@ -94,6 +96,8 @@ namespace Snaphappi
 
 		public void UploadFile(string folder, string path, Func<byte[]> LoadFile)
 		{
+			files.Add(folder, path);
+
 			var size = LoadFile().Length;
 			Console.WriteLine("uploaded '{1}' ({2} bytes) from '{0}'", folder, path, size);
 		}

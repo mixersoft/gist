@@ -53,7 +53,8 @@ namespace Snaphappi
 		public void DownloadInformation()
 		{
 			AddFolders(controlService.GetFolders());
-			AddFiles(controlService.GetFiles());
+			foreach (var folder in folders)
+				AddFiles(controlService.GetFiles(folder));
 			infoService.StartPolling((int)Math.Floor(Settings.Default.InfoPollingRate.TotalMilliseconds));
 		}
 
