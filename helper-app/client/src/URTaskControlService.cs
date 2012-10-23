@@ -31,6 +31,12 @@ namespace Snaphappi
 
 		#region IURTaskControlService Members
 
+		public string[] GetFiles(string folder)
+		{
+			lock (task)
+				return task.GetFiles(id, folder).ToArray();
+		}
+
 		public string[] GetFolders()
 		{
 			lock (task)

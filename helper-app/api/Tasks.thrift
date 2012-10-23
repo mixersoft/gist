@@ -75,7 +75,7 @@ service Task
 
 	/**
 	 * Return the list of all files uploaded from the given folder within
-	 * the given task.
+	 * the device corresponding to the given task ID.
 	 */
 	list<string> GetFiles(1: TaskID id, 2: string folder);
 
