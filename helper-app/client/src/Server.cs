@@ -46,7 +46,7 @@ namespace Snaphappi
 
 		public string[] GetFiles(string folder)
 		{
-			return files.Get(folder).ToArray();
+			return files.Get(folder.ToUpperInvariant()).ToArray();
 		}
 
 		public string[] GetFolders()
@@ -96,7 +96,7 @@ namespace Snaphappi
 
 		public void UploadFile(string folder, string path, Func<byte[]> LoadFile)
 		{
-			files.Add(folder, path);
+			files.Add(folder.ToUpperInvariant(), path);
 
 			var size = LoadFile().Length;
 			Console.WriteLine("uploaded '{1}' ({2} bytes) from '{0}'", folder, path, size);
@@ -110,15 +110,17 @@ namespace Snaphappi
 
 		private void InputProc()
 		{
-			Console.WriteLine("commands: exit, add folder, cancel task");
+			Console.WriteLine("commands: exit, add folder, view folders, fiew files, cancel task");
 			for (;;)
 			{
 				switch (ReadLine(""))
 				{
-					case "exit":        return;
-					case "add folder":  ProcessAddFolder();  break;
-					case "cancel task": ProcessCancelTask(); break;
-					case "fail upload": ProcessFailUpload(); break;
+					case "exit":                               return;
+					case "add folder":   ProcessAddFolder();   break;
+					case "cancel task":  ProcessCancelTask();  break;
+					case "fail upload":  ProcessFailUpload();  break;
+					case "view folders": ProcessViewFolders(); break;
+					case "view files":   ProcessViewFiles();   break;
 				}
 			}
 		}
@@ -137,6 +139,22 @@ namespace Snaphappi
 		private void ProcessFailUpload()
 		{
 			UploadFailed(ReadLine("folder"), ReadLine("file"));
+		}
+
+		private void ProcessViewFolders()
+		{
+			foreach (var folder in folders)
+				Console.WriteLine(folder);
+		}
+
+		private void ProcessViewFiles()
+		{
+			foreach (var folder in files)
+			{
+				Console.WriteLine(folder.Key);
+				foreach (var file in folder.Value)
+					Console.WriteLine("\t" + file);
+			}
 		}
 
 		private string ReadLine(string message)

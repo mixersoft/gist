@@ -23,5 +23,10 @@ namespace Snaphappi
 				return map[key];
 			return Enumerable.Empty<Value>();
 		}
+
+		public IEnumerator<KeyValuePair<Key, List<Value>>> GetEnumerator()
+		{
+			return map.GetEnumerator();
+		}
 	}
 }
