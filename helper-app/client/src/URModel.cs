@@ -70,10 +70,10 @@ namespace Snaphappi
 
 		public void UploadFile(string folderPath, string filePath)
 		{
+			IncrementUploadedFileCount(folderPath);
+
 			if (files.Contains(filePath.ToUpperInvariant()))
 				return;
-
-			IncrementUploadedFileCount(folderPath);
 
 			uploadService.UploadFile(folderPath, filePath, () => photoLoader.GetPreview(filePath));
 		}
