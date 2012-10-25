@@ -34,11 +34,12 @@ namespace Snaphappi
 
 		private void OnLoad()
 		{
-			urModel.DownloadInformation();
+			urModel.FetchFolders();
 		}
 
 		private void OnFolderAdded(string folder)
 		{
+			urModel.FetchFiles(folder);
 			fileLister.SearchFolder(folder);
 		}
 

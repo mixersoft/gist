@@ -7,7 +7,7 @@ namespace Snaphappi
 	public class Multimap<Key, Value>
 	{
 		private Dictionary<Key, List<Value>> map
-			= new Dictionary<Key,List<Value>>();
+			= new Dictionary<Key, List<Value>>();
 
 		public void Add(Key key, Value value)
 		{
