@@ -118,6 +118,7 @@
     <Compile Include="src\IURTaskInfoService.cs" />
     <Compile Include="src\IURView.cs" />
     <Compile Include="src\IURTaskUploadService.cs" />
+    <Compile Include="src\Multimap.cs" />
     <Compile Include="src\OriginalFileInfo.cs" />
     <Compile Include="src\ParameterProcessor.cs" />
     <Compile Include="src\PhotoLoader.cs" />
@@ -175,6 +176,9 @@
     </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>robocopy "$(ProjectDir)\ImageMagick" "$(TargetDir)\ImageMagick" &gt; nul</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

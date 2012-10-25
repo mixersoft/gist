@@ -7,7 +7,9 @@ namespace Snaphappi
 {
 	interface IURModel
 	{
-		void DownloadInformation();
+		void FetchFiles(string folderPath);
+
+		void FetchFolders();
 
 		int GetFileCount(string folderPath);
 

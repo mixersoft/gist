@@ -50,11 +50,14 @@ namespace Snaphappi
 
 		public string[] Folders { get; private set; }
 
-		public void DownloadInformation()
+		public void FetchFiles(string folderPath)
+		{
+			AddFiles(controlService.GetFiles(folderPath));
+		}
+
+		public void FetchFolders()
 		{
 			AddFolders(controlService.GetFolders());
-			foreach (var folder in folders)
-				AddFiles(controlService.GetFiles(folder));
 			infoService.StartPolling((int)Math.Floor(Settings.Default.InfoPollingRate.TotalMilliseconds));
 		}
 
@@ -67,7 +70,7 @@ namespace Snaphappi
 
 		public void UploadFile(string folderPath, string filePath)
 		{
-			if (files.Contains(filePath))
+			if (files.Contains(filePath.ToUpperInvariant()))
 				return;
 
 			IncrementUploadedFileCount(folderPath);
@@ -97,8 +100,9 @@ namespace Snaphappi
 		{
 			foreach (var filePath in files)
 			{
-				if (!this.files.Contains(filePath))
-					this.files.Add(filePath);
+				var ucFilePath = filePath.ToUpperInvariant();
+				if (!this.files.Contains(ucFilePath))
+					this.files.Add(ucFilePath);
 			}
 		}
 
@@ -106,9 +110,10 @@ namespace Snaphappi
 		{
 			foreach (var folderPath in folders)
 			{
-				if (!this.folders.Contains(folderPath))
+				var ucFolderPath = folderPath.ToUpperInvariant();
+				if (!this.folders.Contains(ucFolderPath))
 				{
-					this.folders.Add(folderPath);
+					this.folders.Add(ucFolderPath);
 					FolderAdded(folderPath);
 				}
 			}

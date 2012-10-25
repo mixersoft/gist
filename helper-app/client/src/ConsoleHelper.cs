@@ -9,10 +9,17 @@ namespace Snaphappi
 {
 	public static class ConsoleHelper
 	{
+		#region interface
+
+		/// <summary>
+		/// Allocates a console and resets the standard stream handles.
+		/// </summary>
 		public static void Alloc()
 		{
 			if (!AllocConsole())
 				throw new Win32Exception();
+			SetStdHandle(StdHandle.Output, GetConsoleStandardOutput());
+			SetStdHandle(StdHandle.Input,  GetConsoleStandardInput());
 		}
 
 		public static StreamReader StandardInput
@@ -64,17 +71,77 @@ namespace Snaphappi
 			set { SetConsoleTitle(value); }
 		}
 
+		#endregion
+
+		#region helper functions
+
+		private static IntPtr GetConsoleStandardInput()
+		{
+			var handle = CreateFile
+				( "CONIN$"
+				, DesiredAccess.GenericRead | DesiredAccess.GenericWrite
+				, FileShare.ReadWrite
+				, IntPtr.Zero
+				, FileMode.Open
+				, FileAttributes.Normal
+				, IntPtr.Zero
+				);
+			if (handle == InvalidHandleValue)
+				throw new Win32Exception();
+			return handle;
+		}
+
+		private static IntPtr GetConsoleStandardOutput()
+		{
+			var handle = CreateFile
+				( "CONOUT$"
+				, DesiredAccess.GenericWrite | DesiredAccess.GenericWrite
+				, FileShare.ReadWrite
+				, IntPtr.Zero
+				, FileMode.Open
+				, FileAttributes.Normal
+				, IntPtr.Zero
+				);
+			if (handle == InvalidHandleValue)
+				throw new Win32Exception();
+			return handle;
+		}
+
+		#endregion
+
+		#region PInvoke
+
 		[DllImport("kernel32.dll", SetLastError = true)]
         static extern bool AllocConsole();
 
-		[DllImport("kernel32.dll", SetLastError = true)]
-		static extern IntPtr GetStdHandle(StdHandle nStdHandle);
-
 		[DllImport("kernel32.dll")]
 		static extern IntPtr GetConsoleWindow();
+
+		[DllImport("kernel32.dll", SetLastError = true)]
+		static extern IntPtr GetStdHandle(StdHandle nStdHandle);
 		
 		[DllImport("kernel32.dll")]
 		static extern bool SetConsoleTitle(string lpConsoleTitle);
+
+		[DllImport("kernel32.dll")]
+		static extern bool SetStdHandle(StdHandle nStdHandle, IntPtr hHandle);
+
+		[DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+		static extern IntPtr CreateFile
+			(                               string         lpFileName
+			, [MarshalAs(UnmanagedType.U4)] DesiredAccess  dwDesiredAccess
+			, [MarshalAs(UnmanagedType.U4)] FileShare      dwShareMode
+			,                               IntPtr         lpSecurityAttributes
+			, [MarshalAs(UnmanagedType.U4)] FileMode       dwCreationDisposition
+			, [MarshalAs(UnmanagedType.U4)] FileAttributes dwFlagsAndAttributes
+			,                               IntPtr         hTemplateFile
+			);
+
+		private enum DesiredAccess
+        {
+            GenericRead  = unchecked((int)0x80000000),
+            GenericWrite = 0x40000000
+        }
 
 		private enum StdHandle : int
 		{
@@ -82,5 +149,9 @@ namespace Snaphappi
 			Output = -11,
 			Error  = -12
 		}
+
+		private static readonly IntPtr InvalidHandleValue = new IntPtr(-1);
+
+		#endregion
 	}
 }
