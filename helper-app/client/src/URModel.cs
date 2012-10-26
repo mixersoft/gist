@@ -68,17 +68,24 @@ namespace Snaphappi
 			return count;
 		}
 
+		public void ScheduleFolderUploadCompletionEvent(string folderPath)
+		{
+			uploadService.ScheduleAction(() => FolderUploadComplete(folderPath));
+		}
+
 		public void UploadFile(string folderPath, string filePath)
 		{
+			IncrementUploadedFileCount(folderPath);
+
 			if (files.Contains(filePath.ToUpperInvariant()))
 				return;
-
-			IncrementUploadedFileCount(folderPath);
 
 			uploadService.UploadFile(folderPath, filePath, () => photoLoader.GetPreview(filePath));
 		}
 
 		public event Action<string> FolderAdded;
+
+		public event Action<string> FolderUploadComplete;
 
 		public event Action TaskCancelled
 		{

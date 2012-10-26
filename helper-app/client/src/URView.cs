@@ -6,7 +6,7 @@ namespace Snaphappi
 	{
 		#region data
 
-		private readonly IURTaskControlService taskControl;
+		private readonly IURTaskControlService task;
 
 		#endregion
 
@@ -14,26 +14,31 @@ namespace Snaphappi
 
 		public URView(IURTaskControlService taskControl)
 		{
-			this.taskControl = taskControl;
+			this.task = taskControl;
 		}
 
 		#endregion
 
 		#region IURView Members
 
-		public void ReportFolderNotFound(string folder)
+		public void ReportFolderNotFound(string folderPath)
 		{
-			taskControl.ReportFolderNotFound(folder);
+			task.ReportFolderNotFound(folderPath);
 		}
 
 		public void ReportFileCount(string folderPath, int count)
 		{
-			taskControl.ReportFolderFileCount(folderPath, count);
+			task.ReportFolderFileCount(folderPath, count);
 		}
 
-		public void ReportUploadFailed(string folder, string path)
+		public void ReportUploadFailed(string folderPath, string filePath)
 		{
-			taskControl.ReportUploadFailed(folder, path);
+			task.ReportUploadFailed(folderPath, filePath);
+		}
+
+		public void ReportFolderUploadComplete(string folderPath)
+		{
+			task.ReportFolderUploadComplete(folderPath);
 		}
 
 		#endregion

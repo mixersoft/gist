@@ -6,6 +6,8 @@ namespace Snaphappi
 	{
 		void UploadFile(string folder, string path, Func<byte[]> LoadFile);
 
+		void ScheduleAction(Action action);
+
 		event Action<string, string> UploadFailed;
 	}
 }
