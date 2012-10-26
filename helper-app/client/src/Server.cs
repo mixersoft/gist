@@ -24,7 +24,7 @@ namespace Snaphappi
 
 		private readonly Thread inputThread;
 
-		private List<string> folders = new List<string>();
+		private HashSet<string> folders = new HashSet<string>();
 
 		private Multimap<string, string> files = new Multimap<string,string>();
 
@@ -93,6 +93,11 @@ namespace Snaphappi
 		#endregion
 
 		#region IURTaskUploadService Members
+
+		public void ScheduleAction(Action action)
+		{
+			action();
+		}
 
 		public void UploadFile(string folder, string path, Func<byte[]> LoadFile)
 		{

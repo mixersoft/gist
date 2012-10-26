@@ -68,6 +68,11 @@ namespace Snaphappi
 			return count;
 		}
 
+		public void ScheduleFolderUploadCompletionEvent(string folderPath)
+		{
+			uploadService.ScheduleAction(() => FolderUploadComplete(folderPath));
+		}
+
 		public void UploadFile(string folderPath, string filePath)
 		{
 			IncrementUploadedFileCount(folderPath);
@@ -79,6 +84,8 @@ namespace Snaphappi
 		}
 
 		public event Action<string> FolderAdded;
+
+		public event Action<string> FolderUploadComplete;
 
 		public event Action TaskCancelled
 		{

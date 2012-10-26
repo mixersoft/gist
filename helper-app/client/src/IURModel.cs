@@ -13,9 +13,13 @@ namespace Snaphappi
 
 		int GetFileCount(string folderPath);
 
+		void ScheduleFolderUploadCompletionEvent(string folderPath);
+
 		void UploadFile(string folderPath, string filePath);
 
 		event Action<string> FolderAdded;
+
+		event Action<string> FolderUploadComplete;
 		
 		event Action TaskCancelled;
 

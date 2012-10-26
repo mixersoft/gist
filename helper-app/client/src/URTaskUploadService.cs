@@ -8,33 +8,15 @@ namespace Snaphappi
 {
 	public class URTaskUploadService : IURTaskUploadService
 	{
-		#region nested types
-
-		private struct UploadTask
-		{
-			public readonly string       Folder;
-			public readonly string       Path;
-			public readonly Func<byte[]> LoadFile;
-
-			public UploadTask(string folder, string path, Func<byte[]> LoadFile)
-			{
-				this.Folder   = folder;
-				this.Path     = path;
-				this.LoadFile = LoadFile;
-			}
-		}
-
-		#endregion
-
 		#region data
 
-		private readonly Task.Client taskUpload;
+		private readonly Task.Client task;
 
 		private readonly Snaphappi.API.TaskID id;
 
 		private Thread uploadThread;
 
-		private BlockingQueue<UploadTask> uploadTaskQueue;
+		private BlockingQueue<Action> taskQueue;
 
 		#endregion
 
@@ -44,9 +26,9 @@ namespace Snaphappi
 		{
 			this.id = ApiHelper.ConvertTaskID(taskID);
 			
-			taskUpload = new Task.Client(new TBinaryProtocol(new THttpClient(uri)));
+			task = new Task.Client(new TBinaryProtocol(new THttpClient(uri)));
 
-			uploadTaskQueue = new BlockingQueue<UploadTask>();
+			taskQueue = new BlockingQueue<Action>();
 
 			uploadThread = new Thread(UploadProc);
 			uploadThread.Start();
@@ -58,7 +40,12 @@ namespace Snaphappi
 
 		public void UploadFile(string folder, string path, Func<byte[]> LoadFile)
 		{
-			uploadTaskQueue.Enqueue(new UploadTask(folder, path, LoadFile));
+			taskQueue.Enqueue(() => SafeUploadFile(folder, path, LoadFile));
+		}
+
+		public void ScheduleAction(Action action)
+		{
+			taskQueue.Enqueue(action);
 		}
 
 		public event Action<string, string> UploadFailed;
@@ -69,16 +56,19 @@ namespace Snaphappi
 
 		private void UploadProc()
 		{
-			foreach (var uploadTask in uploadTaskQueue)
+			foreach (var PerformTask in taskQueue)
+				PerformTask();
+		}
+
+		private void SafeUploadFile(string folder, string path, Func<byte[]> LoadFile)
+		{
+			try
 			{
-				try
-				{
-					taskUpload.UploadFile(id, uploadTask.Path, uploadTask.LoadFile());
-				}
-				catch (Exception)
-				{
-					UploadFailed(uploadTask.Folder, uploadTask.Path);
-				}
+				task.UploadFile(id, path, LoadFile());
+			}
+			catch (Exception)
+			{
+				UploadFailed(folder, path);
 			}
 		}
 

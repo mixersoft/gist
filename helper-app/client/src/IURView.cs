@@ -7,10 +7,12 @@ namespace Snaphappi
 {
 	interface IURView
 	{
-		void ReportFolderNotFound(string folder);
+		void ReportFolderNotFound(string folderPath);
 
-		void ReportUploadFailed(string folder, string path);
+		void ReportUploadFailed(string folderPath, string filePath);
 
 		void ReportFileCount(string folderPath, int count);
+
+		void ReportFolderUploadComplete(string folderPath);
 	}
 }
