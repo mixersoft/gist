@@ -1,5 +1,4 @@
-﻿using Microsoft.Win32.TaskScheduler;
-using System;
+﻿using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using Snaphappi.Properties;
@@ -42,7 +41,7 @@ namespace Snaphappi
 							UploadResampled(info.AuthToken, info.SessionID);
 							break;
 						case ParameterProcessor.TaskType.SetWatcher:
-							SetWatcher(info.AuthToken);
+							SystemScheduler.SetWatcher(info.AuthToken);
 							break;
 					}
 					break;
@@ -53,27 +52,6 @@ namespace Snaphappi
 		private static void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
 		{
 			Environment.Exit(ExitFailure);
-		}
-
-		private static void SetWatcher(string authToken)
-		{
-			using (var taskService = new TaskService())
-			{
-				var timeTrigger = new TimeTrigger();
-				timeTrigger.StartBoundary = DateTime.Now + TimeSpan.FromMinutes(1.0);
-				timeTrigger.Repetition.Interval = Settings.Default.WatchedFolderTaskRepetitionRate;
-
-				var execAction = new ExecAction(typeof(HelperApp).Assembly.Location, "-watch " + authToken);
-
-				var definition = taskService.NewTask();
-				definition.Triggers.Add(timeTrigger);
-				definition.Actions.Add(execAction);
-
-				taskService.RootFolder.RegisterTaskDefinition
-					( @"Snaphappi\" + Settings.Default.WatchedFolderTaskName
-					, definition
-					);
-			}
 		}
 
 		/// <summary>
