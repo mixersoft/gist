@@ -264,8 +264,6 @@ def CreateForm(mutable name)
 Application.EnableVisualStyles();
 Application.SetCompatibleTextRenderingDefault(false);
 
-def form = CreateForm("peter-alice");
-
-def thread = Thread(ThreadStart(() => Application.Run(form)));
+def thread = Thread(ThreadStart(() => Application.Run(CreateForm("peter-alice"))));
 thread.SetApartmentState(ApartmentState.STA);
 thread.Start();

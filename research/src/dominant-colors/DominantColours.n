@@ -1,0 +1,64 @@
+using Emgu.CV.CvEnum;
+using Emgu.CV.ML;
+using Emgu.CV.Structure;
+using Emgu.CV;
+using System.Drawing;
+using System.Threading;
+using System.Windows.Forms;
+using System;
+
+def GetDominantColor(path)
+{
+	using (image = Image.[Bgr, double](path))
+	{
+		def samples = Matrix.[double](image.Cols * image.Rows, 3);
+		for (mutable c = 0; c != image.Cols; ++c)
+		for (mutable r = 0; r != image.Rows; ++r)
+		{
+			samples[r * image.Cols + c, 0] = image[r, c].Red;
+			samples[r * image.Cols + c, 1] = image[r, c].Green;
+			samples[r * image.Cols + c, 2] = image[r, c].Blue;
+		}
+
+		def labels = Matrix.[int](2, 1);
+
+		_ = CvInvoke.cvKMeans2
+			( samples =      samples.Ptr
+			, clusterCount = labels.Rows
+			, labels =       labels.Ptr
+			, termcrit =     MCvTermCriteria(maxIteration = 10)
+			, attempts =     2
+			, rng =          IntPtr.Zero
+			, flags =        0
+			, centers =      IntPtr.Zero
+			, compactness =  IntPtr.Zero
+			);
+
+		def GetColorFromSample(i)
+		{
+			Color.FromArgb
+				( red   = samples[i, 0] :> int
+				, green = samples[i, 1] :> int
+				, blue  = samples[i, 2] :> int
+				);
+		}
+		GetColorFromSample(labels[0, 0]);
+	}
+}
+
+def CreateForm(color)
+{
+	def form = Form();
+	form.FormBorderStyle = FormBorderStyle.FixedDialog;
+	form.Text            = "Dominant Colours";
+	form.BackColor       = color;
+	form;
+}
+
+Application.EnableVisualStyles();
+Application.SetCompatibleTextRenderingDefault(false);
+
+def thread = Thread(ThreadStart(() => GetDominantColor(@"c:\Temp\1.jpg") |> CreateForm |> Application.Run));
+thread.SetApartmentState(ApartmentState.STA);
+thread.Start();
+

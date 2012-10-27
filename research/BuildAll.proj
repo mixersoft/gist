@@ -14,11 +14,13 @@
 		<ClusterUiSrc         Include="src\cluster-ui\*.n"          />
 		<ImageGroupingTestSrc Include="src\image-grouping-test\*.n" />
 		<PrettyPrintSrc       Include="src\pretty-print\*.n"        />
+		<DominantColorsSrc    Include="src\dominant-colors\*.n"     />
 	<!-- output -->
 		<ImageGroupingBin     Include="bin\ImageGrouping.exe"     />
 		<ClusterUiBin         Include="bin\ClusterUI.exe"         />
 		<ImageGroupingTestBin Include="bin\ImageGroupingTest.dll" />
 		<PrettyPrintBin       Include="bin\PrettyPrint.exe"       />
+		<DominantColorsBin    Include="bin\DominantColors.exe"    />
 		<Out Include="bin\" />
 	<!-- references -->
 		<ImageGroupingRef     Include="System.Core.dll"          />
@@ -37,6 +39,11 @@
 		<ImageGroupingTestRef Include="lib\nunit.framework.dll"  />
 		<ImageGroupingTestRef Include="@(ImageGroupingBin)"      />
 		<PrettyPrintRef       Include="lib\Newtonsoft.Json.dll"  />
+		<DominantColorsRef    Include="System.Drawing.dll"       />
+		<DominantColorsRef    Include="System.Windows.Forms.dll" />
+		<DominantColorsRef    Include="lib\Emgu.CV.dll"          />
+		<DominantColorsRef    Include="lib\Emgu.CV.ML.dll"       />
+		<DominantColorsRef    Include="lib\Emgu.Util.dll"        />
 	<!-- dependencies -->
 		<Dependencies Include="lib\*" />
 	</ItemGroup>
@@ -49,7 +56,7 @@
 
 	<Target
 		Name             = "All"
-		DependsOnTargets = "ImageGrouping; ImageGroupingTest; ClusterUI; PrettyPrint"
+		DependsOnTargets = "ImageGrouping; ImageGroupingTest; ClusterUI; PrettyPrint; DominantColors"
 		/>
 
 	<Target
@@ -120,6 +127,24 @@
 			Platform             = "x64"
 			References           = "@(PrettyPrintRef)"
 			Sources              = "@(PrettyPrintSrc)"
+			TargetType           = "exe"
+			/>
+	</Target>
+
+	<Target
+		Name             = "DominantColors"
+		Inputs           = "@(DominantColorsSrc)"
+		Outputs          = "@(DominantColorsBin)"
+		DependsOnTargets = "Dependencies"
+		>
+		<ncc
+			DefineConstants      = "$(Defines)"
+			EmitDebugInformation = "true"
+			NoLogo               = "true"
+			OutputAssembly       = "@(DominantColorsBin)"
+			Platform             = "x64"
+			References           = "@(DominantColorsRef)"
+			Sources              = "@(DominantColorsSrc)"
 			TargetType           = "exe"
 			/>
 	</Target>
