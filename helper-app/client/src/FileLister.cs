@@ -39,11 +39,11 @@ namespace Snaphappi
 			}
 		}
 
-		public event Action<string, string> FileFound;
+		public event Action<string, string> FileFound = delegate {};
 
-		public event Action<string> FolderNotFound;
+		public event Action<string> FolderNotFound = delegate {};
 
-		public event Action<string> FolderSearchComplete;
+		public event Action<string> FolderSearchComplete = delegate {};
 
 		#endregion
 

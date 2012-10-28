@@ -118,12 +118,14 @@
     <Compile Include="src\IURTaskInfoService.cs" />
     <Compile Include="src\IURView.cs" />
     <Compile Include="src\IURTaskUploadService.cs" />
+    <Compile Include="src\IWFModel.cs" />
     <Compile Include="src\Multimap.cs" />
     <Compile Include="src\OriginalFileInfo.cs" />
     <Compile Include="src\ParameterProcessor.cs" />
     <Compile Include="src\PhotoLoader.cs" />
     <Compile Include="src\Registry.cs" />
     <Compile Include="src\Server.cs" />
+    <Compile Include="src\SystemScheduler.cs" />
     <Compile Include="src\TaskID.cs" />
     <Compile Include="src\UOPresenter.cs" />
     <Compile Include="src\IUOModel.cs" />
@@ -137,6 +139,8 @@
     <Compile Include="src\URView.cs" />
     <Compile Include="src\TempFile.cs" />
     <Compile Include="src\DeviceID.cs" />
+    <Compile Include="src\WFModel.cs" />
+    <Compile Include="src\WFPresenter.cs" />
     <Compile Include="src\Wmi.cs" />
   </ItemGroup>
   <ItemGroup>

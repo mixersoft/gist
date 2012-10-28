@@ -41,7 +41,7 @@ namespace Snaphappi
 							UploadResampled(info.AuthToken, info.SessionID);
 							break;
 						case ParameterProcessor.TaskType.SetWatcher:
-							SystemScheduler.SetWatcher(info.AuthToken);
+							SystemScheduler.ScheduleWatcher(info.AuthToken);
 							break;
 					}
 					break;
@@ -107,12 +107,36 @@ namespace Snaphappi
 
 			new URPresenter(app, urModel, urView, fileLister);
 
-			app.LoadUR();
+			app.Load();
 		}
 
 		private static void UploadOriginals(string authToken, string sessionID)
 		{
 			throw new NotImplementedException();
+		}
+
+		private static void WatchFolders(string authToken)
+		{
+			var app = new App();
+
+			var registry = new Registry();
+			var deviceID = new DeviceID(registry, Settings.Default.RegistryKey).GetID();
+
+			var taskID = new TaskID(authToken, "", deviceID);
+
+			var controlService = new URTaskControlService (taskID, Settings.Default.TaskURI);
+			var uploadService  = new URTaskUploadService  (taskID, Settings.Default.TaskURI);
+
+			var photoLoader = new PhotoLoader();
+
+			var wfModel = new WFModel(controlService, uploadService, photoLoader);
+
+			var fileSystem = new FileSystem();
+			var fileLister = new FileLister(fileSystem, Settings.Default.PhotoExtensions);
+
+			new WFPresenter(app, wfModel, fileLister);
+
+			app.Load();
 		}
 
 		private static void TestUploadResampled()
@@ -134,14 +158,10 @@ namespace Snaphappi
 
 			new URPresenter(app, urModel, urView, fileLister);
 
-			app.LoadUR();
+			app.Load();
 		}
 
 		private static void TestUploadOriginals()
-		{
-		}
-
-		private static void WatchFolders(string p)
 		{
 		}
 	}

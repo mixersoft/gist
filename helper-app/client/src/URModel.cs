@@ -83,9 +83,9 @@ namespace Snaphappi
 			uploadService.UploadFile(folderPath, filePath, () => photoLoader.GetPreview(filePath));
 		}
 
-		public event Action<string> FolderAdded;
+		public event Action<string> FolderAdded = delegate {};
 
-		public event Action<string> FolderUploadComplete;
+		public event Action<string> FolderUploadComplete = delegate {};
 
 		public event Action TaskCancelled
 		{

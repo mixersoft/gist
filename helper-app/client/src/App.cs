@@ -6,10 +6,10 @@ namespace Snaphappi
 	{
 		#region interface
 
-		public void LoadUR()
+		public void Load()
 		{
-			if (LoadUploadResampled != null)
-				LoadUploadResampled();
+			if (Loaded != null)
+				Loaded();
 		}
 
 		public void LoadUO()
@@ -22,7 +22,7 @@ namespace Snaphappi
 
 		#region IApp Members
 
-		public event Action LoadUploadResampled;
+		public event Action Loaded;
 
 		public event Action LoadUploadOriginals;
 

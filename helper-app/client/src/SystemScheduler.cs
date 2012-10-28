@@ -7,7 +7,7 @@ namespace Snaphappi
 	public class SystemScheduler
 	{
 
-		public static void SetWatcher(string authToken)
+		public static void ScheduleWatcher(string authToken)
 		{
 			using (var taskService = new TaskService())
 			{

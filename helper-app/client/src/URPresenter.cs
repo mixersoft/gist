@@ -21,7 +21,7 @@ namespace Snaphappi
 			this.urView     = urView;
 			this.fileLister = fileLister;
 
-			app.LoadUploadResampled += OnLoad;
+			app.Loaded += OnLoaded;
 			
 			urModel.FolderAdded          += OnFolderAdded;
 			urModel.TaskCancelled        += OnTaskCancelled;
@@ -33,7 +33,7 @@ namespace Snaphappi
 			fileLister.FolderSearchComplete += OnFolderSearchComplete;
 		}
 
-		private void OnLoad()
+		private void OnLoaded()
 		{
 			urModel.FetchFolders();
 		}
