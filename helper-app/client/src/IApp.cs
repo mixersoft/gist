@@ -8,7 +8,6 @@ namespace Snaphappi
 	public interface IApp
 	{
 		event Action Loaded;
-		event Action LoadUploadOriginals;
 
 		void Quit();
 	}

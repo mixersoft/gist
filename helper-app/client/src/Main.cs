@@ -8,17 +8,10 @@ namespace Snaphappi
 {
 	class HelperApp
 	{
-		#region settings
-
-		private const int ExitSuccess = 0;
-		private const int ExitFailure = 1;
-
-		#endregion
-
 		public static int Main(string[] args)
 		{
 			if (args.Length < 1)
-				return ExitFailure;
+				return App.ExitFailure;
 
 			AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
 
@@ -32,7 +25,7 @@ namespace Snaphappi
 				default:
 					var info = ParameterProcessor.SplitUrl(args[0]);
 					if (!IsUnique(info))
-						return ExitSuccess;
+						return App.ExitSuccess;
 					switch (info.Type)
 					{
 						case ParameterProcessor.TaskType.UploadOriginals:
@@ -47,12 +40,12 @@ namespace Snaphappi
 					}
 					break;
 			}
-			return ExitSuccess;
+			return App.ExitSuccess;
 		}
 
 		private static void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
 		{
-			Environment.Exit(ExitFailure);
+			Environment.Exit(App.ExitFailure);
 		}
 
 		/// <summary>

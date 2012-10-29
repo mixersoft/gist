@@ -56,7 +56,7 @@ namespace Snaphappi
 
 		public void UnscheduleWatcher()
 		{
-			throw new NotImplementedException();
+			SystemScheduler.UnscheduleWatcher();
 		}
 
 		public event Action FolderListEmpty = delegate {};

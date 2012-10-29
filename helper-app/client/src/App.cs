@@ -6,16 +6,13 @@ namespace Snaphappi
 	{
 		#region interface
 
+		public const int ExitSuccess = 0;
+		public const int ExitFailure = 1;
+
 		public void Load()
 		{
 			if (Loaded != null)
 				Loaded();
-		}
-
-		public void LoadUO()
-		{
-			if (LoadUploadOriginals != null)
-				LoadUploadOriginals();
 		}
 
 		#endregion
@@ -23,8 +20,6 @@ namespace Snaphappi
 		#region IApp Members
 
 		public event Action Loaded;
-
-		public event Action LoadUploadOriginals;
 
 		public void Quit()
 		{
