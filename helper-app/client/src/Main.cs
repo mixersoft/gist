@@ -27,7 +27,8 @@ namespace Snaphappi
 			{
 				case "-ur":    TestUploadResampled(); break;
 				case "-uo":    TestUploadOriginals(); break;
-				case "-watch": WatchFolders(args[1]);        break;
+				case "-w":     TestWatchFolders();    break;
+				case "-watch": WatchFolders(args[1]); break;
 				default:
 					var info = ParameterProcessor.SplitUrl(args[0]);
 					if (!IsUnique(info))
@@ -68,6 +69,7 @@ namespace Snaphappi
 				{
 					case "-ur": break;
 					case "-uo": break;
+					case "-w":  break;
 					default:
 						try
 						{
@@ -146,7 +148,7 @@ namespace Snaphappi
 
 			var app = new App();
 
-			var server = new Server(Server.TaskType.UploadResampled);
+			var server = new Server();
 
 			var photoLoader = new PhotoLoader();
 
@@ -163,6 +165,27 @@ namespace Snaphappi
 
 		private static void TestUploadOriginals()
 		{
+		}
+
+		private static void TestWatchFolders()
+		{
+			ConsoleHelper.Alloc();
+			ConsoleHelper.Title = "Snaphappi Helper Console";
+
+			var app = new App();
+
+			var server = new Server();
+
+			var photoLoader = new PhotoLoader();
+
+			var wfModel = new WFModel(server, server, photoLoader);
+
+			var fileSystem = new FileSystem();
+			var fileLister = new FileLister(fileSystem, Settings.Default.PhotoExtensions);
+
+			new WFPresenter(app, wfModel, fileLister);
+
+			app.Load();
 		}
 	}
 }

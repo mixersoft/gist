@@ -8,19 +8,7 @@ namespace Snaphappi
 {
 	public class Server : IURTaskControlService, IURTaskInfoService, IURTaskUploadService
 	{
-		#region types
-
-		public enum TaskType
-		{
-			UploadResampled,
-			UploadOriginals,
-		}
-
-		#endregion
-
 		#region data
-
-		private readonly TaskType taskType;
 
 		private readonly Thread inputThread;
 
@@ -32,10 +20,8 @@ namespace Snaphappi
 
 		#region interface
 
-		public Server(TaskType taskType)
+		public Server()
 		{
-			this.taskType = taskType;
-
 			this.inputThread = new Thread(InputProc);
 			this.inputThread.Start();
 		}

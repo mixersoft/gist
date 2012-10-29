@@ -34,6 +34,7 @@ namespace Snaphappi
 		private void OnFolderListEmpty()
 		{
 			wfModel.UnscheduleWatcher();
+			app.Quit();
 		}
 
 		private void OnFolderAdded(string folderPath)
