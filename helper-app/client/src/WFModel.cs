@@ -70,6 +70,12 @@ namespace Snaphappi
 
 		public event Action<string> FolderAdded = delegate {};
 
+		public event Action<string, string> UploadFailed
+		{
+			add    { uploadService.UploadFailed += value; }
+			remove { uploadService.UploadFailed -= value; }
+		}
+
 		#endregion // IWFModel Members
 
 		#region implementation

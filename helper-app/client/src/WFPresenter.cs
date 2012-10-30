@@ -6,16 +6,19 @@ namespace Snaphappi
 	{
 		private readonly IApp        app;
 		private readonly IWFModel    wfModel;
+		private readonly IWFView     wfView;
 		private readonly IFileLister fileLister;
 
 		public WFPresenter
 			( IApp       app
-			, IWFModel    wfModel
+			, IWFModel   wfModel
+			, IWFView    wfView
 			, FileLister fileLister
 			)
 		{
 			this.app        = app;
 			this.wfModel    = wfModel;
+			this.wfView     = wfView;
 			this.fileLister = fileLister;
 
 			app.Loaded += OnLoaded;
@@ -23,14 +26,22 @@ namespace Snaphappi
 			wfModel.FolderListEmpty      += OnFolderListEmpty;
 			wfModel.FolderAdded          += OnFolderAdded;
 			wfModel.FolderUploadComplete += OnFolderUploadComplete;
+			wfModel.UploadFailed         += OnUploadFailed;
 
 			fileLister.FileFound            += OnFileFound;
 			fileLister.FolderSearchComplete += OnFolderSearchComplete;
+			fileLister.FolderNotFound       += OnFolderNotFound;
 		}
 
-		private void OnLoaded()
+		private void OnFileFound(string folderPath, string filePath)
 		{
-			wfModel.FetchFolders();
+			wfModel.UploadFile(folderPath, filePath);
+		}
+
+		private void OnFolderAdded(string folderPath)
+		{
+			wfModel.FetchFiles(folderPath);
+			fileLister.SearchFolder(folderPath);
 		}
 
 		private void OnFolderListEmpty()
@@ -39,10 +50,9 @@ namespace Snaphappi
 			app.Quit();
 		}
 
-		private void OnFolderAdded(string folderPath)
+		private void OnFolderNotFound(string folderPath)
 		{
-			wfModel.FetchFiles(folderPath);
-			fileLister.SearchFolder(folderPath);
+			wfView.ReportFolderNotFound(folderPath);
 		}
 
 		private void OnFolderSearchComplete(string folderPath)
@@ -55,9 +65,14 @@ namespace Snaphappi
 			app.Quit();
 		}
 
-		private void OnFileFound(string folderPath, string filePath)
+		private void OnLoaded()
 		{
-			wfModel.UploadFile(folderPath, filePath);
+			wfModel.FetchFolders();
+		}
+
+		private void OnUploadFailed(string folderPath, string filePath)
+		{
+			wfView.ReportUploadFailed(folderPath, filePath);
 		}
 	}
 }

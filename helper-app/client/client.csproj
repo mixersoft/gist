@@ -119,6 +119,7 @@
     <Compile Include="src\IURView.cs" />
     <Compile Include="src\IURTaskUploadService.cs" />
     <Compile Include="src\IWFModel.cs" />
+    <Compile Include="src\IWFView.cs" />
     <Compile Include="src\Multimap.cs" />
     <Compile Include="src\OriginalFileInfo.cs" />
     <Compile Include="src\ParameterProcessor.cs" />
@@ -141,6 +142,7 @@
     <Compile Include="src\DeviceID.cs" />
     <Compile Include="src\WFModel.cs" />
     <Compile Include="src\WFPresenter.cs" />
+    <Compile Include="src\WFView.cs" />
     <Compile Include="src\Wmi.cs" />
   </ItemGroup>
   <ItemGroup>

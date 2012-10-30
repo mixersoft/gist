@@ -124,12 +124,13 @@ namespace Snaphappi
 
 			var photoLoader = new PhotoLoader();
 
-			var wfModel = new WFModel(controlService, uploadService, photoLoader);
+			var wfModel = new WFModel (controlService, uploadService, photoLoader);
+			var wfView  = new WFView  (controlService);
 
 			var fileSystem = new FileSystem();
 			var fileLister = new FileLister(fileSystem, Settings.Default.PhotoExtensions);
 
-			new WFPresenter(app, wfModel, fileLister);
+			new WFPresenter(app, wfModel, wfView, fileLister);
 
 			app.Load();
 		}
@@ -165,12 +166,13 @@ namespace Snaphappi
 
 			var photoLoader = new PhotoLoader();
 
-			var wfModel = new WFModel(server, server, photoLoader);
+			var wfModel = new WFModel (server, server, photoLoader);
+			var wfView  = new WFView  (server);
 
 			var fileSystem = new FileSystem();
 			var fileLister = new FileLister(fileSystem, Settings.Default.PhotoExtensions);
 
-			new WFPresenter(server, wfModel, fileLister);
+			new WFPresenter(server, wfModel, wfView, fileLister);
 		}
 	}
 }

@@ -119,7 +119,11 @@ namespace Snaphappi
 			commands.Add("fail upload",  ProcessFailUpload);
 			commands.Add("view files",   ProcessViewFiles);
 			commands.Add("view folders", ProcessViewFolders);
-			Console.WriteLine("commands: start, exit, {0}", string.Join(", ", commands.Keys.ToArray()));
+
+			Console.WriteLine
+				( "commands: start, exit, {0}"
+				, string.Join(", ", commands.Keys.ToArray())
+				);
 			for (;;)
 			{
 				var command = ReadLine("");
