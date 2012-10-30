@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace Snaphappi
 {
-	public class Server : IURTaskControlService, IURTaskInfoService, IURTaskUploadService
+	public class Server : IApp, IURTaskControlService, IURTaskInfoService, IURTaskUploadService
 	{
 		#region data
 
@@ -16,7 +16,7 @@ namespace Snaphappi
 
 		private Multimap<string, string> files = new Multimap<string,string>();
 
-		#endregion
+		#endregion // data
 
 		#region interface
 
@@ -26,7 +26,18 @@ namespace Snaphappi
 			this.inputThread.Start();
 		}
 
-		#endregion
+		#endregion // interface
+
+		#region IApp Members
+
+		public event Action Loaded = delegate {};
+
+		public void Quit()
+		{
+			Console.WriteLine("Exit");
+		}
+
+		#endregion // IApp Members
 
 		#region IURTaskControlService Members
 
@@ -60,7 +71,7 @@ namespace Snaphappi
 			Console.WriteLine("folder '{0}' contains {1} files", folder, count);
 		}
 
-		#endregion
+		#endregion // IURTaskControlService Members
 
 		#region IURTaskInfoService Members
 
@@ -72,11 +83,11 @@ namespace Snaphappi
 		{
 		}
 
-		public event Action TaskCancelled;
+		public event Action TaskCancelled = delegate {};
 
-		public event Action FoldersUpdated;
+		public event Action FoldersUpdated = delegate {};
 
-		#endregion
+		#endregion // IURTaskInfoService Members
 
 		#region IURTaskUploadService Members
 
@@ -93,20 +104,21 @@ namespace Snaphappi
 			Console.WriteLine("uploaded '{1}' ({2} bytes) from '{0}'", folder, path, size);
 		}
 
-		public event Action<string, string> UploadFailed;
+		public event Action<string, string> UploadFailed = delegate {};
 
-		#endregion
+		#endregion // IURTaskUploadService Members
 
 		#region implementation
 
 		private void InputProc()
 		{
-			Console.WriteLine("commands: exit, add folder, view folders, fiew files, cancel task");
+			Console.WriteLine("commands: start, exit, add folder, view folders, fiew files, cancel task");
 			for (;;)
 			{
 				switch (ReadLine(""))
 				{
 					case "exit":                               return;
+					case "start":        Loaded();             break;
 					case "add folder":   ProcessAddFolder();   break;
 					case "cancel task":  ProcessCancelTask();  break;
 					case "fail upload":  ProcessFailUpload();  break;
@@ -154,6 +166,6 @@ namespace Snaphappi
 			return Console.ReadLine();
 		}
 
-		#endregion
+		#endregion // implementation
 	}
 }

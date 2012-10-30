@@ -139,8 +139,6 @@ namespace Snaphappi
 			ConsoleHelper.Alloc();
 			ConsoleHelper.Title = "Snaphappi Helper Console";
 
-			var app = new App();
-
 			var server = new Server();
 
 			var photoLoader = new PhotoLoader();
@@ -151,9 +149,7 @@ namespace Snaphappi
 			var fileSystem = new FileSystem();
 			var fileLister = new FileLister(fileSystem, Settings.Default.PhotoExtensions);
 
-			new URPresenter(app, urModel, urView, fileLister);
-
-			app.Load();
+			new URPresenter(server, urModel, urView, fileLister);
 		}
 
 		private static void TestUploadOriginals()
@@ -165,8 +161,6 @@ namespace Snaphappi
 			ConsoleHelper.Alloc();
 			ConsoleHelper.Title = "Snaphappi Helper Console";
 
-			var app = new App();
-
 			var server = new Server();
 
 			var photoLoader = new PhotoLoader();
@@ -176,9 +170,7 @@ namespace Snaphappi
 			var fileSystem = new FileSystem();
 			var fileLister = new FileLister(fileSystem, Settings.Default.PhotoExtensions);
 
-			new WFPresenter(app, wfModel, fileLister);
-
-			app.Load();
+			new WFPresenter(server, wfModel, fileLister);
 		}
 	}
 }
