@@ -20,10 +20,12 @@ namespace Snaphappi
 
 			app.Loaded += OnLoaded;
 
-			wfModel.FolderListEmpty += OnFolderListEmpty;
-			wfModel.FolderAdded     += OnFolderAdded;
+			wfModel.FolderListEmpty      += OnFolderListEmpty;
+			wfModel.FolderAdded          += OnFolderAdded;
+			wfModel.FolderUploadComplete += OnFolderUploadComplete;
 
-			fileLister.FileFound += OnFileFound;
+			fileLister.FileFound            += OnFileFound;
+			fileLister.FolderSearchComplete += OnFolderSearchComplete;
 		}
 
 		private void OnLoaded()
@@ -41,6 +43,16 @@ namespace Snaphappi
 		{
 			wfModel.FetchFiles(folderPath);
 			fileLister.SearchFolder(folderPath);
+		}
+
+		private void OnFolderSearchComplete(string folderPath)
+		{
+			wfModel.ScheduleFolderUploadCompletionEvent(folderPath);
+		}
+
+		private void OnFolderUploadComplete(string folderPath)
+		{
+			app.Quit();
 		}
 
 		private void OnFileFound(string folderPath, string filePath)

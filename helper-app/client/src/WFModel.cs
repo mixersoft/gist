@@ -47,6 +47,11 @@ namespace Snaphappi
 				AddFolders(folders);
 		}
 
+		public void ScheduleFolderUploadCompletionEvent(string folderPath)
+		{
+			uploadService.ScheduleAction(() => FolderUploadComplete(folderPath));
+		}
+
 		public void UploadFile(string folderPath, string filePath)
 		{
 			if (files.Contains(filePath.ToUpperInvariant()))
@@ -60,6 +65,8 @@ namespace Snaphappi
 		}
 
 		public event Action FolderListEmpty = delegate {};
+
+		public event Action<string> FolderUploadComplete = delegate {};
 
 		public event Action<string> FolderAdded = delegate {};
 

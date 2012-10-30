@@ -8,11 +8,15 @@ namespace Snaphappi
 
 		void FetchFolders();
 
+		void ScheduleFolderUploadCompletionEvent(string folderPath);
+
 		void UploadFile(string folderPath, string filePath);
 
 		void UnscheduleWatcher();
 
 		event Action FolderListEmpty;
+
+		event Action<string> FolderUploadComplete;
 
 		event Action<string> FolderAdded;
 	}

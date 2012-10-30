@@ -14,7 +14,7 @@ namespace Snaphappi
 
 		private HashSet<string> folders = new HashSet<string>();
 
-		private Multimap<string, string> files = new Multimap<string,string>();
+		private Multimap<string, string> files = new Multimap<string, string>();
 
 		#endregion // data
 
@@ -34,7 +34,7 @@ namespace Snaphappi
 
 		public void Quit()
 		{
-			Console.WriteLine("Exit");
+			Console.WriteLine("client exit");
 		}
 
 		#endregion // IApp Members
@@ -112,20 +112,35 @@ namespace Snaphappi
 
 		private void InputProc()
 		{
-			Console.WriteLine("commands: start, exit, add folder, view folders, fiew files, cancel task");
+			var commands = new Dictionary<string, Action>();
+			commands.Add("add file",     ProcessAddFile);
+			commands.Add("add folder",   ProcessAddFolder);
+			commands.Add("cancel task",  ProcessCancelTask);
+			commands.Add("fail upload",  ProcessFailUpload);
+			commands.Add("view files",   ProcessViewFiles);
+			commands.Add("view folders", ProcessViewFolders);
+			Console.WriteLine("commands: start, exit, {0}", string.Join(", ", commands.Keys.ToArray()));
 			for (;;)
 			{
-				switch (ReadLine(""))
+				var command = ReadLine("");
+				switch (command)
 				{
-					case "exit":                               return;
-					case "start":        Loaded();             break;
-					case "add folder":   ProcessAddFolder();   break;
-					case "cancel task":  ProcessCancelTask();  break;
-					case "fail upload":  ProcessFailUpload();  break;
-					case "view folders": ProcessViewFolders(); break;
-					case "view files":   ProcessViewFiles();   break;
+					case "exit":  return;
+					case "start": Loaded(); break;
+					default:
+						if (commands.ContainsKey(command))
+							commands[command]();
+						break;
 				}
 			}
+		}
+
+		private void ProcessAddFile()
+		{
+			files.Add
+				( ReadLine("folder").ToUpperInvariant()
+				, ReadLine("file")
+				);
 		}
 
 		private void ProcessAddFolder()
