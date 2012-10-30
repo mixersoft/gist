@@ -1,17 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Threading;
 using Snaphappi.Properties;
 
 namespace Snaphappi
 {
-	public class URModel : IURModel
+	public class WFModel : IWFModel
 	{
 		#region data
 		
 		private readonly IURTaskControlService controlService;
-		private readonly IURTaskInfoService    infoService;
 		private readonly IURTaskUploadService  uploadService;
 		private readonly IPhotoLoader          photoLoader;
 
@@ -21,34 +18,20 @@ namespace Snaphappi
 		private readonly HashSet<string> folders	
 			= new HashSet<string>();
 
-		private readonly Dictionary<string, int> uploadedFileCounts
-			= new Dictionary<string,int>();
+		#endregion // data
 
-		#endregion
-
-		#region interface
-
-		public URModel
+		public WFModel
 			( IURTaskControlService controlService
-			, IURTaskInfoService    infoService
 			, IURTaskUploadService  uploadService
 			, IPhotoLoader          photoLoader
 			)
 		{
 			this.controlService = controlService;
-			this.infoService    = infoService;
 			this.uploadService  = uploadService;
 			this.photoLoader    = photoLoader;
-
-			this.infoService.TaskCancelled  += OnTaskCancelled;
-			this.infoService.FoldersUpdated += OnFoldersUpdated;
 		}
 
-		#endregion
-
-		#region IUploadResampledModel Members
-
-		public string[] Folders { get; private set; }
+		#region IWFModel Members
 
 		public void FetchFiles(string folderPath)
 		{
@@ -57,15 +40,11 @@ namespace Snaphappi
 
 		public void FetchFolders()
 		{
-			AddFolders(controlService.GetFolders());
-			infoService.StartPolling((int)Math.Floor(Settings.Default.InfoPollingRate.TotalMilliseconds));
-		}
-
-		public int GetFileCount(string folderPath)
-		{
-			int count = 0;
-			uploadedFileCounts.TryGetValue(folderPath, out count);
-			return count;
+			var folders = controlService.GetFolders();
+			if (folders.Length == 0)
+				FolderListEmpty();
+			else
+				AddFolders(folders);
 		}
 
 		public void ScheduleFolderUploadCompletionEvent(string folderPath)
@@ -75,23 +54,21 @@ namespace Snaphappi
 
 		public void UploadFile(string folderPath, string filePath)
 		{
-			IncrementUploadedFileCount(folderPath);
-
 			if (files.Contains(filePath.ToUpperInvariant()))
 				return;
-
 			uploadService.UploadFile(folderPath, filePath, () => photoLoader.GetPreview(filePath));
 		}
 
-		public event Action<string> FolderAdded = delegate {};
+		public void UnscheduleWatcher()
+		{
+			SystemScheduler.UnscheduleWatcher();
+		}
+
+		public event Action FolderListEmpty = delegate {};
 
 		public event Action<string> FolderUploadComplete = delegate {};
 
-		public event Action TaskCancelled
-		{
-			add    { infoService.TaskCancelled += value; }
-			remove { infoService.TaskCancelled -= value; }
-		}
+		public event Action<string> FolderAdded = delegate {};
 
 		public event Action<string, string> UploadFailed
 		{
@@ -99,7 +76,7 @@ namespace Snaphappi
 			remove { uploadService.UploadFailed -= value; }
 		}
 
-		#endregion
+		#endregion // IWFModel Members
 
 		#region implementation
 
@@ -126,23 +103,6 @@ namespace Snaphappi
 			}
 		}
 
-		private void IncrementUploadedFileCount(string folderPath)
-		{
-			int count = 0;
-			uploadedFileCounts.TryGetValue(folderPath, out count);
-			uploadedFileCounts[folderPath] = count + 1;
-		}
-
-		private void OnFoldersUpdated()
-		{
-			AddFolders(controlService.GetFolders());
-		}
-
-		private void OnTaskCancelled()
-		{
-			infoService.StopPolling();
-		}
-
-		#endregion
+		#endregion // implementation
 	}
 }

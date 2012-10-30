@@ -1,4 +1,6 @@
 ﻿using Microsoft.Win32.TaskScheduler;
+using System.IO;
+using System.Linq;
 using Snaphappi.Properties;
 using System;
 
@@ -6,8 +8,9 @@ namespace Snaphappi
 {
 	public class SystemScheduler
 	{
+		private const string folderName = "Snaphappi";
 
-		public static void SetWatcher(string authToken)
+		public static void ScheduleWatcher(string authToken)
 		{
 			using (var taskService = new TaskService())
 			{
@@ -21,11 +24,26 @@ namespace Snaphappi
 				definition.Triggers.Add(timeTrigger);
 				definition.Actions.Add(execAction);
 
-				taskService.RootFolder.RegisterTaskDefinition
-					( @"Snaphappi\" + Settings.Default.WatchedFolderTaskName
-					, definition
-					);
+				taskService.RootFolder.RegisterTaskDefinition(TaskPath, definition);
 			}
+		}
+
+		public static void UnscheduleWatcher()
+		{
+			try
+			{
+				using (var taskService = new TaskService())
+					taskService.RootFolder.DeleteTask(TaskPath);
+			}
+			catch (FileNotFoundException)
+			{
+				// no task - no problem
+			}
+		}
+
+		private static string TaskPath
+		{
+			get { return Path.Combine(folderName, Settings.Default.WatchedFolderTaskName); }
 		}
 	}
 }

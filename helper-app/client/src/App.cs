@@ -6,25 +6,20 @@ namespace Snaphappi
 	{
 		#region interface
 
-		public void LoadUR()
-		{
-			if (LoadUploadResampled != null)
-				LoadUploadResampled();
-		}
+		public const int ExitSuccess = 0;
+		public const int ExitFailure = 1;
 
-		public void LoadUO()
+		public void Load()
 		{
-			if (LoadUploadOriginals != null)
-				LoadUploadOriginals();
+			if (Loaded != null)
+				Loaded();
 		}
 
 		#endregion
 
 		#region IApp Members
 
-		public event Action LoadUploadResampled;
-
-		public event Action LoadUploadOriginals;
+		public event Action Loaded;
 
 		public void Quit()
 		{

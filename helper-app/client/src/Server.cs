@@ -6,41 +6,38 @@ using System.Threading;
 
 namespace Snaphappi
 {
-	public class Server : IURTaskControlService, IURTaskInfoService, IURTaskUploadService
+	public class Server : IApp, IURTaskControlService, IURTaskInfoService, IURTaskUploadService
 	{
-		#region types
-
-		public enum TaskType
-		{
-			UploadResampled,
-			UploadOriginals,
-		}
-
-		#endregion
-
 		#region data
-
-		private readonly TaskType taskType;
 
 		private readonly Thread inputThread;
 
 		private HashSet<string> folders = new HashSet<string>();
 
-		private Multimap<string, string> files = new Multimap<string,string>();
+		private Multimap<string, string> files = new Multimap<string, string>();
 
-		#endregion
+		#endregion // data
 
 		#region interface
 
-		public Server(TaskType taskType)
+		public Server()
 		{
-			this.taskType = taskType;
-
 			this.inputThread = new Thread(InputProc);
 			this.inputThread.Start();
 		}
 
-		#endregion
+		#endregion // interface
+
+		#region IApp Members
+
+		public event Action Loaded = delegate {};
+
+		public void Quit()
+		{
+			Console.WriteLine("client exit");
+		}
+
+		#endregion // IApp Members
 
 		#region IURTaskControlService Members
 
@@ -74,7 +71,7 @@ namespace Snaphappi
 			Console.WriteLine("folder '{0}' contains {1} files", folder, count);
 		}
 
-		#endregion
+		#endregion // IURTaskControlService Members
 
 		#region IURTaskInfoService Members
 
@@ -86,11 +83,11 @@ namespace Snaphappi
 		{
 		}
 
-		public event Action TaskCancelled;
+		public event Action TaskCancelled = delegate {};
 
-		public event Action FoldersUpdated;
+		public event Action FoldersUpdated = delegate {};
 
-		#endregion
+		#endregion // IURTaskInfoService Members
 
 		#region IURTaskUploadService Members
 
@@ -107,27 +104,47 @@ namespace Snaphappi
 			Console.WriteLine("uploaded '{1}' ({2} bytes) from '{0}'", folder, path, size);
 		}
 
-		public event Action<string, string> UploadFailed;
+		public event Action<string, string> UploadFailed = delegate {};
 
-		#endregion
+		#endregion // IURTaskUploadService Members
 
 		#region implementation
 
 		private void InputProc()
 		{
-			Console.WriteLine("commands: exit, add folder, view folders, fiew files, cancel task");
+			var commands = new Dictionary<string, Action>();
+			commands.Add("add file",     ProcessAddFile);
+			commands.Add("add folder",   ProcessAddFolder);
+			commands.Add("cancel task",  ProcessCancelTask);
+			commands.Add("fail upload",  ProcessFailUpload);
+			commands.Add("view files",   ProcessViewFiles);
+			commands.Add("view folders", ProcessViewFolders);
+
+			Console.WriteLine
+				( "commands: start, exit, {0}"
+				, string.Join(", ", commands.Keys.ToArray())
+				);
 			for (;;)
 			{
-				switch (ReadLine(""))
+				var command = ReadLine("");
+				switch (command)
 				{
-					case "exit":                               return;
-					case "add folder":   ProcessAddFolder();   break;
-					case "cancel task":  ProcessCancelTask();  break;
-					case "fail upload":  ProcessFailUpload();  break;
-					case "view folders": ProcessViewFolders(); break;
-					case "view files":   ProcessViewFiles();   break;
+					case "exit":  return;
+					case "start": Loaded(); break;
+					default:
+						if (commands.ContainsKey(command))
+							commands[command]();
+						break;
 				}
 			}
+		}
+
+		private void ProcessAddFile()
+		{
+			files.Add
+				( ReadLine("folder").ToUpperInvariant()
+				, ReadLine("file")
+				);
 		}
 
 		private void ProcessAddFolder()
@@ -146,12 +163,6 @@ namespace Snaphappi
 			UploadFailed(ReadLine("folder"), ReadLine("file"));
 		}
 
-		private void ProcessViewFolders()
-		{
-			foreach (var folder in folders)
-				Console.WriteLine(folder);
-		}
-
 		private void ProcessViewFiles()
 		{
 			foreach (var folder in files)
@@ -162,12 +173,18 @@ namespace Snaphappi
 			}
 		}
 
+		private void ProcessViewFolders()
+		{
+			foreach (var folder in folders)
+				Console.WriteLine(folder);
+		}
+
 		private string ReadLine(string message)
 		{
 			Console.Write("{0}> ", message);
 			return Console.ReadLine();
 		}
 
-		#endregion
+		#endregion // implementation
 	}
 }

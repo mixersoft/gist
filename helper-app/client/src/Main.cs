@@ -8,18 +8,11 @@ namespace Snaphappi
 {
 	class HelperApp
 	{
-		#region settings
-
-		private const int ExitSuccess = 0;
-		private const int ExitFailure = 1;
-
         // connect to server
-		#endregion
-
 		public static int Main(string[] args)
 		{
 			if (args.Length < 1)
-				return ExitFailure;
+				return App.ExitFailure;
 
 			AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
 
@@ -28,11 +21,12 @@ namespace Snaphappi
 			{
 				case "-ur":    TestUploadResampled(); break;
 				case "-uo":    TestUploadOriginals(); break;
-				case "-watch": WatchFolders(args[1]);        break;
+				case "-w":     TestWatchFolders();    break;
+				case "-watch": WatchFolders(args[1]); break;
 				default:
 					var info = ParameterProcessor.SplitUrl(args[0]);
 					if (!IsUnique(info))
-						return ExitSuccess;
+						return App.ExitSuccess;
 					switch (info.Type)
 					{
 						case ParameterProcessor.TaskType.UploadOriginals:
@@ -42,17 +36,17 @@ namespace Snaphappi
 							UploadResampled(info.AuthToken, info.SessionID);
 							break;
 						case ParameterProcessor.TaskType.SetWatcher:
-							SystemScheduler.SetWatcher(info.AuthToken);
+							SystemScheduler.ScheduleWatcher(info.AuthToken);
 							break;
 					}
 					break;
 			}
-			return ExitSuccess;
+			return App.ExitSuccess;
 		}
 
 		private static void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
 		{
-			Environment.Exit(ExitFailure);
+			Environment.Exit(App.ExitFailure);
 		}
 
 		/// <summary>
@@ -69,6 +63,7 @@ namespace Snaphappi
 				{
 					case "-ur": break;
 					case "-uo": break;
+					case "-w":  break;
 					default:
 						try
 						{
@@ -84,6 +79,10 @@ namespace Snaphappi
 			}
 			return true;
 		}
+		
+		//------
+		// tasks
+		//------
 
 		private static void UploadResampled(string authToken, string sessionID)
 		{
@@ -108,7 +107,7 @@ namespace Snaphappi
 
 			new URPresenter(app, urModel, urView, fileLister);
 
-			app.LoadUR();
+			app.Load();
 		}
 
 		private static void UploadOriginals(string authToken, string sessionID)
@@ -116,14 +115,41 @@ namespace Snaphappi
 			throw new NotImplementedException();
 		}
 
+		private static void WatchFolders(string authToken)
+		{
+			var app = new App();
+
+			var registry = new Registry();
+			var deviceID = new DeviceID(registry, Settings.Default.RegistryKey).GetID();
+
+			var taskID = new TaskID(authToken, "", deviceID);
+
+			var controlService = new URTaskControlService (taskID, Settings.Default.TaskURI);
+			var uploadService  = new URTaskUploadService  (taskID, Settings.Default.TaskURI);
+
+			var photoLoader = new PhotoLoader();
+
+			var wfModel = new WFModel (controlService, uploadService, photoLoader);
+			var wfView  = new WFView  (controlService);
+
+			var fileSystem = new FileSystem();
+			var fileLister = new FileLister(fileSystem, Settings.Default.PhotoExtensions);
+
+			new WFPresenter(app, wfModel, wfView, fileLister);
+
+			app.Load();
+		}
+		
+		//--------
+		// testing
+		//--------
+
 		private static void TestUploadResampled()
 		{
 			ConsoleHelper.Alloc();
 			ConsoleHelper.Title = "Snaphappi Helper Console";
 
-			var app = new App();
-
-			var server = new Server(Server.TaskType.UploadResampled);
+			var server = new Server();
 
 			var photoLoader = new PhotoLoader();
 
@@ -133,17 +159,29 @@ namespace Snaphappi
 			var fileSystem = new FileSystem();
 			var fileLister = new FileLister(fileSystem, Settings.Default.PhotoExtensions);
 
-			new URPresenter(app, urModel, urView, fileLister);
-
-			app.LoadUR();
+			new URPresenter(server, urModel, urView, fileLister);
 		}
 
 		private static void TestUploadOriginals()
 		{
 		}
 
-		private static void WatchFolders(string p)
+		private static void TestWatchFolders()
 		{
+			ConsoleHelper.Alloc();
+			ConsoleHelper.Title = "Snaphappi Helper Console";
+
+			var server = new Server();
+
+			var photoLoader = new PhotoLoader();
+
+			var wfModel = new WFModel (server, server, photoLoader);
+			var wfView  = new WFView  (server);
+
+			var fileSystem = new FileSystem();
+			var fileLister = new FileLister(fileSystem, Settings.Default.PhotoExtensions);
+
+			new WFPresenter(server, wfModel, wfView, fileLister);
 		}
 	}
 }

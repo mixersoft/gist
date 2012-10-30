@@ -25,7 +25,7 @@ namespace Snaphappi
 			this.uoView     = uoView;
 			this.fileFinder = fileFinder;
 
-			app.LoadUploadOriginals += OnLoad;
+			app.Loaded += OnLoad;
 
 			uoModel.InfoDownloaded += OnInfoDownloaded;
 			uoModel.TaskCancelled  += OnTaskCancelled;
