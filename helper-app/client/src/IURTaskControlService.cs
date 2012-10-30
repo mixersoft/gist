@@ -7,6 +7,8 @@ namespace Snaphappi
 		string[] GetFiles(string folder);
 
 		string[] GetFolders();
+
+		string[] GetWatchedFolders();
 		
 		void ReportFolderNotFound(string folder);
 

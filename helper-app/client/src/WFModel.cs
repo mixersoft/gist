@@ -40,7 +40,7 @@ namespace Snaphappi
 
 		public void FetchFolders()
 		{
-			var folders = controlService.GetFolders();
+			var folders = controlService.GetWatchedFolders();
 			if (folders.Length == 0)
 				FolderListEmpty();
 			else

@@ -43,6 +43,12 @@ namespace Snaphappi
 				return task.GetFolders(id).ToArray();
 		}
 
+		public string[] GetWatchedFolders()
+		{
+			lock (task)
+				return task.GetWatchedFolders(id).ToArray();
+		}
+
 		public void ReportFolderNotFound(string folder)
 		{
 			lock (task)
