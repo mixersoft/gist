@@ -14,6 +14,8 @@ namespace Snaphappi
 
 		private HashSet<string> folders = new HashSet<string>();
 
+		private HashSet<string> watchedFolders = new HashSet<string>();
+
 		private Multimap<string, string> files = new Multimap<string, string>();
 
 		#endregion // data
@@ -49,6 +51,11 @@ namespace Snaphappi
 		public string[] GetFolders()
 		{
 			return folders.ToArray();
+		}
+
+		public string[] GetWatchedFolders()
+		{
+			return watchedFolders.ToArray();
 		}
 
 		public void ReportFolderNotFound(string folder)
