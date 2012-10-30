@@ -33,30 +33,15 @@ namespace Snaphappi
 			fileLister.FolderSearchComplete += OnFolderSearchComplete;
 		}
 
-		private void OnLoaded()
+		private void OnFileFound(string folderPath, string filePath)
 		{
-			urModel.FetchFolders();
+			urModel.UploadFile(folderPath, filePath);
 		}
 
 		private void OnFolderAdded(string folder)
 		{
 			urModel.FetchFiles(folder);
 			fileLister.SearchFolder(folder);
-		}
-
-		private void OnTaskCancelled()
-		{
-			app.Quit();
-		}
-
-		private void OnFileFound(string folderPath, string filePath)
-		{
-			urModel.UploadFile(folderPath, filePath);
-		}
-		
-		private void OnUploadFailed(string folderPath, string filePath)
-		{
-			urView.ReportUploadFailed(folderPath, filePath);
 		}
 
 		private void OnFolderNotFound(string folderPath)
@@ -73,6 +58,21 @@ namespace Snaphappi
 		private void OnFolderUploadComplete(string folderPath)
 		{
 			urView.ReportFolderUploadComplete(folderPath);
+		}
+
+		private void OnLoaded()
+		{
+			urModel.FetchFolders();
+		}
+
+		private void OnTaskCancelled()
+		{
+			app.Quit();
+		}
+		
+		private void OnUploadFailed(string folderPath, string filePath)
+		{
+			urView.ReportUploadFailed(folderPath, filePath);
 		}
 	}
 }

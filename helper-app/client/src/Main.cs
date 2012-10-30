@@ -78,6 +78,10 @@ namespace Snaphappi
 			}
 			return true;
 		}
+		
+		//------
+		// tasks
+		//------
 
 		private static void UploadResampled(string authToken, string sessionID)
 		{
@@ -134,6 +138,10 @@ namespace Snaphappi
 
 			app.Load();
 		}
+		
+		//--------
+		// testing
+		//--------
 
 		private static void TestUploadResampled()
 		{

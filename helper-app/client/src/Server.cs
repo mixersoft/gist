@@ -163,12 +163,6 @@ namespace Snaphappi
 			UploadFailed(ReadLine("folder"), ReadLine("file"));
 		}
 
-		private void ProcessViewFolders()
-		{
-			foreach (var folder in folders)
-				Console.WriteLine(folder);
-		}
-
 		private void ProcessViewFiles()
 		{
 			foreach (var folder in files)
@@ -177,6 +171,12 @@ namespace Snaphappi
 				foreach (var file in folder.Value)
 					Console.WriteLine("\t" + file);
 			}
+		}
+
+		private void ProcessViewFolders()
+		{
+			foreach (var folder in folders)
+				Console.WriteLine(folder);
 		}
 
 		private string ReadLine(string message)
