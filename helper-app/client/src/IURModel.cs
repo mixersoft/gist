@@ -23,6 +23,8 @@ namespace Snaphappi
 		
 		event Action TaskCancelled;
 
+		event Action<string, string> DuplicateUpload;
+
 		event Action<string, string> UploadFailed;
 	}
 }

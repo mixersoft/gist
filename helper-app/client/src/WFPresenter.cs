@@ -23,6 +23,7 @@ namespace Snaphappi
 
 			app.Loaded += OnLoaded;
 
+			wfModel.DuplicateUpload      += OnDuplicateUpload;
 			wfModel.FolderListEmpty      += OnFolderListEmpty;
 			wfModel.FolderAdded          += OnFolderAdded;
 			wfModel.FolderUploadComplete += OnFolderUploadComplete;
@@ -31,6 +32,11 @@ namespace Snaphappi
 			fileLister.FileFound            += OnFileFound;
 			fileLister.FolderSearchComplete += OnFolderSearchComplete;
 			fileLister.FolderNotFound       += OnFolderNotFound;
+		}
+
+		private void OnDuplicateUpload(string folderPath, string filePath)
+		{
+			wfModel.FetchFiles(folderPath);
 		}
 
 		private void OnFileFound(string folderPath, string filePath)

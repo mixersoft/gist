@@ -33,6 +33,28 @@ struct TaskID
 	3: required string DeviceID;
 }
 
+enum ErrorCode
+{
+	Unknown      = 1;
+	InvalidAuth  = 2;
+	DataConflict = 3;
+}
+
+exception SystemException
+{
+	/**
+	 * The numeric code indicating the type of error that has occured.
+	 */
+	1: required ErrorCode ErrorCode;
+
+	/**
+	 * Optional additional information about the error.
+	 * Note: it is important to avoid conflicts with native exception
+	 *       fields when naming this member.
+	 */
+	2: optional string Information;
+}
+
 /**
  * Flags indicating the state of the task.
  */
@@ -66,48 +88,70 @@ service Task
 	void AddFolder
 		( 1: TaskID id
 		, 2: string path
-		);
+		) throws (1: SystemException systemException);
 
 	/**
 	 * Return the number of files to be uploaded from a folder.
 	 */
-	i32 GetFileCount(1: TaskID id, 2: string folder);
+	i32 GetFileCount
+		( 1: TaskID id
+		, 2: string folder
+		) throws (1: SystemException systemException);
 
 	/**
 	 * Return the list of all files uploaded from the given folder within
 	 * the device corresponding to the given task ID.
 	 */
-	list<string> GetFiles(1: TaskID id, 2: string folder);
+	list<string> GetFiles
+		( 1: TaskID id
+		, 2: string folder
+		) throws (1: SystemException systemException);
 
 	/**
 	 * Return the list of folders to scan for images.
 	 */
-	list<string> GetFolders(1: TaskID id);
+	list<string> GetFolders
+		( 1: TaskID id
+		) throws (1: SystemException systemException);
 
 	/**
 	 * Retrieves flags indicating the state of the task.
 	 */
-	URTaskState GetState(1: TaskID id);
+	URTaskState GetState
+		( 1: TaskID id
+		) throws (1: SystemException systemException);
 
 	/**
 	 * Retrieves the list of folders this user has set to be watched.
 	 */
-	list<string> GetWatchedFolders(1: TaskID id);
+	list<string> GetWatchedFolders
+		( 1: TaskID id
+		) throws (1: SystemException systemException);
 
 	/**
 	 * Report the number of files to be uploaded from a folder.
 	 */
-	void ReportFileCount(1: TaskID id, 2: string folder, 3: i32 count);
+	void ReportFileCount
+		( 1: TaskID id
+		, 2: string folder
+		, 3: i32    count
+		) throws (1: SystemException systemException);
 
 	/**
 	 * Report that a folder could not be searched.
 	 */
-	void ReportFolderNotFound(1: TaskID id, 2: string folder);
+	void ReportFolderNotFound
+		( 1: TaskID id
+		, 2: string folder
+		) throws (1: SystemException systemException);
 
 	/**
 	 * Report that all files in a folder have been uploaded.
 	 */
-	void ReportFolderUploadComplete(1: TaskID id, 2: string folder);
+	void ReportFolderUploadComplete
+		( 1: TaskID id
+		, 2: string folder
+		) throws (1: SystemException systemException);
 
 	/**
 	 * Report a failed upload.
@@ -122,5 +166,5 @@ service Task
 		( 1: TaskID id
 		, 2: string path
 		, 3: binary data
-		);
+		) throws (1: SystemException systemException);
 }

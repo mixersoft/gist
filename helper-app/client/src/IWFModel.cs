@@ -21,5 +21,7 @@ namespace Snaphappi
 		event Action<string> FolderAdded;
 
 		event Action<string, string> UploadFailed;
+
+		event Action<string, string> DuplicateUpload;
 	}
 }

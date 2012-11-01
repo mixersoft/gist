@@ -2,63 +2,107 @@ using Emgu.CV.CvEnum;
 using Emgu.CV.ML;
 using Emgu.CV.Structure;
 using Emgu.CV;
+using Nemerle.Collections;
 using System.Drawing;
-using System.Threading;
-using System.Windows.Forms;
+using System.Math;
 using System;
 
-def GetDominantColor(path)
+def GetDominantColor(path, _)
 {
-	using (image = Image.[Bgr, double](path))
+	def srcImage = Image.[Bgr, float](path);
+	def image    = Image.[Bgr, float](srcImage.Size);
+
+	CvInvoke.cvCvtColor
+		( src  = srcImage.Ptr
+		, dst  = image.Ptr
+		, code = COLOR_CONVERSION.CV_BGR2Lab
+		);
+
+	def samples = Matrix.[float](image.Cols * image.Rows, 3);
+	for (mutable c = 0; c != image.Cols; ++c)
+	for (mutable r = 0; r != image.Rows; ++r)
 	{
-		def samples = Matrix.[double](image.Cols * image.Rows, 3);
-		for (mutable c = 0; c != image.Cols; ++c)
-		for (mutable r = 0; r != image.Rows; ++r)
-		{
-			samples[r * image.Cols + c, 0] = image[r, c].Red;
-			samples[r * image.Cols + c, 1] = image[r, c].Green;
-			samples[r * image.Cols + c, 2] = image[r, c].Blue;
-		}
+		def samplesRow = r * image.Cols + c;
+		samples[samplesRow, 0] = image[r, c].Red   :> float;
+		samples[samplesRow, 1] = image[r, c].Green :> float;
+		samples[samplesRow, 2] = image[r, c].Blue  :> float;
+	}
 
-		def labels = Matrix.[int](2, 1);
+	def labels = Matrix.[int](samples.Rows, 1);
 
-		_ = CvInvoke.cvKMeans2
-			( samples =      samples.Ptr
-			, clusterCount = labels.Rows
-			, labels =       labels.Ptr
-			, termcrit =     MCvTermCriteria(maxIteration = 10)
-			, attempts =     2
-			, rng =          IntPtr.Zero
-			, flags =        0
-			, centers =      IntPtr.Zero
-			, compactness =  IntPtr.Zero
+	def centers = Matrix.[float](4, 3);
+
+	_ = CvInvoke.cvKMeans2
+		( samples      = samples.Ptr
+		, clusterCount = centers.Rows
+		, labels       = labels.Ptr
+		, termcrit     = MCvTermCriteria(maxIteration = 10)
+		, attempts     = 5
+		, rng          = IntPtr.Zero
+		, flags        = 0
+		, centers      = centers.Ptr
+		, compactness  = IntPtr.Zero
+		);
+
+	def centersImage = Image.[Bgr, float](1, centers.Rows);
+	for (mutable r = 0; r != centers.Rows; ++r)
+	{
+		centersImage[r, 0] = Bgr
+			( red   = centers[r, 0]
+			, green = centers[r, 1]
+			, blue  = centers[r, 2]
 			);
+	}
 
-		def GetColorFromSample(i)
+	def centers = Image.[Bgr, float](centersImage.Size);
+	CvInvoke.cvCvtColor
+		( src  = centersImage.Ptr
+		, dst  = centers.Ptr
+		, code = COLOR_CONVERSION.CV_Lab2BGR
+		);
+
+	def GetColorFromSample(i)
+	{
+		def Clamp(n)
 		{
-			Color.FromArgb
-				( red   = samples[i, 0] :> int
-				, green = samples[i, 1] :> int
-				, blue  = samples[i, 2] :> int
-				);
+			Min(Max(n :> int, 0), 255)
 		}
-		GetColorFromSample(labels[0, 0]);
+		def color = centers[i, 0];
+		Color.FromArgb
+			( red   = Clamp(color.Red)
+			, green = Clamp(color.Green)
+			, blue  = Clamp(color.Blue)
+			);
+	}
+	$[0..centers.Rows-1].ToArray()
+		.Map(GetColorFromSample);
+}
+
+def DrawBitmap(colors, path)
+{
+	def cellW = 64;
+	def cellH = 64;
+	def rowCount = colors.Length;;
+	def colCount = colors[0].Length;
+	using (bmp = Bitmap(cellW * colCount, cellH * rowCount))
+	{
+		using (gfx = Graphics.FromImage(bmp))
+		{
+			for (mutable row = 0; row != rowCount; ++row)
+			for (mutable col = 0; col != colCount; ++col)
+			{
+				gfx.FillRectangle
+					( SolidBrush(colors[row][col])
+					, Rectangle(col * cellW, row * cellH, cellW, cellH)
+					);
+			}
+		}
+		bmp.Save(path);
 	}
 }
 
-def CreateForm(color)
-{
-	def form = Form();
-	form.FormBorderStyle = FormBorderStyle.FixedDialog;
-	form.Text            = "Dominant Colours";
-	form.BackColor       = color;
-	form;
-}
-
-Application.EnableVisualStyles();
-Application.SetCompatibleTextRenderingDefault(false);
-
-def thread = Thread(ThreadStart(() => GetDominantColor(@"c:\Temp\1.jpg") |> CreateForm |> Application.Run));
-thread.SetApartmentState(ApartmentState.STA);
-thread.Start();
-
+def input = @"C:\Users\Alexey\Pictures\Kary 14.jpg";
+DrawBitmap
+	( $[1..1].ToArray().Map(n => GetDominantColor(input, n).Sort(_.ToArgb()))
+	, "dominant colours.png"
+	);

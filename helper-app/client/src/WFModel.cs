@@ -70,6 +70,12 @@ namespace Snaphappi
 
 		public event Action<string> FolderAdded = delegate {};
 
+		public event Action<string, string> DuplicateUpload
+		{
+			add    { uploadService.DuplicateUpload += value; }
+			remove { uploadService.DuplicateUpload -= value; }
+		}
+
 		public event Action<string, string> UploadFailed
 		{
 			add    { uploadService.UploadFailed += value; }

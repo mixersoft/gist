@@ -23,6 +23,7 @@ namespace Snaphappi
 
 			app.Loaded += OnLoaded;
 			
+			urModel.DuplicateUpload      += OnDuplicateUpload;
 			urModel.FolderAdded          += OnFolderAdded;
 			urModel.TaskCancelled        += OnTaskCancelled;
 			urModel.UploadFailed         += OnUploadFailed;
@@ -31,6 +32,11 @@ namespace Snaphappi
 			fileLister.FileFound            += OnFileFound;
 			fileLister.FolderNotFound       += OnFolderNotFound;
 			fileLister.FolderSearchComplete += OnFolderSearchComplete;
+		}
+
+		private void OnDuplicateUpload(string folderPath, string filePath)
+		{
+			urModel.FetchFiles(folderPath);
 		}
 
 		private void OnFileFound(string folderPath, string filePath)
