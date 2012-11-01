@@ -1,4 +1,5 @@
-﻿using Thrift.Protocol;
+﻿using Thrift;
+using Thrift.Protocol;
 using Thrift.Transport;
 using Snaphappi.API;
 using System;
@@ -48,7 +49,9 @@ namespace Snaphappi
 			taskQueue.Enqueue(action);
 		}
 
-		public event Action<string, string> UploadFailed;
+		public event Action<string, string> DuplicateUpload = delegate {};
+
+		public event Action<string, string> UploadFailed = delegate {};
 
 		#endregion
 
@@ -66,7 +69,14 @@ namespace Snaphappi
 			{
 				task.UploadFile(id, path, LoadFile());
 			}
-			catch (Exception)
+			catch (Snaphappi.API.SystemException e)
+			{
+				if (e.ErrorCode == ErrorCode.DataConflict)
+					DuplicateUpload(folder, path);
+				else
+					throw;
+			}
+			catch (TApplicationException)
 			{
 				UploadFailed(folder, path);
 			}
