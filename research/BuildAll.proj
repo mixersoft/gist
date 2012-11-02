@@ -10,34 +10,34 @@
 
 	<ItemGroup>
 	<!-- source code -->
-		<ImageGroupingSrc     Include="src\image-grouping\*.n"      />
+		<PipelineSrc     Include="src\pipeline\*.n"      />
 		<ClusterUiSrc         Include="src\cluster-ui\*.n"          />
-		<ImageGroupingTestSrc Include="src\image-grouping-test\*.n" />
+		<PipelineTestSrc Include="src\pipeline-test\*.n" />
 		<PrettyPrintSrc       Include="src\pretty-print\*.n"        />
 		<DominantColorsSrc    Include="src\dominant-colors\*.n"     />
 	<!-- output -->
-		<ImageGroupingBin     Include="bin\ImageGrouping.exe"     />
+		<PipelineBin     Include="bin\Pipeline.exe"     />
 		<ClusterUiBin         Include="bin\ClusterUI.exe"         />
-		<ImageGroupingTestBin Include="bin\ImageGroupingTest.dll" />
+		<PipelineTestBin Include="bin\PipelineTest.dll" />
 		<PrettyPrintBin       Include="bin\PrettyPrint.exe"       />
 		<DominantColorsBin    Include="bin\DominantColors.exe"    />
 		<Out Include="bin\" />
 	<!-- references -->
-		<ImageGroupingRef     Include="System.Core.dll"          />
-		<ImageGroupingRef     Include="System.Drawing.dll"       />
-		<ImageGroupingRef     Include="System.Windows.Forms.dll" />
-		<ImageGroupingRef     Include="PresentationCore"         />
-		<ImageGroupingRef     Include="lib\ComputeGist.dll"      />
-		<ImageGroupingRef     Include="lib\Emgu.CV.dll"          />
-		<ImageGroupingRef     Include="lib\Emgu.Util.dll"        />
-		<ImageGroupingRef     Include="lib\Newtonsoft.Json.dll"  />
-		<ImageGroupingRef     Include="lib\Profiling.dll"        />
+		<PipelineRef     Include="System.Core.dll"          />
+		<PipelineRef     Include="System.Drawing.dll"       />
+		<PipelineRef     Include="System.Windows.Forms.dll" />
+		<PipelineRef     Include="PresentationCore"         />
+		<PipelineRef     Include="lib\ComputeGist.dll"      />
+		<PipelineRef     Include="lib\Emgu.CV.dll"          />
+		<PipelineRef     Include="lib\Emgu.Util.dll"        />
+		<PipelineRef     Include="lib\Newtonsoft.Json.dll"  />
+		<PipelineRef     Include="lib\Profiling.dll"        />
 		<ClusterUiRef         Include="System.Drawing.dll"       />
 		<ClusterUiRef         Include="System.Windows.Forms.dll" />
 		<ClusterUiRef         Include="lib\Newtonsoft.Json.dll"  />
-		<ImageGroupingTestRef Include="System.Core"              />
-		<ImageGroupingTestRef Include="lib\nunit.framework.dll"  />
-		<ImageGroupingTestRef Include="@(ImageGroupingBin)"      />
+		<PipelineTestRef Include="System.Core"              />
+		<PipelineTestRef Include="lib\nunit.framework.dll"  />
+		<PipelineTestRef Include="@(PipelineBin)"      />
 		<PrettyPrintRef       Include="lib\Newtonsoft.Json.dll"  />
 		<DominantColorsRef    Include="System.Drawing.dll"       />
 		<DominantColorsRef    Include="System.Windows.Forms.dll" />
@@ -57,41 +57,41 @@
 
 	<Target
 		Name             = "All"
-		DependsOnTargets = "ImageGrouping; ImageGroupingTest; ClusterUI; PrettyPrint; DominantColors"
+		DependsOnTargets = "Pipeline; PipelineTest; ClusterUI; PrettyPrint; DominantColors"
 		/>
 
 	<Target
-		Name             = "ImageGrouping"
-		Inputs           = "@(ImageGroupingSrc)"
-		Outputs          = "@(ImageGroupingBin)"
+		Name             = "Pipeline"
+		Inputs           = "@(PipelineSrc)"
+		Outputs          = "@(PipelineBin)"
 		DependsOnTargets = "Dependencies"
 		>
 		<ncc
 			DefineConstants      = "$(Defines)"
 			EmitDebugInformation = "true"
 			NoLogo               = "true"
-			OutputAssembly       = "@(ImageGroupingBin)"
+			OutputAssembly       = "@(PipelineBin)"
 			Platform             = "x64"
-			References           = "@(ImageGroupingRef)"
-			Sources              = "@(ImageGroupingSrc)"
+			References           = "@(PipelineRef)"
+			Sources              = "@(PipelineSrc)"
 			TargetType           = "exe"
 			/>
 	</Target>
 
 	<Target
-		Name             = "ImageGroupingTest"
-		Inputs           = "@(ImageGroupingTestSrc); @(ImageGroupingBin)"
-		Outputs          = "@(ImageGroupingTestBin)"
-		DependsOnTargets = "ImageGrouping"
+		Name             = "PipelineTest"
+		Inputs           = "@(PipelineTestSrc); @(PipelineBin)"
+		Outputs          = "@(PipelineTestBin)"
+		DependsOnTargets = "Pipeline"
 		>
 		<ncc
 			DefineConstants      = "$(Defines)"
 			EmitDebugInformation = "true"
 			NoLogo               = "true"
-			OutputAssembly       = "@(ImageGroupingTestBin)"
+			OutputAssembly       = "@(PipelineTestBin)"
 			Platform             = "x64"
-			References           = "@(ImageGroupingTestRef)"
-			Sources              = "@(ImageGroupingTestSrc)"
+			References           = "@(PipelineTestRef)"
+			Sources              = "@(PipelineTestSrc)"
 			TargetType           = "library"
 			/>
 	</Target>
