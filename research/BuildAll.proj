@@ -44,6 +44,7 @@
 		<DominantColorsRef    Include="lib\Emgu.CV.dll"          />
 		<DominantColorsRef    Include="lib\Emgu.CV.ML.dll"       />
 		<DominantColorsRef    Include="lib\Emgu.Util.dll"        />
+		<DominantColorsRef    Include="lib\Profiling.dll"        />
 	<!-- dependencies -->
 		<Dependencies Include="lib\*" />
 	</ItemGroup>
