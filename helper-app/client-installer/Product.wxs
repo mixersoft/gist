@@ -59,6 +59,11 @@
 					<Component Id="ProductConfigComponent">
 						<File Id="ProductConfig" Source="$(var.client.TargetPath).config" />
 					</Component>
+
+					<!-- The Task Scheduler library. -->
+					<Component Id="TaskSchedulerComponent">
+						<File Id="TaskSchedulerDll" Source="$(var.client.ProjectDir)\lib\Microsoft.Win32.TaskScheduler.dll" />
+					</Component>
 					
 					<!-- The Thrift library. -->
 					<Component Id="ThriftComponent">
@@ -112,6 +117,7 @@
 		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
 			<ComponentRef Id="ProductComponent" />
 			<ComponentRef Id="ProductConfigComponent" />
+			<ComponentRef Id="TaskSchedulerComponent" />
 			<ComponentRef Id="ThriftComponent" />
 			<ComponentRef Id="ImageMagick" />
 		</ComponentGroup>
