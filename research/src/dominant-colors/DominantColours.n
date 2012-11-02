@@ -3,10 +3,16 @@ using Emgu.CV.ML;
 using Emgu.CV.Structure;
 using Emgu.CV;
 using Nemerle.Collections;
+using Profiling;
 using System.Drawing;
 using System.Math;
 using System;
 
+[assembly: ProfSetup(Enabled)]
+
+module ProfilingHelper { [ ProfDump ] public Print() : void {} }
+
+ProfileLocal
 def GetDominantColor(path, _)
 {
 	def srcImage = Image.[Bgr, float](path);
@@ -18,14 +24,20 @@ def GetDominantColor(path, _)
 		, code = COLOR_CONVERSION.CV_BGR2Lab
 		);
 
-	def samples = Matrix.[float](image.Cols * image.Rows, 3);
-	for (mutable c = 0; c != image.Cols; ++c)
-	for (mutable r = 0; r != image.Rows; ++r)
+	def samplingStep = 2;
+
+	def sampledRows = image.Rows / samplingStep;
+	def sampledCols = image.Cols / samplingStep;
+
+	def samples = Matrix.[float](sampledRows * sampledCols, 3);
+	for (mutable c = 0; c < sampledCols; ++c)
+	for (mutable r = 0; r < sampledRows; ++r)
 	{
-		def samplesRow = r * image.Cols + c;
-		samples[samplesRow, 0] = image[r, c].Red   :> float;
-		samples[samplesRow, 1] = image[r, c].Green :> float;
-		samples[samplesRow, 2] = image[r, c].Blue  :> float;
+		def samplesRow = r * sampledCols + c;
+		def color = image[r * samplingStep, c * samplingStep];
+		samples[samplesRow, 0] = color.Red   :> float;
+		samples[samplesRow, 1] = color.Green :> float;
+		samples[samplesRow, 2] = color.Blue  :> float;
 	}
 
 	def labels = Matrix.[int](samples.Rows, 1);
@@ -103,6 +115,8 @@ def DrawBitmap(colors, path)
 
 def input = @"C:\Users\Alexey\Pictures\Kary 14.jpg";
 DrawBitmap
-	( $[1..1].ToArray().Map(n => GetDominantColor(input, n).Sort(_.ToArgb()))
+	( $[1..4].ToArray().Map(n => GetDominantColor(input, n).Sort(_.ToArgb()))
 	, "dominant colours.png"
 	);
+
+ProfilingHelper.Print();
