@@ -68,6 +68,7 @@ namespace Snaphappi
 
 		private void OnLoaded()
 		{
+			urModel.StartPolling();
 			urModel.FetchFolders();
 		}
 
