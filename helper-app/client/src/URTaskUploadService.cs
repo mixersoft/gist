@@ -67,7 +67,11 @@ namespace Snaphappi
 		{
 			try
 			{
-				task.UploadFile(id, path, LoadFile());
+				var info = new UploadInfo();
+				info.UploadType = UploadType.Preview;
+				info.__isset.UploadType = true;
+
+				task.UploadFile(id, path, LoadFile(), info);
 			}
 			catch (Snaphappi.API.SystemException e)
 			{

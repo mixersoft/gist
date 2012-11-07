@@ -76,6 +76,20 @@ struct URTaskState
 	3: optional i32  FileUpdateCount;
 }
 
+enum UploadType
+{
+	Preview  = 1;
+	Original = 2;
+}
+
+struct UploadInfo
+{
+	/**
+	 * The type of file being uploaded.
+	 */
+	1: required UploadType UploadType;
+}
+
 /**
  * Service for working with the task of servicing the initial upload of files
  * from the user's computer to the server.
@@ -88,6 +102,15 @@ service Task
 	void AddFolder
 		( 1: TaskID id
 		, 2: string path
+		) throws (1: SystemException systemException);
+
+	/**
+	 * Returns the device ID associated with this session or empty string
+	 * if it is not yet known.
+	 */
+	string GetDeviceID
+		( 1: string authToken
+		, 2: string sessionID
 		) throws (1: SystemException systemException);
 
 	/**
@@ -156,15 +179,18 @@ service Task
 	/**
 	 * Report a failed upload.
 	 */
-	void ReportUploadFailed(1: TaskID id, 2: string folder, 3: string path);
+	void ReportUploadFailed
+		( 1: TaskID id, 2: string folder, 3: string path
+		) throws (1: SystemException systemException);
 
 	/**
 	 * Upload file contents, along with its path and the folder in which it
 	 * was found.
 	 */
 	void UploadFile
-		( 1: TaskID id
-		, 2: string path
-		, 3: binary data
+		( 1: TaskID     id
+		, 2: string     path
+		, 3: binary     data
+		, 4: UploadInfo info
 		) throws (1: SystemException systemException);
 }
