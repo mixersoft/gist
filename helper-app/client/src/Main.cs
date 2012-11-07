@@ -121,7 +121,7 @@ namespace Snaphappi
 			var registry = new Registry();
 			var deviceID = new DeviceID(registry, Settings.Default.RegistryKey).GetID();
 
-			var taskID = new TaskID(authToken, "", deviceID);
+			var taskID = new TaskID(authToken, Guid.NewGuid().ToString(), deviceID);
 
 			var controlService = new URTaskControlService (taskID, Settings.Default.TaskURI);
 			var uploadService  = new URTaskUploadService  (taskID, Settings.Default.TaskURI);
