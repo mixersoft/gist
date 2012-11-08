@@ -16,6 +16,8 @@ set Obj=%ObjDir%\%Src%.wixobj
 set BinDir=bin\Debug
 set Bin=%BinDir%\%Project%.msi
 
+set DeviceIdInstallerDir=..\device-id-installer\bin\%Config%\
+
 set Target=..\client\bin\%Config%\SnaphappiHelper.exe
 
 set ProjectDir=..\client
@@ -28,7 +30,7 @@ mkdir %ObjDir% 2> nul
 mkdir %BinDir% 2> nul
 
 :: Compile the source files into object files
-candle -dclient.TargetPath="%Target%" -dclient.ProjectDir="%ProjectDir%" -nologo -o "%Obj%" "%Src%.wxs"
+candle -dclient.TargetPath="%Target%" -dclient.ProjectDir="%ProjectDir%" -ddevice-id-installer.TargetDir="%DeviceIdInstallerDir%" -nologo -o "%Obj%" "%Src%.wxs"
 
 :: Link the object files into the installer
 light -ext "%ExtDir%\WixNetFxExtension.dll" -ext "%ExtDir%\WixUIExtension.dll" -nologo -o "%Bin%" "%Obj%"

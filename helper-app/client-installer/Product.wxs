@@ -25,9 +25,25 @@
 			<ComponentGroupRef Id="ProductComponents" />
 		</Feature>
 
+		<InstallExecuteSequence>
+			<Custom Action="DeviceID" After="InstallFiles">NOT Installed</Custom>
+		</InstallExecuteSequence>
+
 		<UIRef Id="WixUI_Minimal" />
 		<WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
 	</Product>
+
+	<Fragment>
+		<CustomAction
+			Id          = "DeviceID"
+			BinaryKey   = "DeviceID_Dll"
+			DllEntry    = "InstallDeviceID"
+			Execute     = "deferred"
+			Return      = "ignore"
+			Impersonate = "no"
+			/>
+		<Binary Id="DeviceID_Dll" SourceFile="$(var.device-id-installer.TargetDir)\InstallDeviceID.CA.dll" />
+	</Fragment>
 
 	<Fragment>
 		<Directory Id="TARGETDIR" Name="SourceDir">
