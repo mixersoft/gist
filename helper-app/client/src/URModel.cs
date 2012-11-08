@@ -58,7 +58,6 @@ namespace Snaphappi
 		public void FetchFolders()
 		{
 			AddFolders(controlService.GetFolders());
-			infoService.StartPolling((int)Math.Floor(Settings.Default.InfoPollingRate.TotalMilliseconds));
 		}
 
 		public int GetFileCount(string folderPath)
@@ -71,6 +70,11 @@ namespace Snaphappi
 		public void ScheduleFolderUploadCompletionEvent(string folderPath)
 		{
 			uploadService.ScheduleAction(() => FolderUploadComplete(folderPath));
+		}
+
+		public void StartPolling()
+		{
+			infoService.StartPolling((int)Math.Floor(Settings.Default.InfoPollingRate.TotalMilliseconds));
 		}
 
 		public void UploadFile(string folderPath, string filePath)

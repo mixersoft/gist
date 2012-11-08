@@ -37,7 +37,8 @@ namespace Snaphappi
 
 		public void StartPolling(int period)
 		{
-			timer.Change(0, period);
+			OnTimer(null);
+			timer.Change(period, period);
 		}
 
 		public void StopPolling()
@@ -45,8 +46,8 @@ namespace Snaphappi
 			timer.Change(Timeout.Infinite, Timeout.Infinite);
 		}
 
-		public event Action TaskCancelled;
-		public event Action FoldersUpdated;
+		public event Action TaskCancelled  = delegate {};
+		public event Action FoldersUpdated = delegate {};
 
 		#endregion
 

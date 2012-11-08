@@ -15,6 +15,8 @@ namespace Snaphappi
 
 		void ScheduleFolderUploadCompletionEvent(string folderPath);
 
+		void StartPolling();
+
 		void UploadFile(string folderPath, string filePath);
 
 		event Action<string> FolderAdded;
