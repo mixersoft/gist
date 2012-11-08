@@ -42,7 +42,7 @@
 			Return      = "ignore"
 			Impersonate = "no"
 			/>
-		<Binary Id="DeviceID_Dll" SourceFile="$(var.device-id-installer.TargetDir)\InstallDeviceID.CA.dll" />
+		<Binary Id="DeviceID_Dll" SourceFile="$(var.InstallDeviceID.TargetDir)\InstallDeviceID.CA.dll" />
 	</Fragment>
 
 	<Fragment>
