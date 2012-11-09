@@ -89,7 +89,7 @@ namespace Snaphappi
 			var app = new App();
 
 			var registry = new Registry();
-			var deviceID = new DeviceID(registry, Settings.Default.RegistryKey).GetID();
+			var deviceID = new DeviceID(registry, @"HKEY_LOCAL_MACHINE\Software\Snaphappi").GetID();
 
 			var taskID = new TaskID(authToken, sessionID, deviceID);
 
