@@ -11,6 +11,7 @@ namespace Snaphappi
 		private readonly IURTaskControlService controlService;
 		private readonly IURTaskUploadService  uploadService;
 		private readonly IPhotoLoader          photoLoader;
+		private readonly string                authToken;
 
 		private readonly HashSet<string> files
 			= new HashSet<string>();
@@ -24,11 +25,13 @@ namespace Snaphappi
 			( IURTaskControlService controlService
 			, IURTaskUploadService  uploadService
 			, IPhotoLoader          photoLoader
+			, string                authToken
 			)
 		{
 			this.controlService = controlService;
 			this.uploadService  = uploadService;
 			this.photoLoader    = photoLoader;
+			this.authToken      = authToken;
 		}
 
 		#region IWFModel Members
@@ -61,7 +64,7 @@ namespace Snaphappi
 
 		public void UnscheduleWatcher()
 		{
-			SystemScheduler.UnscheduleWatcher();
+			SystemScheduler.UnscheduleWatcher(authToken);
 		}
 
 		public event Action FolderListEmpty = delegate {};

@@ -120,7 +120,7 @@ namespace Snaphappi
 			var app = new App();
 
 			var registry = new Registry();
-			var deviceID = new DeviceID(registry, Settings.Default.RegistryKey).GetID();
+			var deviceID = new DeviceID(registry, @"HKEY_LOCAL_MACHINE\Software\Snaphappi").GetID();
 
 			var taskID = new TaskID(authToken, Guid.NewGuid().ToString(), deviceID);
 
@@ -129,7 +129,7 @@ namespace Snaphappi
 
 			var photoLoader = new PhotoLoader();
 
-			var wfModel = new WFModel (controlService, uploadService, photoLoader);
+			var wfModel = new WFModel (controlService, uploadService, photoLoader, authToken);
 			var wfView  = new WFView  (controlService);
 
 			var fileSystem = new FileSystem();
@@ -175,7 +175,7 @@ namespace Snaphappi
 
 			var photoLoader = new PhotoLoader();
 
-			var wfModel = new WFModel (server, server, photoLoader);
+			var wfModel = new WFModel (server, server, photoLoader, "authoritah");
 			var wfView  = new WFView  (server);
 
 			var fileSystem = new FileSystem();
