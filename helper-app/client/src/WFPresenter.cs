@@ -63,11 +63,13 @@ namespace Snaphappi
 
 		private void OnFolderSearchComplete(string folderPath)
 		{
+			wfView.ReportFileCount(folderPath, wfModel.GetFileCount(folderPath));
 			wfModel.ScheduleFolderUploadCompletionEvent(folderPath);
 		}
 
 		private void OnFolderUploadComplete(string folderPath)
 		{
+			wfView.ReportFolderUploadComplete(folderPath);
 			app.Quit();
 		}
 

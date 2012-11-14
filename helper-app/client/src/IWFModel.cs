@@ -8,6 +8,8 @@ namespace Snaphappi
 
 		void FetchFolders();
 
+		int GetFileCount(string folderPath);
+
 		void ScheduleFolderUploadCompletionEvent(string folderPath);
 
 		void UploadFile(string folderPath, string filePath);
