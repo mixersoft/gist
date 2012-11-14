@@ -122,12 +122,13 @@ namespace Snaphappi
 		private void InputProc()
 		{
 			var commands = new Dictionary<string, Action>();
-			commands.Add("add file",     ProcessAddFile);
-			commands.Add("add folder",   ProcessAddFolder);
-			commands.Add("cancel task",  ProcessCancelTask);
-			commands.Add("fail upload",  ProcessFailUpload);
-			commands.Add("view files",   ProcessViewFiles);
-			commands.Add("view folders", ProcessViewFolders);
+			commands.Add("add file",           ProcessAddFile);
+			commands.Add("add folder",         ProcessAddFolder);
+			commands.Add("add watched folder", ProcessAddWatchedFolder);
+			commands.Add("cancel task",        ProcessCancelTask);
+			commands.Add("fail upload",        ProcessFailUpload);
+			commands.Add("view files",         ProcessViewFiles);
+			commands.Add("view folders",       ProcessViewFolders);
 
 			Console.WriteLine
 				( "commands: start, exit, {0}"
@@ -160,6 +161,11 @@ namespace Snaphappi
 		{
 			folders.Add(ReadLine("folder"));
 			FoldersUpdated();
+		}
+
+		private void ProcessAddWatchedFolder()
+		{
+			watchedFolders.Add(ReadLine("folder"));
 		}
 
 		private void ProcessCancelTask()

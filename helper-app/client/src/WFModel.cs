@@ -19,6 +19,9 @@ namespace Snaphappi
 		private readonly HashSet<string> folders	
 			= new HashSet<string>();
 
+		private readonly Dictionary<string, int> uploadedFileCounts
+			= new Dictionary<string,int>();
+
 		#endregion // data
 
 		public WFModel
@@ -50,6 +53,13 @@ namespace Snaphappi
 				AddFolders(folders);
 		}
 
+		public int GetFileCount(string folderPath)
+		{
+			int count = 0;
+			uploadedFileCounts.TryGetValue(folderPath, out count);
+			return count;
+		}
+
 		public void ScheduleFolderUploadCompletionEvent(string folderPath)
 		{
 			uploadService.ScheduleAction(() => FolderUploadComplete(folderPath));
@@ -57,6 +67,8 @@ namespace Snaphappi
 
 		public void UploadFile(string folderPath, string filePath)
 		{
+			IncrementUploadedFileCount(folderPath);
+
 			if (files.Contains(filePath.ToUpperInvariant()))
 				return;
 			uploadService.UploadFile(folderPath, filePath, () => photoLoader.GetPreview(filePath));
@@ -110,6 +122,13 @@ namespace Snaphappi
 					FolderAdded(folderPath);
 				}
 			}
+		}
+
+		private void IncrementUploadedFileCount(string folderPath)
+		{
+			int count = 0;
+			uploadedFileCounts.TryGetValue(folderPath, out count);
+			uploadedFileCounts[folderPath] = count + 1;
 		}
 
 		#endregion // implementation
