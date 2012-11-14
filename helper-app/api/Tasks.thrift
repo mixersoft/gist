@@ -105,6 +105,14 @@ service Task
 		) throws (1: SystemException systemException);
 
 	/**
+	 * Remove a folder from search.
+	 */
+	void RemoveFolder
+		( 1: TaskID id
+		, 2: string path
+		) throws (1: SystemException systemException);
+		
+	/**
 	 * Returns the device ID associated with this session or empty string
 	 * if it is not yet known.
 	 */
