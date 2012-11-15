@@ -10,9 +10,9 @@ namespace Snaphappi
 	{
 		#region data
 		
-		private readonly IURTaskControlService controlService;
-		private readonly IURTaskInfoService    infoService;
-		private readonly IURTaskUploadService  uploadService;
+		private readonly ITaskControlService controlService;
+		private readonly ITaskInfoService    infoService;
+		private readonly ITaskUploadService  uploadService;
 		private readonly IPhotoLoader          photoLoader;
 
 		private readonly HashSet<string> files
@@ -29,9 +29,9 @@ namespace Snaphappi
 		#region interface
 
 		public URModel
-			( IURTaskControlService controlService
-			, IURTaskInfoService    infoService
-			, IURTaskUploadService  uploadService
+			( ITaskControlService controlService
+			, ITaskInfoService    infoService
+			, ITaskUploadService  uploadService
 			, IPhotoLoader          photoLoader
 			)
 		{

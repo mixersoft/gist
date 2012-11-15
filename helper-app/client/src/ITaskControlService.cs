@@ -2,7 +2,7 @@
 
 namespace Snaphappi
 {
-	public interface IURTaskControlService
+	public interface ITaskControlService
 	{
 		string[] GetFiles(string folder);
 

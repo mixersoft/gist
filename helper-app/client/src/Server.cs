@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace Snaphappi
 {
-	public class Server : IApp, IURTaskControlService, IURTaskInfoService, IURTaskUploadService
+	public class Server : IApp, ITaskControlService, ITaskInfoService, ITaskUploadService
 	{
 		#region data
 

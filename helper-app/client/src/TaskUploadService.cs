@@ -7,7 +7,7 @@ using System.Threading;
 
 namespace Snaphappi
 {
-	public class URTaskUploadService : IURTaskUploadService
+	public class URTaskUploadService : ITaskUploadService
 	{
 		#region data
 

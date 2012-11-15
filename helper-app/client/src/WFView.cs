@@ -6,13 +6,13 @@ namespace Snaphappi
 	{
 		#region data
 
-		private readonly IURTaskControlService controlService;
+		private readonly ITaskControlService controlService;
 
 		#endregion // data
 
 		#region interface
 
-		public WFView(IURTaskControlService controlService)
+		public WFView(ITaskControlService controlService)
 		{
 			this.controlService = controlService;
 		}

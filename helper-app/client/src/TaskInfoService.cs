@@ -6,7 +6,7 @@ using Thrift.Transport;
 
 namespace Snaphappi
 {
-	public class URTaskInfoService : IURTaskInfoService
+	public class URTaskInfoService : ITaskInfoService
 	{
 		#region data
 

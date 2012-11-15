@@ -2,7 +2,7 @@
 
 namespace Snaphappi
 {
-	public interface IURTaskInfoService
+	public interface ITaskInfoService
 	{
 		/// <summary>
 		/// Start polling the server.

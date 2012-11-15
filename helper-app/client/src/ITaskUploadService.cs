@@ -2,7 +2,7 @@
 
 namespace Snaphappi
 {
-	public interface IURTaskUploadService
+	public interface ITaskUploadService
 	{
 		void UploadFile(string folder, string path, Func<byte[]> LoadFile);
 

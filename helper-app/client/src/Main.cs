@@ -8,7 +8,6 @@ namespace Snaphappi
 {
 	class HelperApp
 	{
-        // connect to server
 		public static int Main(string[] args)
 		{
 			if (args.Length < 1)

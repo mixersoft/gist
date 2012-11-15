@@ -8,8 +8,8 @@ namespace Snaphappi
 	{
 		#region data
 		
-		private readonly IURTaskControlService controlService;
-		private readonly IURTaskUploadService  uploadService;
+		private readonly ITaskControlService controlService;
+		private readonly ITaskUploadService  uploadService;
 		private readonly IPhotoLoader          photoLoader;
 		private readonly string                authToken;
 
@@ -25,8 +25,8 @@ namespace Snaphappi
 		#endregion // data
 
 		public WFModel
-			( IURTaskControlService controlService
-			, IURTaskUploadService  uploadService
+			( ITaskControlService controlService
+			, ITaskUploadService  uploadService
 			, IPhotoLoader          photoLoader
 			, string                authToken
 			)
