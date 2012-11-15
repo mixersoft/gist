@@ -55,6 +55,7 @@ namespace Snaphappi
 
 		public string[] GetWatchedFolders()
 		{
+			AuthTokenRejected();
 			return watchedFolders.ToArray();
 		}
 
@@ -111,9 +112,9 @@ namespace Snaphappi
 			Console.WriteLine("uploaded '{1}' ({2} bytes) from '{0}'", folder, path, size);
 		}
 
-		public event Action<string, string> DuplicateUpload = delegate {};
-
-		public event Action<string, string> UploadFailed = delegate {};
+		public event Action                 AuthTokenRejected = delegate {};
+		public event Action<string, string> DuplicateUpload   = delegate {};
+		public event Action<string, string> UploadFailed      = delegate {};
 
 		#endregion // IURTaskUploadService Members
 

@@ -79,6 +79,20 @@ namespace Snaphappi
 			SystemScheduler.UnscheduleWatcher(authToken);
 		}
 
+		public event Action AuthTokenRejected
+		{
+			add
+			{
+				controlService.AuthTokenRejected += value;
+				uploadService.AuthTokenRejected  += value;
+			}
+			remove
+			{
+				controlService.AuthTokenRejected += value;
+				uploadService.AuthTokenRejected  += value;
+			}
+		}
+
 		public event Action FolderListEmpty = delegate {};
 
 		public event Action<string> FolderUploadComplete = delegate {};

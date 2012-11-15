@@ -23,6 +23,7 @@ namespace Snaphappi
 
 			app.Loaded += OnLoaded;
 
+			wfModel.AuthTokenRejected    += OnAuthTokenRejected;
 			wfModel.DuplicateUpload      += OnDuplicateUpload;
 			wfModel.FolderListEmpty      += OnFolderListEmpty;
 			wfModel.FolderAdded          += OnFolderAdded;
@@ -32,6 +33,11 @@ namespace Snaphappi
 			fileLister.FileFound            += OnFileFound;
 			fileLister.FolderSearchComplete += OnFolderSearchComplete;
 			fileLister.FolderNotFound       += OnFolderNotFound;
+		}
+
+		private void OnAuthTokenRejected()
+		{
+			wfModel.UnscheduleWatcher();
 		}
 
 		private void OnDuplicateUpload(string folderPath, string filePath)

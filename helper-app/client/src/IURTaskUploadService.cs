@@ -8,8 +8,8 @@ namespace Snaphappi
 
 		void ScheduleAction(Action action);
 
+		event Action                 AuthTokenRejected;
 		event Action<string, string> DuplicateUpload;
-
 		event Action<string, string> UploadFailed;
 	}
 }

@@ -27,50 +27,115 @@ namespace Snaphappi
 			task = new Task.Client(new TBinaryProtocol(new THttpClient(uri)));
 		}
 
+		public event Action AuthTokenRejected = delegate {};
+
 		#endregion
 
 		#region IURTaskControlService Members
 
 		public string[] GetFiles(string folder)
 		{
-			lock (task)
-				return task.GetFiles(id, folder).ToArray();
+			try
+			{
+				lock (task)
+					return task.GetFiles(id, folder).ToArray();
+			}
+			catch (API.SystemException e)
+			{
+				if (e.ErrorCode == ErrorCode.InvalidAuth)
+					AuthTokenRejected();
+				throw;
+			}
 		}
 
 		public string[] GetFolders()
 		{
-			lock (task)
-				return task.GetFolders(id).ToArray();
+			try
+			{
+				lock (task)
+					return task.GetFolders(id).ToArray();
+			}
+			catch (API.SystemException e)
+			{
+				if (e.ErrorCode == ErrorCode.InvalidAuth)
+					AuthTokenRejected();
+				throw;
+			}
 		}
 
 		public string[] GetWatchedFolders()
 		{
-			lock (task)
-				return task.GetWatchedFolders(id).ToArray();
+			try
+			{
+				lock (task)
+					return task.GetWatchedFolders(id).ToArray();
+			}
+			catch (API.SystemException e)
+			{
+				if (e.ErrorCode == ErrorCode.InvalidAuth)
+					AuthTokenRejected();
+				throw;
+			}
 		}
 
 		public void ReportFolderNotFound(string folder)
 		{
-			lock (task)
-				task.ReportFolderNotFound(id, folder);
+			try
+			{
+				lock (task)
+					task.ReportFolderNotFound(id, folder);
+			}
+			catch (API.SystemException e)
+			{
+				if (e.ErrorCode == ErrorCode.InvalidAuth)
+					AuthTokenRejected();
+				throw;
+			}
 		}
 
 		public void ReportUploadFailed(string folder, string path)
 		{
-			lock (task)
-				task.ReportUploadFailed(id, folder, path);
+			try
+			{
+				lock (task)
+					task.ReportUploadFailed(id, folder, path);
+			}
+			catch (API.SystemException e)
+			{
+				if (e.ErrorCode == ErrorCode.InvalidAuth)
+					AuthTokenRejected();
+				throw;
+			}
 		}
 
 		public void ReportFolderUploadComplete(string folder)
 		{
-			lock (task)
-				task.ReportFolderUploadComplete(id, folder);
+			try
+			{
+				lock (task)
+					task.ReportFolderUploadComplete(id, folder);
+			}
+			catch (API.SystemException e)
+			{
+				if (e.ErrorCode == ErrorCode.InvalidAuth)
+					AuthTokenRejected();
+				throw;
+			}
 		}
 
 		public void ReportFolderFileCount(string folder, int count)
 		{
-			lock (task)
-				task.ReportFileCount(id, folder, count);
+			try
+			{
+				lock (task)
+					task.ReportFileCount(id, folder, count);
+			}
+			catch (API.SystemException e)
+			{
+				if (e.ErrorCode == ErrorCode.InvalidAuth)
+					AuthTokenRejected();
+				throw;
+			}
 		}
 
 		#endregion

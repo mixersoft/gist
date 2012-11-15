@@ -48,10 +48,10 @@ namespace Snaphappi
 		{
 			taskQueue.Enqueue(action);
 		}
-
-		public event Action<string, string> DuplicateUpload = delegate {};
-
-		public event Action<string, string> UploadFailed = delegate {};
+		
+		public event Action                 AuthTokenRejected = delegate {};
+		public event Action<string, string> DuplicateUpload   = delegate {};
+		public event Action<string, string> UploadFailed      = delegate {};
 
 		#endregion
 
@@ -75,10 +75,17 @@ namespace Snaphappi
 			}
 			catch (Snaphappi.API.SystemException e)
 			{
-				if (e.ErrorCode == ErrorCode.DataConflict)
-					DuplicateUpload(folder, path);
-				else
-					throw;
+				switch (e.ErrorCode)
+				{
+					case ErrorCode.DataConflict:
+						DuplicateUpload(folder, path);
+						break;
+					case ErrorCode.InvalidAuth:
+						AuthTokenRejected();
+						break;
+					default:
+						throw;
+				}
 			}
 			catch (TApplicationException)
 			{

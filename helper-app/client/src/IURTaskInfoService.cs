@@ -12,7 +12,8 @@ namespace Snaphappi
 
 		void StopPolling();
 
-		event Action TaskCancelled;
+		event Action AuthTokenRejected;
 		event Action FoldersUpdated;
+		event Action TaskCancelled;
 	}
 }

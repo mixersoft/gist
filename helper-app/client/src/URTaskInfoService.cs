@@ -46,8 +46,9 @@ namespace Snaphappi
 			timer.Change(Timeout.Infinite, Timeout.Infinite);
 		}
 
-		public event Action TaskCancelled  = delegate {};
-		public event Action FoldersUpdated = delegate {};
+		public event Action AuthTokenRejected = delegate {};
+		public event Action FoldersUpdated    = delegate {};
+		public event Action TaskCancelled     = delegate {};
 
 		#endregion
 
@@ -55,13 +56,27 @@ namespace Snaphappi
 
 		private void OnTimer(Object o)
 		{
-			var state = task.GetState(id);
+			var state = SafeGetState();
 			if (state.IsCancelled)
 				TaskCancelled();
 			if (state.FolderUpdateCount > folderUpdateCount)
 			{
 				folderUpdateCount = state.FolderUpdateCount;
 				FoldersUpdated();
+			}
+		}
+
+		private URTaskState SafeGetState()
+		{
+			try
+			{
+				return task.GetState(id);
+			}
+			catch (API.SystemException e)
+			{
+				if (e.ErrorCode == ErrorCode.InvalidAuth)
+					AuthTokenRejected();
+				throw;
 			}
 		}
 

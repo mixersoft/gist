@@ -15,15 +15,12 @@ namespace Snaphappi
 		void UploadFile(string folderPath, string filePath);
 
 		void UnscheduleWatcher();
-
-		event Action FolderListEmpty;
-
-		event Action<string> FolderUploadComplete;
-
-		event Action<string> FolderAdded;
-
-		event Action<string, string> UploadFailed;
-
+		
+		event Action                 AuthTokenRejected;
 		event Action<string, string> DuplicateUpload;
+		event Action<string>         FolderAdded;
+		event Action                 FolderListEmpty;
+		event Action<string>         FolderUploadComplete;
+		event Action<string, string> UploadFailed;
 	}
 }

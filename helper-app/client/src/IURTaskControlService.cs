@@ -17,5 +17,7 @@ namespace Snaphappi
 		void ReportFolderUploadComplete(string folder);
 
 		void ReportFolderFileCount(string folder, int count);
+
+		event Action AuthTokenRejected;
 	}
 }
