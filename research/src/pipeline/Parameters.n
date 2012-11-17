@@ -6,13 +6,15 @@ using System;
 /// <summary>Meta-parameter source that loads from "parameters.txt".</summary>
 class Parameters
 {
-	public mutable DownloadImagePrefix    : string;
-	public mutable ImageSize              : int * int;
 	public mutable ClusteringThreshold    : double;
-	public mutable ImageSampleSize        : int;
+	public mutable ColorWeight            : double;
+	public mutable DominantColorCount     : int;
+	public mutable DownloadImagePrefix    : string;
+	public mutable HashedImageBlur        : ImageHash.BlurMethod;
 	public mutable HashedImageBpp         : int;
 	public mutable HashedImageSize        : int;
-	public mutable HashedImageBlur        : ImageHash.BlurMethod;
+	public mutable ImageSampleSize        : int;
+	public mutable ImageSize              : int * int;
 	public mutable SimulatedTimelineCount : int;
 
 	public this()
@@ -30,7 +32,7 @@ class Parameters
 		{
 			match (str.SplitToList(' '))
 			{
-			| [ w, h] => (int.Parse(w), int.Parse(h))
+			| [w, h] => (int.Parse(w), int.Parse(h))
 			| _ => throw Exception($"Incorrect size format: '$str'.")
 			}
 		}
@@ -44,15 +46,21 @@ class Parameters
 			map.Add(name, value);
 		}
 
-		DownloadImagePrefix    = map["download image prefix"];
-		ImageSize              = map["image size"]               |> ParseSize;
 		ClusteringThreshold    = map["clustering threshold"]     |> double.Parse;
-		ImageSampleSize        = map["image sample size"]        |> int.Parse;
+		ColorWeight            = map["color component weight"]   |> double.Parse;
+		DominantColorCount     = map["dominant color count"]     |> int.Parse;
+		DownloadImagePrefix    = map["download image prefix"];
+		HashedImageBlur        = map["hashed image blur"]        |> ParseBlur;
 		HashedImageBpp         = map["hashed image bpp"]         |> int.Parse;
 		HashedImageSize        = map["hashed image size"]        |> int.Parse;
-		HashedImageBlur        = map["hashed image blur"]        |> ParseBlur;
+		ImageSampleSize        = map["image sample size"]        |> int.Parse;
+		ImageSize              = map["image size"]               |> ParseSize;
 		SimulatedTimelineCount = map["simulated timeline count"] |> int.Parse;
 
+		when (ColorWeight < 0.0)
+			throw ArgumentException("Color component weight must be non-negative.");
+		when (DominantColorCount < 0)
+			throw ArgumentException("Dominant color count must be non-negative.");
 		when (HashedImageBpp < 0 || HashedImageBpp > 8)
 			throw ArgumentException("bpp must be between 0 and 8");
 	}

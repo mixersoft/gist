@@ -18,6 +18,7 @@ using SCG = System.Collections.Generic;
 variant RunMode
 {
 | Normal
+| OptimizeColor
 | OptimizeThreshold { min : double; max : double; count : int }
 | OptimizeImageSize
 | OptimizeImageHash
@@ -57,6 +58,60 @@ module Main
 			, displayProgress = true
 			).Compute();
 		PrintProfileInfo();
+	}
+
+	private RunColorOptimization() : void
+	{
+		def parameters = Parameters();
+
+		def taskManager = TaskManager
+			( tasks =
+				[ LoadJsonDataTask          ("data")
+				, DownloadDataTask          (parameters)
+				, ExtractDescriptorsTask    (parameters)
+				, ClusterDataTask           (parameters)
+				, LoadReferenceClustersTask ()
+				, EvaluateClustersTask      ()
+				]
+			, persistData     = false
+			, displayProgress = false
+			);
+
+		def taskPath = @"eval\venice.txt";
+		def task =
+			match (taskManager.Items.Find(item : ITaskItem => item.Path == taskPath))
+			{
+			| Some(item is ClusterEvaluationItem) => item
+			| _                                   => throw Exception($"'$taskPath' not found.")
+			}
+
+		def outFile = File.CreateText("color test.txt");
+		outFile.WriteLine("threshold\tcolor\tvalue");
+
+		def Rand = Random(0).NextDouble;
+		def LinRand(min, max) { min + Rand() * (max - min) }
+		def LogRand(min, max) { Exp(Log(min) + Rand() * (Log(max) - Log(min))) }
+
+		for (mutable i = 0;; ++i)
+		{
+			parameters.ClusteringThreshold = LinRand(0.2, 0.6);
+			parameters.ColorWeight         = LogRand(0.001, 1.0);
+
+			taskManager.DiscardItemData(@"descriptors\venice");
+			taskManager.Compute();
+
+			when (i % 10 == 0)
+				Console.WriteLine();
+			Console.Write('.');
+
+			outFile.WriteLine
+				( "{0}\t{1}\t{2}"
+				, parameters.ClusteringThreshold
+				, parameters.ColorWeight
+				, task.Value
+				);
+			outFile.Flush();
+		}
 	}
 
 	private RunThresholdOptimization(min : double, max : double, count : int) : void
@@ -309,6 +364,11 @@ module Main
 					}
 				)
 			, Getopt.CliOption.Flag
+				( "-optimize-color"
+				, "Optimize dominant color component."
+				, () => runMode = RunMode.OptimizeColor()
+				)
+			, Getopt.CliOption.Flag
 				( "-optimize-image-size"
 				, "Optimize the image size."
 				, () => runMode = RunMode.OptimizeImageSize()
@@ -336,9 +396,10 @@ module Main
 			match (runMode)
 			{
 			| Normal                             => Run()
-			| OptimizeThreshold(min, max, count) => RunThresholdOptimization(min, max, count)
-			| OptimizeImageSize                  => RunImageSizeOptimization()
+			| OptimizeColor                      => RunColorOptimization()
 			| OptimizeImageHash                  => RunImageHashOptimization()
+			| OptimizeImageSize                  => RunImageSizeOptimization()
+			| OptimizeThreshold(min, max, count) => RunThresholdOptimization(min, max, count)
 			}
 		}
 	}

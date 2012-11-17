@@ -1,6 +1,8 @@
+color component weight = 0.00153788994898586
+dominant color count = 1
 download image prefix = 
 image size = 120 120
-clustering threshold = 0.43
+clustering threshold = 0.540193980531857
 image sample size = 10
 hashed image bpp = 2
 hashed image size = 8

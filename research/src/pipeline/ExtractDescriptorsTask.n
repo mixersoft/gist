@@ -54,10 +54,95 @@ class ExtractDescriptorsTask : ITask
 			}
 		def MakeDescriptor(id)
 		{
-			def FloatToDouble(n : float) { n :> double }
-			def data = ExtractDescriptor(images.MakePath(id));
-			DescriptorItem.Descriptor(id, data.Map(FloatToDouble))
+			def path   = images.MakePath(id);
+			def gist   = ExtractDescriptor(path);
+			def colors = GetDominantColors(path, parameters.DominantColorCount, 4);
+
+			def descriptor = array(gist.Length + colors.Length);
+			for (mutable i = 0; i != gist.Length; ++i)
+				descriptor[i] = gist[i] :> double;
+			for (mutable i = 0; i != colors.Length; ++i)
+				descriptor[gist.Length + i] = parameters.ColorWeight * colors[i] :> double;
+
+			DescriptorItem.Descriptor(id, descriptor);
 		}
 		result.Descriptors = images.ImageIDs.Map(MakeDescriptor);
+	}
+
+	private static GetDominantColors
+		( imagePath     : string
+		, clusterCount  : int
+		, totalClusters : int
+		) : array[float]
+	{
+		if (clusterCount == 0)
+		{
+			array(0);
+		}
+		else
+		{
+			def samples =
+				using (image = LoadLabImage(imagePath))
+					SampleImage(image, 2);
+
+			def labels  = Matrix.[int](samples.Rows, 1);
+			def centers = Matrix.[float](Math.Max(totalClusters, clusterCount), 3);
+
+			_ = CvInvoke.cvKMeans2
+				( samples      = samples.Ptr
+				, clusterCount = centers.Rows
+				, labels       = labels.Ptr
+				, termcrit     = MCvTermCriteria(maxIteration = 10)
+				, attempts     = 5
+				, rng          = IntPtr.Zero
+				, flags        = 0
+				, centers      = centers.Ptr
+				, compactness  = IntPtr.Zero
+				);
+
+			def result = array(clusterCount * 3);
+			for (mutable i = 0; i != clusterCount; ++i)
+			{
+				result[3 * i + 0] = centers[i, 0];
+				result[3 * i + 1] = centers[i, 1];
+				result[3 * i + 2] = centers[i, 2];
+			}
+			result;
+		}
+	}
+
+	private static LoadLabImage(imagePath : string) : Image.[Bgr, float]
+	{
+		using (srcImage = Image.[Bgr, float](imagePath))
+		{
+			def dstImage = Image.[Bgr, float](srcImage.Size);
+			CvInvoke.cvCvtColor
+				( src  = srcImage.Ptr
+				, dst  = dstImage.Ptr
+				, code = COLOR_CONVERSION.CV_BGR2Lab
+				);
+			dstImage;
+		}
+	}
+
+	private static SampleImage
+		( image        : Image.[Bgr, float]
+		, samplingStep : int
+		) : Matrix.[float]
+	{
+		def sampledRows = image.Rows / samplingStep;
+		def sampledCols = image.Cols / samplingStep;
+
+		def samples = Matrix.[float](sampledRows * sampledCols, 3);
+		for (mutable c = 0; c < sampledCols; ++c)
+		for (mutable r = 0; r < sampledRows; ++r)
+		{
+			def samplesRow = r * sampledCols + c;
+			def color = image[r * samplingStep, c * samplingStep];
+			samples[samplesRow, 0] = color.Red   :> float;
+			samples[samplesRow, 1] = color.Green :> float;
+			samples[samplesRow, 2] = color.Blue  :> float;
+		}
+		samples;
 	}
 }
