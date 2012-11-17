@@ -32,6 +32,7 @@ namespace Snaphappi
 			taskQueue = new BlockingQueue<Action>();
 
 			uploadThread = new Thread(UploadProc);
+			uploadThread.Name = "TaskUpload";
 			uploadThread.Start();
 		}
 

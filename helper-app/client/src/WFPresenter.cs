@@ -38,6 +38,7 @@ namespace Snaphappi
 		private void OnAuthTokenRejected()
 		{
 			wfModel.UnscheduleWatcher();
+			app.Quit();
 		}
 
 		private void OnDuplicateUpload(string folderPath, string filePath)

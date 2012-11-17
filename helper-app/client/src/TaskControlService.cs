@@ -9,9 +9,6 @@ namespace Snaphappi
 	{
 		#region data
 
-		/// <summary>
-		/// The generated task class. All access to it is serialized between threads.
-		/// </summary>
 		private readonly Task.Client task;
 
 		private readonly Snaphappi.API.TaskID id;
