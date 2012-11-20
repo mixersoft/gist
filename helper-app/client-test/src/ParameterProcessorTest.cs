@@ -10,7 +10,7 @@ namespace SnaphappiTest
 		[ Test ]
 		public void TestSplitParameter1()
 		{
-			var info = ParameterProcessor.SplitUrl(@"snaphappi://SGVsbG8gV29ybGQh_aHR0cDovL3d3dy5zbmFwaGFwcGkuY29t_ur");
+			var info = ParameterProcessor.ParseUrl(@"snaphappi://SGVsbG8gV29ybGQh_aHR0cDovL3d3dy5zbmFwaGFwcGkuY29t_ur");
 
 			var taskType  = ParameterProcessor.TaskType.UploadResampled;
 			var authToken = "Hello World!";
@@ -24,7 +24,7 @@ namespace SnaphappiTest
 		[ Test ]
 		public void TestSplitParameter2()
 		{
-			var info = ParameterProcessor.SplitUrl(@"snaphappi://MA==_MQ==_uo");
+			var info = ParameterProcessor.ParseUrl(@"snaphappi://MA==_MQ==_uo");
 
 			var taskType = ParameterProcessor.TaskType.UploadOriginals;
 

@@ -23,16 +23,22 @@ namespace Snaphappi
 
 			app.Loaded += OnLoaded;
 
-			wfModel.AuthTokenRejected    += OnAuthTokenRejected;
-			wfModel.DuplicateUpload      += OnDuplicateUpload;
-			wfModel.FolderListEmpty      += OnFolderListEmpty;
-			wfModel.FolderAdded          += OnFolderAdded;
-			wfModel.FolderUploadComplete += OnFolderUploadComplete;
-			wfModel.UploadFailed         += OnUploadFailed;
+			wfModel.AllFolderUploadsComplete += OnAllFolderUploadsComplete;
+			wfModel.AuthTokenRejected        += OnAuthTokenRejected;
+			wfModel.DuplicateUpload          += OnDuplicateUpload;
+			wfModel.FolderListEmpty          += OnFolderListEmpty;
+			wfModel.FolderAdded              += OnFolderAdded;
+			wfModel.FolderUploadComplete     += OnFolderUploadComplete;
+			wfModel.UploadFailed             += OnUploadFailed;
 
 			fileLister.FileFound            += OnFileFound;
 			fileLister.FolderSearchComplete += OnFolderSearchComplete;
 			fileLister.FolderNotFound       += OnFolderNotFound;
+		}
+
+		private void OnAllFolderUploadsComplete()
+		{
+			app.Quit();
 		}
 
 		private void OnAuthTokenRejected()
@@ -77,7 +83,6 @@ namespace Snaphappi
 		private void OnFolderUploadComplete(string folderPath)
 		{
 			wfView.ReportFolderUploadComplete(folderPath);
-			app.Quit();
 		}
 
 		private void OnLoaded()

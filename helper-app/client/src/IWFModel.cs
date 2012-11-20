@@ -16,6 +16,7 @@ namespace Snaphappi
 
 		void UnscheduleWatcher();
 		
+		event Action                 AllFolderUploadsComplete;
 		event Action                 AuthTokenRejected;
 		event Action<string, string> DuplicateUpload;
 		event Action<string>         FolderAdded;

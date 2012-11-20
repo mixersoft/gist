@@ -68,6 +68,7 @@ namespace Snaphappi
 		{
 			try
 			{
+				System.Diagnostics.Trace.WriteLine(string.Format("[{0:T}], upload: {1}", DateTime.Now, path));
 				var info = new UploadInfo();
 				info.UploadType = UploadType.Preview;
 				info.__isset.UploadType = true;

@@ -21,9 +21,11 @@ namespace Snaphappi
 				case "-ur":    TestUploadResampled(); break;
 				case "-uo":    TestUploadOriginals(); break;
 				case "-w":     TestWatchFolders();    break;
-				case "-watch": WatchFolders(args[1]); break;
+				case "-watch":
+					WatchFolders(ParameterProcessor.DecodeWatchParameter(args[1]));
+					break;
 				default:
-					var info = ParameterProcessor.SplitUrl(args[0]);
+					var info = ParameterProcessor.ParseUrl(args[0]);
 					if (!IsUnique(info))
 						return App.ExitSuccess;
 					switch (info.Type)
@@ -66,7 +68,7 @@ namespace Snaphappi
 					default:
 						try
 						{
-							if (ParameterProcessor.SplitUrl(arg).Equals(info))
+							if (ParameterProcessor.ParseUrl(arg).Equals(info))
 								return false;
 						}
 						catch (FormatException)

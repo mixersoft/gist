@@ -36,7 +36,7 @@ namespace Snaphappi.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://dev.snaphappi.com/thrift/test/api:1-0/Task")]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://dev.snaphappi.com/thrift/service/api:1-0/Task")]
         public global::System.Uri TaskURI {
             get {
                 return ((global::System.Uri)(this["TaskURI"]));

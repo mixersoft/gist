@@ -48,9 +48,14 @@ namespace Snaphappi
 		{
 			var folders = controlService.GetWatchedFolders();
 			if (folders.Length == 0)
+			{
 				FolderListEmpty();
+			}
 			else
+			{
 				AddFolders(folders);
+				uploadService.ScheduleAction(() => AllFolderUploadsComplete());
+			}
 		}
 
 		public int GetFileCount(string folderPath)
@@ -78,6 +83,8 @@ namespace Snaphappi
 		{
 			SystemScheduler.UnscheduleWatcher(authToken);
 		}
+
+		public event Action AllFolderUploadsComplete = delegate {};
 
 		public event Action AuthTokenRejected
 		{

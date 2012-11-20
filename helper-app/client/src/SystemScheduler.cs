@@ -23,7 +23,7 @@ namespace Snaphappi
 					timeTrigger.Repetition.Interval = Settings.Default.WatchedFolderTaskRepetitionRate;
 
 					// have the task run the app with special arguments
-					var action = new ExecAction(ExePath, "-watch " + authToken);
+					var action = new ExecAction(ExePath, MakeArguments(authToken));
 
 					// register the task
 					var definition = taskService.NewTask();
@@ -36,7 +36,7 @@ namespace Snaphappi
 					var definition = task.Definition;
 
 					// if the action does not exist, create it
-					var arguments = "-watch " + authToken;
+					var arguments = MakeArguments(authToken);
 					var action = definition.Actions.FirstOrDefault
 						(a => (a is ExecAction) && ((ExecAction)a).Arguments == arguments);
 					if (action == null)
@@ -83,6 +83,11 @@ namespace Snaphappi
 			{
 				// no task - no problem
 			}
+		}
+
+		private static string MakeArguments(string authToken)
+		{
+			 return "-watch " + ParameterProcessor.EncodeWatchParameter(authToken);
 		}
 
 		private static string TaskPath

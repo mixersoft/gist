@@ -34,6 +34,7 @@
 	</Product>
 
 	<Fragment>
+		<!-- Device ID registration. -->
 		<CustomAction
 			Id          = "DeviceID"
 			BinaryKey   = "DeviceID_Dll"

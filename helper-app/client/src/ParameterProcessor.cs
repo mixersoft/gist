@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Snaphappi
 {
-	public class ParameterProcessor
+	public static class ParameterProcessor
 	{
 		public enum TaskType
 		{
@@ -39,7 +39,7 @@ namespace Snaphappi
 		/// Split the URL passed as the command line parameter. The URL consists of the task ID,
 		/// the session ID, and the task type. Example: snaphappi://5_abc_ur
 		/// </summary>
-		public static ParameterInfo SplitUrl(string url)
+		public static ParameterInfo ParseUrl(string url)
 		{
 			var taskTypeMap = new Dictionary<string, TaskType>();
 			taskTypeMap["ur"] = TaskType.UploadResampled;
@@ -61,9 +61,27 @@ namespace Snaphappi
 			}
 		}
 
+		/// <summary>
+		/// Returns an auth token.
+		/// </summary>
+		public static string DecodeWatchParameter(string parameter)
+		{
+			return DecodeString(parameter);
+		}
+
+		public static string EncodeWatchParameter(string authToken)
+		{
+			return EncodeString(authToken);
+		}
+
 		private static string DecodeString(string str)
 		{
 			return Encoding.UTF8.GetString(Convert.FromBase64String(str));
+		}
+
+		private static string EncodeString(string str)
+		{
+			return Convert.ToBase64String(Encoding.UTF8.GetBytes(str));
 		}
 	}
 }
