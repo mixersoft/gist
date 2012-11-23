@@ -26,7 +26,7 @@ namespace Snaphappi
 		public URTaskUploadService(TaskID taskID, Uri uri)
 		{
 			this.id = ApiHelper.ConvertTaskID(taskID);
-			
+						
 			task = new Task.Client(new TBinaryProtocol(new THttpClient(uri)));
 
 			taskQueue = new BlockingQueue<Action>();
@@ -68,7 +68,6 @@ namespace Snaphappi
 		{
 			try
 			{
-				System.Diagnostics.Trace.WriteLine(string.Format("[{0:T}], upload: {1}", DateTime.Now, path));
 				var info = new UploadInfo();
 				info.UploadType = UploadType.Preview;
 				info.__isset.UploadType = true;
