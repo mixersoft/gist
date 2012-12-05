@@ -38,6 +38,20 @@
       <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
       <RefTargetDir>INSTALLFOLDER</RefTargetDir>
     </ProjectReference>
+    <ProjectReference Include="..\Launcher\Launcher.csproj">
+      <Name>Launcher</Name>
+      <Project>{6a519a6d-b0f2-4dba-a3a4-4491605aaa95}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="arh.exe" />
+    <Content Include="license.rtf" />
+    <Content Include="logo.png" />
+    <Content Include="TopLevelFolder.air" />
   </ItemGroup>
   <Import Project="$(WixTargetsPath)" />
   <!--
