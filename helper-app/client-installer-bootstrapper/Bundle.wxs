@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix
-	xmlns     = "http://schemas.microsoft.com/wix/2006/wi"
-	xmlns:bal ="http://schemas.microsoft.com/wix/BalExtension"
+	xmlns      = "http://schemas.microsoft.com/wix/2006/wi"
+	xmlns:bal  = "http://schemas.microsoft.com/wix/BalExtension"
+	xmlns:util = "http://schemas.microsoft.com/wix/UtilExtension"
 	>
 	<Bundle
 		Name         = "Snaphappi"
 		Version      = "1.0.0.0"
 		Manufacturer = "Snaphappi"
 		AboutUrl     = "http://www.snaphappi.com/"
+		HelpUrl      = "http://www.snaphappi.com/"
 		UpgradeCode  = "53b8c34d-52c7-4abc-bed2-73e4273ed133"
 		>
 
@@ -18,21 +20,28 @@
 				/>
 		</BootstrapperApplicationRef>
 
+		<util:DirectorySearch
+			Path     = "[ProgramFilesFolder]Snaphappi_TopLevelFolder"
+			Variable = "TopLevelFolder"
+			/>
+
 		<Chain>
 			
 			<!-- The .NET workhorse app. -->
 			<MsiPackage
-				DisplayName = "Engine"
+				DisplayName = "Core engine"
 				SourceFile  = "$(var.client-installer.TargetPath)"
 				Vital       = "yes"
 				/>
 
 			<!-- The AIR interface app. -->
 			<ExePackage
-				DisplayName      = "User Interface"
+				DisplayName      = "User interface"
 				SourceFile       = "$(var.Launcher.TargetPath)"
 				InstallCommand   = 'arh.exe "-installAppSilent TopLevelFolder.air"'
 				UninstallCommand = 'arh.exe "-uninstallAppSilent TopLevelFolder"'
+				DetectCondition  = "TopLevelFolder"
+				Cache            = "yes"
 				PerMachine       = "yes"
 				Vital            = "yes"
 				>
