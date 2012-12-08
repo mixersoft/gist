@@ -5,40 +5,68 @@ setlocal
 
 set PATH=%PATH%;c:\Program Files (x86)\WiX Toolset v3.6\bin
 
-set Project=SnaphappiHelperSetup
 set Config=Debug
 
-set Src=Product
-
-set ObjDir=obj\Debug
-set Obj=%ObjDir%\%Src%.wixobj
-
-set BinDir=bin\Debug
-set Bin=%BinDir%\%Project%.msi
-
-set InstallDeviceIDDir=..\InstallDeviceID\bin\%Config%
-
-set Target=..\client\bin\%Config%\SnaphappiHelper.exe
-
-set ProjectDir=..\client
+set ClientInstallerTargetPath=..\client-installer\bin\%Config%\SnaphappiHelperSetup.msi
+set ClientProjectDir=..\client
+set ClientTargetPath=..\client\bin\%Config%\SnaphappiHelper.exe
+set InstallDeviceIdDir=..\InstallDeviceID\bin\%Config%
+set LauncherTargetPath=..\Launcher\bin\%Config%\Launcher.exe
 
 set ExtDir=C:\Program Files (x86)\WiX Toolset v3.6\bin
 
+:: Create the helper app installer
 pushd client-installer
+
+set Src=Product
+
+set ObjDir=obj\%Config%
+set Obj=%ObjDir%\%Src%.wixobj
+
+set BinDir=bin\%Config%
+set Bin=%BinDir%\SnaphappiHelperSetup.msi
 
 mkdir %ObjDir% 2> nul
 mkdir %BinDir% 2> nul
 
 :: Compile the source files into object files
-candle -dclient.TargetPath="%Target%" -dclient.ProjectDir="%ProjectDir%" -dInstallDeviceID.TargetDir="%InstallDeviceIDDir%" -nologo -o "%Obj%" "%Src%.wxs"
+echo Compiling '%Obj%'...
+candle -dclient.TargetPath="%ClientTargetPath%" -dclient.ProjectDir="%ClientProjectDir%" -dInstallDeviceID.TargetDir="%InstallDeviceIdDir%" -nologo -o "%Obj%" "%Src%.wxs"
+if ERRORLEVEL 1 goto exit
 
 :: Link the object files into the installer
+echo Linking '%Bin%'...
 light -ext "%ExtDir%\WixNetFxExtension.dll" -ext "%ExtDir%\WixUIExtension.dll" -nologo -o "%Bin%" "%Obj%"
+if ERRORLEVEL 1 goto exit
 
 popd
 
-pushd client-installer-bootstrapper\
+:: Create the bootstrapper
+pushd client-installer-bootstrapper
 
-:: Create a bootstrapper
+set Src=Bundle
+
+set ObjDir=obj\%Config%
+set Obj=%ObjDir%\%Src%.wixobj
+
+set BinDir=bin\%Config%
+set Bin=%BinDir%\SnaphappiSetup.exe
+
+mkdir %ObjDir% 2> nul
+mkdir %BinDir% 2> nul
+
+:: Compile the source files into object files
+echo Compiling '%Obj%'...
+candle -ext "%ExtDir%\WixBalExtension.dll" -ext "%ExtDir%\WixUtilExtension.dll" -dclient-installer.TargetPath="%ClientInstallerTargetPath%" -dLauncher.TargetPath="%LauncherTargetPath%" -nologo -o "%Obj%" "%Src%.wxs"
+if ERRORLEVEL 1 goto exit
+
+:: Link the object files into the installer
+echo Linking '%Bin%'...
+light -ext "%ExtDir%\WixBalExtension.dll" -ext "%ExtDir%\WixUtilExtension.dll" -nologo -o "%Bin%" "%Obj%"
+if ERRORLEVEL 1 goto exit
 
 popd
+
+echo Done
+
+: exit
