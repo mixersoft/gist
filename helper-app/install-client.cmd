@@ -1,3 +1,3 @@
 @echo off
 
-msiexec /i client-installer\bin\Debug\SnaphappiHelperSetup.msi
+client-installer-bootstrapper\bin\debug\SnaphappiSetup.exe
