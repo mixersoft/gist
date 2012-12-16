@@ -10,6 +10,7 @@ namespace Snaphappi
 
 		event Action                 AuthTokenRejected;
 		event Action<string, string> DuplicateUpload;
+		event Action<string, string> FileNotFound;
 		event Action<string, string> UploadFailed;
 	}
 }

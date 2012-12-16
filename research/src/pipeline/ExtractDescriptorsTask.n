@@ -33,7 +33,7 @@ class ExtractDescriptorsTask : ITask
 	}
 
 	[ Profile(Recursive) ]
-	public Compute(images : ImageCollectionItem, result : DescriptorItem) : void
+	private Compute(images : ImageCollectionItem, result : DescriptorItem) : void
 	{
 		def ExtractDescriptor =
 			match (parameters.ImageSize)

@@ -52,6 +52,7 @@ namespace Snaphappi
 		
 		public event Action                 AuthTokenRejected = delegate {};
 		public event Action<string, string> DuplicateUpload   = delegate {};
+		public event Action<string, string> FileNotFound      = delegate {};
 		public event Action<string, string> UploadFailed      = delegate {};
 
 		#endregion
@@ -91,6 +92,10 @@ namespace Snaphappi
 			catch (TApplicationException)
 			{
 				UploadFailed(folder, path);
+			}
+			catch (System.IO.FileNotFoundException)
+			{
+				FileNotFound(folder, path);
 			}
 		}
 

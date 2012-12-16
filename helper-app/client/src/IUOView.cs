@@ -7,10 +7,8 @@ namespace Snaphappi
 {
 	public interface IUOView
 	{
-		void ReportFolderNotFound(string folder);
+		void ReportFileNotFound(string folderPath, string filePath);
 
-		void ReportFileNotFound(OriginalFileInfo file);
-
-		void ReportUploadFailed(OriginalFileInfo file);
+		void ReportUploadFailed(string folderPath, string filePath);
 	}
 }

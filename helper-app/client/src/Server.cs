@@ -18,6 +18,8 @@ namespace Snaphappi
 
 		private Multimap<string, string> files = new Multimap<string, string>();
 
+		private List<string> filesToUpload = new List<string>();
+
 		#endregion // data
 
 		#region interface
@@ -48,6 +50,11 @@ namespace Snaphappi
 			return files.Get(folder.ToUpperInvariant()).ToArray();
 		}
 
+		public string[] GetFilesToUpload()
+		{
+			return filesToUpload.ToArray();
+		}
+
 		public string[] GetFolders()
 		{
 			return folders.ToArray();
@@ -59,24 +66,29 @@ namespace Snaphappi
 			return watchedFolders.ToArray();
 		}
 
-		public void ReportFolderNotFound(string folder)
+		public void ReportFileNotFound(string folderPath, string filePath)
 		{
-			Console.WriteLine("folder '{0}' not found", folder);
+			Console.WriteLine("file '{1}' from '{0}' not found", folderPath, filePath);
 		}
 
-		public void ReportUploadFailed(string folder, string path)
+		public void ReportFolderNotFound(string folderPath)
 		{
-			Console.WriteLine("upload of '{1}' from '{0}' failed", folder, path);
+			Console.WriteLine("folder '{0}' not found", folderPath);
 		}
 
-		public void ReportFolderUploadComplete(string folder)
+		public void ReportUploadFailed(string folderPath, string filePath)
 		{
-			Console.WriteLine("completed uploading from '{0}'", folder);
+			Console.WriteLine("upload of '{1}' from '{0}' failed", folderPath, filePath);
 		}
 
-		public void ReportFolderFileCount(string folder, int count)
+		public void ReportFolderUploadComplete(string folderPath)
 		{
-			Console.WriteLine("folder '{0}' contains {1} files", folder, count);
+			Console.WriteLine("completed uploading from '{0}'", folderPath);
+		}
+
+		public void ReportFolderFileCount(string folderPath, int count)
+		{
+			Console.WriteLine("folder '{0}' contains {1} files", folderPath, count);
 		}
 
 		#endregion // IURTaskControlService Members
@@ -104,16 +116,23 @@ namespace Snaphappi
 			action();
 		}
 
-		public void UploadFile(string folder, string path, Func<byte[]> LoadFile)
+		public void UploadFile(string folderPath, string filePath, Func<byte[]> LoadFile)
 		{
-			files.Add(folder.ToUpperInvariant(), path);
-
-			var size = LoadFile().Length;
-			Console.WriteLine("uploaded '{1}' ({2} bytes) from '{0}'", folder, path, size);
+			try
+			{
+				var size = LoadFile().Length;
+				files.Add(folderPath.ToUpperInvariant(), filePath);
+				Console.WriteLine("uploaded '{1}' ({2} bytes) from '{0}'", folderPath, filePath, size);
+			}
+			catch (FileNotFoundException)
+			{
+				FileNotFound(folderPath, filePath);
+			}
 		}
 
 		public event Action                 AuthTokenRejected = delegate {};
 		public event Action<string, string> DuplicateUpload   = delegate {};
+		public event Action<string, string> FileNotFound      = delegate {};
 		public event Action<string, string> UploadFailed      = delegate {};
 
 		#endregion // IURTaskUploadService Members
@@ -124,6 +143,7 @@ namespace Snaphappi
 		{
 			var commands = new Dictionary<string, Action>();
 			commands.Add("add file",           ProcessAddFile);
+			commands.Add("add file to upload", ProcessAddFileToUpload);
 			commands.Add("add folder",         ProcessAddFolder);
 			commands.Add("add watched folder", ProcessAddWatchedFolder);
 			commands.Add("cancel task",        ProcessCancelTask);
@@ -156,6 +176,11 @@ namespace Snaphappi
 				( ReadLine("folder").ToUpperInvariant()
 				, ReadLine("file")
 				);
+		}
+
+		private void ProcessAddFileToUpload()
+		{
+			filesToUpload.Add(ReadLine("file"));
 		}
 
 		private void ProcessAddFolder()

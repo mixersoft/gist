@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading;
 using Snaphappi.Properties;
 
 namespace Snaphappi
@@ -9,11 +8,11 @@ namespace Snaphappi
 	public class URModel : IURModel
 	{
 		#region data
-		
+
 		private readonly ITaskControlService controlService;
 		private readonly ITaskInfoService    infoService;
 		private readonly ITaskUploadService  uploadService;
-		private readonly IPhotoLoader          photoLoader;
+		private readonly IPhotoLoader        photoLoader;
 
 		private readonly HashSet<string> files
 			= new HashSet<string>();
@@ -32,7 +31,7 @@ namespace Snaphappi
 			( ITaskControlService controlService
 			, ITaskInfoService    infoService
 			, ITaskUploadService  uploadService
-			, IPhotoLoader          photoLoader
+			, IPhotoLoader        photoLoader
 			)
 		{
 			this.controlService = controlService;
@@ -74,7 +73,8 @@ namespace Snaphappi
 
 		public void StartPolling()
 		{
-			infoService.StartPolling((int)Math.Floor(Settings.Default.InfoPollingRate.TotalMilliseconds));
+			var pollingRate = Settings.Default.InfoPollingRate.TotalMilliseconds;
+			infoService.StartPolling((int)Math.Floor(pollingRate));
 		}
 
 		public void UploadFile(string folderPath, string filePath)

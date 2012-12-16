@@ -11,60 +11,49 @@ namespace Snaphappi
 		private readonly IApp        app;
 		private readonly IUOModel    uoModel;
 		private readonly IUOView     uoView;
-		private readonly IFileFinder fileFinder;
 
 		public UOPresenter
-			( IApp                  app
+			( IApp     app
 			, IUOModel uoModel
 			, IUOView  uoView
-			, IFileFinder           fileFinder
 			)
 		{
 			this.app        = app;
 			this.uoModel    = uoModel;
 			this.uoView     = uoView;
-			this.fileFinder = fileFinder;
 
-			app.Loaded += OnLoad;
+			app.Loaded += OnLoaded;
 
-			uoModel.InfoDownloaded += OnInfoDownloaded;
+			uoModel.FileAdded      += OnFileAdded;
+			uoModel.FileNotFound   += OnFileNotFound;
 			uoModel.TaskCancelled  += OnTaskCancelled;
 			uoModel.UploadFailed   += OnUploadFailed;
-
-			fileFinder.FileFound    += OnFileFound;
-			fileFinder.FileNotFound += OnFileNotFound;
 		}
 
-		private void OnLoad()
+		private void OnFileAdded(string folderPath, string filePath)
 		{
-			uoModel.DownloadInformation();
+			uoModel.UploadFile(folderPath, filePath);
 		}
 
-		private void OnInfoDownloaded()
+		private void OnFileNotFound(string folderPath, string filePath)
 		{
-			fileFinder.SetFiles(uoModel.FileInfo);
-			fileFinder.Start();
+			uoView.ReportFileNotFound(folderPath, filePath);
+		}
+
+		private void OnLoaded()
+		{
+			uoModel.StartPolling();
+			uoModel.FetchFiles();
 		}
 
 		private void OnTaskCancelled()
 		{
-			fileFinder.Stop();
 			app.Quit();
 		}
 
-		private void OnFileFound(OriginalFileInfo file)
+		private void OnUploadFailed(string folderPath, string filePath)
 		{
-			uoModel.UploadFile(file);
-		}
-
-		private void OnFileNotFound(OriginalFileInfo file)
-		{
-			uoView.ReportFileNotFound(file);
-		}
-
-		private void OnUploadFailed(OriginalFileInfo file)
-		{
-			uoView.ReportUploadFailed(file);
+			uoView.ReportUploadFailed(folderPath, filePath);
 		}
 	}
 }

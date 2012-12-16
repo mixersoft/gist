@@ -63,6 +63,7 @@ public class TaskManager
 
 	public Compute() : void
 	{
+		def stopwatch = Diagnostics.Stopwatch();
 		def ToCompute(item) { toCompute.Contains(item.Path) }
 		foreach (layer in taskMappings)
 		{
@@ -83,8 +84,16 @@ public class TaskManager
 						}
 					}
 					when (displayProgress)
+					{
 						Console.WriteLine($"..$(i.Map(_.Path)) -> ..$(o.Map(_.Path))");
+						stopwatch.Start();
+					}
 					mapping.Compute();
+					when (displayProgress)
+					{
+						Console.WriteLine(stopwatch.Elapsed);
+						stopwatch.Reset();
+					}
 					when (persistData)
 					{
 						foreach (item in o)

@@ -113,7 +113,23 @@ namespace Snaphappi
 
 		private static void UploadOriginals(string authToken, string sessionID)
 		{
-			throw new NotImplementedException();
+			var app = new App();
+
+			var registry = new Registry();
+			var deviceID = new DeviceID(registry, @"HKEY_LOCAL_MACHINE\Software\Snaphappi").GetID();
+
+			var taskID = new TaskID(authToken, sessionID, deviceID);
+
+			var controlService = new URTaskControlService (taskID, Settings.Default.TaskURI);
+			var infoService    = new URTaskInfoService    (taskID, Settings.Default.TaskURI);
+			var uploadService  = new URTaskUploadService  (taskID, Settings.Default.TaskURI);
+
+			var uoModel = new UOModel(controlService, infoService, uploadService);
+			var uoView  = new UOView(controlService);
+
+			new UOPresenter(app, uoModel, uoView);
+
+			app.Load();
 		}
 
 		private static void WatchFolders(string authToken)
@@ -165,6 +181,15 @@ namespace Snaphappi
 
 		private static void TestUploadOriginals()
 		{
+			ConsoleHelper.Alloc();
+			ConsoleHelper.Title = "Snaphappi Helper Console";
+
+			var server = new Server();
+
+			var uoModel = new UOModel(server, server, server);
+			var uoView  = new UOView(server);
+
+			new UOPresenter(server, uoModel, uoView);
 		}
 
 		private static void TestWatchFolders()

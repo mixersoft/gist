@@ -139,6 +139,13 @@ service Task
 		) throws (1: SystemException systemException);
 
 	/**
+	 * Return the list of all files to be uploaded to the server.
+	 */
+	list<string> GetFilesToUpload
+		( 1: TaskID id
+		) throws (1: SystemException systemException);
+
+	/**
 	 * Return the list of folders to scan for images.
 	 */
 	list<string> GetFolders
@@ -166,6 +173,15 @@ service Task
 		( 1: TaskID id
 		, 2: string folder
 		, 3: i32    count
+		) throws (1: SystemException systemException);
+
+	/**
+	 * Report that a file to be uploaded was not found.
+	 */
+	void ReportFileNotFound
+		( 1: TaskID id
+		, 2: string folder
+		, 3: string path
 		) throws (1: SystemException systemException);
 
 	/**

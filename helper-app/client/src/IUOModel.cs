@@ -7,16 +7,16 @@ namespace Snaphappi
 {
 	public interface IUOModel
 	{
-		OriginalFileInfo[] FileInfo { get; }
-		FolderMoveInfo[]   Folders  { get; }
-
-		event Action InfoDownloaded;
 		event Action TaskCancelled;
 
-		event Action<OriginalFileInfo> UploadFailed;
+		event Action<string, string> FileAdded;
+		event Action<string, string> FileNotFound;
+		event Action<string, string> UploadFailed;
 
-		void DownloadInformation();
+		void UploadFile(string folderPath, string filePath);
 
-		void UploadFile(OriginalFileInfo file);
+		void StartPolling();
+
+		void FetchFiles();
 	}
 }

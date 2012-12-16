@@ -4,19 +4,23 @@ namespace Snaphappi
 {
 	public interface ITaskControlService
 	{
-		string[] GetFiles(string folder);
+		string[] GetFiles(string folderPath);
+
+		string[] GetFilesToUpload();
 
 		string[] GetFolders();
 
 		string[] GetWatchedFolders();
+
+		void ReportFileNotFound(string folderPath, string filePath);
 		
-		void ReportFolderNotFound(string folder);
+		void ReportFolderNotFound(string folderPath);
 
-		void ReportUploadFailed(string folder, string path);
+		void ReportUploadFailed(string folderPath, string filePath);
 
-		void ReportFolderUploadComplete(string folder);
+		void ReportFolderUploadComplete(string folderPath);
 
-		void ReportFolderFileCount(string folder, int count);
+		void ReportFolderFileCount(string folderPath, int count);
 
 		event Action AuthTokenRejected;
 	}

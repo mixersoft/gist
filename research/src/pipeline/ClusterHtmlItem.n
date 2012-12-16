@@ -1,5 +1,6 @@
 using Nemerle.Utility;
 using System.IO;
+using System;
 
 class ClusterHtmlItem : ITaskItem
 {
@@ -54,5 +55,6 @@ class ClusterHtmlItem : ITaskItem
 
 	public Load() : void
 	{
+		throw NotImplementedException();
 	}
 }

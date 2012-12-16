@@ -45,6 +45,21 @@ namespace Snaphappi
 			}
 		}
 
+		public string[] GetFilesToUpload()
+		{
+			try
+			{
+				lock (task)
+					return task.GetFilesToUpload(id).ToArray();
+			}
+			catch (API.SystemException e)
+			{
+				if (e.ErrorCode == ErrorCode.InvalidAuth)
+					AuthTokenRejected();
+				throw;
+			}
+		}
+
 		public string[] GetFolders()
 		{
 			try
@@ -75,12 +90,12 @@ namespace Snaphappi
 			}
 		}
 
-		public void ReportFolderNotFound(string folder)
+		public void ReportFileNotFound(string folderPath, string filePath)
 		{
 			try
 			{
 				lock (task)
-					task.ReportFolderNotFound(id, folder);
+					task.ReportFileNotFound(id, folderPath, filePath);
 			}
 			catch (API.SystemException e)
 			{
@@ -90,12 +105,12 @@ namespace Snaphappi
 			}
 		}
 
-		public void ReportUploadFailed(string folder, string path)
+		public void ReportFolderNotFound(string folderPath)
 		{
 			try
 			{
 				lock (task)
-					task.ReportUploadFailed(id, folder, path);
+					task.ReportFolderNotFound(id, folderPath);
 			}
 			catch (API.SystemException e)
 			{
@@ -105,12 +120,12 @@ namespace Snaphappi
 			}
 		}
 
-		public void ReportFolderUploadComplete(string folder)
+		public void ReportUploadFailed(string folderPath, string filePath)
 		{
 			try
 			{
 				lock (task)
-					task.ReportFolderUploadComplete(id, folder);
+					task.ReportUploadFailed(id, folderPath, filePath);
 			}
 			catch (API.SystemException e)
 			{
@@ -120,12 +135,27 @@ namespace Snaphappi
 			}
 		}
 
-		public void ReportFolderFileCount(string folder, int count)
+		public void ReportFolderUploadComplete(string folderPath)
 		{
 			try
 			{
 				lock (task)
-					task.ReportFileCount(id, folder, count);
+					task.ReportFolderUploadComplete(id, folderPath);
+			}
+			catch (API.SystemException e)
+			{
+				if (e.ErrorCode == ErrorCode.InvalidAuth)
+					AuthTokenRejected();
+				throw;
+			}
+		}
+
+		public void ReportFolderFileCount(string folderPath, int count)
+		{
+			try
+			{
+				lock (task)
+					task.ReportFileCount(id, folderPath, count);
 			}
 			catch (API.SystemException e)
 			{
