@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using Snaphappi.Properties;
 
@@ -11,6 +12,9 @@ namespace Snaphappi
 		private readonly ITaskControlService controlService;
 		private readonly ITaskInfoService    infoService;
 		private readonly ITaskUploadService  uploadService;
+
+		private readonly HashSet<string> files
+			= new HashSet<string>();
 
 		#endregion // data
 
@@ -26,7 +30,8 @@ namespace Snaphappi
 			this.infoService    = infoService;
 			this.uploadService  = uploadService;
 
-			this.infoService.TaskCancelled  += OnTaskCancelled;
+			this.infoService.FilesUpdated  += OnFilesUpdated;
+			this.infoService.TaskCancelled += OnTaskCancelled;
 		}
 
 		#endregion // interface
@@ -75,8 +80,20 @@ namespace Snaphappi
 
 		private void AddFiles(string[] files)
 		{
-			foreach (var file in files)
-				FileAdded("", file);
+			foreach (var filePath in files)
+			{
+				var ucFilePath = filePath.ToUpperInvariant();
+				if (!this.files.Contains(ucFilePath))
+				{
+					this.files.Add(ucFilePath);
+					FileAdded("", filePath);
+				}
+			}
+		}
+
+		private void OnFilesUpdated()
+		{
+			AddFiles(controlService.GetFilesToUpload());
 		}
 
 		private void OnTaskCancelled()

@@ -72,6 +72,7 @@ struct URTaskState
 
 	/**
 	 * A strictly increasing change counter for the file list in a given task.
+	 * Updated for files uploaded and files to upload.
 	 */
 	3: optional i32  FileUpdateCount;
 }

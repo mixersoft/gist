@@ -16,6 +16,7 @@ namespace Snaphappi
 
 		private Timer timer;
 
+		private int fileUpdateCount   = 0;
 		private int folderUpdateCount = 0;
 
 		#endregion
@@ -47,6 +48,7 @@ namespace Snaphappi
 		}
 
 		public event Action AuthTokenRejected = delegate {};
+		public event Action FilesUpdated      = delegate {};
 		public event Action FoldersUpdated    = delegate {};
 		public event Action TaskCancelled     = delegate {};
 
@@ -59,6 +61,11 @@ namespace Snaphappi
 			var state = SafeGetState();
 			if (state.IsCancelled)
 				TaskCancelled();
+			if (state.FileUpdateCount > fileUpdateCount)
+			{
+				fileUpdateCount = state.FileUpdateCount;
+				FilesUpdated();
+			}
 			if (state.FolderUpdateCount > folderUpdateCount)
 			{
 				folderUpdateCount = state.FolderUpdateCount;

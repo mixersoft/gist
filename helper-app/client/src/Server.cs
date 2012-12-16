@@ -20,6 +20,8 @@ namespace Snaphappi
 
 		private List<string> filesToUpload = new List<string>();
 
+		private bool loaded = false;
+
 		#endregion // data
 
 		#region interface
@@ -97,15 +99,18 @@ namespace Snaphappi
 
 		public void StartPolling(int period)
 		{
+			Console.WriteLine("started polling info service");
 		}
 
 		public void StopPolling()
 		{
+			Console.WriteLine("stopped polling info service");
 		}
-
-		public event Action TaskCancelled = delegate {};
-
-		public event Action FoldersUpdated = delegate {};
+		
+		public event Action AuthTokenRejected = delegate {};
+		public event Action FilesUpdated      = delegate {};
+		public event Action FoldersUpdated    = delegate {};
+		public event Action TaskCancelled     = delegate {};
 
 		#endregion // IURTaskInfoService Members
 
@@ -130,10 +135,9 @@ namespace Snaphappi
 			}
 		}
 
-		public event Action                 AuthTokenRejected = delegate {};
-		public event Action<string, string> DuplicateUpload   = delegate {};
-		public event Action<string, string> FileNotFound      = delegate {};
-		public event Action<string, string> UploadFailed      = delegate {};
+		public event Action<string, string> DuplicateUpload = delegate {};
+		public event Action<string, string> FileNotFound    = delegate {};
+		public event Action<string, string> UploadFailed    = delegate {};
 
 		#endregion // IURTaskUploadService Members
 
@@ -160,8 +164,12 @@ namespace Snaphappi
 				var command = ReadLine("");
 				switch (command)
 				{
-					case "exit":  return;
-					case "start": Loaded(); break;
+					case "exit":
+						return;
+					case "start":
+						loaded = true;
+						Loaded();
+						break;
 					default:
 						if (commands.ContainsKey(command))
 							commands[command]();
@@ -176,17 +184,22 @@ namespace Snaphappi
 				( ReadLine("folder").ToUpperInvariant()
 				, ReadLine("file")
 				);
+			if (loaded)
+				FilesUpdated();
 		}
 
 		private void ProcessAddFileToUpload()
 		{
 			filesToUpload.Add(ReadLine("file"));
+			if (loaded)
+				FilesUpdated();
 		}
 
 		private void ProcessAddFolder()
 		{
 			folders.Add(ReadLine("folder"));
-			FoldersUpdated();
+			if (loaded)
+				FoldersUpdated();
 		}
 
 		private void ProcessAddWatchedFolder()
