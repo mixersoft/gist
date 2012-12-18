@@ -87,8 +87,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="src\FileFinderTest.cs" />
     <Compile Include="src\FileListerTest.cs" />
     <Compile Include="src\MockFileSystem.cs" />
+    <Compile Include="src\MockPhotoLoader.cs" />
     <Compile Include="src\MockRegistry.cs" />
     <Compile Include="src\ParameterProcessorTest.cs" />
     <Compile Include="src\DeviceIDTest.cs" />

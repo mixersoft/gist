@@ -99,12 +99,15 @@
     <Compile Include="Settings.cs" />
     <Compile Include="src\ApiHelper.cs" />
     <Compile Include="src\App.cs" />
+    <Compile Include="src\AsyncFileFinder.cs" />
     <Compile Include="src\BlockingQueue.cs" />
     <Compile Include="src\ConsoleHelper.cs" />
+    <Compile Include="src\FileFinder.cs" />
     <Compile Include="src\FileLister.cs" />
     <Compile Include="src\FileSystem.cs" />
     <Compile Include="src\FolderMoveInfo.cs" />
     <Compile Include="src\IApp.cs" />
+    <Compile Include="src\IAsyncFileFinder.cs" />
     <Compile Include="src\IFileLister.cs" />
     <Compile Include="src\IFileSystem.cs" />
     <Compile Include="src\ImageMagick.cs" />

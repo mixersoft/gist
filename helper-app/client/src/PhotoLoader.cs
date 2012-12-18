@@ -16,6 +16,11 @@ namespace Snaphappi
 			}
 		}
 
+		public int GetHash(string path)
+		{
+			throw new NotImplementedException();
+		}
+
 		#endregion
 	}
 }
