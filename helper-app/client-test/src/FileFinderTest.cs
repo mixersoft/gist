@@ -22,11 +22,10 @@ namespace SnaphappiTest
 		[ Test ]
 		public void TestFind()
 		{
-			fileSystem.filePaths.Add("b");
-			fileSystem.filePaths.Add(@"a\c");
-			fileSystem.filePaths.Add(@"a\d");
-			photoLoader.hashes.Add(@"a\c", 0);
-			photoLoader.hashes.Add(@"a\d", 1);
+			AddHashedFile(@"b",   1);
+			AddHashedFile(@"a\c", 0);
+			AddHashedFile(@"a\d", 1);
+			AddHashedFile(@"a\e", 0);
 
 			FileMatch match = null;
 			fileFinder.FileFound += m => match = m;
@@ -36,6 +35,12 @@ namespace SnaphappiTest
 			Assert.NotNull(match);
 			Assert.AreEqual(match.OldLocation, @"a\b");
 			Assert.AreEqual(match.NewLocation, @"a\d");
+		}
+
+		private void AddHashedFile(string path, int hash)
+		{
+			fileSystem.filePaths.Add(path);
+			photoLoader.hashes.Add(path, hash);
 		}
 	}
 }
