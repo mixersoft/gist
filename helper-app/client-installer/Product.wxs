@@ -49,77 +49,79 @@
 	<Fragment>
 		<Directory Id="TARGETDIR" Name="SourceDir">
 			<Directory Id="ProgramFilesFolder">
-				<Directory Id="INSTALLFOLDER" Name="Snaphappi">
+				<Directory Id="GroupFolder" Name="Snaphappi">
+					<Directory Id="INSTALLFOLDER" Name="Uploader">
 					
-					<!-- The executable together with its protocol handler. -->
-					<Component Id="ProductComponent">
-						<!-- Main application file. -->
-						<File Id="ProductExe" Source="$(var.client.TargetPath)" />
-						<!-- Protocol handler registry entry. -->
-						<RegistryKey Key="snaphappi" Root="HKCR">
-							<RegistryValue Value="URL:Snaphappi Protocol" Type="string" />
-							<RegistryValue Name="URL Protocol" Value="" Type="string" />
-							<RegistryKey Key="DefaultIcon">
-								<RegistryValue Value='"[#ProductExe]",0' Type="string" />
-							</RegistryKey>
-							<RegistryKey Key="shell">
-								<RegistryKey Key="open">
-									<RegistryKey Key="command">
-										<RegistryValue Value='"[#ProductExe]" "%1"' Type="string" />
+						<!-- The executable together with its protocol handler. -->
+						<Component Id="ProductComponent">
+							<!-- Main application file. -->
+							<File Id="ProductExe" Source="$(var.client.TargetPath)" />
+							<!-- Protocol handler registry entry. -->
+							<RegistryKey Key="snaphappi" Root="HKCR">
+								<RegistryValue Value="URL:Snaphappi Protocol" Type="string" />
+								<RegistryValue Name="URL Protocol" Value="" Type="string" />
+								<RegistryKey Key="DefaultIcon">
+									<RegistryValue Value='"[#ProductExe]",0' Type="string" />
+								</RegistryKey>
+								<RegistryKey Key="shell">
+									<RegistryKey Key="open">
+										<RegistryKey Key="command">
+											<RegistryValue Value='"[#ProductExe]" "%1"' Type="string" />
+										</RegistryKey>
 									</RegistryKey>
 								</RegistryKey>
 							</RegistryKey>
-						</RegistryKey>
-					</Component>
-					
-					<!-- The main configuration file. -->
-					<Component Id="ProductConfigComponent">
-						<File Id="ProductConfig" Source="$(var.client.TargetPath).config" />
-					</Component>
-
-					<!-- The Task Scheduler library. -->
-					<Component Id="TaskSchedulerComponent">
-						<File Id="TaskSchedulerDll" Source="$(var.client.ProjectDir)\lib\Microsoft.Win32.TaskScheduler.dll" />
-					</Component>
-					
-					<!-- The Thrift library. -->
-					<Component Id="ThriftComponent">
-						<File Id="ThriftDll" Source="$(var.client.ProjectDir)\lib\Thrift.dll" />
-					</Component>
-					
-					<!-- The ImageMagick app. -->
-					<Directory Id="ImageMagickDir" Name="ImageMagick" >
-						<Component Id="ImageMagick" Guid="67A00421-C52C-4213-91AD-FF84833CAD13">
-							<File Source="ImageMagick\atl90.dll" />
-							<File Source="ImageMagick\coder.xml" />
-							<File Source="ImageMagick\colors.xml" />
-							<File Source="ImageMagick\configure.xml" />
-							<File Source="ImageMagick\convert.exe" KeyPath="yes" />
-							<File Source="ImageMagick\delegates.xml" />
-							<File Source="ImageMagick\english.xml" />
-							<File Source="ImageMagick\ImageMagick.rdf" />
-							<File Source="ImageMagick\locale.xml" />
-							<File Source="ImageMagick\log.xml" />
-							<File Source="ImageMagick\magic.xml" />
-							<File Source="ImageMagick\mfc90.dll" />
-							<File Source="ImageMagick\Microsoft.VC90.ATL.manifest" />
-							<File Source="ImageMagick\Microsoft.VC90.CRT.manifest" />
-							<File Source="ImageMagick\Microsoft.VC90.MFC.manifest" />
-							<File Source="ImageMagick\Microsoft.VC90.OpenMP.manifest" />
-							<File Source="ImageMagick\msvcp90.dll" />
-							<File Source="ImageMagick\msvcr90.dll" />
-							<File Source="ImageMagick\NOTICE" />
-							<File Source="ImageMagick\policy.xml" />
-							<File Source="ImageMagick\sRGB.icm" />
-							<File Source="ImageMagick\thresholds.xml" />
-							<File Source="ImageMagick\type-ghostscript.xml" />
-							<File Source="ImageMagick\type.xml" />
-							<File Source="ImageMagick\vcomp90.dll" />
-							<File Source="ImageMagick\X11.dll" />
-							<File Source="ImageMagick\Xext.dll" />
 						</Component>
-					</Directory>
 					
+						<!-- The main configuration file. -->
+						<Component Id="ProductConfigComponent">
+							<File Id="ProductConfig" Source="$(var.client.TargetPath).config" />
+						</Component>
+
+						<!-- The Task Scheduler library. -->
+						<Component Id="TaskSchedulerComponent">
+							<File Id="TaskSchedulerDll" Source="$(var.client.ProjectDir)\lib\Microsoft.Win32.TaskScheduler.dll" />
+						</Component>
+					
+						<!-- The Thrift library. -->
+						<Component Id="ThriftComponent">
+							<File Id="ThriftDll" Source="$(var.client.ProjectDir)\lib\Thrift.dll" />
+						</Component>
+					
+						<!-- The ImageMagick app. -->
+						<Directory Id="ImageMagickDir" Name="ImageMagick" >
+							<Component Id="ImageMagick" Guid="67A00421-C52C-4213-91AD-FF84833CAD13">
+								<File Source="ImageMagick\atl90.dll" />
+								<File Source="ImageMagick\coder.xml" />
+								<File Source="ImageMagick\colors.xml" />
+								<File Source="ImageMagick\configure.xml" />
+								<File Source="ImageMagick\convert.exe" KeyPath="yes" />
+								<File Source="ImageMagick\delegates.xml" />
+								<File Source="ImageMagick\english.xml" />
+								<File Source="ImageMagick\ImageMagick.rdf" />
+								<File Source="ImageMagick\locale.xml" />
+								<File Source="ImageMagick\log.xml" />
+								<File Source="ImageMagick\magic.xml" />
+								<File Source="ImageMagick\mfc90.dll" />
+								<File Source="ImageMagick\Microsoft.VC90.ATL.manifest" />
+								<File Source="ImageMagick\Microsoft.VC90.CRT.manifest" />
+								<File Source="ImageMagick\Microsoft.VC90.MFC.manifest" />
+								<File Source="ImageMagick\Microsoft.VC90.OpenMP.manifest" />
+								<File Source="ImageMagick\msvcp90.dll" />
+								<File Source="ImageMagick\msvcr90.dll" />
+								<File Source="ImageMagick\NOTICE" />
+								<File Source="ImageMagick\policy.xml" />
+								<File Source="ImageMagick\sRGB.icm" />
+								<File Source="ImageMagick\thresholds.xml" />
+								<File Source="ImageMagick\type-ghostscript.xml" />
+								<File Source="ImageMagick\type.xml" />
+								<File Source="ImageMagick\vcomp90.dll" />
+								<File Source="ImageMagick\X11.dll" />
+								<File Source="ImageMagick\Xext.dll" />
+							</Component>
+						</Directory>
+					
+					</Directory>
 				</Directory>
 			</Directory>
 		</Directory>

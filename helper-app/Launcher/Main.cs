@@ -9,9 +9,12 @@ namespace Launcher
 		static int Main(string[] args)
 		{
 			Environment.CurrentDirectory = AssemblyDirectory;
+			var path = @"c:\users\alexey\command line.txt";
+			File.WriteAllLines(path, args);
+			File.AppendAllText(path, Environment.CommandLine);
 			var process = CreateProcess(args);
 			if (process == null)
-				return 0;
+				return 1;
 			process.WaitForExit();
 			return process.ExitCode;
 		}

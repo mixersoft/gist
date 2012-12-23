@@ -20,8 +20,13 @@
 				/>
 		</BootstrapperApplicationRef>
 
+		<Variable
+			Name  = "GroupFolder"
+			Value = "[ProgramFilesFolder]Snaphappi"
+			/>
+		
 		<util:DirectorySearch
-			Path     = "[ProgramFilesFolder]Snaphappi_TopLevelFolder"
+			Path     = "[ProgramFilesFolder]Snaphappi\Snaphappi_TopLevelFolder"
 			Variable = "TopLevelFolder"
 			/>
 
@@ -38,7 +43,7 @@
 			<ExePackage
 				DisplayName      = "User interface"
 				SourceFile       = "$(var.Launcher.TargetPath)"
-				InstallCommand   = 'arh.exe "-installAppSilent TopLevelFolder.air"'
+				InstallCommand   = 'arh.exe "-installAppSilent -location \"[GroupFolder]\" TopLevelFolder.air"'
 				UninstallCommand = 'arh.exe "-uninstallAppSilent TopLevelFolder"'
 				DetectCondition  = "TopLevelFolder"
 				Cache            = "yes"

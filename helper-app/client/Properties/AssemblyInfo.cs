@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("SnaphappiHelper")]
-[assembly: AssemblyDescription("Snaphappi helper application.")]
+[assembly: AssemblyTitle("Snaphappi Uploader")]
+[assembly: AssemblyDescription("JPG file uploader for watching and uploading entire folders of photos to your Snaphappi account.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Snaphappi")]
-[assembly: AssemblyProduct("SnaphappiHelper")]
+[assembly: AssemblyProduct("Snaphappi Uploader")]
 [assembly: AssemblyCopyright("Copyright ©  2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
