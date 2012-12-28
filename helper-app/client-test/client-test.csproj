@@ -87,6 +87,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="src\TempFileTest.cs" />
     <Compile Include="src\FileFinderTest.cs" />
     <Compile Include="src\FileListerTest.cs" />
     <Compile Include="src\MockFileSystem.cs" />
@@ -94,8 +95,12 @@
     <Compile Include="src\MockRegistry.cs" />
     <Compile Include="src\ParameterProcessorTest.cs" />
     <Compile Include="src\DeviceIDTest.cs" />
+    <Compile Include="src\PhotoLoaderTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>robocopy $(ProjectDir)img $(TargetDir)img /njh /njs /ndl /nc /ns /np /nfl</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

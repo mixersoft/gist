@@ -6,7 +6,7 @@ namespace Snaphappi
 	{
 		string[] GetFiles(string folderPath);
 
-		string[] GetFilesToUpload();
+		UploadTarget[] GetFilesToUpload();
 
 		string[] GetFolders();
 

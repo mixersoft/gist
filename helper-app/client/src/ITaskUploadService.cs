@@ -4,7 +4,12 @@ namespace Snaphappi
 {
 	public interface ITaskUploadService
 	{
-		void UploadFile(string folder, string path, Func<byte[]> LoadFile);
+		void UploadFile
+			( string       folder
+			, string       path
+			, UploadType   uploadType
+			, Func<byte[]> LoadFile
+			);
 
 		void ScheduleAction(Action action);
 

@@ -21,7 +21,7 @@ namespace Snaphappi
 		{
 			foreach (var file in fileSystem.ListFiles(Path.GetDirectoryName(filePath)))
 			{
-				if (hash == photoLoader.GetHash(file))
+				if (hash == photoLoader.GetImageHash(file))
 				{
 					FileFound(new FileMatch(filePath, file));
 					return;

@@ -76,7 +76,12 @@ namespace Snaphappi
 
 			if (files.Contains(filePath.ToUpperInvariant()))
 				return;
-			uploadService.UploadFile(folderPath, filePath, () => photoLoader.GetPreview(filePath));
+			uploadService.UploadFile
+				( folderPath
+				, filePath
+				, UploadType.Preview
+				, () => photoLoader.GetPreview(filePath)
+				);
 		}
 
 		public void UnscheduleWatcher()

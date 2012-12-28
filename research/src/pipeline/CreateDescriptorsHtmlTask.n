@@ -1,0 +1,69 @@
+using Nemerle.Collections;
+using System.IO;
+using System.Text;
+
+class CreateDescriptorsHtmlTask : ITask
+{
+	public Name : string { get { "CreateDescriptorsHtmlTask" } }
+
+	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
+	{
+		mutable mappings = [];
+		foreach (item is DescriptorItem when item.Path.StartsWith(@"descriptors\") in items)
+		{
+			def path = Path.Combine
+				( "descriptors-html"
+				, Path.GetFileNameWithoutExtension(item.Path) + ".html"
+				);
+
+			def result = DescriptorsHtmlItem(path);
+
+			mappings ::= TaskMapping
+				( inputs  = [ item ]
+				, outputs = [ result ]
+				, compute = () => Compute(item, result)
+				);
+		}
+		mappings;
+	}
+
+	private Compute(descriptors : DescriptorItem, html : DescriptorsHtmlItem) : void
+	{
+		def GetThumbnailPath(id)
+		{
+			def folder = Path.GetFileName(descriptors.Path);
+			$"../thumbnails/$folder/$id.jpg"
+		}
+		def GetDominantColor(data)
+		{
+			def l = data[data.Length - 3];
+			def a = data[data.Length - 2];
+			def b = data[data.Length - 1];
+			String.Format
+				( "#{0}{1}{2}"
+				);
+		}
+
+		def text = StringBuilder();
+		def WriteLine(line) { _ = text.AppendLine(line) }
+
+		[ "<html>"
+		, "<head><style type='text/css'>"
+		, "	tr td:nth-child(1) { text-align: right }"
+		, "	tr td:nth-child(2) { width: 32px }"
+		, "</style></head>"
+		, "<body><table>"
+		].Iter(WriteLine);
+
+		foreach (descriptor in descriptors.Descriptors)
+		{
+			def thumb = GetThumbnailPath(descriptor.ID);
+			def color = GetDominantColor(descriptor.Data);
+			WriteLine($"<tr><td><img src='$thumb' /></td><td bgcolor='$color'>&nbsp;</td></tr>");
+		}
+
+		WriteLine("</table></html></body>");
+
+		html.Text = text.ToString();
+	}
+}

@@ -40,9 +40,14 @@ namespace Snaphappi
 
 		#region IURUploadService Members
 
-		public void UploadFile(string folder, string path, Func<byte[]> LoadFile)
+		public void UploadFile
+			( string       folder
+			, string       path
+			, UploadType   uploadType
+			, Func<byte[]> LoadFile
+			)
 		{
-			taskQueue.Enqueue(() => SafeUploadFile(folder, path, LoadFile));
+			taskQueue.Enqueue(() => SafeUploadFile(folder, path, uploadType, LoadFile));
 		}
 
 		public void ScheduleAction(Action action)
@@ -65,12 +70,17 @@ namespace Snaphappi
 				PerformTask();
 		}
 
-		private void SafeUploadFile(string folder, string path, Func<byte[]> LoadFile)
+		private void SafeUploadFile
+			( string       folder
+			, string       path
+			, UploadType   uploadType
+			, Func<byte[]> LoadFile
+			)
 		{
 			try
 			{
 				var info = new UploadInfo();
-				info.UploadType = UploadType.Preview;
+				info.UploadType = MapUploadType(uploadType);
 				info.__isset.UploadType = true;
 
 				task.UploadFile(id, path, LoadFile(), info);
@@ -100,5 +110,15 @@ namespace Snaphappi
 		}
 
 		#endregion
+
+		private API.UploadType MapUploadType(UploadType uploadType)
+		{
+			switch (uploadType)
+			{
+				case UploadType.Original: return API.UploadType.Original;
+				case UploadType.Preview:  return API.UploadType.Preview;
+			}
+			throw new ArgumentException("uploadType");
+		}
 	}
 }

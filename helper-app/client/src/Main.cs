@@ -124,7 +124,11 @@ namespace Snaphappi
 			var infoService    = new URTaskInfoService    (taskID, Settings.Default.TaskURI);
 			var uploadService  = new URTaskUploadService  (taskID, Settings.Default.TaskURI);
 
-			var uoModel = new UOModel(controlService, infoService, uploadService);
+			var fileSystem  = new FileSystem();
+			var photoLoader = new PhotoLoader();
+			var fileFinder  = new AsyncFileFinder(fileSystem, photoLoader);
+
+			var uoModel = new UOModel(controlService, infoService, uploadService, fileFinder);
 			var uoView  = new UOView(controlService);
 
 			new UOPresenter(app, uoModel, uoView);
@@ -186,7 +190,11 @@ namespace Snaphappi
 
 			var server = new Server();
 
-			var uoModel = new UOModel(server, server, server);
+			var fileSystem  = new FileSystem();
+			var photoLoader = new PhotoLoader();
+			var fileFinder  = new AsyncFileFinder(fileSystem, photoLoader);
+
+			var uoModel = new UOModel(server, server, server, fileFinder);
 			var uoView  = new UOView(server);
 
 			new UOPresenter(server, uoModel, uoView);

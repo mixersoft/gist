@@ -4,9 +4,9 @@ namespace Snaphappi
 {
 	public class TaskID
 	{
-		public string AuthToken;
-		public string SessionID;
-		public string DeviceID;
+		public readonly string AuthToken;
+		public readonly string SessionID;
+		public readonly string DeviceID;
 
 		public TaskID(string authToken, string sessionID, string deviceID)
 		{

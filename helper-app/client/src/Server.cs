@@ -18,7 +18,7 @@ namespace Snaphappi
 
 		private Multimap<string, string> files = new Multimap<string, string>();
 
-		private List<string> filesToUpload = new List<string>();
+		private List<UploadTarget> filesToUpload = new List<UploadTarget>();
 
 		private bool loaded = false;
 
@@ -52,7 +52,7 @@ namespace Snaphappi
 			return files.Get(folder.ToUpperInvariant()).ToArray();
 		}
 
-		public string[] GetFilesToUpload()
+		public UploadTarget[] GetFilesToUpload()
 		{
 			return filesToUpload.ToArray();
 		}
@@ -121,13 +121,18 @@ namespace Snaphappi
 			action();
 		}
 
-		public void UploadFile(string folderPath, string filePath, Func<byte[]> LoadFile)
+		public void UploadFile
+			( string       folderPath
+			, string       filePath
+			, UploadType   uploadType
+			, Func<byte[]> LoadFile
+			)
 		{
 			try
 			{
 				var size = LoadFile().Length;
 				files.Add(folderPath.ToUpperInvariant(), filePath);
-				Console.WriteLine("uploaded '{1}' ({2} bytes) from '{0}'", folderPath, filePath, size);
+				Console.WriteLine("uploaded '{1}' ({2} bytes) from '{0}' for {3}", folderPath, filePath, size, uploadType);
 			}
 			catch (FileNotFoundException)
 			{
@@ -190,7 +195,10 @@ namespace Snaphappi
 
 		private void ProcessAddFileToUpload()
 		{
-			filesToUpload.Add(ReadLine("file"));
+			var filePath   = ReadLine("file");
+			var hash       = int.Parse(ReadLine("hash"));
+			var folderPath = ReadLine("folder");
+			filesToUpload.Add(new UploadTarget(filePath, hash, folderPath));
 			if (loaded)
 				FilesUpdated();
 		}

@@ -20,7 +20,7 @@ namespace SnaphappiTest
 			return previews[path];
 		}
 
-		public int GetHash(string path)
+		public int GetImageHash(string path)
 		{
 			return hashes[path];
 		}

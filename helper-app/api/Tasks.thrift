@@ -33,6 +33,27 @@ struct TaskID
 	3: required string DeviceID;
 }
 
+/**
+ * Information about a file to upload.
+ */
+struct UploadTarget
+{
+	/**
+	 * Absolute file path.
+	 */
+	1: required string FilePath;
+
+	/**
+	 * Image hash to be used to find renamed files.
+	 */
+	2: required i32 Hash;
+
+	/**
+	 * Top-level folder containing the file.
+	 */
+	3: required string FolderPath;
+}
+
 enum ErrorCode
 {
 	Unknown      = 1;
@@ -141,8 +162,9 @@ service Task
 
 	/**
 	 * Return the list of all files to be uploaded to the server.
+	 * Used to upload file originals.
 	 */
-	list<string> GetFilesToUpload
+	list<UploadTarget> GetFilesToUpload
 		( 1: TaskID id
 		) throws (1: SystemException systemException);
 

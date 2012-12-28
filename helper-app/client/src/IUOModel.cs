@@ -9,14 +9,21 @@ namespace Snaphappi
 	{
 		event Action TaskCancelled;
 
-		event Action<string, string> FileAdded;
+		event Action<string, string> FileFound;
+
+		event Action<UploadTarget> TargetAdded;
+
 		event Action<string, string> FileNotFound;
 		event Action<string, string> UploadFailed;
 
-		void UploadFile(string folderPath, string filePath);
+		void FetchFiles();
+
+		void FindFile(string path, int hash);
 
 		void StartPolling();
 
-		void FetchFiles();
+		void Stop();
+
+		void UploadFile(string folderPath, string filePath);
 	}
 }

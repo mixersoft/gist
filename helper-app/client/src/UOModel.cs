@@ -12,9 +12,10 @@ namespace Snaphappi
 		private readonly ITaskControlService controlService;
 		private readonly ITaskInfoService    infoService;
 		private readonly ITaskUploadService  uploadService;
+		private readonly IAsyncFileFinder    fileFinder;
 
-		private readonly HashSet<string> files
-			= new HashSet<string>();
+		private readonly Dictionary<string, UploadTarget> uploadTargets
+			= new Dictionary<string, UploadTarget>();
 
 		#endregion // data
 
@@ -24,11 +25,15 @@ namespace Snaphappi
 			( ITaskControlService controlService
 			, ITaskInfoService    infoService
 			, ITaskUploadService  uploadService
+			, IAsyncFileFinder    fileFinder
 			)
 		{
 			this.controlService = controlService;
 			this.infoService    = infoService;
 			this.uploadService  = uploadService;
+			this.fileFinder     = fileFinder;
+
+			this.fileFinder.FileFound += OnFileFound;
 
 			this.infoService.FilesUpdated  += OnFilesUpdated;
 			this.infoService.TaskCancelled += OnTaskCancelled;
@@ -38,7 +43,9 @@ namespace Snaphappi
 
 		#region IUOModel Members
 
-		public event Action<string, string> FileAdded = delegate {};
+		public event Action<string, string> FileFound = delegate {};
+
+		public event Action<UploadTarget> TargetAdded = delegate {};
 
 		public event Action TaskCancelled
 		{
@@ -58,9 +65,14 @@ namespace Snaphappi
 			remove { uploadService.UploadFailed -= value; }
 		}
 
-		public void UploadFile(string folderPath, string filePath)
+		public void FetchFiles()
 		{
-			uploadService.UploadFile(folderPath, filePath, () => File.ReadAllBytes(filePath));
+			AddFiles(controlService.GetFilesToUpload());
+		}
+
+		public void FindFile(string path, int hash)
+		{
+			fileFinder.Find(path, hash);
 		}
 
 		public void StartPolling()
@@ -69,26 +81,42 @@ namespace Snaphappi
 			infoService.StartPolling((int)Math.Floor(pollingRate));
 		}
 
-		public void FetchFiles()
+		public void Stop()
 		{
-			AddFiles(controlService.GetFilesToUpload());
+			fileFinder.Stop();
+		}
+
+		public void UploadFile(string folderPath, string filePath)
+		{
+			uploadService.UploadFile
+				( folderPath
+				, filePath
+				, UploadType.Original
+				, () => File.ReadAllBytes(filePath)
+				);
 		}
 
 		#endregion // IUOModel Members
 
 		#region implementation
 
-		private void AddFiles(string[] files)
+		private void AddFiles(UploadTarget[] uploadTargets)
 		{
-			foreach (var filePath in files)
+			foreach (var target in uploadTargets)
 			{
-				var ucFilePath = filePath.ToUpperInvariant();
-				if (!this.files.Contains(ucFilePath))
+				var ucFilePath = target.FilePath.ToUpperInvariant();
+				if (!this.uploadTargets.ContainsKey(ucFilePath))
 				{
-					this.files.Add(ucFilePath);
-					FileAdded("", filePath);
+					this.uploadTargets.Add(ucFilePath, target);
+					TargetAdded(target);
 				}
 			}
+		}
+
+		private void OnFileFound(FileMatch match)
+		{
+			var target = uploadTargets[match.OldLocation];
+			FileFound(target.FolderPath, target.FilePath);
 		}
 
 		private void OnFilesUpdated()

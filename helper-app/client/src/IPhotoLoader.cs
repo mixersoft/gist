@@ -6,6 +6,6 @@ namespace Snaphappi
 	{
 		byte[] GetPreview(string path);
 
-		int GetHash(string path);
+		int GetImageHash(string path);
 	}
 }

@@ -24,13 +24,19 @@ namespace Snaphappi
 
 			app.Loaded += OnLoaded;
 
-			uoModel.FileAdded      += OnFileAdded;
+			uoModel.TargetAdded    += OnTargetAdded;
+			uoModel.FileFound      += OnFileFound;
 			uoModel.FileNotFound   += OnFileNotFound;
 			uoModel.TaskCancelled  += OnTaskCancelled;
 			uoModel.UploadFailed   += OnUploadFailed;
 		}
 
-		private void OnFileAdded(string folderPath, string filePath)
+		private void OnTargetAdded(UploadTarget uploadTarget)
+		{
+			uoModel.FindFile(uploadTarget.FilePath, uploadTarget.Hash);
+		}
+
+		private void OnFileFound(string folderPath, string filePath)
 		{
 			uoModel.UploadFile(folderPath, filePath);
 		}
@@ -48,6 +54,7 @@ namespace Snaphappi
 
 		private void OnTaskCancelled()
 		{
+			uoModel.Stop();
 			app.Quit();
 		}
 

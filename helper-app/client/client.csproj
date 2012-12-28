@@ -136,6 +136,8 @@
     <Compile Include="src\TaskControlService.cs" />
     <Compile Include="src\TaskUploadService.cs" />
     <Compile Include="src\UOView.cs" />
+    <Compile Include="src\UploadTarget.cs" />
+    <Compile Include="src\UploadType.cs" />
     <Compile Include="src\URModel.cs" />
     <Compile Include="src\URPresenter.cs" />
     <Compile Include="src\TaskInfoService.cs" />
@@ -153,6 +155,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Management" />
     <Reference Include="System.XML" />
     <Reference Include="Thrift">

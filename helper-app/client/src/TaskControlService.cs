@@ -1,5 +1,6 @@
 ﻿using Snaphappi.API;
 using System;
+using System.Linq;
 using Thrift.Protocol;
 using Thrift.Transport;
 
@@ -45,12 +46,12 @@ namespace Snaphappi
 			}
 		}
 
-		public string[] GetFilesToUpload()
+		public UploadTarget[] GetFilesToUpload()
 		{
 			try
 			{
 				lock (task)
-					return task.GetFilesToUpload(id).ToArray();
+					return task.GetFilesToUpload(id).Select(MapUploadTarget).ToArray();
 			}
 			catch (API.SystemException e)
 			{
@@ -166,5 +167,18 @@ namespace Snaphappi
 		}
 
 		#endregion
+
+		#region implementation
+
+		private UploadTarget MapUploadTarget(API.UploadTarget uploadTarget)
+		{
+			return new UploadTarget
+				( uploadTarget.FilePath
+				, uploadTarget.Hash
+				, uploadTarget.FolderPath
+				);
+		}
+
+		#endregion // implementation
 	}
 }
