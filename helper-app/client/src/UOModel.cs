@@ -33,46 +33,35 @@ namespace Snaphappi
 			this.uploadService  = uploadService;
 			this.fileFinder     = fileFinder;
 
-			this.fileFinder.FileFound += OnFileFound;
+			this.fileFinder.FileFound    += OnFileFound;
+			this.fileFinder.FileNotFound += OnFileNotFound;
 
 			this.infoService.FilesUpdated  += OnFilesUpdated;
 			this.infoService.TaskCancelled += OnTaskCancelled;
+
+			// same handling for all upload failures
+			this.uploadService.FileNotFound += OnUploadFailed;
+			this.uploadService.UploadFailed += OnUploadFailed;
 		}
 
 		#endregion // interface
 
 		#region IUOModel Members
-
-		public event Action<string, string> FileFound = delegate {};
-
-		public event Action<UploadTarget> TargetAdded = delegate {};
-
-		public event Action TaskCancelled
-		{
-			add    { infoService.TaskCancelled += value; }
-			remove { infoService.TaskCancelled -= value; }
-		}
-
-		public event Action<string, string> FileNotFound
-		{
-			add    { uploadService.FileNotFound += value; }
-			remove { uploadService.FileNotFound -= value; }
-		}
-
-		public event Action<string, string> UploadFailed
-		{
-			add    { uploadService.UploadFailed += value; }
-			remove { uploadService.UploadFailed -= value; }
-		}
+		
+		public event Action<UploadTarget> FileFound     = delegate {};
+		public event Action<UploadTarget> FileNotFound  = delegate {};
+		public event Action<UploadTarget> TargetAdded   = delegate {};
+		public event Action               TaskCancelled = delegate {};
+		public event Action<UploadTarget> UploadFailed  = delegate {};
 
 		public void FetchFiles()
 		{
 			AddFiles(controlService.GetFilesToUpload());
 		}
 
-		public void FindFile(string path, int hash)
+		public void FindFile(UploadTarget target)
 		{
-			fileFinder.Find(path, hash);
+			fileFinder.Find(target.FilePath, target.Timestamp, target.Hash);
 		}
 
 		public void StartPolling()
@@ -113,10 +102,24 @@ namespace Snaphappi
 			}
 		}
 
+		private UploadTarget GetUploadTarget(string filePath)
+		{
+			return uploadTargets[filePath.ToUpperInvariant()];
+		}
+
 		private void OnFileFound(FileMatch match)
 		{
-			var target = uploadTargets[match.OldLocation];
-			FileFound(target.FolderPath, target.FilePath);
+			FileFound(GetUploadTarget(match.OldLocation));
+		}
+
+		private void OnFileNotFound(string filePath)
+		{
+			FileNotFound(GetUploadTarget(filePath));
+		}
+
+		private void OnUploadFailed(string folderPath, string filePath)
+		{
+			UploadFailed(GetUploadTarget(filePath));
 		}
 
 		private void OnFilesUpdated()
@@ -127,6 +130,7 @@ namespace Snaphappi
 		private void OnTaskCancelled()
 		{
 			infoService.StopPolling();
+			TaskCancelled();
 		}
 
 		#endregion // implementation

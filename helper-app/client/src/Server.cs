@@ -196,9 +196,10 @@ namespace Snaphappi
 		private void ProcessAddFileToUpload()
 		{
 			var filePath   = ReadLine("file");
+			var timestamp  = DateTime.Parse(ReadLine("time")).ToUnixTime();
 			var hash       = int.Parse(ReadLine("hash"));
 			var folderPath = ReadLine("folder");
-			filesToUpload.Add(new UploadTarget(filePath, hash, folderPath));
+			filesToUpload.Add(new UploadTarget(filePath, timestamp, hash, folderPath));
 			if (loaded)
 				FilesUpdated();
 		}

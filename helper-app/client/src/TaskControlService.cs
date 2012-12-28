@@ -174,6 +174,7 @@ namespace Snaphappi
 		{
 			return new UploadTarget
 				( uploadTarget.FilePath
+				, uploadTarget.Timestamp
 				, uploadTarget.Hash
 				, uploadTarget.FolderPath
 				);

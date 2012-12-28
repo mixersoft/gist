@@ -22,24 +22,26 @@ namespace SnaphappiTest
 		[ Test ]
 		public void TestFind()
 		{
-			AddHashedFile(@"b",   1);
-			AddHashedFile(@"a\c", 0);
-			AddHashedFile(@"a\d", 1);
-			AddHashedFile(@"a\e", 0);
+			AddFile(@"b",   2, 1);
+			AddFile(@"a\c", 0, 0);
+			AddFile(@"a\d", 0, 1);
+			AddFile(@"a\e", 2, 1);
+			AddFile(@"a\f", 2, 0);
 
 			FileMatch match = null;
 			fileFinder.FileFound += m => match = m;
 
-			fileFinder.Find(@"a\b", 1);
+			fileFinder.Find(@"a\b", 2, 1);
 
 			Assert.NotNull(match);
 			Assert.AreEqual(match.OldLocation, @"a\b");
-			Assert.AreEqual(match.NewLocation, @"a\d");
+			Assert.AreEqual(match.NewLocation, @"a\e");
 		}
 
-		private void AddHashedFile(string path, int hash)
+		private void AddFile(string path, int timestamp, int hash)
 		{
 			fileSystem.filePaths.Add(path);
+			fileSystem.timestamps.Add(path, timestamp);
 			photoLoader.hashes.Add(path, hash);
 		}
 	}

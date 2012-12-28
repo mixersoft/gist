@@ -8,12 +8,14 @@ namespace Snaphappi
 		struct QueueItem
 		{
 			public readonly string Path;
+			public readonly int    Timestamp;
 			public readonly int    Hash;
 
-			public QueueItem(string path, int hash)
+			public QueueItem(string path, int timestamp, int hash)
 			{
-				Path = path;
-				Hash = hash;
+				Path      = path;
+				Timestamp = timestamp;
+				Hash      = hash;
 			}
 		}
 
@@ -42,9 +44,9 @@ namespace Snaphappi
 
 		#region IAsyncFileFinder Members
 
-		public void Find(string filePath, int hash)
+		public void Find(string filePath, int timestamp, int hash)
 		{
-			queue.Enqueue(new QueueItem(filePath, hash));
+			queue.Enqueue(new QueueItem(filePath, timestamp, hash));
 		}
 
 		public void Stop()
@@ -59,6 +61,12 @@ namespace Snaphappi
 			remove { lock (fileFinder) fileFinder.FileFound -= value; }
 		}
 
+		public event Action<string> FileNotFound
+		{
+			add    { lock (fileFinder) fileFinder.FileNotFound += value; }
+			remove { lock (fileFinder) fileFinder.FileNotFound -= value; }
+		}
+
 		#endregion
 
 		#region implementation
@@ -71,7 +79,7 @@ namespace Snaphappi
 				{
 					if (stopRequested)
 						break;
-					fileFinder.Find(item.Path, item.Hash);
+					fileFinder.Find(item.Path, item.Timestamp, item.Hash);
 				}
 			}
 		}

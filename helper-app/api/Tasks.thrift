@@ -44,14 +44,19 @@ struct UploadTarget
 	1: required string FilePath;
 
 	/**
+	 * File creation Unix timestamp.
+	 */
+	2: required i32 Timestamp;
+
+	/**
 	 * Image hash to be used to find renamed files.
 	 */
-	2: required i32 Hash;
+	3: required i32 Hash;
 
 	/**
 	 * Top-level folder containing the file.
 	 */
-	3: required string FolderPath;
+	4: required string FolderPath;
 }
 
 enum ErrorCode

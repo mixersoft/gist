@@ -102,6 +102,7 @@
     <Compile Include="src\AsyncFileFinder.cs" />
     <Compile Include="src\BlockingQueue.cs" />
     <Compile Include="src\ConsoleHelper.cs" />
+    <Compile Include="src\DateTimeEx.cs" />
     <Compile Include="src\FileFinder.cs" />
     <Compile Include="src\FileLister.cs" />
     <Compile Include="src\FileSystem.cs" />

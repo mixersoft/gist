@@ -18,6 +18,11 @@ namespace Snaphappi
 			return Directory.Exists(path);
 		}
 
+		public int GetCreationTimestamp(string path)
+		{
+			return File.GetCreationTimeUtc(path).ToUnixTime();
+		}
+
 		public IEnumerable<string> ListFiles(string folderPath)
 		{
 			return Directory.GetFiles(folderPath);

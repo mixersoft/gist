@@ -19,10 +19,11 @@ namespace Snaphappi
 
 	public interface IAsyncFileFinder
 	{
-		void Find(string filePath, int hash);
+		void Find(string filePath, int timestamp, int hash);
 
 		void Stop();
 
 		event Action<FileMatch> FileFound;
+		event Action<string>    FileNotFound;
 	}
 }

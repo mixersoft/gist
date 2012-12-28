@@ -7,18 +7,16 @@ namespace Snaphappi
 {
 	public interface IUOModel
 	{
-		event Action TaskCancelled;
 
-		event Action<string, string> FileFound;
-
+		event Action<UploadTarget> FileFound;
+		event Action<UploadTarget> FileNotFound;
 		event Action<UploadTarget> TargetAdded;
-
-		event Action<string, string> FileNotFound;
-		event Action<string, string> UploadFailed;
+		event Action               TaskCancelled;
+		event Action<UploadTarget> UploadFailed;
 
 		void FetchFiles();
 
-		void FindFile(string path, int hash);
+		void FindFile(UploadTarget target);
 
 		void StartPolling();
 

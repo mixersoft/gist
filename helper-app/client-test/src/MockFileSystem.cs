@@ -8,8 +8,14 @@ namespace SnaphappiTest
 {
 	class MockFileSystem : IFileSystem
 	{
+		#region data
+
 		public HashSet<string> filePaths = new HashSet<string>();
-		
+
+		public Dictionary<string, int> timestamps = new Dictionary<string,int>();
+
+		#endregion // data
+
 		#region IFileSystem Members
 
 		public IEnumerable<string> ListFiles(string folderPath)
@@ -28,6 +34,11 @@ namespace SnaphappiTest
 				.Where(path => path != "" && Path.GetDirectoryName(path) == folderPath);
 		}
 
+		public int GetCreationTimestamp(string path)
+		{
+			return timestamps[path];
+		}
+
 		public bool FileExists(string path)
 		{
 			return filePaths.Contains(path);
@@ -38,6 +49,6 @@ namespace SnaphappiTest
 			return filePaths.Any(p => Path.GetDirectoryName(p) == path);
 		}
 
-		#endregion
+		#endregion // IFileSystem Members
 	}
 }
