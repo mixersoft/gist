@@ -5,7 +5,7 @@ namespace Snaphappi
 {
 	public class AsyncFileFinder : IAsyncFileFinder
 	{
-		struct QueueItem
+		class QueueItem
 		{
 			public readonly string Path;
 			public readonly int    Timestamp;
@@ -25,8 +25,6 @@ namespace Snaphappi
 
 		private readonly BlockingQueue<QueueItem> queue = new BlockingQueue<QueueItem>();
 
-		private bool stopRequested = false;
-
 		#endregion // data
 
 		#region interface
@@ -37,7 +35,10 @@ namespace Snaphappi
 			)
 		{
 			fileFinder = new FileFinder(fileSystem, photoLoader);
-			new Thread(FindFiles).Start();
+
+			var thread = new Thread(FindFiles);
+			thread.Name = "AsyncFileFinder";
+			thread.Start();
 		}
 
 		#endregion // interface
@@ -51,8 +52,7 @@ namespace Snaphappi
 
 		public void Stop()
 		{
-			lock (fileFinder)
-				stopRequested = true;
+			queue.Enqueue(null);
 		}
 
 		public event Action<FileMatch> FileFound
@@ -75,12 +75,10 @@ namespace Snaphappi
 		{
 			foreach (var item in queue)
 			{
+				if (item == null)
+					break;
 				lock (fileFinder)
-				{
-					if (stopRequested)
-						break;
 					fileFinder.Find(item.Path, item.Timestamp, item.Hash);
-				}
 			}
 		}
 

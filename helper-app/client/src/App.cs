@@ -20,9 +20,11 @@ namespace Snaphappi
 		#region IApp Members
 
 		public event Action Loaded;
+		public event Action Terminated;
 
 		public void Quit()
 		{
+			Terminated();
 			Environment.Exit(0);
 		}
 

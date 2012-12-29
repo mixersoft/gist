@@ -22,7 +22,8 @@ namespace Snaphappi
 			this.uoModel    = uoModel;
 			this.uoView     = uoView;
 
-			app.Loaded += OnLoaded;
+			app.Loaded     += OnLoaded;
+			app.Terminated += OnTerminated;
 
 			uoModel.TargetAdded    += OnTargetAdded;
 			uoModel.FileFound      += OnFileFound;
@@ -54,8 +55,12 @@ namespace Snaphappi
 
 		private void OnTaskCancelled()
 		{
-			uoModel.Stop();
 			app.Quit();
+		}
+
+		private void OnTerminated()
+		{
+			uoModel.Stop();
 		}
 
 		private void OnUploadFailed(UploadTarget target)

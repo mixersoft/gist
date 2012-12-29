@@ -4,14 +4,16 @@ namespace Snaphappi
 {
 	public interface ITaskUploadService
 	{
+		void ScheduleAction(Action action);
+
+		void Stop();
+
 		void UploadFile
 			( string       folder
 			, string       path
 			, UploadType   uploadType
 			, Func<byte[]> LoadFile
 			);
-
-		void ScheduleAction(Action action);
 
 		event Action                 AuthTokenRejected;
 		event Action<string, string> DuplicateUpload;

@@ -168,7 +168,7 @@ namespace Snaphappi
 		private static void TestUploadResampled()
 		{
 			ConsoleHelper.Alloc();
-			ConsoleHelper.Title = "Snaphappi Helper Console";
+			ConsoleHelper.Title = "Snaphappi Helper Console - upload resampled";
 
 			var server = new Server();
 
@@ -186,7 +186,7 @@ namespace Snaphappi
 		private static void TestUploadOriginals()
 		{
 			ConsoleHelper.Alloc();
-			ConsoleHelper.Title = "Snaphappi Helper Console";
+			ConsoleHelper.Title = "Snaphappi Helper Console - upload originals";
 
 			var server = new Server();
 
@@ -203,7 +203,7 @@ namespace Snaphappi
 		private static void TestWatchFolders()
 		{
 			ConsoleHelper.Alloc();
-			ConsoleHelper.Title = "Snaphappi Helper Console";
+			ConsoleHelper.Title = "Snaphappi Helper Console - watch folders";
 
 			var server = new Server();
 

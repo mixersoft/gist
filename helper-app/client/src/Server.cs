@@ -18,7 +18,7 @@ namespace Snaphappi
 
 		private Multimap<string, string> files = new Multimap<string, string>();
 
-		private List<UploadTarget> filesToUpload = new List<UploadTarget>();
+		private List<UploadTarget> uploadTargets = new List<UploadTarget>();
 
 		private bool loaded = false;
 
@@ -36,7 +36,8 @@ namespace Snaphappi
 
 		#region IApp Members
 
-		public event Action Loaded = delegate {};
+		public event Action Loaded     = delegate {};
+		public event Action Terminated = delegate {};
 
 		public void Quit()
 		{
@@ -54,7 +55,7 @@ namespace Snaphappi
 
 		public UploadTarget[] GetFilesToUpload()
 		{
-			return filesToUpload.ToArray();
+			return uploadTargets.ToArray();
 		}
 
 		public string[] GetFolders()
@@ -93,9 +94,9 @@ namespace Snaphappi
 			Console.WriteLine("folder '{0}' contains {1} files", folderPath, count);
 		}
 
-		#endregion // IURTaskControlService Members
+		#endregion // ITaskControlService Members
 
-		#region IURTaskInfoService Members
+		#region ITaskInfoService Members
 
 		public void StartPolling(int period)
 		{
@@ -112,13 +113,18 @@ namespace Snaphappi
 		public event Action FoldersUpdated    = delegate {};
 		public event Action TaskCancelled     = delegate {};
 
-		#endregion // IURTaskInfoService Members
+		#endregion // ITaskInfoService Members
 
-		#region IURTaskUploadService Members
+		#region ITaskUploadService Members
 
 		public void ScheduleAction(Action action)
 		{
 			action();
+		}
+
+		void ITaskUploadService.Stop()
+		{
+			Console.WriteLine("stopped upload service");
 		}
 
 		public void UploadFile
@@ -144,21 +150,22 @@ namespace Snaphappi
 		public event Action<string, string> FileNotFound    = delegate {};
 		public event Action<string, string> UploadFailed    = delegate {};
 
-		#endregion // IURTaskUploadService Members
+		#endregion // ITaskUploadService Members
 
 		#region implementation
 
 		private void InputProc()
 		{
 			var commands = new Dictionary<string, Action>();
-			commands.Add("add file",           ProcessAddFile);
-			commands.Add("add file to upload", ProcessAddFileToUpload);
-			commands.Add("add folder",         ProcessAddFolder);
-			commands.Add("add watched folder", ProcessAddWatchedFolder);
-			commands.Add("cancel task",        ProcessCancelTask);
-			commands.Add("fail upload",        ProcessFailUpload);
-			commands.Add("view files",         ProcessViewFiles);
-			commands.Add("view folders",       ProcessViewFolders);
+			commands.Add("add file",             ProcessAddFile);
+			commands.Add("add file to upload",   ProcessAddFileToUpload);
+			commands.Add("add folder",           ProcessAddFolder);
+			commands.Add("add watched folder",   ProcessAddWatchedFolder);
+			commands.Add("cancel task",          ProcessCancelTask);
+			commands.Add("fail upload",          ProcessFailUpload);
+			commands.Add("view files",           ProcessViewFiles);
+			commands.Add("view files to upload", ProcessViewFilesToUpload);
+			commands.Add("view folders",         ProcessViewFolders);
 
 			Console.WriteLine
 				( "commands: start, exit, {0}"
@@ -170,6 +177,7 @@ namespace Snaphappi
 				switch (command)
 				{
 					case "exit":
+						Terminated();
 						return;
 					case "start":
 						loaded = true;
@@ -196,10 +204,10 @@ namespace Snaphappi
 		private void ProcessAddFileToUpload()
 		{
 			var filePath   = ReadLine("file");
-			var timestamp  = DateTime.Parse(ReadLine("time")).ToUnixTime();
+			var timestamp  = File.GetCreationTimeUtc(filePath).ToUnixTime();
 			var hash       = int.Parse(ReadLine("hash"));
 			var folderPath = ReadLine("folder");
-			filesToUpload.Add(new UploadTarget(filePath, timestamp, hash, folderPath));
+			uploadTargets.Add(new UploadTarget(filePath, timestamp, hash, folderPath));
 			if (loaded)
 				FilesUpdated();
 		}
@@ -233,6 +241,19 @@ namespace Snaphappi
 				Console.WriteLine(folder.Key);
 				foreach (var file in folder.Value)
 					Console.WriteLine("\t" + file);
+			}
+		}
+
+		private void ProcessViewFilesToUpload()
+		{
+			int n = 0;
+			foreach (var target in uploadTargets)
+			{
+				Console.WriteLine("{0,3}. path:   {1}", n, target.FilePath);
+				Console.WriteLine("     folder: {0}", target.FolderPath);
+				Console.WriteLine("     time:   {0}", target.Timestamp);
+				Console.WriteLine("     hash:   {0}", target.Hash);
+				++n;
 			}
 		}
 

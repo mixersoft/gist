@@ -37,7 +37,6 @@ namespace Snaphappi
 			this.fileFinder.FileNotFound += OnFileNotFound;
 
 			this.infoService.FilesUpdated  += OnFilesUpdated;
-			this.infoService.TaskCancelled += OnTaskCancelled;
 
 			// same handling for all upload failures
 			this.uploadService.FileNotFound += OnUploadFailed;
@@ -51,8 +50,13 @@ namespace Snaphappi
 		public event Action<UploadTarget> FileFound     = delegate {};
 		public event Action<UploadTarget> FileNotFound  = delegate {};
 		public event Action<UploadTarget> TargetAdded   = delegate {};
-		public event Action               TaskCancelled = delegate {};
 		public event Action<UploadTarget> UploadFailed  = delegate {};
+
+		public event Action TaskCancelled
+		{
+			add    { infoService.TaskCancelled += value; }
+			remove { infoService.TaskCancelled -= value; }
+		}
 
 		public void FetchFiles()
 		{
@@ -73,6 +77,8 @@ namespace Snaphappi
 		public void Stop()
 		{
 			fileFinder.Stop();
+			infoService.StopPolling();
+			uploadService.Stop();
 		}
 
 		public void UploadFile(string folderPath, string filePath)
@@ -125,12 +131,6 @@ namespace Snaphappi
 		private void OnFilesUpdated()
 		{
 			AddFiles(controlService.GetFilesToUpload());
-		}
-
-		private void OnTaskCancelled()
-		{
-			infoService.StopPolling();
-			TaskCancelled();
 		}
 
 		#endregion // implementation

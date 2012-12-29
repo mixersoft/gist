@@ -21,7 +21,8 @@ namespace Snaphappi
 			this.urView     = urView;
 			this.fileLister = fileLister;
 
-			app.Loaded += OnLoaded;
+			app.Loaded     += OnLoaded;
+			app.Terminated += OnTerminated;
 			
 			urModel.DuplicateUpload      += OnDuplicateUpload;
 			urModel.FolderAdded          += OnFolderAdded;
@@ -68,13 +69,18 @@ namespace Snaphappi
 
 		private void OnLoaded()
 		{
-			urModel.StartPolling();
+			urModel.Start();
 			urModel.FetchFolders();
 		}
 
 		private void OnTaskCancelled()
 		{
 			app.Quit();
+		}
+
+		private void OnTerminated()
+		{
+			urModel.Stop();
 		}
 		
 		private void OnUploadFailed(string folderPath, string filePath)

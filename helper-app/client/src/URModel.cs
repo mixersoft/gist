@@ -39,7 +39,6 @@ namespace Snaphappi
 			this.uploadService  = uploadService;
 			this.photoLoader    = photoLoader;
 
-			this.infoService.TaskCancelled  += OnTaskCancelled;
 			this.infoService.FoldersUpdated += OnFoldersUpdated;
 		}
 
@@ -71,10 +70,16 @@ namespace Snaphappi
 			uploadService.ScheduleAction(() => FolderUploadComplete(folderPath));
 		}
 
-		public void StartPolling()
+		public void Start()
 		{
 			var pollingRate = Settings.Default.InfoPollingRate.TotalMilliseconds;
 			infoService.StartPolling((int)Math.Floor(pollingRate));
+		}
+
+		public void Stop()
+		{
+			infoService.StopPolling();
+			uploadService.Stop();
 		}
 
 		public void UploadFile(string folderPath, string filePath)
@@ -151,11 +156,6 @@ namespace Snaphappi
 		private void OnFoldersUpdated()
 		{
 			AddFolders(controlService.GetFolders());
-		}
-
-		private void OnTaskCancelled()
-		{
-			infoService.StopPolling();
 		}
 
 		#endregion

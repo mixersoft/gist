@@ -17,7 +17,7 @@ namespace Snaphappi
 
 		private Thread uploadThread;
 
-		private BlockingQueue<Action> taskQueue;
+		private BlockingQueue<Action> taskQueue = new BlockingQueue<Action>();
 
 		#endregion
 
@@ -29,8 +29,6 @@ namespace Snaphappi
 						
 			task = new Task.Client(new TBinaryProtocol(new THttpClient(uri)));
 
-			taskQueue = new BlockingQueue<Action>();
-
 			uploadThread = new Thread(UploadProc);
 			uploadThread.Name = "TaskUpload";
 			uploadThread.Start();
@@ -40,6 +38,16 @@ namespace Snaphappi
 
 		#region IURUploadService Members
 
+		public void ScheduleAction(Action action)
+		{
+			taskQueue.Enqueue(action);
+		}
+
+		public void Stop()
+		{
+			taskQueue.Enqueue(null);
+		}
+
 		public void UploadFile
 			( string       folder
 			, string       path
@@ -48,11 +56,6 @@ namespace Snaphappi
 			)
 		{
 			taskQueue.Enqueue(() => SafeUploadFile(folder, path, uploadType, LoadFile));
-		}
-
-		public void ScheduleAction(Action action)
-		{
-			taskQueue.Enqueue(action);
 		}
 		
 		public event Action                 AuthTokenRejected = delegate {};
@@ -67,7 +70,11 @@ namespace Snaphappi
 		private void UploadProc()
 		{
 			foreach (var PerformTask in taskQueue)
+			{
+				if (PerformTask == null)
+					break;
 				PerformTask();
+			}
 		}
 
 		private void SafeUploadFile
