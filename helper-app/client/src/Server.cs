@@ -12,13 +12,13 @@ namespace Snaphappi
 
 		private readonly Thread inputThread;
 
-		private HashSet<string> folders = new HashSet<string>();
+		private IFileSystem  fileSystem;
+		private IPhotoLoader photoLoader;
 
-		private HashSet<string> watchedFolders = new HashSet<string>();
-
-		private Multimap<string, string> files = new Multimap<string, string>();
-
-		private List<UploadTarget> uploadTargets = new List<UploadTarget>();
+		private Multimap<string, string> files          = new Multimap<string, string>();
+		private HashSet<string>          folders        = new HashSet<string>();
+		private List<UploadTarget>       uploadTargets  = new List<UploadTarget>();
+		private HashSet<string>          watchedFolders = new HashSet<string>();
 
 		private bool loaded = false;
 
@@ -28,8 +28,12 @@ namespace Snaphappi
 
 		public Server()
 		{
-			this.inputThread = new Thread(InputProc);
-			this.inputThread.Start();
+			fileSystem  = new FileSystem();
+			photoLoader = new PhotoLoader();
+
+			inputThread = new Thread(InputProc);
+			inputThread.Name = "Server";
+			inputThread.Start();
 		}
 
 		#endregion // interface
@@ -186,6 +190,8 @@ namespace Snaphappi
 					default:
 						if (commands.ContainsKey(command))
 							commands[command]();
+						else if (command != "")
+							Console.WriteLine("unknown command: '{0}'", command);
 						break;
 				}
 			}
@@ -204,9 +210,11 @@ namespace Snaphappi
 		private void ProcessAddFileToUpload()
 		{
 			var filePath   = ReadLine("file");
-			var timestamp  = File.GetCreationTimeUtc(filePath).ToUnixTime();
-			var hash       = int.Parse(ReadLine("hash"));
 			var folderPath = ReadLine("folder");
+
+			var timestamp  = fileSystem.GetCreationTimestamp(filePath);
+			var hash       = photoLoader.GetImageHash(filePath);
+
 			uploadTargets.Add(new UploadTarget(filePath, timestamp, hash, folderPath));
 			if (loaded)
 				FilesUpdated();
@@ -251,7 +259,7 @@ namespace Snaphappi
 			{
 				Console.WriteLine("{0,3}. path:   {1}", n, target.FilePath);
 				Console.WriteLine("     folder: {0}", target.FolderPath);
-				Console.WriteLine("     time:   {0}", target.Timestamp);
+				Console.WriteLine("     time:   {0} ({1:u})", target.Timestamp, DateTimeEx.FromUnixTime(target.Timestamp));
 				Console.WriteLine("     hash:   {0}", target.Hash);
 				++n;
 			}
