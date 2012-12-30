@@ -9,8 +9,16 @@ namespace Snaphappi
 		void Stop();
 
 		void UploadFile
-			( string       folder
-			, string       path
+			( string       folderPath
+			, string       pathPath
+			, UploadType   uploadType
+			, Func<byte[]> LoadFile
+			);
+
+		void UploadFile
+			( string       folderPath
+			, string       oldFilePath
+			, string       newFilePath
 			, UploadType   uploadType
 			, Func<byte[]> LoadFile
 			);

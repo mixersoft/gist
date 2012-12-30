@@ -37,9 +37,9 @@ namespace Snaphappi
 			uoModel.FindFile(uploadTarget);
 		}
 
-		private void OnFileFound(UploadTarget target)
+		private void OnFileFound(FileMatch match)
 		{
-			uoModel.UploadFile(target.FolderPath, target.FilePath);
+			uoModel.UploadFile(match);
 		}
 
 		private void OnFileNotFound(UploadTarget target)

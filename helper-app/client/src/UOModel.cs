@@ -47,7 +47,7 @@ namespace Snaphappi
 
 		#region IUOModel Members
 		
-		public event Action<UploadTarget> FileFound     = delegate {};
+		public event Action<FileMatch> FileFound        = delegate {};
 		public event Action<UploadTarget> FileNotFound  = delegate {};
 		public event Action<UploadTarget> TargetAdded   = delegate {};
 		public event Action<UploadTarget> UploadFailed  = delegate {};
@@ -81,13 +81,14 @@ namespace Snaphappi
 			uploadService.Stop();
 		}
 
-		public void UploadFile(string folderPath, string filePath)
+		public void UploadFile(FileMatch match)
 		{
 			uploadService.UploadFile
-				( folderPath
-				, filePath
+				( GetUploadTarget(match.OldLocation).FolderPath
+				, match.OldLocation
+				, match.NewLocation
 				, UploadType.Original
-				, () => File.ReadAllBytes(filePath)
+				, () => File.ReadAllBytes(match.OldLocation)
 				);
 		}
 
@@ -115,7 +116,7 @@ namespace Snaphappi
 
 		private void OnFileFound(FileMatch match)
 		{
-			FileFound(GetUploadTarget(match.OldLocation));
+			FileFound(match);
 		}
 
 		private void OnFileNotFound(string filePath)

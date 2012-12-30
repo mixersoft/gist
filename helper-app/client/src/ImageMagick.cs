@@ -16,6 +16,8 @@ namespace Snaphappi
 
 		public static void Convert(string srcPath, string dstPath, string options)
 		{
+			if (!File.Exists(srcPath))
+				throw new FileNotFoundException("Source image does not exist.", srcPath);
 			Process.Start
 				( new ProcessStartInfo()
 					{

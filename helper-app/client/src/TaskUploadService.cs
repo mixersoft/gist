@@ -55,7 +55,18 @@ namespace Snaphappi
 			, Func<byte[]> LoadFile
 			)
 		{
-			taskQueue.Enqueue(() => SafeUploadFile(folder, path, uploadType, LoadFile));
+			taskQueue.Enqueue(() => SafeUploadFile(folder, path, path, uploadType, LoadFile));
+		}
+
+		public void UploadFile
+			( string       folder
+			, string       oldPath
+			, string       newPath
+			, UploadType   uploadType
+			, Func<byte[]> LoadFile
+			)
+		{
+			taskQueue.Enqueue(() => SafeUploadFile(folder, oldPath, newPath, uploadType, LoadFile));
 		}
 		
 		public event Action                 AuthTokenRejected = delegate {};
@@ -79,7 +90,8 @@ namespace Snaphappi
 
 		private void SafeUploadFile
 			( string       folder
-			, string       path
+			, string       oldPath
+			, string       newPath
 			, UploadType   uploadType
 			, Func<byte[]> LoadFile
 			)
@@ -89,15 +101,20 @@ namespace Snaphappi
 				var info = new UploadInfo();
 				info.UploadType = MapUploadType(uploadType);
 				info.__isset.UploadType = true;
+				if (newPath != oldPath)
+				{
+					info.NewPath = newPath;
+					info.__isset.NewPath = true;
+				}
 
-				task.UploadFile(id, path, LoadFile(), info);
+				task.UploadFile(id, oldPath, LoadFile(), info);
 			}
 			catch (Snaphappi.API.SystemException e)
 			{
 				switch (e.ErrorCode)
 				{
 					case ErrorCode.DataConflict:
-						DuplicateUpload(folder, path);
+						DuplicateUpload(folder, oldPath);
 						break;
 					case ErrorCode.InvalidAuth:
 						AuthTokenRejected();
@@ -108,11 +125,11 @@ namespace Snaphappi
 			}
 			catch (TApplicationException)
 			{
-				UploadFailed(folder, path);
+				UploadFailed(folder, oldPath);
 			}
 			catch (System.IO.FileNotFoundException)
 			{
-				FileNotFound(folder, path);
+				FileNotFound(folder, oldPath);
 			}
 		}
 

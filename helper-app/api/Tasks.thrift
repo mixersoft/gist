@@ -115,6 +115,11 @@ struct UploadInfo
 	 * The type of file being uploaded.
 	 */
 	1: required UploadType UploadType;
+
+	/**
+	 * Set if the file was moved or renamed.
+	 */
+	2: optional string NewPath;
 }
 
 /**

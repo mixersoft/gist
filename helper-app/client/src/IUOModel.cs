@@ -8,7 +8,7 @@ namespace Snaphappi
 	public interface IUOModel
 	{
 
-		event Action<UploadTarget> FileFound;
+		event Action<FileMatch>    FileFound;
 		event Action<UploadTarget> FileNotFound;
 		event Action<UploadTarget> TargetAdded;
 		event Action               TaskCancelled;
@@ -22,6 +22,6 @@ namespace Snaphappi
 
 		void Stop();
 
-		void UploadFile(string folderPath, string filePath);
+		void UploadFile(FileMatch match);
 	}
 }

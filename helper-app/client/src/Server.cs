@@ -111,7 +111,7 @@ namespace Snaphappi
 		{
 			Console.WriteLine("stopped polling info service");
 		}
-		
+
 		public event Action AuthTokenRejected = delegate {};
 		public event Action FilesUpdated      = delegate {};
 		public event Action FoldersUpdated    = delegate {};
@@ -142,11 +142,47 @@ namespace Snaphappi
 			{
 				var size = LoadFile().Length;
 				files.Add(folderPath.ToUpperInvariant(), filePath);
-				Console.WriteLine("uploaded '{1}' ({2} bytes) from '{0}' for {3}", folderPath, filePath, size, uploadType);
+				Console.WriteLine
+					( "uploaded '{1}' ({2} bytes) from '{0}' for {3}"
+					, folderPath, filePath, size, uploadType
+					);
 			}
-			catch (FileNotFoundException)
+			catch (FileNotFoundException e)
 			{
-				FileNotFound(folderPath, filePath);
+				FileNotFound(folderPath, e.FileName);
+			}
+		}
+
+		public void UploadFile
+			( string       folderPath
+			, string       oldFilePath
+			, string       newFilePath
+			, UploadType   uploadType
+			, Func<byte[]> LoadFile
+			)
+		{
+			try
+			{
+				var size = LoadFile().Length;
+				files.Add(folderPath.ToUpperInvariant(), newFilePath);
+				if (oldFilePath == newFilePath)
+				{
+					Console.WriteLine
+						( "uploaded '{1}' ({2} bytes) from '{0}' for {3}"
+						, folderPath, oldFilePath, size, uploadType
+						);
+				}
+				else
+				{
+					Console.WriteLine
+						( "uploaded '{1}' as {2} ({3} bytes) from '{0}' for {4}"
+						, folderPath, oldFilePath, newFilePath, size, uploadType
+						);
+				}
+			}
+			catch (FileNotFoundException e)
+			{
+				FileNotFound(folderPath, e.FileName);
 			}
 		}
 
@@ -209,15 +245,22 @@ namespace Snaphappi
 
 		private void ProcessAddFileToUpload()
 		{
-			var filePath   = ReadLine("file");
-			var folderPath = ReadLine("folder");
+			try
+			{
+				var filePath   = ReadLine("file");
+				var folderPath = ReadLine("folder");
 
-			var timestamp  = fileSystem.GetCreationTimestamp(filePath);
-			var hash       = photoLoader.GetImageHash(filePath);
+				var timestamp  = fileSystem.GetCreationTimestamp(filePath);
+				var hash       = photoLoader.GetImageHash(filePath);
 
-			uploadTargets.Add(new UploadTarget(filePath, timestamp, hash, folderPath));
-			if (loaded)
-				FilesUpdated();
+				uploadTargets.Add(new UploadTarget(filePath, timestamp, hash, folderPath));
+				if (loaded)
+					FilesUpdated();
+			}
+			catch (FileNotFoundException e)
+			{
+				Console.WriteLine("File not found: '{0}'", e.FileName);
+			}
 		}
 
 		private void ProcessAddFolder()
