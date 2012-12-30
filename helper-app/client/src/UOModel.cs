@@ -88,7 +88,7 @@ namespace Snaphappi
 				, match.OldLocation
 				, match.NewLocation
 				, UploadType.Original
-				, () => File.ReadAllBytes(match.OldLocation)
+				, () => File.ReadAllBytes(match.NewLocation)
 				);
 		}
 
