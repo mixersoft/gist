@@ -41,7 +41,6 @@ namespace Snaphappi
 						, hashHeight
 						)
 					);
-				File.Copy(temp.Path, Path.GetFileNameWithoutExtension(path) + ".png", true);
 				return GetFirstInt(ComputeHash(GetBitmapBits(temp.Path)));
 			}
 		}

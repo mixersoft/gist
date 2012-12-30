@@ -175,7 +175,7 @@ namespace Snaphappi
 				else
 				{
 					Console.WriteLine
-						( "uploaded '{1}' as {2} ({3} bytes) from '{0}' for {4}"
+						( "uploaded '{1}' as '{2}' ({3} bytes) from '{0}' for {4}"
 						, folderPath, oldFilePath, newFilePath, size, uploadType
 						);
 				}
