@@ -112,22 +112,22 @@ namespace Snaphappi
 		#region PInvoke
 
 		[DllImport("kernel32.dll", SetLastError = true)]
-        static extern bool AllocConsole();
+		private static extern bool AllocConsole();
 
 		[DllImport("kernel32.dll")]
-		static extern IntPtr GetConsoleWindow();
+		private static extern IntPtr GetConsoleWindow();
 
 		[DllImport("kernel32.dll", SetLastError = true)]
-		static extern IntPtr GetStdHandle(StdHandle nStdHandle);
+		private static extern IntPtr GetStdHandle(StdHandle nStdHandle);
 		
 		[DllImport("kernel32.dll")]
-		static extern bool SetConsoleTitle(string lpConsoleTitle);
+		private static extern bool SetConsoleTitle(string lpConsoleTitle);
 
 		[DllImport("kernel32.dll")]
-		static extern bool SetStdHandle(StdHandle nStdHandle, IntPtr hHandle);
+		private static extern bool SetStdHandle(StdHandle nStdHandle, IntPtr hHandle);
 
 		[DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-		static extern IntPtr CreateFile
+		private static extern IntPtr CreateFile
 			(                               string         lpFileName
 			, [MarshalAs(UnmanagedType.U4)] DesiredAccess  dwDesiredAccess
 			, [MarshalAs(UnmanagedType.U4)] FileShare      dwShareMode
