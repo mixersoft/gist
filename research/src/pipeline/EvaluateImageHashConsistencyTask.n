@@ -22,7 +22,7 @@ class EvaluateImageHashConsistencyTask : ITask
 		def images = items
 			.TypedFind(item : ImageCollectionItem => item.Path == "image-sample")
 			.Value;
-		def evaluation = ImageHashConsistencyEvaluationItem(@"eval\image sample.txt");
+		def evaluation = ImageHashConsistencyEvaluationItem(@"eval\hash consistency.txt");
 		[ TaskMapping
 			( inputs  = [ images ]
 			, outputs = [ evaluation ]

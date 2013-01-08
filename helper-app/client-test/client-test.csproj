@@ -100,7 +100,9 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>robocopy $(ProjectDir)img $(TargetDir)img /njh /njs /ndl /nc /ns /np /nfl</PostBuildEvent>
+    <PostBuildEvent>(robocopy "$(ProjectDir)img" "$(TargetDir)img" &gt; nul) ^&amp; IF ERRORLEVEL 4 exit/b
+(robocopy "$(SolutionDir)..\common\ImageMagick" "$(TargetDir)ImageMagick" &gt; nul) ^&amp; IF ERRORLEVEL 4 exit/b
+ver&gt;nul</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

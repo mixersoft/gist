@@ -89,35 +89,36 @@
 						</Component>
 					
 						<!-- The ImageMagick app. -->
+						<?define ImageMagick="..\..\common\ImageMagick" ?>
 						<Directory Id="ImageMagickDir" Name="ImageMagick" >
 							<Component Id="ImageMagick" Guid="67A00421-C52C-4213-91AD-FF84833CAD13">
-								<File Source="ImageMagick\atl90.dll" />
-								<File Source="ImageMagick\coder.xml" />
-								<File Source="ImageMagick\colors.xml" />
-								<File Source="ImageMagick\configure.xml" />
-								<File Source="ImageMagick\convert.exe" KeyPath="yes" />
-								<File Source="ImageMagick\delegates.xml" />
-								<File Source="ImageMagick\english.xml" />
-								<File Source="ImageMagick\ImageMagick.rdf" />
-								<File Source="ImageMagick\locale.xml" />
-								<File Source="ImageMagick\log.xml" />
-								<File Source="ImageMagick\magic.xml" />
-								<File Source="ImageMagick\mfc90.dll" />
-								<File Source="ImageMagick\Microsoft.VC90.ATL.manifest" />
-								<File Source="ImageMagick\Microsoft.VC90.CRT.manifest" />
-								<File Source="ImageMagick\Microsoft.VC90.MFC.manifest" />
-								<File Source="ImageMagick\Microsoft.VC90.OpenMP.manifest" />
-								<File Source="ImageMagick\msvcp90.dll" />
-								<File Source="ImageMagick\msvcr90.dll" />
-								<File Source="ImageMagick\NOTICE" />
-								<File Source="ImageMagick\policy.xml" />
-								<File Source="ImageMagick\sRGB.icm" />
-								<File Source="ImageMagick\thresholds.xml" />
-								<File Source="ImageMagick\type-ghostscript.xml" />
-								<File Source="ImageMagick\type.xml" />
-								<File Source="ImageMagick\vcomp90.dll" />
-								<File Source="ImageMagick\X11.dll" />
-								<File Source="ImageMagick\Xext.dll" />
+								<File Source="$(var.ImageMagick)\atl90.dll" />
+								<File Source="$(var.ImageMagick)\coder.xml" />
+								<File Source="$(var.ImageMagick)\colors.xml" />
+								<File Source="$(var.ImageMagick)\configure.xml" />
+								<File Source="$(var.ImageMagick)\convert.exe" KeyPath="yes" />
+								<File Source="$(var.ImageMagick)\delegates.xml" />
+								<File Source="$(var.ImageMagick)\english.xml" />
+								<File Source="$(var.ImageMagick)\ImageMagick.rdf" />
+								<File Source="$(var.ImageMagick)\locale.xml" />
+								<File Source="$(var.ImageMagick)\log.xml" />
+								<File Source="$(var.ImageMagick)\magic.xml" />
+								<File Source="$(var.ImageMagick)\mfc90.dll" />
+								<File Source="$(var.ImageMagick)\Microsoft.VC90.ATL.manifest" />
+								<File Source="$(var.ImageMagick)\Microsoft.VC90.CRT.manifest" />
+								<File Source="$(var.ImageMagick)\Microsoft.VC90.MFC.manifest" />
+								<File Source="$(var.ImageMagick)\Microsoft.VC90.OpenMP.manifest" />
+								<File Source="$(var.ImageMagick)\msvcp90.dll" />
+								<File Source="$(var.ImageMagick)\msvcr90.dll" />
+								<File Source="$(var.ImageMagick)\NOTICE" />
+								<File Source="$(var.ImageMagick)\policy.xml" />
+								<File Source="$(var.ImageMagick)\sRGB.icm" />
+								<File Source="$(var.ImageMagick)\thresholds.xml" />
+								<File Source="$(var.ImageMagick)\type-ghostscript.xml" />
+								<File Source="$(var.ImageMagick)\type.xml" />
+								<File Source="$(var.ImageMagick)\vcomp90.dll" />
+								<File Source="$(var.ImageMagick)\X11.dll" />
+								<File Source="$(var.ImageMagick)\Xext.dll" />
 							</Component>
 						</Directory>
 					
