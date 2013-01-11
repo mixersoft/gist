@@ -53,7 +53,11 @@ namespace Snaphappi
 
 		private bool TimestampMatches(int timestamp, string path)
 		{
-			return timestamp == fileSystem.GetCreationTimestamp(path);
+			DateTime time;
+			if (DateTime.TryParse(photoLoader.GetImageDateTime(path), out time))
+				return timestamp == time.ToUnixTime();
+			else
+				return false;
 		}
 
 		private bool HashMatches(int hash, string path)

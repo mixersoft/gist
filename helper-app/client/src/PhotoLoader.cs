@@ -3,6 +3,8 @@ using System.Collections;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
+using System.Text;
 
 namespace Snaphappi
 {
@@ -42,6 +44,25 @@ namespace Snaphappi
 						)
 					);
 				return GetFirstInt(ComputeHash(GetBitmapBits(temp.Path)));
+			}
+		}
+
+		public string GetImageDateTime(string path)
+		{
+			try
+			{
+				using (var bmp = new Bitmap(path))
+				{
+					const int dateTimeId = 0x0132;
+					var item = bmp.PropertyItems.FirstOrDefault(p => p.Id == dateTimeId);
+					if (item == null)
+						return "";
+					return Encoding.ASCII.GetString(item.Value).TrimEnd(new char[] { '\0' });
+				}
+			}
+			catch (ArgumentException)
+			{
+				return "";
 			}
 		}
 

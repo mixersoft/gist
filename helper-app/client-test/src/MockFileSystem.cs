@@ -12,8 +12,6 @@ namespace SnaphappiTest
 
 		public HashSet<string> filePaths = new HashSet<string>();
 
-		public Dictionary<string, int> timestamps = new Dictionary<string,int>();
-
 		#endregion // data
 
 		#region IFileSystem Members
@@ -32,11 +30,6 @@ namespace SnaphappiTest
 				.Select(Path.GetDirectoryName)
 				.Distinct()
 				.Where(path => path != "" && Path.GetDirectoryName(path) == folderPath);
-		}
-
-		public int GetCreationTimestamp(string path)
-		{
-			return timestamps[path];
 		}
 
 		public bool FileExists(string path)

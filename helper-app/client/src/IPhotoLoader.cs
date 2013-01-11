@@ -7,5 +7,7 @@ namespace Snaphappi
 		byte[] GetPreview(string path);
 
 		int GetImageHash(string path);
+
+		string GetImageDateTime(string path);
 	}
 }

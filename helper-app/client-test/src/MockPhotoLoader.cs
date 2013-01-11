@@ -10,6 +10,7 @@ namespace SnaphappiTest
 
 		public Dictionary<string, byte[]> previews = new Dictionary<string,byte[]>();
 		public Dictionary<string, int>    hashes   = new Dictionary<string,int>();
+		public Dictionary<string, string> times    = new Dictionary<string,string>();
 
 		#endregion
 
@@ -23,6 +24,11 @@ namespace SnaphappiTest
 		public int GetImageHash(string path)
 		{
 			return hashes[path];
+		}
+
+		public string GetImageDateTime(string path)
+		{
+			return times[path];
 		}
 
 		#endregion

@@ -250,16 +250,20 @@ namespace Snaphappi
 				var filePath   = ReadLine("file");
 				var folderPath = ReadLine("folder");
 
-				var timestamp  = fileSystem.GetCreationTimestamp(filePath);
+				var timestamp  = DateTime.Parse(photoLoader.GetImageDateTime(filePath)).ToUnixTime();
 				var hash       = photoLoader.GetImageHash(filePath);
 
 				uploadTargets.Add(new UploadTarget(filePath, timestamp, hash, folderPath));
 				if (loaded)
 					FilesUpdated();
 			}
+			catch (FormatException e)
+			{
+				Console.WriteLine("no valid DateTime Exif property");
+			}
 			catch (FileNotFoundException e)
 			{
-				Console.WriteLine("File not found: '{0}'", e.FileName);
+				Console.WriteLine("file not found: '{0}'", e.FileName);
 			}
 		}
 

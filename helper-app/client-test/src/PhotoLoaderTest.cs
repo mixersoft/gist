@@ -17,6 +17,23 @@ namespace SnaphappiTest
 		}
 
 		[ Test ]
+		public void TestDateTime()
+		{
+			Assert.AreEqual
+				( "2011:01:31 14:42:54"
+				, photoLoader.GetImageDateTime(@"img\bp~0CCF308F-6ED8-459A-BF5A-85F6AC85F12B.jpg")
+				);
+			Assert.AreEqual
+				( ""
+				, photoLoader.GetImageDateTime(@"img\bm~0CCF308F-6ED8-459A-BF5A-85F6AC85F12B.jpg")
+				);
+			Assert.AreEqual
+				( ""
+				, photoLoader.GetImageDateTime(@"img\non-existent")
+				);
+		}
+
+		[ Test ]
 		public void TestImageHash()
 		{
 			var bmHash = photoLoader.GetImageHash(@"img\bm~0CCF308F-6ED8-459A-BF5A-85F6AC85F12B.jpg");
