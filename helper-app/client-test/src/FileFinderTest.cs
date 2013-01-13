@@ -109,6 +109,48 @@ namespace SnaphappiTest
 			Assert.IsFalse(fileNotFound);
 		}
 
+		[ Test ]
+		public void TestFindByHash_HashMismatch()
+		{
+			AddFile("b", "2013-01-10 00:00:02", 0);
+
+			FileMatch match = null;
+			fileFinder.FileFound += m => match = m;
+			
+			UploadTarget notFoundTarget = null;
+			SearchType   notFoundType   = SearchType.Name;
+			fileFinder.FileNotFound += (tar, type) => { notFoundTarget = tar; notFoundType = type; };
+
+			var target = new UploadTarget("b", MakeExifDateTime("2013-01-10 00:00:02"), 0);
+			fileFinder.FindByHash(target, 1);
+
+			Assert.IsNull(match);
+
+			Assert.AreSame(target, notFoundTarget);
+			Assert.AreEqual(SearchType.Hash, notFoundType);
+		}
+
+		[ Test ]
+		public void TestFindByHash_TimeMismatch()
+		{
+			AddFile("b", "2013-01-10 00:00:01", 1);
+
+			FileMatch match = null;
+			fileFinder.FileFound += m => match = m;
+			
+			UploadTarget notFoundTarget = null;
+			SearchType   notFoundType   = SearchType.Name;
+			fileFinder.FileNotFound += (tar, type) => { notFoundTarget = tar; notFoundType = type; };
+
+			var target = new UploadTarget("b", MakeExifDateTime("2013-01-10 00:00:02"), 0);
+			fileFinder.FindByHash(target, 1);
+
+			Assert.IsNull(match);
+
+			Assert.AreSame(target, notFoundTarget);
+			Assert.AreEqual(SearchType.Hash, notFoundType);
+		}
+
 		private void AddFile(string path, string dateTime, int hash)
 		{
 			fileSystem.filePaths.Add(path);
