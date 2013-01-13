@@ -21,14 +21,14 @@ namespace Snaphappi
 
 		#region IUOView Members
 
-		public void ReportFileNotFound(string folderPath, string filePath)
+		public void ReportFileNotFound(int imageID)
 		{
-			controlService.ReportFileNotFound(folderPath, filePath);
+			controlService.ReportFileNotFoundByID(imageID);
 		}
 
-		public void ReportUploadFailed(string folderPath, string filePath)
+		public void ReportUploadFailed(int imageID)
 		{
-			controlService.ReportUploadFailed(folderPath, filePath);
+			controlService.ReportUploadFailedByID(imageID);
 		}
 
 		#endregion

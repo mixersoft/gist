@@ -44,7 +44,7 @@ namespace Snaphappi
 
 		private void OnFileNotFound(UploadTarget target)
 		{
-			uoView.ReportFileNotFound(target.FolderPath, target.FilePath);
+			uoView.ReportFileNotFound(target.ImageID);
 		}
 
 		private void OnLoaded()
@@ -65,7 +65,7 @@ namespace Snaphappi
 
 		private void OnUploadFailed(UploadTarget target)
 		{
-			uoView.ReportUploadFailed(target.FolderPath, target.FilePath);
+			uoView.ReportUploadFailed(target.ImageID);
 		}
 	}
 }

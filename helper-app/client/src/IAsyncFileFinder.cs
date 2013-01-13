@@ -4,26 +4,25 @@ namespace Snaphappi
 {
 	public class FileMatch
 	{
-		public readonly string OldLocation;
-		public readonly string NewLocation;
+		public readonly UploadTarget Target;
+		public readonly string       NewPath;
 
-		public FileMatch
-			( string oldLocation
-			, string newLocation
-			)
+		public FileMatch(UploadTarget target, string newPath)
 		{
-			OldLocation = oldLocation;
-			NewLocation = newLocation;
+			Target  = target;
+			NewPath = newPath;
 		}
 	}
 
 	public interface IAsyncFileFinder
 	{
-		void Find(string filePath, int timestamp, int hash);
+		void FindByName(UploadTarget target);
+
+		void FindByHash(UploadTarget target, int hash);
 
 		void Stop();
 
-		event Action<FileMatch> FileFound;
-		event Action<string>    FileNotFound;
+		event Action<FileMatch>                FileFound;
+		event Action<UploadTarget, SearchType> FileNotFound;
 	}
 }

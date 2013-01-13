@@ -106,6 +106,21 @@ namespace Snaphappi
 			}
 		}
 
+		public void ReportFileNotFoundByID(int imageID)
+		{
+			try
+			{
+				lock (task)
+					task.ReportFileNotFoundByID(id, imageID);
+			}
+			catch (API.SystemException e)
+			{
+				if (e.ErrorCode == ErrorCode.InvalidAuth)
+					AuthTokenRejected();
+				throw;
+			}
+		}
+
 		public void ReportFolderNotFound(string folderPath)
 		{
 			try
@@ -127,6 +142,21 @@ namespace Snaphappi
 			{
 				lock (task)
 					task.ReportUploadFailed(id, folderPath, filePath);
+			}
+			catch (API.SystemException e)
+			{
+				if (e.ErrorCode == ErrorCode.InvalidAuth)
+					AuthTokenRejected();
+				throw;
+			}
+		}
+
+		public void ReportUploadFailedByID(int imageID)
+		{
+			try
+			{
+				lock (task)
+					task.ReportUploadFailedByID(id, imageID);
 			}
 			catch (API.SystemException e)
 			{
@@ -174,9 +204,8 @@ namespace Snaphappi
 		{
 			return new UploadTarget
 				( uploadTarget.FilePath
-				, uploadTarget.Timestamp
-				, uploadTarget.Hash
-				, uploadTarget.FolderPath
+				, uploadTarget.ExifDateTime
+				, uploadTarget.ImageID
 				);
 		}
 

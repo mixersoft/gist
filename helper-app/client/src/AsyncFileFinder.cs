@@ -7,15 +7,13 @@ namespace Snaphappi
 	{
 		class QueueItem
 		{
-			public readonly string Path;
-			public readonly int    Timestamp;
-			public readonly int    Hash;
+			public readonly UploadTarget Target;
+			public readonly int          Hash;
 
-			public QueueItem(string path, int timestamp, int hash)
+			public QueueItem(UploadTarget target, int hash)
 			{
-				Path      = path;
-				Timestamp = timestamp;
-				Hash      = hash;
+				Target = target;
+				Hash   = hash;
 			}
 		}
 
@@ -45,9 +43,14 @@ namespace Snaphappi
 
 		#region IAsyncFileFinder Members
 
-		public void Find(string filePath, int timestamp, int hash)
+		public void FindByName(UploadTarget target)
 		{
-			queue.Enqueue(new QueueItem(filePath, timestamp, hash));
+			fileFinder.FindByName(target);
+		}
+
+		public void FindByHash(UploadTarget target, int hash)
+		{
+			queue.Enqueue(new QueueItem(target, hash));
 		}
 
 		public void Stop()
@@ -61,7 +64,7 @@ namespace Snaphappi
 			remove { lock (fileFinder) fileFinder.FileFound -= value; }
 		}
 
-		public event Action<string> FileNotFound
+		public event Action<UploadTarget, SearchType> FileNotFound
 		{
 			add    { lock (fileFinder) fileFinder.FileNotFound += value; }
 			remove { lock (fileFinder) fileFinder.FileNotFound -= value; }
@@ -78,7 +81,7 @@ namespace Snaphappi
 				if (item == null)
 					break;
 				lock (fileFinder)
-					fileFinder.Find(item.Path, item.Timestamp, item.Hash);
+					fileFinder.FindByHash(item.Target, item.Hash);
 			}
 		}
 

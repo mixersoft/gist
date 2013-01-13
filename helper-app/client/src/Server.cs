@@ -78,6 +78,11 @@ namespace Snaphappi
 			Console.WriteLine("file '{1}' from '{0}' not found", folderPath, filePath);
 		}
 
+		public void ReportFileNotFoundByID(int imageID)
+		{
+			Console.WriteLine("file '{0}' not found", imageID);
+		}
+
 		public void ReportFolderNotFound(string folderPath)
 		{
 			Console.WriteLine("folder '{0}' not found", folderPath);
@@ -86,6 +91,11 @@ namespace Snaphappi
 		public void ReportUploadFailed(string folderPath, string filePath)
 		{
 			Console.WriteLine("upload of '{1}' from '{0}' failed", folderPath, filePath);
+		}
+
+		public void ReportUploadFailedByID(int imageID)
+		{
+			Console.WriteLine("upload of '{0}' failed", imageID);
 		}
 
 		public void ReportFolderUploadComplete(string folderPath)
@@ -133,7 +143,7 @@ namespace Snaphappi
 
 		public void UploadFile
 			( string       folderPath
-			, string       filePath
+			, string       path
 			, UploadType   uploadType
 			, Func<byte[]> LoadFile
 			)
@@ -141,10 +151,10 @@ namespace Snaphappi
 			try
 			{
 				var size = LoadFile().Length;
-				files.Add(folderPath.ToUpperInvariant(), filePath);
+				files.Add(folderPath.ToUpperInvariant(), path);
 				Console.WriteLine
 					( "uploaded '{1}' ({2} bytes) from '{0}' for {3}"
-					, folderPath, filePath, size, uploadType
+					, folderPath, path, size, uploadType
 					);
 			}
 			catch (FileNotFoundException e)
@@ -155,8 +165,8 @@ namespace Snaphappi
 
 		public void UploadFile
 			( string       folderPath
-			, string       oldFilePath
-			, string       newFilePath
+			, int          imageID
+			, string       path
 			, UploadType   uploadType
 			, Func<byte[]> LoadFile
 			)
@@ -164,21 +174,11 @@ namespace Snaphappi
 			try
 			{
 				var size = LoadFile().Length;
-				files.Add(folderPath.ToUpperInvariant(), newFilePath);
-				if (oldFilePath == newFilePath)
-				{
-					Console.WriteLine
-						( "uploaded '{1}' ({2} bytes) from '{0}' for {3}"
-						, folderPath, oldFilePath, size, uploadType
-						);
-				}
-				else
-				{
-					Console.WriteLine
-						( "uploaded '{1}' as '{2}' ({3} bytes) from '{0}' for {4}"
-						, folderPath, oldFilePath, newFilePath, size, uploadType
-						);
-				}
+				files.Add(folderPath.ToUpperInvariant(), path);
+				Console.WriteLine
+					( "uploaded '{2}' (id: {1}) ({3} bytes) from '{0}' for {4}"
+					, folderPath, imageID, path, size, uploadType
+					);
 			}
 			catch (FileNotFoundException e)
 			{
@@ -247,17 +247,15 @@ namespace Snaphappi
 		{
 			try
 			{
-				var filePath   = ReadLine("file");
-				var folderPath = ReadLine("folder");
+				var filePath     = ReadLine("file");
+				var imageID      = int.Parse(ReadLine("id"));
+				var exifDateTime = DateTime.Parse(photoLoader.GetImageDateTime(filePath)).ToUnixTime();
 
-				var timestamp  = DateTime.Parse(photoLoader.GetImageDateTime(filePath)).ToUnixTime();
-				var hash       = photoLoader.GetImageHash(filePath);
-
-				uploadTargets.Add(new UploadTarget(filePath, timestamp, hash, folderPath));
+				uploadTargets.Add(new UploadTarget(filePath, exifDateTime, imageID));
 				if (loaded)
 					FilesUpdated();
 			}
-			catch (FormatException e)
+			catch (FormatException)
 			{
 				Console.WriteLine("no valid DateTime Exif property");
 			}
@@ -304,10 +302,9 @@ namespace Snaphappi
 			int n = 0;
 			foreach (var target in uploadTargets)
 			{
-				Console.WriteLine("{0,3}. path:   {1}", n, target.FilePath);
-				Console.WriteLine("     folder: {0}", target.FolderPath);
-				Console.WriteLine("     time:   {0} ({1:u})", target.Timestamp, DateTimeEx.FromUnixTime(target.Timestamp));
-				Console.WriteLine("     hash:   {0}", target.Hash);
+				Console.WriteLine("{0,3}. path: {1}", n, target.FilePath);
+				Console.WriteLine("     time: {0} ({1:u})", target.ExifDateTime, DateTimeEx.FromUnixTime(target.ExifDateTime));
+				Console.WriteLine("     id:   {0}", target.ImageID);
 				++n;
 			}
 		}

@@ -5,16 +5,14 @@ namespace Snaphappi
 	public class UploadTarget
 	{
 		public readonly string FilePath;
-		public readonly string FolderPath;
-		public readonly int    Hash;
-		public readonly int    Timestamp;
+		public readonly int    ExifDateTime;
+		public readonly int    ImageID;
 
-		public UploadTarget(string filePath, int timestamp, int hash, string folderPath)
+		public UploadTarget(string filePath, int exifDateTime, int imageID)
 		{
-			FilePath   = filePath;
-			FolderPath = folderPath;
-			Hash       = hash;
-			Timestamp  = timestamp;
+			FilePath     = filePath;
+			ExifDateTime = exifDateTime;
+			ImageID      = imageID;
 		}
 	}
 }

@@ -12,6 +12,16 @@ const i16 SNAPHAPPI_VERSION_MAJOR = 0
 const i16 SNAPHAPPI_VERSION_MINOR = 1
 
 /**
+ * A 32-bit image hash. Robust against resampling and re-compression.
+ */
+typedef i32 ImageHash
+
+/**
+ * Unique image identifier
+ */
+typedef i32 ImageID
+
+/**
  * ID used to make sure the web page and the app stay in sync with each other.
  * At most one app instance could be running for any given ID.
  */
@@ -46,19 +56,17 @@ struct UploadTarget
 	/**
 	 * File creation Unix timestamp.
 	 */
-	2: required i32 Timestamp;
+	2: required i32 ExifDateTime;
 
 	/**
-	 * Image hash to be used to find renamed files.
+	 * Unique image identifier.
 	 */
-	3: required i32 Hash;
-
-	/**
-	 * Top-level folder containing the file.
-	 */
-	4: required string FolderPath;
+	3: required ImageID ImageID;
 }
 
+/**
+ SystemException type.
+ */
 enum ErrorCode
 {
 	Unknown      = 1;
@@ -66,6 +74,9 @@ enum ErrorCode
 	DataConflict = 3;
 }
 
+/**
+ Exception that could be thrown by any method.
+ */
 exception SystemException
 {
 	/**
@@ -103,12 +114,18 @@ struct URTaskState
 	3: optional i32  FileUpdateCount;
 }
 
+/**
+ * The type of file uploaded with UploadFile().
+ */
 enum UploadType
 {
 	Preview  = 1;
 	Original = 2;
 }
 
+/**
+ * Information about the file uploaded with UploadFile().
+ */
 struct UploadInfo
 {
 	/**
@@ -117,9 +134,10 @@ struct UploadInfo
 	1: required UploadType UploadType;
 
 	/**
-	 * Set if the file was moved or renamed.
+	 * Used for uploading originals, where the original file could have
+	 * been moved, or renamed.
 	 */
-	2: optional string NewPath;
+	2: optional ImageID imageID;
 }
 
 /**
@@ -186,6 +204,14 @@ service Task
 		) throws (1: SystemException systemException);
 
 	/**
+	 * Retrieves the hash of an image.
+	 */
+	ImageHash GetHash
+		( 1: TaskID id
+		, 2: ImageID imageID
+		) throws (1: SystemException systemException);
+
+	/**
 	 * Retrieves flags indicating the state of the task.
 	 */
 	URTaskState GetState
@@ -212,9 +238,17 @@ service Task
 	 * Report that a file to be uploaded was not found.
 	 */
 	void ReportFileNotFound
-		( 1: TaskID id
-		, 2: string folder
-		, 3: string path
+		( 1: TaskID  id
+		, 2: string  folder
+		, 3: string  path
+		) throws (1: SystemException systemException);
+
+	/**
+	 * Report that a file to be uploaded was not found.
+	 */
+	void ReportFileNotFoundByID
+		( 1: TaskID  id
+		, 2: ImageID imageID
 		) throws (1: SystemException systemException);
 
 	/**
@@ -237,7 +271,17 @@ service Task
 	 * Report a failed upload.
 	 */
 	void ReportUploadFailed
-		( 1: TaskID id, 2: string folder, 3: string path
+		( 1: TaskID id
+		, 2: string folder
+		, 3: string path
+		) throws (1: SystemException systemException);
+
+	/**
+	 * Report a failed upload.
+	 */
+	void ReportUploadFailedByID
+		( 1: TaskID  id
+		, 2: ImageID imageID
 		) throws (1: SystemException systemException);
 
 	/**

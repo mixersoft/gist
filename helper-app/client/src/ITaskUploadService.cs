@@ -10,15 +10,15 @@ namespace Snaphappi
 
 		void UploadFile
 			( string       folderPath
-			, string       pathPath
+			, string       path
 			, UploadType   uploadType
 			, Func<byte[]> LoadFile
 			);
 
 		void UploadFile
 			( string       folderPath
-			, string       oldFilePath
-			, string       newFilePath
+			, int          imageID
+			, string       path
 			, UploadType   uploadType
 			, Func<byte[]> LoadFile
 			);

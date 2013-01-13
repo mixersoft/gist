@@ -23,39 +23,55 @@ namespace Snaphappi
 			this.photoLoader = photoLoader;
 		}
 
-		public void Find(string filePath, int timestamp, int hash)
+		public void FindByName(UploadTarget target)
 		{
-			var matchPath = FindFirst(filePath, timestamp, hash);
-			if (matchPath != null)
-				FileFound(new FileMatch(filePath, matchPath));
+			if (MatchExists(target.FilePath, target.ExifDateTime))
+				FileFound(new FileMatch(target, target.FilePath));
 			else
-				FileNotFound(filePath);
+				FileNotFound(target, SearchType.Name);
 		}
 
-		public event Action<FileMatch> FileFound    = delegate {};
-		public event Action<string>    FileNotFound = delegate{};
+		public void FindByHash(UploadTarget target, int hash)
+		{
+			var newPath = FindFirst(target.FilePath, target.ExifDateTime, hash);
+			if (newPath != null)
+				FileFound(new FileMatch(target, newPath));
+			else
+				FileNotFound(target, SearchType.Hash);
+		}
+
+		public event Action<FileMatch>                FileFound    = delegate {};
+		public event Action<UploadTarget, SearchType> FileNotFound = delegate{};
 
 		#endregion // interface
 
 		#region implementation
 
-		private string FindFirst(string filePath, int timestamp, int hash)
+		private bool MatchExists(string filePath, int exifDateTime)
 		{
-			if (fileSystem.FileExists(filePath))
-				return filePath;
+			if  (!fileSystem.FileExists(filePath))
+				return false;
+			DateTime time;
+			if (!DateTime.TryParse(photoLoader.GetImageDateTime(filePath), out time))
+				return false;
+			return exifDateTime == time.ToUnixTime();
+		}
+
+		private string FindFirst(string filePath, int exifDateTime, int hash)
+		{
 			foreach (var file in fileSystem.ListFiles(Path.GetDirectoryName(filePath)))
 			{
-				if (TimestampMatches(timestamp, file) && HashMatches(hash, file))
+				if (TimestampMatches(exifDateTime, file) && HashMatches(hash, file))
 					return file;
 			}
 			return null;
 		}
 
-		private bool TimestampMatches(int timestamp, string path)
+		private bool TimestampMatches(int exifDateTime, string path)
 		{
 			DateTime time;
 			if (DateTime.TryParse(photoLoader.GetImageDateTime(path), out time))
-				return timestamp == time.ToUnixTime();
+				return exifDateTime == time.ToUnixTime();
 			else
 				return false;
 		}

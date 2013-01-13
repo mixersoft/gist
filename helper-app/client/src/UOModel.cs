@@ -65,7 +65,7 @@ namespace Snaphappi
 
 		public void FindFile(UploadTarget target)
 		{
-			fileFinder.Find(target.FilePath, target.Timestamp, target.Hash);
+			fileFinder.FindByName(target);
 		}
 
 		public void StartPolling()
@@ -84,11 +84,11 @@ namespace Snaphappi
 		public void UploadFile(FileMatch match)
 		{
 			uploadService.UploadFile
-				( GetUploadTarget(match.OldLocation).FolderPath
-				, match.OldLocation
-				, match.NewLocation
+				( ""
+				, match.Target.ImageID
+				, match.NewPath
 				, UploadType.Original
-				, () => File.ReadAllBytes(match.NewLocation)
+				, () => File.ReadAllBytes(match.NewPath)
 				);
 		}
 
@@ -99,34 +99,23 @@ namespace Snaphappi
 		private void AddFiles(UploadTarget[] uploadTargets)
 		{
 			foreach (var target in uploadTargets)
-			{
-				var ucFilePath = target.FilePath.ToUpperInvariant();
-				if (!this.uploadTargets.ContainsKey(ucFilePath))
-				{
-					this.uploadTargets.Add(ucFilePath, target);
 					TargetAdded(target);
-				}
-			}
-		}
-
-		private UploadTarget GetUploadTarget(string filePath)
-		{
-			return uploadTargets[filePath.ToUpperInvariant()];
 		}
 
 		private void OnFileFound(FileMatch match)
 		{
+			uploadTargets.Add(match.NewPath, match.Target);
 			FileFound(match);
 		}
 
-		private void OnFileNotFound(string filePath)
+		private void OnFileNotFound(UploadTarget target, SearchType searchType)
 		{
-			FileNotFound(GetUploadTarget(filePath));
+			FileNotFound(target);
 		}
 
 		private void OnUploadFailed(string folderPath, string filePath)
 		{
-			UploadFailed(GetUploadTarget(filePath));
+			UploadFailed(uploadTargets[filePath]);
 		}
 
 		private void OnFilesUpdated()

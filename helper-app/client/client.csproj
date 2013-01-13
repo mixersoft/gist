@@ -126,6 +126,7 @@
     <Compile Include="src\ParameterProcessor.cs" />
     <Compile Include="src\PhotoLoader.cs" />
     <Compile Include="src\Registry.cs" />
+    <Compile Include="src\SearchType.cs" />
     <Compile Include="src\Server.cs" />
     <Compile Include="src\SystemScheduler.cs" />
     <Compile Include="src\TaskID.cs" />
