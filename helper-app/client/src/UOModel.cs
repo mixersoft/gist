@@ -104,7 +104,10 @@ namespace Snaphappi
 
 		private void OnFileFound(FileMatch match)
 		{
-			uploadTargets.Add(match.NewPath, match.Target);
+			if (uploadTargets.ContainsKey(match.NewPath))
+				uploadTargets[match.NewPath] = match.Target;
+			else
+				uploadTargets.Add(match.NewPath, match.Target);
 			FileFound(match);
 		}
 

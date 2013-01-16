@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -156,6 +157,7 @@ namespace Snaphappi
 					( "uploaded '{1}' ({2} bytes) from '{0}' for {3}"
 					, folderPath, path, size, uploadType
 					);
+				HandleUpload(path, uploadType);
 			}
 			catch (FileNotFoundException e)
 			{
@@ -179,6 +181,7 @@ namespace Snaphappi
 					( "uploaded '{2}' (id: {1}) ({3} bytes) from '{0}' for {4}"
 					, folderPath, imageID, path, size, uploadType
 					);
+				HandleUpload(path, uploadType);
 			}
 			catch (FileNotFoundException e)
 			{
@@ -319,6 +322,16 @@ namespace Snaphappi
 		{
 			Console.Write("{0}> ", message);
 			return Console.ReadLine();
+		}
+
+		private void HandleUpload(string path, UploadType uploadType)
+		{
+			if (uploadType == UploadType.Original)
+			{
+				var ucPath = path.ToUpperInvariant();
+				var removedCount = uploadTargets.RemoveAll(t => t.FilePath.ToUpperInvariant() == ucPath);
+				Trace.Assert(removedCount == 1);
+			}
 		}
 
 		#endregion // implementation
