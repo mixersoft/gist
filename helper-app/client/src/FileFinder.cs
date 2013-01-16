@@ -52,7 +52,7 @@ namespace Snaphappi
 			if  (!fileSystem.FileExists(filePath))
 				return false;
 			DateTime time;
-			if (!DateTime.TryParse(photoLoader.GetImageDateTime(filePath), out time))
+			if (!DateTimeEx.TryParseExifTime(photoLoader.GetImageDateTime(filePath), out time))
 				return false;
 			return exifDateTime == time.ToUnixTime();
 		}
@@ -70,7 +70,7 @@ namespace Snaphappi
 		private bool TimestampMatches(int exifDateTime, string path)
 		{
 			DateTime time;
-			if (DateTime.TryParse(photoLoader.GetImageDateTime(path), out time))
+			if (DateTimeEx.TryParseExifTime(photoLoader.GetImageDateTime(path), out time))
 				return exifDateTime == time.ToUnixTime();
 			else
 				return false;

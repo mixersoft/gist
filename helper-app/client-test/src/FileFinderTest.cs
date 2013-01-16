@@ -22,10 +22,10 @@ namespace SnaphappiTest
 		[ Test ]
 		public void TestFindByName_Match()
 		{
-			AddFile(@"b",   "2013-01-10 00:00:02", 0);
-			AddFile(@"a\a", "2013-01-10 00:00:02", 0);
-			AddFile(@"a\b", "2013-01-10 00:00:02", 0);
-			AddFile(@"a\c", "2013-01-10 00:00:02", 0);
+			AddFile(@"b",   "2013:01:10 00:00:02", 0);
+			AddFile(@"a\a", "2013:01:10 00:00:02", 0);
+			AddFile(@"a\b", "2013:01:10 00:00:02", 0);
+			AddFile(@"a\c", "2013:01:10 00:00:02", 0);
 
 			FileMatch match = null;
 			fileFinder.FileFound += m => match = m;
@@ -33,7 +33,7 @@ namespace SnaphappiTest
 			bool fileNotFound = false;
 			fileFinder.FileNotFound += (a, b) => fileNotFound = true;
 
-			var target = new UploadTarget(@"a\b", MakeExifDateTime("2013-01-10 00:00:02"), 0);
+			var target = new UploadTarget(@"a\b", MakeExifDateTime("2013:01:10 00:00:02"), 0);
 			fileFinder.FindByName(target);
 
 			Assert.NotNull(match);
@@ -46,7 +46,7 @@ namespace SnaphappiTest
 		[ Test ]
 		public void TestFindByName_PathMismatch()
 		{
-			AddFile(@"b", "2013-01-10 00:00:02", 0);
+			AddFile(@"b", "2013:01:10 00:00:02", 0);
 
 			FileMatch match = null;
 			fileFinder.FileFound += m => match = m;
@@ -55,7 +55,7 @@ namespace SnaphappiTest
 			SearchType   notFoundType   = SearchType.Hash;
 			fileFinder.FileNotFound += (tar, type) => { notFoundTarget = tar; notFoundType = type; };
 
-			var target = new UploadTarget(@"a\b", MakeExifDateTime("2013-01-10 00:00:02"), 0);
+			var target = new UploadTarget(@"a\b", MakeExifDateTime("2013:01:10 00:00:02"), 0);
 			fileFinder.FindByName(target);
 
 			Assert.IsNull(match);
@@ -76,7 +76,7 @@ namespace SnaphappiTest
 			SearchType   notFoundType   = SearchType.Hash;
 			fileFinder.FileNotFound += (tar, type) => { notFoundTarget = tar; notFoundType = type; };
 
-			var target = new UploadTarget(@"a\b", MakeExifDateTime("2013-01-10 00:00:02"), 0);
+			var target = new UploadTarget(@"a\b", MakeExifDateTime("2013:01:10 00:00:02"), 0);
 			fileFinder.FindByName(target);
 
 			Assert.IsNull(match);
@@ -88,10 +88,10 @@ namespace SnaphappiTest
 		[ Test ]
 		public void TestFindByHash_Match()
 		{
-			AddFile("a", "2013-01-10 00:00:00", 0); // wrong everything
-			AddFile("b", "2013-01-10 00:00:02", 0); // wrong hash
-			AddFile("c", "2013-01-10 00:00:02", 1); // correct
-			AddFile("d", "2013-01-10 00:00:00", 1); // wrong date
+			AddFile("a", "2013:01:10 00:00:00", 0); // wrong everything
+			AddFile("b", "2013:01:10 00:00:02", 0); // wrong hash
+			AddFile("c", "2013:01:10 00:00:02", 1); // correct
+			AddFile("d", "2013:01:10 00:00:00", 1); // wrong date
 
 			FileMatch match = null;
 			fileFinder.FileFound += m => match = m;
@@ -99,7 +99,7 @@ namespace SnaphappiTest
 			bool fileNotFound = false;
 			fileFinder.FileNotFound += (a, b) => fileNotFound = true;
 
-			var target = new UploadTarget("b", MakeExifDateTime("2013-01-10 00:00:02"), 0);
+			var target = new UploadTarget("b", MakeExifDateTime("2013:01:10 00:00:02"), 0);
 			fileFinder.FindByHash(target, 1);
 
 			Assert.NotNull(match);
@@ -112,7 +112,7 @@ namespace SnaphappiTest
 		[ Test ]
 		public void TestFindByHash_HashMismatch()
 		{
-			AddFile("b", "2013-01-10 00:00:02", 0);
+			AddFile("b", "2013:01:10 00:00:02", 0);
 
 			FileMatch match = null;
 			fileFinder.FileFound += m => match = m;
@@ -121,7 +121,7 @@ namespace SnaphappiTest
 			SearchType   notFoundType   = SearchType.Name;
 			fileFinder.FileNotFound += (tar, type) => { notFoundTarget = tar; notFoundType = type; };
 
-			var target = new UploadTarget("b", MakeExifDateTime("2013-01-10 00:00:02"), 0);
+			var target = new UploadTarget("b", MakeExifDateTime("2013:01:10 00:00:02"), 0);
 			fileFinder.FindByHash(target, 1);
 
 			Assert.IsNull(match);
@@ -133,7 +133,7 @@ namespace SnaphappiTest
 		[ Test ]
 		public void TestFindByHash_TimeMismatch()
 		{
-			AddFile("b", "2013-01-10 00:00:01", 1);
+			AddFile("b", "2013:01:10 00:00:01", 1);
 
 			FileMatch match = null;
 			fileFinder.FileFound += m => match = m;
@@ -142,7 +142,7 @@ namespace SnaphappiTest
 			SearchType   notFoundType   = SearchType.Name;
 			fileFinder.FileNotFound += (tar, type) => { notFoundTarget = tar; notFoundType = type; };
 
-			var target = new UploadTarget("b", MakeExifDateTime("2013-01-10 00:00:02"), 0);
+			var target = new UploadTarget("b", MakeExifDateTime("2013:01:10 00:00:02"), 0);
 			fileFinder.FindByHash(target, 1);
 
 			Assert.IsNull(match);
@@ -160,7 +160,7 @@ namespace SnaphappiTest
 
 		private int MakeExifDateTime(string dateTime)
 		{
-			return DateTime.Parse(dateTime).ToUnixTime();
+			return DateTimeEx.ParseExifTime(dateTime).ToUnixTime();
 		}
 	}
 }

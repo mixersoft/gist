@@ -249,7 +249,7 @@ namespace Snaphappi
 			{
 				var filePath     = ReadLine("file");
 				var imageID      = int.Parse(ReadLine("id"));
-				var exifDateTime = DateTime.Parse(photoLoader.GetImageDateTime(filePath)).ToUnixTime();
+				var exifDateTime = DateTimeEx.ParseExifTime(photoLoader.GetImageDateTime(filePath)).ToUnixTime();
 
 				uploadTargets.Add(new UploadTarget(filePath, exifDateTime, imageID));
 				if (loaded)
