@@ -206,8 +206,8 @@ service Task
 	/**
 	 * Retrieves the hash of an image.
 	 */
-	ImageHash GetHash
-		( 1: TaskID id
+	ImageHash GetImageHash
+		( 1: TaskID  id
 		, 2: ImageID imageID
 		) throws (1: SystemException systemException);
 

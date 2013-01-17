@@ -46,11 +46,12 @@ namespace Snaphappi
 		#endregion // interface
 
 		#region IUOModel Members
-		
-		public event Action<FileMatch> FileFound        = delegate {};
-		public event Action<UploadTarget> FileNotFound  = delegate {};
-		public event Action<UploadTarget> TargetAdded   = delegate {};
-		public event Action<UploadTarget> UploadFailed  = delegate {};
+
+		public event Action<FileMatch>    FileFound          = delegate {};
+		public event Action<UploadTarget> FileNotFoundByHash = delegate {};
+		public event Action<UploadTarget> FileNotFoundByName = delegate {};
+		public event Action<UploadTarget> TargetAdded        = delegate {};
+		public event Action<UploadTarget> UploadFailed       = delegate {};
 
 		public event Action TaskCancelled
 		{
@@ -66,6 +67,21 @@ namespace Snaphappi
 		public void FindFile(UploadTarget target)
 		{
 			fileFinder.FindByName(target);
+		}
+
+		public void FindFileByHash(UploadTarget target, int hash)
+		{
+			fileFinder.FindByHash(target, hash);
+		}
+
+		public void FindFileByName(UploadTarget target)
+		{
+			fileFinder.FindByName(target);
+		}
+
+		public int GetImageHash(int imageID)
+		{
+			return controlService.GetImageHash(imageID);
 		}
 
 		public void StartPolling()
@@ -113,7 +129,12 @@ namespace Snaphappi
 
 		private void OnFileNotFound(UploadTarget target, SearchType searchType)
 		{
-			FileNotFound(target);
+			switch (searchType)
+			{
+				case SearchType.Hash: FileNotFoundByHash(target); break;
+				case SearchType.Name: FileNotFoundByName(target); break;
+				default: throw new ArgumentOutOfRangeException("searchType");
+			}
 		}
 
 		private void OnUploadFailed(string folderPath, string filePath)

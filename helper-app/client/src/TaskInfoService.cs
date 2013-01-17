@@ -6,7 +6,7 @@ using Thrift.Transport;
 
 namespace Snaphappi
 {
-	public class URTaskInfoService : ITaskInfoService
+	public class TaskInfoService : ITaskInfoService
 	{
 		#region data
 
@@ -23,7 +23,7 @@ namespace Snaphappi
 
 		#region interface
 
-		public URTaskInfoService(TaskID taskID, Uri uri)
+		public TaskInfoService(TaskID taskID, Uri uri)
 		{
 			this.id = ApiHelper.ConvertTaskID(taskID);
 

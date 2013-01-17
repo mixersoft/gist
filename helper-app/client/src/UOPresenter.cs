@@ -25,16 +25,17 @@ namespace Snaphappi
 			app.Loaded     += OnLoaded;
 			app.Terminated += OnTerminated;
 
-			uoModel.TargetAdded    += OnTargetAdded;
-			uoModel.FileFound      += OnFileFound;
-			uoModel.FileNotFound   += OnFileNotFound;
-			uoModel.TaskCancelled  += OnTaskCancelled;
-			uoModel.UploadFailed   += OnUploadFailed;
+			uoModel.TargetAdded        += OnTargetAdded;
+			uoModel.FileFound          += OnFileFound;
+			uoModel.FileNotFoundByHash += OnFileNotFoundByHash;
+			uoModel.FileNotFoundByName += OnFileNotFoundByName;
+			uoModel.TaskCancelled      += OnTaskCancelled;
+			uoModel.UploadFailed       += OnUploadFailed;
 		}
 
-		private void OnTargetAdded(UploadTarget uploadTarget)
+		private void OnTargetAdded(UploadTarget target)
 		{
-			uoModel.FindFile(uploadTarget);
+			uoModel.FindFileByName(target);
 		}
 
 		private void OnFileFound(FileMatch match)
@@ -42,9 +43,14 @@ namespace Snaphappi
 			uoModel.UploadFile(match);
 		}
 
-		private void OnFileNotFound(UploadTarget target)
+		private void OnFileNotFoundByHash(UploadTarget target)
 		{
 			uoView.ReportFileNotFound(target.ImageID);
+		}
+
+		private void OnFileNotFoundByName(UploadTarget target)
+		{
+			uoModel.FindFileByHash(target, uoModel.GetImageHash(target.ImageID));
 		}
 
 		private void OnLoaded()

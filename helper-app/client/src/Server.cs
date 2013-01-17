@@ -18,6 +18,7 @@ namespace Snaphappi
 
 		private Multimap<string, string> files          = new Multimap<string, string>();
 		private HashSet<string>          folders        = new HashSet<string>();
+		private Dictionary<int, int>     imageHashes    = new Dictionary<int,int>();
 		private List<UploadTarget>       uploadTargets  = new List<UploadTarget>();
 		private HashSet<string>          watchedFolders = new HashSet<string>();
 
@@ -66,6 +67,11 @@ namespace Snaphappi
 		public string[] GetFolders()
 		{
 			return folders.ToArray();
+		}
+
+		public int GetImageHash(int imageID)
+		{
+			return imageHashes[imageID];
 		}
 
 		public string[] GetWatchedFolders()
@@ -254,6 +260,8 @@ namespace Snaphappi
 				var imageID      = int.Parse(ReadLine("id"));
 				var exifDateTime = DateTimeEx.ParseExifTime(photoLoader.GetImageDateTime(filePath)).ToUnixTime();
 
+				imageHashes.Add(imageID, photoLoader.GetImageHash(filePath));
+
 				uploadTargets.Add(new UploadTarget(filePath, exifDateTime, imageID));
 				if (loaded)
 					FilesUpdated();
@@ -330,7 +338,7 @@ namespace Snaphappi
 			{
 				var ucPath = path.ToUpperInvariant();
 				var removedCount = uploadTargets.RemoveAll(t => t.FilePath.ToUpperInvariant() == ucPath);
-				Trace.Assert(removedCount == 1);
+				Trace.Assert(removedCount <= 1);
 			}
 		}
 

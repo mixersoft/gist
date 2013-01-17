@@ -9,14 +9,19 @@ namespace Snaphappi
 	{
 
 		event Action<FileMatch>    FileFound;
-		event Action<UploadTarget> FileNotFound;
+		event Action<UploadTarget> FileNotFoundByHash;
+		event Action<UploadTarget> FileNotFoundByName;
 		event Action<UploadTarget> TargetAdded;
 		event Action               TaskCancelled;
 		event Action<UploadTarget> UploadFailed;
 
 		void FetchFiles();
 
-		void FindFile(UploadTarget target);
+		void FindFileByHash(UploadTarget target, int hash);
+
+		void FindFileByName(UploadTarget target);
+
+		int GetImageHash(int imageID);
 
 		void StartPolling();
 

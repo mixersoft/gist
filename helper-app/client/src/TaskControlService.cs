@@ -6,7 +6,7 @@ using Thrift.Transport;
 
 namespace Snaphappi
 {
-	public class URTaskControlService : ITaskControlService
+	public class TaskControlService : ITaskControlService
 	{
 		#region data
 
@@ -18,7 +18,7 @@ namespace Snaphappi
 
 		#region interface
 
-		public URTaskControlService(TaskID taskID, Uri uri)
+		public TaskControlService(TaskID taskID, Uri uri)
 		{
 			this.id = ApiHelper.ConvertTaskID(taskID);
 
@@ -67,6 +67,21 @@ namespace Snaphappi
 			{
 				lock (task)
 					return task.GetFolders(id).ToArray();
+			}
+			catch (API.SystemException e)
+			{
+				if (e.ErrorCode == ErrorCode.InvalidAuth)
+					AuthTokenRejected();
+				throw;
+			}
+		}
+
+		public int GetImageHash(int imageID)
+		{
+			try
+			{
+				lock (task)
+					return task.GetImageHash(id, imageID);
 			}
 			catch (API.SystemException e)
 			{

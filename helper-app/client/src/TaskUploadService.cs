@@ -7,7 +7,7 @@ using System.Threading;
 
 namespace Snaphappi
 {
-	public class URTaskUploadService : ITaskUploadService
+	public class TaskUploadService : ITaskUploadService
 	{
 		#region data
 
@@ -23,7 +23,7 @@ namespace Snaphappi
 
 		#region interface
 
-		public URTaskUploadService(TaskID taskID, Uri uri)
+		public TaskUploadService(TaskID taskID, Uri uri)
 		{
 			this.id = ApiHelper.ConvertTaskID(taskID);
 						

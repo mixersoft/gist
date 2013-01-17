@@ -94,9 +94,9 @@ namespace Snaphappi
 
 			var taskID = new TaskID(authToken, sessionID, deviceID);
 
-			var controlService = new URTaskControlService (taskID, Settings.Default.TaskURI);
-			var infoService    = new URTaskInfoService    (taskID, Settings.Default.TaskURI);
-			var uploadService  = new URTaskUploadService  (taskID, Settings.Default.TaskURI);
+			var controlService = new TaskControlService (taskID, Settings.Default.TaskURI);
+			var infoService    = new TaskInfoService    (taskID, Settings.Default.TaskURI);
+			var uploadService  = new TaskUploadService  (taskID, Settings.Default.TaskURI);
 
 			var photoLoader = new PhotoLoader();
 
@@ -120,9 +120,9 @@ namespace Snaphappi
 
 			var taskID = new TaskID(authToken, sessionID, deviceID);
 
-			var controlService = new URTaskControlService (taskID, Settings.Default.TaskURI);
-			var infoService    = new URTaskInfoService    (taskID, Settings.Default.TaskURI);
-			var uploadService  = new URTaskUploadService  (taskID, Settings.Default.TaskURI);
+			var controlService = new TaskControlService (taskID, Settings.Default.TaskURI);
+			var infoService    = new TaskInfoService    (taskID, Settings.Default.TaskURI);
+			var uploadService  = new TaskUploadService  (taskID, Settings.Default.TaskURI);
 
 			var fileSystem  = new FileSystem();
 			var photoLoader = new PhotoLoader();
@@ -145,8 +145,8 @@ namespace Snaphappi
 
 			var taskID = new TaskID(authToken, Guid.NewGuid().ToString(), deviceID);
 
-			var controlService = new URTaskControlService (taskID, Settings.Default.TaskURI);
-			var uploadService  = new URTaskUploadService  (taskID, Settings.Default.TaskURI);
+			var controlService = new TaskControlService (taskID, Settings.Default.TaskURI);
+			var uploadService  = new TaskUploadService  (taskID, Settings.Default.TaskURI);
 
 			var photoLoader = new PhotoLoader();
 

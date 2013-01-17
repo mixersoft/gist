@@ -10,6 +10,8 @@ namespace Snaphappi
 
 		string[] GetFolders();
 
+		int GetImageHash(int imageID);
+
 		string[] GetWatchedFolders();
 
 		void ReportFileNotFound(string folderPath, string filePath);
