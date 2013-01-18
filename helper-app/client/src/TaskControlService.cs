@@ -76,12 +76,12 @@ namespace Snaphappi
 			}
 		}
 
-		public int GetImageHash(int imageID)
+		public int GetImageHash(ImageID imageID)
 		{
 			try
 			{
 				lock (task)
-					return task.GetImageHash(id, imageID);
+					return task.GetImageHash(id, imageID.Data);
 			}
 			catch (API.SystemException e)
 			{
@@ -121,12 +121,12 @@ namespace Snaphappi
 			}
 		}
 
-		public void ReportFileNotFoundByID(int imageID)
+		public void ReportFileNotFoundByID(ImageID imageID)
 		{
 			try
 			{
 				lock (task)
-					task.ReportFileNotFoundByID(id, imageID);
+					task.ReportFileNotFoundByID(id, imageID.Data);
 			}
 			catch (API.SystemException e)
 			{
@@ -166,12 +166,12 @@ namespace Snaphappi
 			}
 		}
 
-		public void ReportUploadFailedByID(int imageID)
+		public void ReportUploadFailedByID(ImageID imageID)
 		{
 			try
 			{
 				lock (task)
-					task.ReportUploadFailedByID(id, imageID);
+					task.ReportUploadFailedByID(id, imageID.Data);
 			}
 			catch (API.SystemException e)
 			{
@@ -220,7 +220,7 @@ namespace Snaphappi
 			return new UploadTarget
 				( uploadTarget.FilePath
 				, uploadTarget.ExifDateTime
-				, uploadTarget.ImageID
+				, new ImageID(uploadTarget.ImageID)
 				);
 		}
 

@@ -18,7 +18,7 @@ namespace Snaphappi
 
 		private Multimap<string, string> files          = new Multimap<string, string>();
 		private HashSet<string>          folders        = new HashSet<string>();
-		private Dictionary<int, int>     imageHashes    = new Dictionary<int,int>();
+		private Dictionary<ImageID, int> imageHashes    = new Dictionary<ImageID, int>();
 		private List<UploadTarget>       uploadTargets  = new List<UploadTarget>();
 		private HashSet<string>          watchedFolders = new HashSet<string>();
 
@@ -69,7 +69,7 @@ namespace Snaphappi
 			return folders.ToArray();
 		}
 
-		public int GetImageHash(int imageID)
+		public int GetImageHash(ImageID imageID)
 		{
 			return imageHashes[imageID];
 		}
@@ -85,7 +85,7 @@ namespace Snaphappi
 			Console.WriteLine("file '{1}' from '{0}' not found", folderPath, filePath);
 		}
 
-		public void ReportFileNotFoundByID(int imageID)
+		public void ReportFileNotFoundByID(ImageID imageID)
 		{
 			Console.WriteLine("file '{0}' not found", imageID);
 		}
@@ -100,7 +100,7 @@ namespace Snaphappi
 			Console.WriteLine("upload of '{1}' from '{0}' failed", folderPath, filePath);
 		}
 
-		public void ReportUploadFailedByID(int imageID)
+		public void ReportUploadFailedByID(ImageID imageID)
 		{
 			Console.WriteLine("upload of '{0}' failed", imageID);
 		}
@@ -173,7 +173,7 @@ namespace Snaphappi
 
 		public void UploadFile
 			( string       folderPath
-			, int          imageID
+			, ImageID      imageID
 			, string       path
 			, UploadType   uploadType
 			, Func<byte[]> LoadFile
@@ -257,7 +257,7 @@ namespace Snaphappi
 			try
 			{
 				var filePath     = ReadLine("file");
-				var imageID      = int.Parse(ReadLine("id"));
+				var imageID      = new ImageID(ReadLine("id"));
 				var exifDateTime = DateTimeEx.ParseExifTime(photoLoader.GetImageDateTime(filePath)).ToUnixTime();
 
 				imageHashes.Add(imageID, photoLoader.GetImageHash(filePath));

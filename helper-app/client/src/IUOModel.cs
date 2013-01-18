@@ -21,7 +21,7 @@ namespace Snaphappi
 
 		void FindFileByName(UploadTarget target);
 
-		int GetImageHash(int imageID);
+		int GetImageHash(ImageID imageID);
 
 		void StartPolling();
 

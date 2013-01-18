@@ -111,6 +111,7 @@
     <Compile Include="src\IAsyncFileFinder.cs" />
     <Compile Include="src\IFileLister.cs" />
     <Compile Include="src\IFileSystem.cs" />
+    <Compile Include="src\ImageID.cs" />
     <Compile Include="src\ImageMagick.cs" />
     <Compile Include="src\IPhotoLoader.cs" />
     <Compile Include="src\IRegistry.cs" />

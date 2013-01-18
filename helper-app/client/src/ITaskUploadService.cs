@@ -17,7 +17,7 @@ namespace Snaphappi
 
 		void UploadFile
 			( string       folderPath
-			, int          imageID
+			, ImageID      imageID
 			, string       path
 			, UploadType   uploadType
 			, Func<byte[]> LoadFile

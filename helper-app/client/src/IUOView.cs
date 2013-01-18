@@ -7,8 +7,8 @@ namespace Snaphappi
 {
 	public interface IUOView
 	{
-		void ReportFileNotFound(int imageID);
+		void ReportFileNotFound(ImageID imageID);
 
-		void ReportUploadFailed(int imageID);
+		void ReportUploadFailed(ImageID imageID);
 	}
 }

@@ -21,12 +21,12 @@ namespace Snaphappi
 
 		#region IUOView Members
 
-		public void ReportFileNotFound(int imageID)
+		public void ReportFileNotFound(ImageID imageID)
 		{
 			controlService.ReportFileNotFoundByID(imageID);
 		}
 
-		public void ReportUploadFailed(int imageID)
+		public void ReportUploadFailed(ImageID imageID)
 		{
 			controlService.ReportUploadFailedByID(imageID);
 		}

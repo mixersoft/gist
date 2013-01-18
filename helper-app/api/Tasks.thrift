@@ -19,7 +19,7 @@ typedef i32 ImageHash
 /**
  * Unique image identifier
  */
-typedef i32 ImageID
+typedef string ImageID
 
 /**
  * ID used to make sure the web page and the app stay in sync with each other.

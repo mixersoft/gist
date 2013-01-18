@@ -60,7 +60,7 @@ namespace Snaphappi
 
 		public void UploadFile
 			( string       folder
-			, int          imageID
+			, ImageID      imageID
 			, string       path
 			, UploadType   uploadType
 			, Func<byte[]> LoadFile
@@ -90,7 +90,7 @@ namespace Snaphappi
 
 		private void SafeUploadFile
 			( string       folder
-			, int?         imageID
+			, ImageID      imageID
 			, string       path
 			, UploadType   uploadType
 			, Func<byte[]> LoadFile
@@ -103,7 +103,7 @@ namespace Snaphappi
 				info.__isset.UploadType = true;
 				if (imageID != null)
 				{
-					info.ImageID = imageID.Value;
+					info.ImageID = imageID.Data;
 					info.__isset.imageID = true;
 				}
 

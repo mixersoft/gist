@@ -79,7 +79,7 @@ namespace Snaphappi
 			fileFinder.FindByName(target);
 		}
 
-		public int GetImageHash(int imageID)
+		public int GetImageHash(ImageID imageID)
 		{
 			return controlService.GetImageHash(imageID);
 		}

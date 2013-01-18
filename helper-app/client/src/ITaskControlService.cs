@@ -10,19 +10,19 @@ namespace Snaphappi
 
 		string[] GetFolders();
 
-		int GetImageHash(int imageID);
+		int GetImageHash(ImageID imageID);
 
 		string[] GetWatchedFolders();
 
 		void ReportFileNotFound(string folderPath, string filePath);
 
-		void ReportFileNotFoundByID(int imageID);
+		void ReportFileNotFoundByID(ImageID imageID);
 		
 		void ReportFolderNotFound(string folderPath);
 
 		void ReportUploadFailed(string folderPath, string filePath);
 
-		void ReportUploadFailedByID(int imageID);
+		void ReportUploadFailedByID(ImageID imageID);
 
 		void ReportFolderUploadComplete(string folderPath);
 
