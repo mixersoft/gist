@@ -1,0 +1,25 @@
+﻿using System;
+using System.IO;
+using System.Diagnostics;
+
+public module ImageMagick
+{
+	private root : string;
+
+	this()
+	{
+		def appDirectory = Path.GetDirectoryName(typeof(ImageMagick).Assembly.Location);
+		root = Path.Combine(appDirectory, "ImageMagick");
+	}
+
+	public Convert(srcPath : string, dstPath : string, options : string) : void
+	{
+		when (!File.Exists(srcPath))
+			throw FileNotFoundException("Source image does not exist.", srcPath);
+		def startInfo = ProcessStartInfo();
+		startInfo.FileName    = Path.Combine(root, "convert.exe");
+		startInfo.Arguments   = string.Format("\"{0}\" {2} \"{1}\"", srcPath, dstPath, options);
+		startInfo.WindowStyle = ProcessWindowStyle.Hidden;
+		Process.Start(startInfo).WaitForExit();
+	}
+}

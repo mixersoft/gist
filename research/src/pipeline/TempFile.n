@@ -1,0 +1,27 @@
+﻿using System;
+
+public class TempFile : IDisposable
+{
+	public this()
+	{
+		Path = IO.Path.GetTempFileName();
+	}
+
+	public Path : string { get; private set; }
+
+	#region IDisposable Members
+
+	public Dispose() : void
+	{
+		try
+		{
+			System.IO.File.Delete(Path);
+		}
+		catch
+		{
+		| _ => () // inability to delete the file does not compromise the program
+		}
+	}
+
+	#endregion
+}
