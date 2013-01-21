@@ -41,13 +41,14 @@ class CreateDescriptorsHtmlTask : ITask
 			def folder = Path.GetFileName(descriptors.Path);
 			$"../thumbnails/$folder/$id.jpg"
 		}
-		def GetDominantColor(data)
+		def GetDominantColor(data, n)
 		{
+			def startIndex = data.Length - 3 * parameters.DominantColorCount + 3 * n;
 			def src = Image.[Bgr, float](1, 1);
 			src[0, 0] = Bgr
-				( red   = data[data.Length - 3] / parameters.ColorWeight
-				, green = data[data.Length - 2] / parameters.ColorWeight
-				, blue  = data[data.Length - 1] / parameters.ColorWeight
+				( red   = data[startIndex + 0] / parameters.ColorWeight
+				, green = data[startIndex + 1] / parameters.ColorWeight
+				, blue  = data[startIndex + 2] / parameters.ColorWeight
 				);
 
 			def dst = Image.[Bgr, float](1, 1);
@@ -62,12 +63,13 @@ class CreateDescriptorsHtmlTask : ITask
 		}
 
 		def text = StringBuilder();
+		def Write    (line) { _ = text.Append(line)     }
 		def WriteLine(line) { _ = text.AppendLine(line) }
 
 		[ "<html>"
 		, "<head><style type='text/css'>"
-		, "	tr td:nth-child(1) { text-align: right }"
-		, "	tr td:nth-child(2) { width: 32px }"
+		, "	tr td              { width: 32px }"
+		, "	tr td:nth-child(1) { width: autho; text-align: right }"
 		, "</style></head>"
 		, "<body><table>"
 		].Iter(WriteLine);
@@ -75,8 +77,13 @@ class CreateDescriptorsHtmlTask : ITask
 		foreach (descriptor in descriptors.Descriptors)
 		{
 			def thumb = GetThumbnailPath(descriptor.ID);
-			def color = GetDominantColor(descriptor.Data);
-			WriteLine($"<tr><td><img src='$thumb' /></td><td bgcolor='$color'>&nbsp;</td></tr>");
+			Write($"<tr><td><img src='$thumb' /></td>");
+			for (mutable i = 0; i != parameters.DominantColorCount; ++i)
+			{
+				def color = GetDominantColor(descriptor.Data, i);
+				Write($"<td bgcolor='$color'>&nbsp;</td>");
+			}
+			WriteLine("</tr>");
 		}
 
 		WriteLine("</table></html></body>");

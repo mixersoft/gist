@@ -1,5 +1,5 @@
 color component weight = 0.00153788994898586
-dominant color count = 1
+dominant color count = 2
 download image prefix = 
 image size = 120 120
 clustering threshold = 0.540193980531857
