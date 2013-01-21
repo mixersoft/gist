@@ -1,9 +1,16 @@
+using Emgu.CV.CvEnum;
+using Emgu.CV.Structure;
+using Emgu.CV;
 using Nemerle.Collections;
+using Nemerle.Utility;
 using System.IO;
 using System.Text;
 
+[ Record ]
 class CreateDescriptorsHtmlTask : ITask
 {
+	private parameters : Parameters;
+
 	public Name : string { get { "CreateDescriptorsHtmlTask" } }
 
 	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
@@ -36,11 +43,21 @@ class CreateDescriptorsHtmlTask : ITask
 		}
 		def GetDominantColor(data)
 		{
-			def l = data[data.Length - 3];
-			def a = data[data.Length - 2];
-			def b = data[data.Length - 1];
-			String.Format
-				( "#{0}{1}{2}"
+			def src = Image.[Bgr, float](1, 1);
+			src[0, 0] = Bgr
+				( red   = data[data.Length - 3] / parameters.ColorWeight
+				, green = data[data.Length - 2] / parameters.ColorWeight
+				, blue  = data[data.Length - 1] / parameters.ColorWeight
+				);
+
+			def dst = Image.[Bgr, float](1, 1);
+			CvInvoke.cvCvtColor(src.Ptr, dst.Ptr, COLOR_CONVERSION.CV_Lab2BGR);
+
+			string.Format
+				( "#{0:X2}{1:X2}{2:X2}"
+				, dst[0, 0].Red   :> int
+				, dst[0, 0].Green :> int
+				, dst[0, 0].Blue  :> int
 				);
 		}
 

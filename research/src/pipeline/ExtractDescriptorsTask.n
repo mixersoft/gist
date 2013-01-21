@@ -116,6 +116,7 @@ class ExtractDescriptorsTask : ITask
 		using (srcImage = Image.[Bgr, float](imagePath))
 		{
 			def dstImage = Image.[Bgr, float](srcImage.Size);
+			// TODO: use Image.ConvertFrom
 			CvInvoke.cvCvtColor
 				( src  = srcImage.Ptr
 				, dst  = dstImage.Ptr

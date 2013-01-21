@@ -47,6 +47,9 @@
 		<DominantColorsRef    Include="lib\Profiling.dll"        />
 	<!-- dependencies -->
 		<Dependencies Include="lib\*" />
+		<Dependencies Include="..\common\ImageMagick\*">
+			<Subdirectory>ImageMagick\</Subdirectory>
+		</Dependencies>
 	</ItemGroup>
 
 	<PropertyGroup>
@@ -153,12 +156,12 @@
 	<Target
 		Name    = "Dependencies"
 		Inputs  = "@(Dependencies)"
-		Outputs = "bin\%(Filename)%(Extension)"
+		Outputs = "bin\%(Dependencies.Subdirectory)%(Filename)%(Extension)"
 		>
-		<MakeDir Directories="bin" />
+		<MakeDir Directories="bin;bin\%(Dependencies.Subdirectory)" />
 		<Copy
 			SourceFiles       = "@(Dependencies)"
-			DestinationFolder = "bin"
+			DestinationFolder = "bin\%(Dependencies.Subdirectory)"
 			/>
 	</Target>
 

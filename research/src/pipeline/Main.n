@@ -40,7 +40,7 @@ module Main
 				, DownloadDataTask                 (parameters)
 				, CreateThumbnailsTask             ()
 				, ExtractDescriptorsTask           (parameters)
-				, CreateDescriptorsHtmlTask        ()
+				, CreateDescriptorsHtmlTask        (parameters)
 				, ClusterDataTask                  (parameters)
 				, CreateClusterHtmlTask            ()
 				, LoadReferenceClustersTask        ()
