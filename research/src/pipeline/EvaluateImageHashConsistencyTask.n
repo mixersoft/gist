@@ -52,13 +52,13 @@ class EvaluateImageHashConsistencyTask : ITask
 		foreach (id in images.ImageIDs)
 		{
 			def sizes =
-				[ /*(75, 75), */(120, 80), (144, 96), (222, 148)
+				[ (120, 80),  (144, 96),  (222, 148)
 				, (240, 161), (320, 214), (640, 428)
 				];
 			mutable hashes = [];
+			def path = images.MakePath(id);
 			foreach ((w, h) in sizes)
 			{
-				def path = images.MakePath(id);
 				using (tmp = TempFile())
 				{
 					SubsampleHQ(path, tmp.Path, w, h);

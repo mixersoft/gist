@@ -13,13 +13,14 @@ class Parameters
 	public mutable HashedImageBlur        : ImageHash.BlurMethod;
 	public mutable HashedImageBpp         : int;
 	public mutable HashedImageSize        : int;
+	public mutable HashMethod             : ImageHash.HashMethod;
 	public mutable ImageSampleSize        : int;
 	public mutable ImageSize              : int * int;
 	public mutable SimulatedTimelineCount : int;
 
 	public this()
 	{
-		def ParseBlur(str : string) : ImageHash.BlurMethod
+		def ParseBlurMethod(str : string) : ImageHash.BlurMethod
 		{
 			match (str.SplitToList(' '))
 			{
@@ -27,6 +28,12 @@ class Parameters
 			| ["gaussian", σ]  => ImageHash.BlurMethod.Gaussian(double.Parse(σ))
 			| _ => throw Exception($"Incorrect blur format: '$str'.")
 			}
+		}
+		def ParseHashMethod(str : string) : ImageHash.HashMethod
+		{
+		| "md5"  => ImageHash.HashMethod.MD5
+		| "mean" => ImageHash.HashMethod.Mean
+		| _ => throw Exception($"Incorrect hash method: '$str'.")
 		}
 		def ParseSize(str : string) : int * int
 		{
@@ -50,9 +57,10 @@ class Parameters
 		ColorWeight            = map["color component weight"]   |> double.Parse;
 		DominantColorCount     = map["dominant color count"]     |> int.Parse;
 		DownloadImagePrefix    = map["download image prefix"];
-		HashedImageBlur        = map["hashed image blur"]        |> ParseBlur;
+		HashedImageBlur        = map["hashed image blur"]        |> ParseBlurMethod;
 		HashedImageBpp         = map["hashed image bpp"]         |> int.Parse;
 		HashedImageSize        = map["hashed image size"]        |> int.Parse;
+		HashMethod             = map["hash method"]              |> ParseHashMethod;
 		ImageSampleSize        = map["image sample size"]        |> int.Parse;
 		ImageSize              = map["image size"]               |> ParseSize;
 		SimulatedTimelineCount = map["simulated timeline count"] |> int.Parse;
