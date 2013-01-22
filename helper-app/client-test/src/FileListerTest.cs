@@ -36,7 +36,7 @@ namespace SnaphappiTest
 		}
 
 		[ Test ]
-		public void TestListing()
+		public  void Listing()
 		{
 			fileLister = new FileLister(fileSystem, new string[] { "" });
 
@@ -73,7 +73,7 @@ namespace SnaphappiTest
 		}
 
 		[ Test ]
-		public void TestListingWithExtensions()
+		public  void ListingWithExtensions()
 		{
 			fileLister = new FileLister(fileSystem, new string[] { ".1", ".2" });
 

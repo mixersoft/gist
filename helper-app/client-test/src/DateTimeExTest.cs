@@ -9,7 +9,7 @@ namespace SnaphappiTest
 	public class DateTimeExTest
 	{
 		[ Test ]
-		public void TestFromUnixTime()
+		public  void FromUnixTime()
 		{
 			Assert.AreEqual
 				( new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)
@@ -26,7 +26,7 @@ namespace SnaphappiTest
 		}
 
 		[ Test ]
-		public void TestToUnixTime()
+		public  void ToUnixTime()
 		{
 			Assert.AreEqual
 				( 0x0
@@ -43,7 +43,7 @@ namespace SnaphappiTest
 		}
 
 		[ Test ]
-		public void TestParseExifTime()
+		public  void ParseExifTime()
 		{
 			// arbitrary valid time
 			Assert.AreEqual
@@ -68,7 +68,7 @@ namespace SnaphappiTest
 		}
 
 		[ Test ]
-		public void TestTryParseExifTime()
+		public  void TryParseExifTime()
 		{
 			DateTime time;
 			// arbitrary valid time

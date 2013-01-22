@@ -18,7 +18,7 @@ namespace SnaphappiTest.src
 		}
 
 		[ Test ]
-		public void TestGetID()
+		public void GetID()
 		{
 			var id1 = userID.GetID();
 			var id2 = userID.GetID();

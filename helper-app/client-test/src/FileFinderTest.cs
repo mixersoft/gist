@@ -20,7 +20,7 @@ namespace SnaphappiTest
 		}
 
 		[ Test ]
-		public void TestFindByName_Match()
+		public  void FindByName_Match()
 		{
 			AddFile(@"b",   "2013:01:10 00:00:02", 0);
 			AddFile(@"a\a", "2013:01:10 00:00:02", 0);
@@ -44,7 +44,7 @@ namespace SnaphappiTest
 		}
 
 		[ Test ]
-		public void TestFindByName_PathMismatch()
+		public  void FindByName_PathMismatch()
 		{
 			AddFile(@"b", "2013:01:10 00:00:02", 0);
 
@@ -65,7 +65,7 @@ namespace SnaphappiTest
 		}
 
 		[ Test ]
-		public void TestFindByName_TimeMismatch()
+		public  void FindByName_TimeMismatch()
 		{
 			AddFile(@"a\b", "2013-01-10 00:00:01", 0);
 
@@ -86,7 +86,7 @@ namespace SnaphappiTest
 		}
 
 		[ Test ]
-		public void TestFindByHash_Match()
+		public  void FindByHash_Match()
 		{
 			AddFile("a", "2013:01:10 00:00:00", 0); // wrong everything
 			AddFile("b", "2013:01:10 00:00:02", 0); // wrong hash
@@ -110,7 +110,7 @@ namespace SnaphappiTest
 		}
 
 		[ Test ]
-		public void TestFindByHash_HashMismatch()
+		public  void FindByHash_HashMismatch()
 		{
 			AddFile("b", "2013:01:10 00:00:02", 0);
 
@@ -131,7 +131,7 @@ namespace SnaphappiTest
 		}
 
 		[ Test ]
-		public void TestFindByHash_TimeMismatch()
+		public  void FindByHash_TimeMismatch()
 		{
 			AddFile("b", "2013:01:10 00:00:01", 1);
 

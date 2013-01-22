@@ -8,9 +8,9 @@ namespace Snaphappi
 {
 	public class UOPresenter
 	{
-		private readonly IApp        app;
-		private readonly IUOModel    uoModel;
-		private readonly IUOView     uoView;
+		private readonly IApp     app;
+		private readonly IUOModel uoModel;
+		private readonly IUOView  uoView;
 
 		public UOPresenter
 			( IApp     app
@@ -18,24 +18,19 @@ namespace Snaphappi
 			, IUOView  uoView
 			)
 		{
-			this.app        = app;
-			this.uoModel    = uoModel;
-			this.uoView     = uoView;
+			this.app     = app;
+			this.uoModel = uoModel;
+			this.uoView  = uoView;
 
 			app.Loaded     += OnLoaded;
 			app.Terminated += OnTerminated;
 
-			uoModel.TargetAdded        += OnTargetAdded;
 			uoModel.FileFound          += OnFileFound;
 			uoModel.FileNotFoundByHash += OnFileNotFoundByHash;
 			uoModel.FileNotFoundByName += OnFileNotFoundByName;
+			uoModel.TargetAdded        += OnTargetAdded;
 			uoModel.TaskCancelled      += OnTaskCancelled;
 			uoModel.UploadFailed       += OnUploadFailed;
-		}
-
-		private void OnTargetAdded(UploadTarget target)
-		{
-			uoModel.FindFileByName(target);
 		}
 
 		private void OnFileFound(FileMatch match)
@@ -62,6 +57,11 @@ namespace Snaphappi
 		private void OnTaskCancelled()
 		{
 			app.Quit();
+		}
+
+		private void OnTargetAdded(UploadTarget target)
+		{
+			uoModel.FindFileByName(target);
 		}
 
 		private void OnTerminated()

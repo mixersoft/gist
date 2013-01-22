@@ -9,7 +9,7 @@ namespace SnaphappiTest
 	public class TempFileTest
 	{
 		[ Test ]
-		public void TestTempFile()
+		public void TempFile()
 		{
 			string path = null;
 			using (var file = new TempFile())

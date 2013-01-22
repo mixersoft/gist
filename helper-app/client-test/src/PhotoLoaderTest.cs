@@ -17,7 +17,7 @@ namespace SnaphappiTest
 		}
 
 		[ Test ]
-		public void TestDateTime()
+		public void DateTime()
 		{
 			// proper DateTime test
 			Assert.AreEqual
@@ -37,7 +37,7 @@ namespace SnaphappiTest
 		}
 
 		[ Test ]
-		public void TestImageHash()
+		public void ImageHash()
 		{
 			var bmHash = photoLoader.GetImageHash(@"img\bm~0CCF308F-6ED8-459A-BF5A-85F6AC85F12B.jpg");
 			var bpHash = photoLoader.GetImageHash(@"img\bp~0CCF308F-6ED8-459A-BF5A-85F6AC85F12B.jpg");

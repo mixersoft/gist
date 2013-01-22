@@ -8,7 +8,7 @@ namespace SnaphappiTest
 	public class ParameterProcessorTest
 	{
 		[ Test ]
-		public void TestSplitParameter1()
+		public void SplitParameter1()
 		{
 			var info = ParameterProcessor.ParseUrl(@"snaphappi://SGVsbG8gV29ybGQh_aHR0cDovL3d3dy5zbmFwaGFwcGkuY29t_ur");
 
@@ -22,7 +22,7 @@ namespace SnaphappiTest
 		}
 
 		[ Test ]
-		public void TestSplitParameter2()
+		public void SplitParameter2()
 		{
 			var info = ParameterProcessor.ParseUrl(@"snaphappi://MA==_MQ==_uo");
 
