@@ -105,13 +105,13 @@ struct TaskState
 	/**
 	 * A strictly increasing change counter for the folder list in a given task.
 	 */
-	2: optional i32  FolderUpdateCount;
+	2: optional i32 FolderUpdateCount;
 
 	/**
-* A strictly increasing change counter for the file list in a given task.
-* Updated for files uploaded and files to upload.
+	 * A strictly increasing change counter for the file list in a given task.
+	 * Updated for files uploaded and files to upload.
 	 */
-	3: optional i32  FileUpdateCount;
+	3: optional i32 FileUpdateCount;
 }
 
 /**
