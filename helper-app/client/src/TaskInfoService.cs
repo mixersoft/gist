@@ -73,7 +73,7 @@ namespace Snaphappi
 			}
 		}
 
-		private URTaskState SafeGetState()
+		private TaskState SafeGetState()
 		{
 			try
 			{

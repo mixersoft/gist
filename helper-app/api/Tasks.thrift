@@ -95,7 +95,7 @@ exception SystemException
 /**
  * Flags indicating the state of the task.
  */
-struct URTaskState
+struct TaskState
 {
 	/**
 	 * To be set at when the task is completed or cancelled.
@@ -108,8 +108,8 @@ struct URTaskState
 	2: optional i32  FolderUpdateCount;
 
 	/**
-	 * A strictly increasing change counter for the file list in a given task.
-	 * Updated for files uploaded and files to upload.
+* A strictly increasing change counter for the file list in a given task.
+* Updated for files uploaded and files to upload.
 	 */
 	3: optional i32  FileUpdateCount;
 }
@@ -214,7 +214,7 @@ service Task
 	/**
 	 * Retrieves flags indicating the state of the task.
 	 */
-	URTaskState GetState
+	TaskState GetState
 		( 1: TaskID id
 		) throws (1: SystemException systemException);
 
