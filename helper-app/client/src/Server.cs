@@ -128,11 +128,12 @@ namespace Snaphappi
 		{
 			Console.WriteLine("stopped polling info service");
 		}
-
-		public event Action AuthTokenRejected = delegate {};
-		public event Action FilesUpdated      = delegate {};
-		public event Action FoldersUpdated    = delegate {};
-		public event Action TaskCancelled     = delegate {};
+		
+		public event Action AuthTokenRejected    = delegate {};
+		public event Action FilesUpdated         = delegate {};
+		public event Action FoldersUpdated       = delegate {};
+		public event Action TaskCancelled        = delegate {};
+		public event Action UploadTargetsUpdated = delegate {};
 
 		#endregion // ITaskInfoService Members
 
@@ -264,7 +265,7 @@ namespace Snaphappi
 
 				uploadTargets.Add(new UploadTarget(filePath, exifDateTime, imageID));
 				if (loaded)
-					FilesUpdated();
+					UploadTargetsUpdated();
 			}
 			catch (FormatException)
 			{

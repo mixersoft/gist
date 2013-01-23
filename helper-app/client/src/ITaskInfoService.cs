@@ -16,5 +16,6 @@ namespace Snaphappi
 		event Action FilesUpdated;
 		event Action FoldersUpdated;
 		event Action TaskCancelled;
+		event Action UploadTargetsUpdated;
 	}
 }

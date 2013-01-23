@@ -36,7 +36,7 @@ namespace Snaphappi
 			this.fileFinder.FileFound    += OnFileFound;
 			this.fileFinder.FileNotFound += OnFileNotFound;
 
-			this.infoService.FilesUpdated  += OnFilesUpdated;
+			this.infoService.UploadTargetsUpdated  += OnUploadTargetsUpdated;
 
 			// same handling for all upload failures
 			this.uploadService.FileNotFound += OnUploadFailed;
@@ -142,7 +142,7 @@ namespace Snaphappi
 			UploadFailed(uploadTargets[filePath]);
 		}
 
-		private void OnFilesUpdated()
+		private void OnUploadTargetsUpdated()
 		{
 			AddFiles(controlService.GetFilesToUpload());
 		}

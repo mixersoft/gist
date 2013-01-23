@@ -16,8 +16,9 @@ namespace Snaphappi
 
 		private Timer timer;
 
-		private int fileUpdateCount   = 0;
-		private int folderUpdateCount = 0;
+		private int fileUpdateCount         = 0;
+		private int folderUpdateCount       = 0;
+		private int uploadTargetUpdateCount = 0;
 
 		#endregion
 
@@ -47,10 +48,11 @@ namespace Snaphappi
 			timer.Change(Timeout.Infinite, Timeout.Infinite);
 		}
 
-		public event Action AuthTokenRejected = delegate {};
-		public event Action FilesUpdated      = delegate {};
-		public event Action FoldersUpdated    = delegate {};
-		public event Action TaskCancelled     = delegate {};
+		public event Action AuthTokenRejected    = delegate {};
+		public event Action FilesUpdated         = delegate {};
+		public event Action FoldersUpdated       = delegate {};
+		public event Action TaskCancelled        = delegate {};
+		public event Action UploadTargetsUpdated = delegate {};
 
 		#endregion
 
@@ -70,6 +72,11 @@ namespace Snaphappi
 			{
 				folderUpdateCount = state.FolderUpdateCount;
 				FoldersUpdated();
+			}
+			if (state.FilesToUploadUpdateCount > uploadTargetUpdateCount)
+			{
+				uploadTargetUpdateCount = state.FilesToUploadUpdateCount;
+				UploadTargetsUpdated();
 			}
 		}
 
