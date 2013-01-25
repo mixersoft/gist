@@ -219,7 +219,7 @@ namespace Snaphappi
 		{
 			return new UploadTarget
 				( uploadTarget.FilePath
-				, uploadTarget.ExifDateTime
+				, uploadTarget.ExifOriginalTimestamp
 				, new ImageID(uploadTarget.ImageID)
 				);
 		}

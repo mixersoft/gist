@@ -56,7 +56,7 @@ struct UploadTarget
 	/**
 	 * File creation Unix timestamp.
 	 */
-	2: required i32 ExifDateTime;
+	2: required i32 ExifOriginalTimestamp;
 
 	/**
 	 * Unique image identifier.
@@ -141,7 +141,7 @@ struct UploadInfo
 	 * Used for uploading originals, where the original file could have
 	 * been moved, or renamed.
 	 */
-	2: optional ImageID imageID;
+	2: optional ImageID ImageID;
 }
 
 /**

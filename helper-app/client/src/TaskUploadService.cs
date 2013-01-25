@@ -104,7 +104,7 @@ namespace Snaphappi
 				if (imageID != null)
 				{
 					info.ImageID = imageID.Data;
-					info.__isset.imageID = true;
+					info.__isset.ImageID = true;
 				}
 
 				task.UploadFile(id, path, LoadFile(), info);
