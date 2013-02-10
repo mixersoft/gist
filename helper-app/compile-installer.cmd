@@ -3,6 +3,8 @@
 @echo off
 setlocal
 
+:: Set up configuration
+
 set PATH=%PATH%;c:\Program Files (x86)\WiX Toolset v3.6\bin
 
 set Config=Debug
