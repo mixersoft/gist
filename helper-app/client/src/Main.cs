@@ -47,6 +47,11 @@ namespace Snaphappi
 
 		private static void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
 		{
+			var exception =
+				e.ExceptionObject is Exception
+				? (Exception)e.ExceptionObject
+				: new Exception("Unknown error.");
+			new Logger().RecordException(exception);
 			Environment.Exit(App.ExitFailure);
 		}
 
@@ -97,6 +102,7 @@ namespace Snaphappi
 			var controlService = new TaskControlService (taskID, Settings.Default.TaskURI);
 			var infoService    = new TaskInfoService    (taskID, Settings.Default.TaskURI);
 			var uploadService  = new TaskUploadService  (taskID, Settings.Default.TaskURI);
+
 
 			var photoLoader = new PhotoLoader();
 

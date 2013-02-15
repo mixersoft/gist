@@ -123,6 +123,7 @@
     <Compile Include="src\ITaskUploadService.cs" />
     <Compile Include="src\IWFModel.cs" />
     <Compile Include="src\IWFView.cs" />
+    <Compile Include="src\Logger.cs" />
     <Compile Include="src\Multimap.cs" />
     <Compile Include="src\ParameterProcessor.cs" />
     <Compile Include="src\PhotoLoader.cs" />

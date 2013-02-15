@@ -69,5 +69,14 @@ namespace Snaphappi.Properties {
                 return ((global::System.TimeSpan)(this["InfoPollingRate"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public int ConnectionRetryCount {
+            get {
+                return ((int)(this["ConnectionRetryCount"]));
+            }
+        }
     }
 }

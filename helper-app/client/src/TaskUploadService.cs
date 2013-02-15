@@ -2,6 +2,7 @@
 using Thrift.Protocol;
 using Thrift.Transport;
 using Snaphappi.API;
+using Snaphappi.Properties;
 using System;
 using System.Threading;
 
@@ -26,8 +27,10 @@ namespace Snaphappi
 		public TaskUploadService(TaskID taskID, Uri uri)
 		{
 			this.id = ApiHelper.ConvertTaskID(taskID);
-						
-			task = new Task.Client(new TBinaryProtocol(new THttpClient(uri)));
+			
+			var transport = new THttpClient(uri);
+			transport.MaxRetryCount = Settings.Default.ConnectionRetryCount;
+			task = new Task.Client(new TBinaryProtocol(transport));
 
 			uploadThread = new Thread(UploadProc);
 			uploadThread.Name = "TaskUpload";

@@ -1,4 +1,5 @@
 ﻿using Snaphappi.API;
+using Snaphappi.Properties;
 using System;
 using System.Threading;
 using Thrift.Protocol;
@@ -27,8 +28,10 @@ namespace Snaphappi
 		public TaskInfoService(TaskID taskID, Uri uri)
 		{
 			this.id = ApiHelper.ConvertTaskID(taskID);
-
-			task = new Task.Client(new TBinaryProtocol(new THttpClient(uri)));
+			
+			var transport = new THttpClient(uri);
+			transport.MaxRetryCount = Settings.Default.ConnectionRetryCount;
+			task = new Task.Client(new TBinaryProtocol(transport));
 
 			timer = new Timer(OnTimer);
 		}
