@@ -26,12 +26,13 @@
 		</BootstrapperApplicationRef>
 
 		<Variable
-			Name  = "GroupFolder"
-			Value = "[ProgramFilesFolder]Snaphappi"
+			Name      = "InstallFolder"
+			Value     = "[ProgramFilesFolder]Snaphappi"
+			Persisted = "yes"
 			/>
 		
 		<util:DirectorySearch
-			Path     = "[ProgramFilesFolder]Snaphappi\Snaphappi_TopLevelFolder"
+			Path     = "[InstallFolder]\Snaphappi_TopLevelFolder"
 			Variable = "TopLevelFolder"
 			/>
 
@@ -42,13 +43,15 @@
 				DisplayName = "Core engine"
 				SourceFile  = "$(var.client-installer.TargetPath)"
 				Vital       = "yes"
-				/>
+				>
+				<MsiProperty Name="INSTALLFOLDER" Value="[InstallFolder]\Uploader"/>
+			</MsiPackage>
 
 			<!-- The AIR interface app. -->
 			<ExePackage
 				DisplayName      = "User interface"
 				SourceFile       = "$(var.Launcher.TargetPath)"
-				InstallCommand   = 'arh.exe "-installAppSilent -location \"[GroupFolder]\" TopLevelFolder.air"'
+				InstallCommand   = 'arh.exe "-installAppSilent -location \"[InstallFolder]\" TopLevelFolder.air"'
 				UninstallCommand = 'arh.exe "-uninstallAppSilent TopLevelFolder"'
 				DetectCondition  = "TopLevelFolder"
 				Cache            = "yes"
