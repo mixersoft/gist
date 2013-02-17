@@ -17,7 +17,7 @@ set LauncherTargetPath=..\Launcher\bin\%Config%\Launcher.exe
 
 set ExtDir=C:\Program Files (x86)\WiX Toolset v3.6\bin
 
-:: Create the helper app installer
+:: set up helper app installer environment
 pushd client-installer
 
 set Src=Product
@@ -43,13 +43,7 @@ if ERRORLEVEL 1 goto ErrorExit
 
 popd
 
-:: Load and increment build count
-set BuildCountPath=client-installer-version\build-count.txt
-set/p BuildCount=<%BuildCountPath%
-set/a BuildCount=BuildCount+1
-echo %BuildCount% > %BuildCountPath%
-
-:: Create the bootstrapper
+:: Set up bootstrapper environment
 pushd client-installer-bootstrapper
 
 set Src=Bundle
@@ -63,9 +57,12 @@ set Bin=%BinDir%\SnaphappiSetup.exe
 mkdir %ObjDir% 2> nul
 mkdir %BinDir% 2> nul
 
+:: Create an include file containing the build count for the bootstrapper.
+create-wxi "%BinDir%\build-count.txt" "%BinDir%\build-count.wxi"
+
 :: Compile the source files into object files
 echo Compiling '%Obj%'...
-candle -ext "%ExtDir%\WixBalExtension.dll" -ext "%ExtDir%\WixUtilExtension.dll" -dclient-installer.TargetPath="%ClientInstallerTargetPath%" -dLauncher.TargetPath="%LauncherTargetPath%" -dBuildCount=%BuildCount% -nologo -o "%Obj%" "%Src%.wxs"
+candle -ext "%ExtDir%\WixBalExtension.dll" -ext "%ExtDir%\WixUtilExtension.dll" -dTargetDir="%BinDir%" -dclient-installer.TargetPath="%ClientInstallerTargetPath%" -dLauncher.TargetPath="%LauncherTargetPath%" -nologo -o "%Obj%" "%Src%.wxs"
 if ERRORLEVEL 1 goto ErrorExit
 
 :: Link the object files into the installer

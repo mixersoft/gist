@@ -12,15 +12,12 @@ Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "client-installer", "client-
 EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "client-installer-bootstrapper", "client-installer-bootstrapper\client-installer-bootstrapper.wixproj", "{DDF02506-8DD3-4975-9C49-F57A94D9FDB4}"
 	ProjectSection(ProjectDependencies) = postProject
-		{AA87BE1F-8FBA-4CF9-AF2A-31AE4B54E587} = {AA87BE1F-8FBA-4CF9-AF2A-31AE4B54E587}
 		{33B809D8-1A19-413B-A03B-91CA030DFEB0} = {33B809D8-1A19-413B-A03B-91CA030DFEB0}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InstallDeviceID", "InstallDeviceID\InstallDeviceID.csproj", "{26970141-015A-402A-B602-082B83F92964}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Launcher", "Launcher\Launcher.csproj", "{6A519A6D-B0F2-4DBA-A3A4-4491605AAA95}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "client-installer-version", "client-installer-version\client-installer-version.csproj", "{AA87BE1F-8FBA-4CF9-AF2A-31AE4B54E587}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -70,11 +67,6 @@ Global
 		{6A519A6D-B0F2-4DBA-A3A4-4491605AAA95}.Release|Any CPU.ActiveCfg = Release|x86
 		{6A519A6D-B0F2-4DBA-A3A4-4491605AAA95}.Release|x86.ActiveCfg = Release|x86
 		{6A519A6D-B0F2-4DBA-A3A4-4491605AAA95}.Release|x86.Build.0 = Release|x86
-		{AA87BE1F-8FBA-4CF9-AF2A-31AE4B54E587}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{AA87BE1F-8FBA-4CF9-AF2A-31AE4B54E587}.Debug|x86.ActiveCfg = Debug|x86
-		{AA87BE1F-8FBA-4CF9-AF2A-31AE4B54E587}.Debug|x86.Build.0 = Debug|x86
-		{AA87BE1F-8FBA-4CF9-AF2A-31AE4B54E587}.Release|Any CPU.ActiveCfg = Debug|x86
-		{AA87BE1F-8FBA-4CF9-AF2A-31AE4B54E587}.Release|x86.ActiveCfg = Debug|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

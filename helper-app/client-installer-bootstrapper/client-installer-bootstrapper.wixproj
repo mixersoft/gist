@@ -52,15 +52,16 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\client-installer-version\build-count.wxi">
-      <Link>build-count.wxi</Link>
-    </Content>
     <Content Include="arh.exe" />
+    <Content Include="create-wxi.cmd" />
     <Content Include="license.rtf" />
     <Content Include="logo.png" />
     <Content Include="TopLevelFolder.air" />
   </ItemGroup>
   <Import Project="$(WixTargetsPath)" />
+  <PropertyGroup>
+    <PreBuildEvent>"$(ProjectDir)create-wxi.cmd" "$(TargetDir)build-count.txt" "$(TargetDir)build-count.wxi"</PreBuildEvent>
+  </PropertyGroup>
   <!--
 	To modify your build process, add your task inside one of the targets below and uncomment it.
 	Other similar extension points exist, see Wix.targets.
