@@ -52,6 +52,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\client-installer-version\build-count.wxi">
+      <Link>build-count.wxi</Link>
+    </Content>
     <Content Include="arh.exe" />
     <Content Include="license.rtf" />
     <Content Include="logo.png" />

@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{AA87BE1F-8FBA-4CF9-AF2A-31AE4B54E587}</ProjectGuid>
+  </PropertyGroup>
+  <ItemGroup>
+    <Script Include="create wxi.cmd" />
+    <Count Include="build-count.txt" />
+    <CountWxi Include="build-count.wxi" />
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <Target Name="Build" Inputs="@(Script)" Outputs="@(Count);@(CountWxi)">
+    <Exec Command="&quot;@(Script)&quot; &quot;@(Count)&quot; &quot;@(CountWxi)&quot;" />
+  </Target>
+</Project>

@@ -4,9 +4,14 @@
 	xmlns:bal  = "http://schemas.microsoft.com/wix/BalExtension"
 	xmlns:util = "http://schemas.microsoft.com/wix/UtilExtension"
 	>
+	
+	<?ifndef BuildCount ?>
+		<?include ..\client-installer-version\build-count.wxi ?>
+	<?endif?>
+	
 	<Bundle
 		Name         = "Snaphappi"
-		Version      = "1.0.0.0"
+		Version      = "1.0.0.$(var.BuildCount)"
 		Manufacturer = "Snaphappi"
 		AboutUrl     = "http://www.snaphappi.com/"
 		HelpUrl      = "http://www.snaphappi.com/"
