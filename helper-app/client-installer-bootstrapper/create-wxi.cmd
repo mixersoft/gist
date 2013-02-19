@@ -1,4 +1,5 @@
 @echo off
+setlocal
 
 :: Load and increment build count
 set/p count=<%1

@@ -5,8 +5,9 @@
 	xmlns:util = "http://schemas.microsoft.com/wix/UtilExtension"
 	>
 	
-	<!-- Build count incremented in a pre-build event. Useful for creating monotonically increasing version numbers. -->
-	<?include $(var.TargetDir)build-count.wxi ?>
+	<!-- Build count incremented in a pre-build event.
+	     Useful for creating monotonically increasing version numbers. -->
+	<?include $(var.TargetDir)\build-count.wxi ?>
 	
 	<Bundle
 		Name         = "Snaphappi"

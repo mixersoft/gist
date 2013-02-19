@@ -1,4 +1,4 @@
-:: Installer compilation script for those who do not have Visual Studio Wix integration
+:: Installer compilation script for those without Visual Studio Wix integration
 
 @echo off
 setlocal
@@ -58,7 +58,7 @@ mkdir %ObjDir% 2> nul
 mkdir %BinDir% 2> nul
 
 :: Create an include file containing the build count for the bootstrapper.
-create-wxi "%BinDir%\build-count.txt" "%BinDir%\build-count.wxi"
+call create-wxi "%BinDir%\build-count.txt" "%BinDir%\build-count.wxi"
 
 :: Compile the source files into object files
 echo Compiling '%Obj%'...
@@ -74,7 +74,7 @@ popd
 
 echo Done
 
-exit
+exit/b
 
 : ErrorExit
 echo An error has occurred.
