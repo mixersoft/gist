@@ -151,6 +151,10 @@ namespace Thrift.Transport
 					if (retryCount <= MaxRetryCount)
 					{
 						System.Diagnostics.Debug.WriteLine("Retrying after exception: " + wx.ToString());
+
+						// 100 ms with exponential backoff with factor 1.5
+						System.Threading.Thread.Sleep((int)(100.0 * Math.Pow(1.5, retryCount)));
+
 						++retryCount;
 					}
 					else
