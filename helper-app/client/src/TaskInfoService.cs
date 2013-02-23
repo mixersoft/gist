@@ -1,7 +1,7 @@
 ﻿using Snaphappi.API;
 using Snaphappi.Properties;
 using System;
-using System.Threading;
+using System.Timers;
 using Thrift.Protocol;
 using Thrift.Transport;
 
@@ -16,6 +16,7 @@ namespace Snaphappi
 		private readonly Snaphappi.API.TaskID id;
 
 		private Timer timer;
+		private bool  stopPolling;
 
 		private int fileUpdateCount         = 0;
 		private int folderUpdateCount       = 0;
@@ -33,7 +34,9 @@ namespace Snaphappi
 			transport.MaxRetryCount = Settings.Default.ConnectionRetryCount;
 			task = new Task.Client(new TBinaryProtocol(transport));
 
-			timer = new Timer(OnTimer);
+			timer = new Timer();
+			timer.Elapsed += OnTimer;
+			timer.AutoReset = false;
 		}
 
 		#endregion
@@ -42,13 +45,16 @@ namespace Snaphappi
 
 		public void StartPolling(int period)
 		{
-			OnTimer(null);
-			timer.Change(period, period);
+			timer.Interval = period;
+			OnTimer(null, null);
+			stopPolling = false;
+			timer.Start();
 		}
 
 		public void StopPolling()
 		{
-			timer.Change(Timeout.Infinite, Timeout.Infinite);
+			stopPolling = true;
+			timer.Stop();
 		}
 
 		public event Action AuthTokenRejected    = delegate {};
@@ -61,7 +67,7 @@ namespace Snaphappi
 
 		#region implementation
 
-		private void OnTimer(Object o)
+		private void OnTimer(object o, ElapsedEventArgs e)
 		{
 			var state = SafeGetState();
 			if (state.IsCancelled)
@@ -81,6 +87,8 @@ namespace Snaphappi
 				uploadTargetUpdateCount = state.FilesToUploadUpdateCount;
 				UploadTargetsUpdated();
 			}
+			if (!stopPolling)
+				timer.Start();
 		}
 
 		private TaskState SafeGetState()
