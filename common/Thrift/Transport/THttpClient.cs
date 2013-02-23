@@ -37,8 +37,8 @@ namespace Thrift.Transport
 		{
 			uri = u;
 
-			ConnectTimeout = 0;
-			ReadTimeout    = 0;
+			ConnectTimeout = 300000;
+			ReadTimeout    = 300000;
 			MaxRetryCount  = 1;
 		}
 
@@ -133,13 +133,13 @@ namespace Thrift.Transport
 					byte[] data = outputStream.ToArray();
 					connection.ContentLength = data.Length;
 
-					Stream requestStream = connection.GetRequestStream();
-					requestStream.Write(data, 0, data.Length);
+					using (Stream requestStream = connection.GetRequestStream())
+						requestStream.Write(data, 0, data.Length);
 
 					if (inputStream != null)
 						inputStream.Close();
-
 					inputStream = connection.GetResponse().GetResponseStream();
+
 					break;
 				}
 				catch (IOException iox)
