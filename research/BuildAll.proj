@@ -10,17 +10,19 @@
 
 	<ItemGroup>
 	<!-- source code -->
-		<PipelineSrc     Include="src\pipeline\*.n"      />
-		<ClusterUiSrc         Include="src\cluster-ui\*.n"          />
-		<PipelineTestSrc Include="src\pipeline-test\*.n" />
-		<PrettyPrintSrc       Include="src\pretty-print\*.n"        />
-		<DominantColorsSrc    Include="src\dominant-colors\*.n"     />
+		<PipelineSrc       Include="src\pipeline\*.n"        />
+		<PipelineSrc       Include="src\pipeline\items\*.n"  />
+		<PipelineSrc       Include="src\pipeline\tasks\*.n"  />
+		<ClusterUiSrc      Include="src\cluster-ui\*.n"      />
+		<PipelineTestSrc   Include="src\pipeline-test\*.n"   />
+		<PrettyPrintSrc    Include="src\pretty-print\*.n"    />
+		<DominantColorsSrc Include="src\dominant-colors\*.n" />
 	<!-- output -->
-		<PipelineBin     Include="bin\Pipeline.exe"     />
-		<ClusterUiBin         Include="bin\ClusterUI.exe"         />
-		<PipelineTestBin Include="bin\PipelineTest.dll" />
-		<PrettyPrintBin       Include="bin\PrettyPrint.exe"       />
-		<DominantColorsBin    Include="bin\DominantColors.exe"    />
+		<PipelineBin       Include="bin\Pipeline.exe"       />
+		<ClusterUiBin      Include="bin\ClusterUI.exe"      />
+		<PipelineTestBin   Include="bin\PipelineTest.dll"   />
+		<PrettyPrintBin    Include="bin\PrettyPrint.exe"    />
+		<DominantColorsBin Include="bin\DominantColors.exe" />
 		<Out Include="bin\" />
 	<!-- references -->
 		<PipelineRef     Include="System.Core.dll"          />
