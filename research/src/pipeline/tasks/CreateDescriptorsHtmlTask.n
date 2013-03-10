@@ -3,16 +3,12 @@ using Emgu.CV.Structure;
 using Emgu.CV;
 using Nemerle.Collections;
 using Nemerle.Utility;
+using PipelineMacro;
 using System.IO;
 using System.Text;
 
-[ Record ]
 class CreateDescriptorsHtmlTask : ITask
 {
-	private parameters : Parameters;
-
-	public Name : string { get { "CreateDescriptorsHtmlTask" } }
-
 	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
 	{
 		mutable mappings = [];
@@ -22,19 +18,17 @@ class CreateDescriptorsHtmlTask : ITask
 				( "descriptors-html"
 				, Path.GetFileNameWithoutExtension(item.Path) + ".html"
 				);
-
-			def result = DescriptorsHtmlItem(path);
-
-			mappings ::= TaskMapping
-				( inputs  = [ item ]
-				, outputs = [ result ]
-				, compute = () => Compute(item, result)
-				);
+			mappings ::= TaskMapping(this, [ item ], [ DescriptorsHtmlItem(path) ]);
 		}
 		mappings;
 	}
 
-	private Compute(descriptors : DescriptorItem, html : DescriptorsHtmlItem) : void
+	private Compute
+		( [InItem]  descriptors : DescriptorItem
+		, [OutItem] html        : DescriptorsHtmlItem
+		, dominantColorCount : int
+		, colorWeight        : double
+		) : void
 	{
 		def GetThumbnailPath(id)
 		{
@@ -43,12 +37,12 @@ class CreateDescriptorsHtmlTask : ITask
 		}
 		def GetDominantColor(data, n)
 		{
-			def startIndex = data.Length - 3 * parameters.DominantColorCount + 3 * n;
+			def startIndex = data.Length - 3 * dominantColorCount + 3 * n;
 			def src = Image.[Bgr, float](1, 1);
 			src[0, 0] = Bgr
-				( red   = data[startIndex + 0] / parameters.ColorWeight
-				, green = data[startIndex + 1] / parameters.ColorWeight
-				, blue  = data[startIndex + 2] / parameters.ColorWeight
+				( red   = data[startIndex + 0] / colorWeight
+				, green = data[startIndex + 1] / colorWeight
+				, blue  = data[startIndex + 2] / colorWeight
 				);
 
 			def dst = Image.[Bgr, float](1, 1);
@@ -78,7 +72,7 @@ class CreateDescriptorsHtmlTask : ITask
 		{
 			def thumb = GetThumbnailPath(descriptor.ID);
 			Write($"<tr><td><img src='$thumb' /></td>");
-			for (mutable i = 0; i != parameters.DominantColorCount; ++i)
+			for (mutable i = 0; i != dominantColorCount; ++i)
 			{
 				def color = GetDominantColor(descriptor.Data, i);
 				Write($"<td bgcolor='$color'>&nbsp;</td>");

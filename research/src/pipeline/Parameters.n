@@ -1,75 +1,106 @@
 using Nemerle.Collections;
 using Nemerle.Utility;
+using PipelineMacro;
 using System.IO.File;
 using System;
 
 /// <summary>Meta-parameter source that loads from "parameters.txt".</summary>
-class Parameters
+public class Parameters
 {
-	public mutable ClusteringThreshold    : double;
-	public mutable ColorWeight            : double;
-	public mutable DominantColorCount     : int;
-	public mutable DownloadImagePrefix    : string;
-	public mutable HashedImageBlur        : ImageHash.BlurMethod;
-	public mutable HashedImageBpp         : int;
-	public mutable HashedImageSize        : int;
-	public mutable HashMethod             : ImageHash.HashMethod;
-	public mutable ImageSampleSize        : int;
-	public mutable ImageSize              : int * int;
+	//----------------
+	// meta-parameters
+	//----------------
+
+	[ Parameter(ShortName = "ClThr", LongName = "clustering threshold") ]
+	public mutable ClusteringThreshold : double;
+
+	[ Parameter(ShortName = "ClrW", LongName = "color component weight") ]
+	public mutable ColorWeight : double;
+
+	[ Parameter(ShortName = "ClrN", LongName = "dominant color count") ]
+	public mutable DominantColorCount : int;
+
+	[ Parameter(ShortName = "ImgPre", LongName = "download image prefix") ]
+	public mutable DownloadImagePrefix : string;
+
+	[ Parameter(ShortName = "HshBlr", LongName = "hashed image blur") ]
+	public mutable HashedImageBlur : ImageHash.BlurMethod;
+
+	[ Parameter(ShortName = "HshBpp", LongName = "hashed image bpp") ]
+	public mutable HashedImageBpp : int;
+
+	[ Parameter(ShortName = "HshSz", LongName = "hashed image size") ]
+	public mutable HashedImageSize : int;
+
+	[ Parameter(ShortName = "Hsh", LongName = "hash method") ]
+	public mutable HashMethod : ImageHash.HashMethod;
+
+	[ Parameter(ShortName = "ImgSpl", LongName = "image sample size") ]
+	public mutable ImageSampleSize : int;
+
+	[ Parameter(ShortName = "ImgSz", LongName = "image size") ]
+	public mutable ImageSize : int * int;
+
+	[ Parameter(ShortName = "TlN", LongName = "simulated timeline count") ]
 	public mutable SimulatedTimelineCount : int;
 
-	public this()
+	//-----------------------
+	// implementation methods
+	//-----------------------
+
+	private SplitParameterLine(line : string) : string * string
 	{
-		def ParseBlurMethod(str : string) : ImageHash.BlurMethod
+		def i = line.IndexOf('=');
+		def name  = line.Substring(0, i).Trim();
+		def value = line.Substring(i + 1).Trim();
+		(name, value);
+	}
+
+	//--------
+	// parsing
+	//--------
+
+	private Parse(text : string, value : out double) : void
+	{
+		value = double.Parse(text);
+	}
+
+	private Parse(text : string, value : out int) : void
+	{
+		value = int.Parse(text);
+	}
+
+	private Parse(text : string, value : out ImageHash.BlurMethod) : void
+	{
+		value = match (text.SplitToList(' '))
 		{
-			match (str.SplitToList(' '))
-			{
-			| ["median", size] => ImageHash.BlurMethod.Median(int.Parse(size))
-			| ["gaussian", σ]  => ImageHash.BlurMethod.Gaussian(double.Parse(σ))
-			| _ => throw Exception($"Incorrect blur format: '$str'.")
-			}
+		| ["median", size] => ImageHash.BlurMethod.Median(int.Parse(size))
+		| ["gaussian", σ]  => ImageHash.BlurMethod.Gaussian(double.Parse(σ))
+		| _ => throw Exception($"Incorrect blur format: '$text'.")
 		}
-		def ParseHashMethod(str : string) : ImageHash.HashMethod
+	}
+
+	private Parse(text : string, value : out ImageHash.HashMethod) : void
+	{
+		value = match (text)
 		{
 		| "md5"  => ImageHash.HashMethod.MD5
 		| "mean" => ImageHash.HashMethod.Mean
-		| _ => throw Exception($"Incorrect hash method: '$str'.")
+		| _ => throw Exception($"Incorrect hash method: '$text'.")
 		}
-		def ParseSize(str : string) : int * int
+	}
+
+	private Parse(text : string, value : out int * int) : void
+	{
+		value = match (text.SplitToList(' '))
 		{
-			match (str.SplitToList(' '))
-			{
-			| [w, h] => (int.Parse(w), int.Parse(h))
-			| _ => throw Exception($"Incorrect size format: '$str'.")
-			}
+		| [w, h] => (int.Parse(w), int.Parse(h))
+		| _ => throw Exception($"Incorrect size format: '$text'.")
 		}
+	}
 
-		def map = Hashtable();
-		foreach (line in ReadAllLines("parameters.txt"))
-		{
-			def i = line.IndexOf('=');
-			def name  = line.Substring(0, i).Trim();
-			def value = line.Substring(i + 1).Trim();
-			map.Add(name, value);
-		}
-
-		ClusteringThreshold    = map["clustering threshold"]     |> double.Parse;
-		ColorWeight            = map["color component weight"]   |> double.Parse;
-		DominantColorCount     = map["dominant color count"]     |> int.Parse;
-		DownloadImagePrefix    = map["download image prefix"];
-		HashedImageBlur        = map["hashed image blur"]        |> ParseBlurMethod;
-		HashedImageBpp         = map["hashed image bpp"]         |> int.Parse;
-		HashedImageSize        = map["hashed image size"]        |> int.Parse;
-		HashMethod             = map["hash method"]              |> ParseHashMethod;
-		ImageSampleSize        = map["image sample size"]        |> int.Parse;
-		ImageSize              = map["image size"]               |> ParseSize;
-		SimulatedTimelineCount = map["simulated timeline count"] |> int.Parse;
-
-		when (ColorWeight < 0.0)
-			throw ArgumentException("Color component weight must be non-negative.");
-		when (DominantColorCount < 0)
-			throw ArgumentException("Dominant color count must be non-negative.");
-		when (HashedImageBpp < 0 || HashedImageBpp > 8)
-			throw ArgumentException("bpp must be between 0 and 8");
+	private Parse(text : string, value : out string) : void
+	{
+		value = text;
 	}
 }

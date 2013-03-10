@@ -1,0 +1,210 @@
+using Nemerle.Collections;
+using Nemerle.Compiler;
+using Nemerle.Compiler.Parsetree;
+using Nemerle.Macros;
+using System.IO;
+
+using PipelineMacro.Helper;
+
+namespace PipelineMacro
+{
+	[ Nemerle.MacroUsage
+		( Nemerle.MacroPhase.BeforeInheritance
+		, Nemerle.MacroTargets.Field
+		, Inherited     = false
+		, AllowMultiple = false
+		)
+	]
+	macro Parameter
+		( _            : TypeBuilder
+		, storageField : ParsedField
+		, params args  : list[PExpr]
+		)
+	{
+		mutable longName  = null;
+		mutable shortName = null;
+
+		foreach (arg in args)
+		{
+		| <[ LongName  = $(expr:string) ]> => longName  = expr;
+		| <[ ShortName = $(expr:string) ]> => shortName = expr;
+		| _ => Message.Error("$invalid argument: '$arg'");
+		}
+
+		mutable srcName = storageField.Name;
+
+		when (longName == null)
+			Message.Error($"missing 'LongName' for the $srcName parameter");
+		when (shortName == null)
+			Message.Error($"missing 'ShortName' for the $srcName parameter");
+
+		Parameters ::= ParameterInfo(srcName, longName, shortName);
+	}
+
+	[ Nemerle.MacroUsage
+		( Nemerle.MacroPhase.BeforeInheritance
+		, Nemerle.MacroTargets.Parameter
+		)
+	]
+	macro InItem
+		( builder   : TypeBuilder
+		, method    : ParsedMethod
+		, parameter : ParsedParameter
+		)
+	{
+		when (method.Name != "Compute")
+			Message.Error("InItem can only be used on task Compute parameters");
+		ItemArgs ::= ItemArgumentInfo(builder.Name, parameter.Name, true);
+	}
+
+	[ Nemerle.MacroUsage
+		( Nemerle.MacroPhase.BeforeInheritance
+		, Nemerle.MacroTargets.Parameter
+		)
+	]
+	macro OutItem
+		( builder   : TypeBuilder
+		, method    : ParsedMethod
+		, parameter : ParsedParameter
+		)
+	{
+		when (method.Name != "Compute")
+			Message.Error("InItem can only be used on task Compute parameters");
+		ItemArgs ::= ItemArgumentInfo(builder.Name, parameter.Name, false);
+	}
+
+	[ Nemerle.MacroUsage
+		( Nemerle.MacroPhase.BeforeTypedMembers
+		, Nemerle.MacroTargets.Assembly
+		)
+	]
+	macro PipelineSetup()
+	{
+		Setup(ImplicitCTX().Env);
+	}
+
+	[ Record ]
+	internal class ItemArgumentInfo
+	{
+		public TypeName : string;
+		public ArgName  : string;
+		public IsInput  : bool;
+	}
+
+	[ Record ]
+	internal class ParameterInfo
+	{
+		public SrcName   : string;
+		public LongName  : string;
+		public ShortName : string;
+	}
+
+	internal module Helper
+	{
+		public mutable Parameters : list[ParameterInfo]    = [];
+		public mutable ItemArgs   : list[ItemArgumentInfo] = [];
+
+		public Setup(env : GlobalEnv) : void
+		{
+			// create parameters constructor
+			match (env.LookupType(["Parameters"]))
+			{
+			| Some(ty is TypeBuilder) =>
+				ty.Define(CreateParametersLoader())
+			| _ =>
+				Message.Error("Parameters type not found")
+			}
+
+			// create task compute methods
+			match (env.LookupType(["ITask"]))
+			{
+			| Some(ty is TypeBuilder) =>
+				foreach (superTy in ty.GetAllSubTypes())
+				{
+					def members = superTy.ParsedDeclaration.GetMembers();
+					match (members.Filter(m => m.Name == "Compute"))
+					{
+					| [ f is ClassMember.Function ] => superTy.Define(CreateTaskCompute(superTy, f))
+					| [] => Message.Error
+						( superTy.Location
+						, $"missing Compute method in $(superTy.Name)"
+						)
+					| _  => Message.Error
+						( superTy.Location
+						, $"overloaded Compute method in $(superTy.Name)"
+						)
+					}
+				}
+			| _ =>
+				Message.Error("ITask type not found")
+			}
+		}
+
+		public CreateParametersLoader() : ClassMember
+		{
+			def CreateParameterInitializer(p)
+			{
+				// Parse(map["hashed image blur"], out HashedImageBlur);
+				<[ Parse(map[$(p.LongName:string)], out $(p.SrcName:dyn)) ]>
+			}
+			<[ decl:
+				public Load(path : string) : void
+				{
+					def map = Hashtable();
+					foreach (line in File.ReadAllLines(path))
+						map.Add(SplitParameterLine(line));
+
+					{ ..$(Parameters.Map(CreateParameterInitializer)) }
+				}
+			]>
+		}
+
+		public CreateTaskCompute
+			( ty : TypeBuilder
+			, f : ClassMember.Function
+			) : ClassMember
+		{
+			def AsParameterArg(p)
+			{
+				def ignoreCase = System.StringComparison.OrdinalIgnoreCase;
+				Parameters.Find(info => p.Name.Equals(info.SrcName, ignoreCase))
+			}
+			def AsItemArg(p)
+			{
+				ItemArgs.Find(info => ty.Name == info.TypeName && p.Name == info.ArgName)
+			}
+			def MapParameter(p)
+			{
+				match (AsParameterArg(p))
+				{
+				| Some(info) => <[ parameters.$(info.SrcName:dyn) ]>
+				| None =>
+					match (AsItemArg(p))
+					{
+					| Some(info) when info.IsInput =>
+						<[ { def head = inputs.Head; inputs = inputs.Tail; head :> $(p.Type) } ]>
+					| Some =>
+						<[ { def head = outputs.Head; outputs = outputs.Tail; head :> $(p.Type) } ]>
+					| None =>
+						Message.Error
+							( f.Location
+							, $"$(p.Name) is not marked as [InItem] or [OutItem] nor corresponds to a Parameters member"
+							);
+						<[ ]>
+					}
+				}
+			}
+			<[ decl:
+				public Compute
+					( mutable inputs  : list[ITaskItem]
+					, mutable outputs : list[ITaskItem]
+					, parameters : Parameters
+					) : void
+				{
+					_ = inputs; _ = outputs; _ = parameters;
+					Compute(..$(f.header.Parameters.Map(MapParameter)));
+				}
+			]>
+		}
+	}
+}

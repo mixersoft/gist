@@ -1,13 +1,12 @@
 using Nemerle.Collections;
 using Nemerle.Utility;
+using PipelineMacro;
 using Profiling;
 using System.IO;
 using System;
 
 public class EvaluateClustersTask: ITask
 {
-	public Name : string { get { "EvaluateClustersTask" } }
-
 	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
 	{
 		def clusters   = items.Filter(item => item.Path.StartsWith(@"clusters\"));
@@ -23,14 +22,7 @@ public class EvaluateClustersTask: ITask
 			{
 			| Some(reference is ClusterItem ) =>
 				def path = Path.Combine("eval", fileName);
-
-				def result = ClusterEvaluationItem(path);
-
-				mappings ::= TaskMapping
-					( inputs  = [ cluster, reference ]
-					, outputs = [ result ]
-					, compute = () => Compute(cluster, reference, result)
-					);
+				mappings ::= TaskMapping(this, [ cluster, reference ], [ ClusterEvaluationItem(path) ]);
 			| _ => ()
 			}
 		}
@@ -39,9 +31,9 @@ public class EvaluateClustersTask: ITask
 
 	[ Profile(Recursive) ]
 	private Compute
-		( autoClusters : ClusterItem
-		, refClusters  : ClusterItem
-		, result       : ClusterEvaluationItem
+		( [InItem]  autoClusters : ClusterItem
+		, [InItem]  refClusters  : ClusterItem
+		, [OutItem] result       : ClusterEvaluationItem
 		) : void
 	{
 		def MakeHash(c)

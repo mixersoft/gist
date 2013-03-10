@@ -1,24 +1,23 @@
 using Nemerle.Collections;
+using PipelineMacro;
 using System.IO;
 
 [ Record ]
 class LoadJsonDataTask : ITask
 {
-	public Name : string { get { "LoadJsonDataTask" } }
-
 	public directory : string;
 
 	public MapItems(_ : list[ITaskItem]) : list[TaskMapping]
 	{
 		def CreateTaskMapping(file)
 		{
-			TaskMapping
-				( inputs  = []
-				, outputs = [ JsonItem(file) ]
-				, compute = () => ()
-				);
+			TaskMapping(this, [], [ JsonItem(file) ]);
 		}
 		Directory.GetFiles(directory, "*.json")
 			.Map(CreateTaskMapping).NToList();
+	}
+
+	private Compute() : void
+	{
 	}
 }

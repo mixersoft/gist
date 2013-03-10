@@ -1,4 +1,5 @@
 using Nemerle.Collections;
+using PipelineMacro;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Drawing;
@@ -10,30 +11,23 @@ using System.Windows.Media.Imaging;
 using System.Windows.Media;
 using System;
 
-[ Record ]
 class EvaluateImageHashConsistencyTask : ITask
 {
-	private parameters : Parameters;
-
-	public Name : string { get { "EvaluateImageHashConsistencyTask" } }
-
 	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
 	{
 		def images = items
 			.TypedFind(item : ImageCollectionItem => item.Path == "image-sample")
 			.Value;
 		def evaluation = ImageHashConsistencyEvaluationItem(@"eval\hash consistency.txt");
-		[ TaskMapping
-			( inputs  = [ images ]
-			, outputs = [ evaluation ]
-			, compute = () => Compute(images, evaluation)
-			)
-		]
+		[ TaskMapping(this, [ images ], [ evaluation ]) ]
 	}
 
 	private Compute
-		( images     : ImageCollectionItem
-		, evaluation : ImageHashConsistencyEvaluationItem
+		( [InItem]  images     : ImageCollectionItem
+		, [OutItem] evaluation : ImageHashConsistencyEvaluationItem
+		, hashMethod      : ImageHash.HashMethod
+		, hashedImageSize : int
+		, hashedImageBpp  : int
 		) : void
 	{
 		def SubsampleHQ(src, dst, w, h)
@@ -47,7 +41,7 @@ class EvaluateImageHashConsistencyTask : ITask
 		def GetHashCode(path) : int
 		{
 			using (bmp = Bitmap(path))
-				ImageHash.GetHashCode(bmp, parameters);
+				ImageHash.GetHashCode(bmp, hashMethod, hashedImageSize, hashedImageBpp);
 		}
 		foreach (id in images.ImageIDs)
 		{

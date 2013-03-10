@@ -10,43 +10,47 @@
 
 	<ItemGroup>
 	<!-- source code -->
+		<ClusterUiSrc      Include="src\cluster-ui\*.n"      />
+		<DominantColorsSrc Include="src\dominant-colors\*.n" />
+		<PipelineMacroSrc  Include="src\pipeline-macro\*.n"  />
 		<PipelineSrc       Include="src\pipeline\*.n"        />
 		<PipelineSrc       Include="src\pipeline\items\*.n"  />
 		<PipelineSrc       Include="src\pipeline\tasks\*.n"  />
-		<ClusterUiSrc      Include="src\cluster-ui\*.n"      />
 		<PipelineTestSrc   Include="src\pipeline-test\*.n"   />
 		<PrettyPrintSrc    Include="src\pretty-print\*.n"    />
-		<DominantColorsSrc Include="src\dominant-colors\*.n" />
 	<!-- output -->
-		<PipelineBin       Include="bin\Pipeline.exe"       />
 		<ClusterUiBin      Include="bin\ClusterUI.exe"      />
+		<DominantColorsBin Include="bin\DominantColors.exe" />
+		<PipelineBin       Include="bin\Pipeline.exe"       />
+		<PipelineMacroBin  Include="bin\PipelineMacro.dll"  />
 		<PipelineTestBin   Include="bin\PipelineTest.dll"   />
 		<PrettyPrintBin    Include="bin\PrettyPrint.exe"    />
-		<DominantColorsBin Include="bin\DominantColors.exe" />
 		<Out Include="bin\" />
 	<!-- references -->
-		<PipelineRef     Include="System.Core.dll"          />
-		<PipelineRef     Include="System.Drawing.dll"       />
-		<PipelineRef     Include="System.Windows.Forms.dll" />
-		<PipelineRef     Include="PresentationCore"         />
-		<PipelineRef     Include="lib\ComputeGist.dll"      />
-		<PipelineRef     Include="lib\Emgu.CV.dll"          />
-		<PipelineRef     Include="lib\Emgu.Util.dll"        />
-		<PipelineRef     Include="lib\Newtonsoft.Json.dll"  />
-		<PipelineRef     Include="lib\Profiling.dll"        />
-		<ClusterUiRef         Include="System.Drawing.dll"       />
-		<ClusterUiRef         Include="System.Windows.Forms.dll" />
-		<ClusterUiRef         Include="lib\Newtonsoft.Json.dll"  />
-		<PipelineTestRef Include="System.Core"              />
-		<PipelineTestRef Include="lib\nunit.framework.dll"  />
-		<PipelineTestRef Include="@(PipelineBin)"      />
-		<PrettyPrintRef       Include="lib\Newtonsoft.Json.dll"  />
-		<DominantColorsRef    Include="System.Drawing.dll"       />
-		<DominantColorsRef    Include="System.Windows.Forms.dll" />
-		<DominantColorsRef    Include="lib\Emgu.CV.dll"          />
-		<DominantColorsRef    Include="lib\Emgu.CV.ML.dll"       />
-		<DominantColorsRef    Include="lib\Emgu.Util.dll"        />
-		<DominantColorsRef    Include="lib\Profiling.dll"        />
+		<ClusterUiRef      Include="System.Drawing.dll"       />
+		<ClusterUiRef      Include="System.Windows.Forms.dll" />
+		<ClusterUiRef      Include="lib\Newtonsoft.Json.dll"  />
+		<DominantColorsRef Include="System.Drawing.dll"       />
+		<DominantColorsRef Include="System.Windows.Forms.dll" />
+		<DominantColorsRef Include="lib\Emgu.CV.ML.dll"       />
+		<DominantColorsRef Include="lib\Emgu.CV.dll"          />
+		<DominantColorsRef Include="lib\Emgu.Util.dll"        />
+		<DominantColorsRef Include="lib\Profiling.dll"        />
+		<PipelineMacroRef  Include="Nemerle.Compiler.dll"     />
+		<PipelineRef       Include="PresentationCore"         />
+		<PipelineRef       Include="System.Core.dll"          />
+		<PipelineRef       Include="System.Drawing.dll"       />
+		<PipelineRef       Include="System.Windows.Forms.dll" />
+		<PipelineRef       Include="lib\ComputeGist.dll"      />
+		<PipelineRef       Include="lib\Emgu.CV.dll"          />
+		<PipelineRef       Include="lib\Emgu.Util.dll"        />
+		<PipelineRef       Include="lib\Newtonsoft.Json.dll"  />
+		<PipelineRef       Include="lib\Profiling.dll"        />
+		<PipelineRef       Include="@(PipelineMacroBin)"      />
+		<PipelineTestRef   Include="@(PipelineBin)"           />
+		<PipelineTestRef   Include="System.Core"              />
+		<PipelineTestRef   Include="lib\nunit.framework.dll"  />
+		<PrettyPrintRef    Include="lib\Newtonsoft.Json.dll"  />
 	<!-- dependencies -->
 		<Dependencies Include="lib\*" />
 		<Dependencies Include="..\common\ImageMagick\*">
@@ -67,9 +71,9 @@
 
 	<Target
 		Name             = "Pipeline"
-		Inputs           = "@(PipelineSrc)"
+		Inputs           = "@(PipelineSrc);@(PipelineMacroSrc)"
 		Outputs          = "@(PipelineBin)"
-		DependsOnTargets = "Dependencies"
+		DependsOnTargets = "Dependencies; PipelineMacro"
 		>
 		<ncc
 			DefineConstants      = "$(Defines)"
@@ -80,6 +84,23 @@
 			References           = "@(PipelineRef)"
 			Sources              = "@(PipelineSrc)"
 			TargetType           = "exe"
+			/>
+	</Target>
+
+	<Target
+		Name = "PipelineMacro"
+		Inputs = "@(PipelineMacroSrc)"
+		Outputs = "@(PipelineMacroBin)"
+		>
+		<ncc
+			DefineConstants      = "$(Defines)"
+			EmitDebugInformation = "true"
+			NoLogo               = "true"
+			OutputAssembly       = "@(PipelineMacroBin)"
+			Platform             = "x64"
+			References           = "@(PipelineMacroRef)"
+			Sources              = "@(PipelineMacroSrc)"
+			TargetType           = "library"
 			/>
 	</Target>
 

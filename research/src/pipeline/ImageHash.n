@@ -6,7 +6,7 @@ using System.Drawing;
 using System.Security.Cryptography;
 using System;
 
-module ImageHash
+public module ImageHash
 {
 	public variant BlurMethod
 	{
@@ -20,12 +20,17 @@ module ImageHash
 	| MD5
 	}
 
-	public GetHashCode(image : Bitmap, parameters : Parameters) : int
+	public GetHashCode
+		( image           : Bitmap
+		, hashMethod      : ImageHash.HashMethod
+		, hashedImageSize : int
+		, hashedImageBpp  : int
+		) : int
 	{
-		match (parameters.HashMethod)
+		match (hashMethod)
 		{
 		| Mean => GetMeanHashCode(image)
-		| MD5  => GetMD5HashCode(image, parameters.HashedImageSize, parameters.HashedImageBpp);
+		| MD5  => GetMD5HashCode(image, hashedImageSize, hashedImageBpp);
 		}
 	}
 

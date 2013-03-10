@@ -1,10 +1,8 @@
-using Emgu.CV.CvEnum;
-using Emgu.CV.Structure;
-using Emgu.CV;
 using Nemerle.Collections;
 using Nemerle.Text;
 using Nemerle.Utility;
 using Newtonsoft.Json.Linq;
+using PipelineMacro;
 using Profiling;
 using System.IO;
 using System.Math;
@@ -14,6 +12,7 @@ using System;
 using SCG = System.Collections.Generic;
 
 [assembly: ProfSetup(Disabled) ]
+[assembly: PipelineSetup ]
 
 variant RunMode
 {
@@ -34,45 +33,47 @@ module Main
 	private Run() : void
 	{
 		def parameters = Parameters();
+		parameters.Load("parameters.txt");
 		TaskManager
 			( tasks =
-				[ LoadJsonDataTask                 ("data")
-				, DownloadDataTask                 (parameters)
-				, CreateThumbnailsTask             ()
-				, ExtractDescriptorsTask           (parameters)
-				, CreateDescriptorsHtmlTask        (parameters)
-				, ClusterDataTask                  (parameters)
-				, CreateClusterHtmlTask            ()
-				, LoadReferenceClustersTask        ()
-				, EvaluateClustersTask             ()
+				[ LoadJsonDataTask("data")
+				, DownloadDataTask()
+				, CreateThumbnailsTask()
+				, ExtractDescriptorsTask()
+				, CreateDescriptorsHtmlTask()
+				, ClusterDataTask()
+				, CreateClusterHtmlTask()
+				, LoadReferenceClustersTask()
+				, EvaluateClustersTask()
 
-				, SampleImagesTask                 (parameters)
-				, ExtractHashTask                  (parameters)
-				, GroupShotsTask                   ()
-				, EvaluateImageHashUniquenessTask  (parameters)
-				, EvaluateImageHashConsistencyTask (parameters)
+				, SampleImagesTask()
+				, ExtractHashTask()
+				, GroupShotsTask()
+				, EvaluateImageHashUniquenessTask()
+				, EvaluateImageHashConsistencyTask()
 				
-				, SplitTimelineTask                (parameters, @"saturday.json")
-				, AlignTimelinesTask               ()
+				, SplitTimelineTask("saturday.json")
+				, AlignTimelinesTask()
 				]
 			, persistData     = true
 			, displayProgress = true
-			).Compute();
+			).Compute(parameters);
 		PrintProfileInfo();
 	}
 
 	private RunColorOptimization() : void
 	{
 		def parameters = Parameters();
+		parameters.Load("parameters.txt");
 
 		def taskManager = TaskManager
 			( tasks =
-				[ LoadJsonDataTask          ("data")
-				, DownloadDataTask          (parameters)
-				, ExtractDescriptorsTask    (parameters)
-				, ClusterDataTask           (parameters)
-				, LoadReferenceClustersTask ()
-				, EvaluateClustersTask      ()
+				[ LoadJsonDataTask("data")
+				, DownloadDataTask()
+				, ExtractDescriptorsTask()
+				, ClusterDataTask()
+				, LoadReferenceClustersTask()
+				, EvaluateClustersTask()
 				]
 			, persistData     = false
 			, displayProgress = false
@@ -99,7 +100,7 @@ module Main
 			parameters.ColorWeight         = LogRand(0.001, 1.0);
 
 			taskManager.DiscardItemData(@"descriptors\venice");
-			taskManager.Compute();
+			taskManager.Compute(parameters);
 
 			when (i % 10 == 0)
 				Console.WriteLine();
@@ -118,15 +119,16 @@ module Main
 	private RunThresholdOptimization(min : double, max : double, count : int) : void
 	{
 		def parameters = Parameters();
+		parameters.Load("parameters.txt");
 
 		def taskManager = TaskManager
 			( tasks =
-				[ LoadJsonDataTask          ("data")
-				, DownloadDataTask          (parameters)
-				, ExtractDescriptorsTask    (parameters)
-				, ClusterDataTask           (parameters)
-				, LoadReferenceClustersTask ()
-				, EvaluateClustersTask      ()
+				[ LoadJsonDataTask("data")
+				, DownloadDataTask()
+				, ExtractDescriptorsTask()
+				, ClusterDataTask()
+				, LoadReferenceClustersTask()
+				, EvaluateClustersTask()
 				]
 			, persistData     = false
 			, displayProgress = true
@@ -145,7 +147,7 @@ module Main
 			parameters.ClusteringThreshold = threshold;
 
 			taskManager.DiscardItemData(@"clusters\peter-alice.txt");
-			taskManager.Compute();
+			taskManager.Compute(parameters);
 
 			Console.WriteLine($"$threshold\t$(task.Value)");
 		}
@@ -161,15 +163,16 @@ module Main
 	private RunImageSizeOptimization() : void
 	{
 		def parameters = Parameters();
+		parameters.Load("parameters.txt");
 
 		def taskManager = TaskManager
 			( tasks =
-				[ LoadJsonDataTask          ("data")
-				, DownloadDataTask          (parameters)
-				, ExtractDescriptorsTask    (parameters)
-				, ClusterDataTask           (parameters)
-				, LoadReferenceClustersTask ()
-				, EvaluateClustersTask      ()
+				[ LoadJsonDataTask("data")
+				, DownloadDataTask()
+				, ExtractDescriptorsTask()
+				, ClusterDataTask()
+				, LoadReferenceClustersTask()
+				, EvaluateClustersTask()
 				]
 			, persistData     = false
 			, displayProgress = false
@@ -194,7 +197,7 @@ module Main
 				parameters.ClusteringThreshold = threshold;
 
 				taskManager.DiscardItemData($@"clusters\$dataSet.txt");
-				taskManager.Compute();
+				taskManager.Compute(parameters);
 
 				Console.WriteLine($"$(w)x$(h)\t$threshold\t$(task.Value)");
 			}
@@ -219,14 +222,15 @@ module Main
 		Console.WriteLine("Image hash optimization:");
 
 		def parameters = Parameters();
+		parameters.Load("parameters.txt");
 
 		def taskManager = TaskManager
 			( tasks =
-				[ LoadJsonDataTask                 ("data")
-				, DownloadDataTask                 (parameters)
-				, SampleImagesTask                 (parameters)
-				, EvaluateImageHashUniquenessTask  (parameters)
-				, EvaluateImageHashConsistencyTask (parameters)
+				[ LoadJsonDataTask("data")
+				, DownloadDataTask()
+				, SampleImagesTask()
+				, EvaluateImageHashUniquenessTask()
+				, EvaluateImageHashConsistencyTask()
 				]
 			, persistData     = false
 			, displayProgress = false
@@ -270,7 +274,7 @@ module Main
 
 				foreach (item in itemsToDiscard)
 					taskManager.DiscardItemData(item.Path);
-				taskManager.Compute();
+				taskManager.Compute(parameters);
 
 				def CountUnique(l)
 				{
@@ -325,7 +329,7 @@ module Main
 				parameters.ClusteringThreshold = threshold;
 
 				taskManager.DiscardItemData($@"clusters\$dataSet.txt");
-				taskManager.Compute();
+				taskManager.Compute(parameters);
 
 				Console.WriteLine($"$(w)x$(h)\t$threshold\t$(task.Value)");
 			}

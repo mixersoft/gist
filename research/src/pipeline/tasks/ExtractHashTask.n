@@ -1,35 +1,28 @@
 using Nemerle.Collections;
+using PipelineMacro;
 using System.Drawing;
 using System;
 
-[ Record ]
 class ExtractHashTask : ITask
 {
-	private parameters : Parameters;
-
-	public Name : string { get { "ExtractHashTask" } }
-
 	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
 	{
 		def imageSample = items.TypedFind(item : ImageCollectionItem => item.Path == "image-sample").Value;
-		def hashes = ImageHashItem(@"eval\hashes.txt");
-		[ TaskMapping
-			( inputs  = [ imageSample ]
-			, outputs = [ hashes ]
-			, compute = () => Compute(imageSample, hashes)
-			)
-		]
+		[ TaskMapping(this, [ imageSample ], [ ImageHashItem(@"eval\hashes.txt") ]) ]
 	}
 
 	private Compute
-		( imageSample : ImageCollectionItem
-		, hashes      : ImageHashItem
+		( [InItem]  imageSample : ImageCollectionItem
+		, [OutItem] hashes      : ImageHashItem
+		, hashMethod      : ImageHash.HashMethod
+		, hashedImageSize : int
+		, hashedImageBpp  : int
 		) : void
 	{
 		def Hash(id, map)
 		{
 			using (bmp = Bitmap(imageSample.MakePath(id)))
-				map.Add(id, ImageHash.GetHashCode(bmp, parameters));
+				map.Add(id, ImageHash.GetHashCode(bmp, hashMethod, hashedImageSize, hashedImageBpp));
 		}
 		hashes.ImageHashes = imageSample.ImageIDs.Fold(Map(), Hash);
 	}

@@ -1,29 +1,27 @@
 using Nemerle.Collections;
 using Nemerle.Utility;
+using PipelineMacro;
 using System.IO;
 using System;
 
 [ Record ]
 class AlignTimelinesTask : ITask
 {
-	public Name : string { get { "AlignTimelinesTask" } }
-
 	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
 	{
 		mutable mappings = [];
 		foreach (item is JsonItem when item.Path.StartsWith("simulation") in items)
 		{
-			def result = TimelineAlignmentItem(Path.Combine("timelines", Path.GetFileNameWithoutExtension(item.Path) + ".png"));
-			mappings ::= TaskMapping
-				( inputs  = [ item ]
-				, outputs = [ result ]
-				, compute = () => Compute(item, result)
-				);
+			def path = Path.Combine("timelines", Path.GetFileNameWithoutExtension(item.Path) + ".png");
+			mappings ::= TaskMapping(this, [ item ], [ TimelineAlignmentItem(path) ]);
 		}
 		mappings;
 	}
 
-	private Compute(json : JsonItem, timelineAlignments : TimelineAlignmentItem) : void
+	private Compute
+		( [InItem]  json               : JsonItem
+		, [OutItem] timelineAlignments : TimelineAlignmentItem
+		) : void
 	{
 		def random     = Random(0);
 		def eventCount = 5;

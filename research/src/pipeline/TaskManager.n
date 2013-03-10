@@ -61,7 +61,7 @@ public class TaskManager
 		toCompute = toCompute.Replace(name);
 	}
 
-	public Compute() : void
+	public Compute(parameters : Parameters) : void
 	{
 		def stopwatch = Diagnostics.Stopwatch();
 		def ToCompute(item) { toCompute.Contains(item.Path) }
@@ -88,7 +88,7 @@ public class TaskManager
 						Console.WriteLine($"..$(i.Map(_.Path)) -> ..$(o.Map(_.Path))");
 						stopwatch.Start();
 					}
-					mapping.Compute();
+					mapping.Task.Compute(mapping.Inputs, mapping.Outputs, parameters);
 					when (displayProgress)
 					{
 						Console.WriteLine(stopwatch.Elapsed);

@@ -80,7 +80,7 @@ public class PersistedTaskManagerTest
 	[ Test ]
 	public TestCompute() : void
 	{
-		taskManager.Compute();
+		taskManager.Compute(Parameters());
 
 		def items = taskManager.Items.Map(ToMockTaskItem).Sort((x, y) => x.CompareTo(y));
 

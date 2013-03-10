@@ -17,19 +17,18 @@ class MockTask : ITask
 		}
 		def CreateMapping(i, o)
 		{
-			def i = GetItemsByPath(i);
-			def o = GetItemsByPath(o);
-			TaskMapping
-				( inputs  = i
-				, outputs = o
-				, compute = () => Compute(o)
-				);
+			TaskMapping(this, GetItemsByPath(i), GetItemsByPath(o));
 		}
 		itemMap.Map(CreateMapping);
 	}
 
-	private Compute(outputs : list[ITaskItem]) : void
+	public Compute
+		( inputs     : list[ITaskItem]
+		, outputs    : list[ITaskItem]
+		, parameters : Parameters
+		) : void
 	{
+		_ = inputs; _ = parameters;
 		foreach (output is MockTaskItem in outputs)
 			output.Compute();
 	}

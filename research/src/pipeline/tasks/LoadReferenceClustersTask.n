@@ -1,20 +1,19 @@
 using Nemerle.Collections;
+using PipelineMacro;
 using System.IO;
 
 class LoadReferenceClustersTask : ITask
 {
-	public Name : string { get { "LoadReferenceClustersTask" } }
-
 	public MapItems(_ : list[ITaskItem]) : list[TaskMapping]
 	{
 		def MakeMapping(path)
 		{
-			TaskMapping
-				( inputs  = []
-				, outputs = [ ClusterItem(path) ]
-				, compute = () => ()
-				)
+			TaskMapping(this, [], [ ClusterItem(path) ]);
 		}
 		Directory.GetFiles("clusters-ref").MapToList(MakeMapping);
+	}
+
+	public Compute() : void
+	{
 	}
 }

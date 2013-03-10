@@ -1,13 +1,11 @@
+using PipelineMacro;
 using System.IO;
 using System;
 
 [ Record ]
 class SplitTimelineTask : ITask
 {
-	private parameters  : Parameters;
 	private datasetName : string;
-
-	public Name : string { get { "SplitTimelineTask" } }
 
 	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
 	{
@@ -15,15 +13,14 @@ class SplitTimelineTask : ITask
 
 		def item   = items.TypedFind(item : JsonItem => item.Path == path).Value;
 		def result = JsonItem(Path.Combine("simulation", Path.GetFileName(item.Path)));
-		[ TaskMapping
-			( inputs  = [ item ]
-			, outputs = [ result ]
-			, compute = () => Compute(item, result)
-			)
-		]
+		[ TaskMapping(this, [ item ], [ result ]) ]
 	}
 
-	public Compute(src : JsonItem, dst : JsonItem) : void
+	private Compute
+		( [InItem]  src : JsonItem
+		, [OutItem] dst : JsonItem
+		, simulatedTimelineCount : int
+		) : void
 	{
 		def random = Random(0);
 
@@ -33,7 +30,7 @@ class SplitTimelineTask : ITask
 				( id        = photo.ID
 				, rootSrc   = photo.RootSrc
 				, shotID    = photo.ShotID
-				, cameraID  = random.Next(parameters.SimulatedTimelineCount).ToString()
+				, cameraID  = random.Next(simulatedTimelineCount).ToString()
 				, dateTaken = photo.DateTaken
 				)
 		}

@@ -1,35 +1,30 @@
 using Nemerle.Collections;
 using Nemerle.Utility;
+using PipelineMacro;
 using System.IO;
 using System.Net;
 using System;
 
-[ Record ]
 class DownloadDataTask : ITask
 {
-	private parameters : Parameters;
-
-	public Name : string { get { "DownloadDataTask" } }
-
 	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
 	{
 		mutable mappings = [];
 		foreach (item is JsonItem when item.Path.StartsWith(@"data\") in items)
 		{
-			def result = ImageCollectionItem
-				(Path.Combine("images", Path.GetFileNameWithoutExtension(item.Path)));
-			mappings ::= TaskMapping
-				( inputs  = [ item ]
-				, outputs = [ result ]
-				, compute = () => Compute(item, result)
-				);
+			def path = Path.Combine("images", Path.GetFileNameWithoutExtension(item.Path));
+			mappings ::= TaskMapping(this, [ item ], [ ImageCollectionItem(path) ]);
 		}
 		mappings;
 	}
 
-	private Compute(jsonItem : JsonItem, images : ImageCollectionItem) : void
+	private Compute
+		( [InItem]  jsonItem : JsonItem
+		, [OutItem] images   : ImageCollectionItem
+		, downloadImagePrefix : string
+		) : void
 	{
-		def downloadPrefix = "/" + parameters.DownloadImagePrefix;
+		def downloadPrefix = "/" + downloadImagePrefix;
 
 		def client = WebClient();
 

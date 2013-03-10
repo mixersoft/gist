@@ -1,28 +1,25 @@
+using PipelineMacro;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
 
 class CreateThumbnailsTask : ITask
 {
-	public Name : string { get { "CreateThumbnailsTask" } }
-
 	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
 	{
 		mutable mappings = [];
 		foreach (item is ImageCollectionItem in items)
 		{
-			def result = ImageCollectionItem
-				(Path.Combine("thumbnails", Path.GetFileName(item.Path)));
-			mappings ::= TaskMapping
-				( inputs  = [ item ]
-				, outputs = [ result ]
-				, compute = () => Compute(item, result)
-				);
+			def path = Path.Combine("thumbnails", Path.GetFileName(item.Path));
+			mappings ::= TaskMapping(this, [ item ], [ ImageCollectionItem(path) ]);
 		}
 		mappings;
 	}
 
-	private Compute(images : ImageCollectionItem, thumbnails : ImageCollectionItem) : void
+	private Compute
+		( [InItem]  images     : ImageCollectionItem
+		, [OutItem] thumbnails : ImageCollectionItem
+		) : void
 	{
 		def height = 64;
 

@@ -3,47 +3,39 @@ using Emgu.CV.Structure;
 using Emgu.CV;
 using Nemerle.Collections;
 using Nemerle.Utility;
+using PipelineMacro;
 using Profiling;
 using System.IO;
 using System;
 
 using SCG = System.Collections.Generic;
 
-[ Record ]
 class ClusterDataTask : ITask
 {
-	private parameters : Parameters;
-
-	public Name : string { get { "ClusterDataTask" } }
-
 	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
 	{
 		mutable mappings = [];
 		foreach (item is DescriptorItem in items)
 		{
 			def path = Path.Combine("clusters", Path.GetFileName(item.Path) + ".txt");
-
-			def result = ClusterItem(path);
-
-			mappings ::= TaskMapping
-				( inputs  = [ item ]
-				, outputs = [ result ]
-				, compute = () => Compute(item, result)
-				);
+			mappings ::= TaskMapping(this, [ item ], [ ClusterItem(path) ]);
 		}
 		mappings;
 	}
 
 	// QT clustering algorithm
 	[ Profile(Recursive) ]
-	private Compute(descriptors : DescriptorItem, result : ClusterItem) : void
+	private Compute
+		( [InItem]  descriptors : DescriptorItem
+		, [OutItem] result      : ClusterItem
+		, clusteringThreshold   : double
+		) : void
 	{
 		def Cluster(descriptors) : array[array[string]]
 		{
 			def CreateThresholdMap()
 			{
-				def threshold = parameters.ClusteringThreshold;
-				def sqThreshold = threshold * threshold;
+				def sqThreshold = clusteringThreshold * clusteringThreshold;
 
 				def map = array(descriptors.Length, descriptors.Length);
 				for (mutable i = 0; i != descriptors.Length; ++i)

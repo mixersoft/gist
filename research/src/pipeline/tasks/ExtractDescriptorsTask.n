@@ -3,6 +3,7 @@ using Emgu.CV.Structure;
 using Emgu.CV;
 using Nemerle.Collections;
 using Nemerle.Utility;
+using PipelineMacro;
 using Profiling;
 using System.IO;
 using System;
@@ -10,33 +11,28 @@ using System;
 [ Record ]
 class ExtractDescriptorsTask : ITask
 {
-	private parameters : Parameters;
-
-	public Name : string { get { "ExtractDescriptorsTask" } }
-
 	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
 	{
 		mutable mappings = [];
 		foreach (item is ImageCollectionItem when item.Path.StartsWith(@"images\") in items)
 		{
 			def path = Path.Combine("descriptors", Path.GetFileName(item.Path));
-
-			def result = DescriptorItem(path);
-
-			mappings ::= TaskMapping
-				( inputs  = [ item ]
-				, outputs = [ result ]
-				, compute = () => Compute(item, result)
-				);
+			mappings ::= TaskMapping(this, [ item ], [ DescriptorItem(path) ]);
 		}
 		mappings;
 	}
 
 	[ Profile(Recursive) ]
-	private Compute(images : ImageCollectionItem, result : DescriptorItem) : void
+	private Compute
+		( [InItem]  images : ImageCollectionItem
+		, [OutItem] result : DescriptorItem
+		, imageSize          : int * int
+		, dominantColorCount : int
+		, colorWeight        : double
+		) : void
 	{
 		def ExtractDescriptor =
-			match (parameters.ImageSize)
+			match (imageSize)
 			{
 			| (0, 0) =>
 				fun (path)
@@ -56,13 +52,13 @@ class ExtractDescriptorsTask : ITask
 		{
 			def path   = images.MakePath(id);
 			def gist   = ExtractDescriptor(path);
-			def colors = GetDominantColors(path, parameters.DominantColorCount, 4);
+			def colors = GetDominantColors(path, dominantColorCount, 4);
 
 			def descriptor = array(gist.Length + colors.Length);
 			for (mutable i = 0; i != gist.Length; ++i)
 				descriptor[i] = gist[i] :> double;
 			for (mutable i = 0; i != colors.Length; ++i)
-				descriptor[gist.Length + i] = parameters.ColorWeight * colors[i] :> double;
+				descriptor[gist.Length + i] = colorWeight * colors[i] :> double;
 
 			DescriptorItem.Descriptor(id, descriptor);
 		}

@@ -47,7 +47,7 @@ public class MiscTaskManagerTest
 			, displayProgress = false
 			);
 
-		taskManager.Compute();
+		taskManager.Compute(Parameters());
 
 		CollectionAssert.AreEqual
 			( expected = [ false, false, false ]

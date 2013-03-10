@@ -1,14 +1,10 @@
 using Nemerle.Collections;
+using PipelineMacro;
 using System.Drawing;
 using System.IO;
 
-[ Record ]
 class EvaluateImageHashUniquenessTask : ITask
 {
-	private parameters : Parameters;
-
-	public Name : string { get { "EvaluateImageHashUniquenessTask" } }
-
 	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
 	{
 		mutable images     = [];
@@ -27,20 +23,20 @@ class EvaluateImageHashUniquenessTask : ITask
 		foreach ((name, image) in images)
 		{
 			def thumbnail = thumbnails.Find(x => x[0] == name).Value[1];
-			def result = ImageHashUniquenessEvaluationItem(Path.Combine("eval",  $"$name hash uniqueness.html"));
-			mappings ::= TaskMapping
-				( inputs  = [ image, thumbnail ]
-				, outputs = [ result ]
-				, compute = () => Compute(image, thumbnail, result)
-				);
+			def path = Path.Combine("eval",  $"$name hash uniqueness.html");
+			def result = ImageHashUniquenessEvaluationItem(path);
+			mappings ::= TaskMapping(this, [ image, thumbnail ], [ result ]);
 		}
 		mappings;
 	}
 
 	private Compute
-		( thumbnails : ImageCollectionItem
-		, images     : ImageCollectionItem
-		, evaluation : ImageHashUniquenessEvaluationItem
+		( [InItem]  thumbnails : ImageCollectionItem
+		, [InItem]  images     : ImageCollectionItem
+		, [OutItem] evaluation : ImageHashUniquenessEvaluationItem
+		, hashMethod      : ImageHash.HashMethod
+		, hashedImageSize : int
+		, hashedImageBpp  : int
 		) : void
 	{
 		def map = Hashtable();
@@ -48,7 +44,7 @@ class EvaluateImageHashUniquenessTask : ITask
 		{
 			def hash =
 				using (bmp = Bitmap(images.MakePath(id)))
-					ImageHash.GetHashCode(bmp, parameters);
+					ImageHash.GetHashCode(bmp, hashMethod, hashedImageSize, hashedImageBpp);
 			map[hash] = id :: map.GetValueOrDefault(hash);
 		}
 		evaluation.Conflicts = map.MapToArrayFiltered

@@ -92,7 +92,7 @@ public class UnpersistedTaskManagerTest
 	[ Test ]
 	public TestCompute() : void
 	{
-		taskManager.Compute();
+		taskManager.Compute(Parameters());
 
 		def items = taskManager.Items.Map(ToMockTaskItem).Sort((x, y) => x.CompareTo(y));
 
@@ -126,6 +126,8 @@ public class UnpersistedTaskManagerTest
 			items.Iter(_.Reset());
 		}
 
+		def parameters = Parameters();
+
 		def values =
 			[ ("item-1", [ 1, 0, 1, 1, 1 ])
 			, ("item-2", [ 0, 1, 1, 1, 1 ])
@@ -136,12 +138,12 @@ public class UnpersistedTaskManagerTest
 
 		foreach ((discarded, expected) in values)
 		{
-			taskManager.Compute();
+			taskManager.Compute(parameters);
 
 			ResetItemData();
 			taskManager.DiscardItemData(discarded);
 
-			taskManager.Compute();
+			taskManager.Compute(parameters);
 
 			foreach (count in expected with i)
 			{

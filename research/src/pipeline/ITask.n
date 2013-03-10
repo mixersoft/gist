@@ -1,6 +1,15 @@
 public interface ITask
 {
-	Name : string { get }
-
+	// map a subset of given items to a set of new items
 	MapItems(items : list[ITaskItem]) : list[TaskMapping];
+
+	// automatically generated
+	// instead, implement a private Compute method with ITaskItem subclass
+	// arguments marked with [InItem] and [OutItem] and arguments matching
+	// Parameters member names, possibly in different letter case
+	Compute
+		( inputs     : list[ITaskItem]
+		, outputs    : list[ITaskItem]
+		, parameters : Parameters
+		) : void;
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 [ Record ]
 public class TaskMapping
 {
+	public Task    : ITask;
 	public Inputs  : list[ITaskItem];
 	public Outputs : list[ITaskItem];
-	public Compute : void -> void;
 }

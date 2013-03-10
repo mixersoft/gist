@@ -1,35 +1,30 @@
 using Nemerle.Collections;
+using PipelineMacro;
 using System.IO;
 using System;
 
-[ Record ]
 class SampleImagesTask : ITask
 {
-	private parameters : Parameters;
-
-	public Name : string { get { "SampleImagesTask" } }
-
 	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
 	{
 		mutable images = [];
 		foreach (item is ImageCollectionItem when item.Path.StartsWith(@"images\") in items)
 			images ::= item;
 		def sample = ImageCollectionItem("image-sample");
-		[ TaskMapping
-			( inputs  = images.Map(_ : ITaskItem)
-			, outputs = [ sample ]
-			, compute = () => Compute(images, sample)
-			)
-		];
+		[ TaskMapping(this, images.Map(_ : ITaskItem), [ sample ]) ];
 	}
 
-	private Compute(images : list[ImageCollectionItem], sample : ImageCollectionItem) : void
+	private Compute
+		( [InItem]  images : list[ImageCollectionItem]
+		, [OutItem] sample : ImageCollectionItem
+		, imageSampleSize : int
+		) : void
 	{
 		def random = Random(0);
 
 		def n = images.Fold(0, (item, sum) => sum + item.ImageIDs.Length);
 		mutable indices = Set();
-		while (indices.Count < parameters.ImageSampleSize)
+		while (indices.Count < imageSampleSize)
 		{
 			def index = random.Next(n);
 			unless (indices.Contains(index))
