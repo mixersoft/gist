@@ -1,11 +1,12 @@
+clustering threshold = 0.540193980531857
 color component weight = 0.00153788994898586
 dominant color count = 2
 download image prefix = 
-image size = 120 120
-clustering threshold = 0.540193980531857
-image sample size = 10
+hash method = md5
+hashed image blur = gaussian 1
 hashed image bpp = 2
 hashed image size = 8
-hashed image blur = gaussian 1
-hash method = md5
+image sample size = 10
+image size = 120 120
+kde window = 0.05
 simulated timeline count = 10

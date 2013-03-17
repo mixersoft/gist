@@ -41,6 +41,9 @@ public class Parameters
 	[ Parameter(LongName = "image size") ]
 	public mutable ImageSize : int * int;
 
+	[ Parameter(LongName = "kde window") ]
+	public mutable KdeWindow : double;
+
 	[ Parameter(LongName = "simulated timeline count") ]
 	public mutable SimulatedTimelineCount : int;
 

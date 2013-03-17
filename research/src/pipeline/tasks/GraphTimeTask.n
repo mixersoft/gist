@@ -17,10 +17,50 @@ class GraphTimeTask : ITask
 	private Compute
 		( [InItem]  json  : JsonItem
 		, [OutItem] graph : TimeGraphItem
+		, kdeWindow : double
 		) : void
 	{
 		def (w, h, y) = (512, 96, 64);
 
+		def DrawDistribution(bmp, times)
+		{
+			def hFactor = 1.0 / (kdeWindow * kdeWindow);
+			def cols = array(w);
+			mutable max = 0.0;
+			for (mutable i = 0; i != w; ++i)
+			{
+				def x = (i :> double) / w;
+				foreach (t in times)
+				{
+					def w = hFactor * (x - t) * (x - t);
+					when (w <= 1.0)
+						cols[i] += 1.0 - w;
+				}
+				when (cols[i] > max)
+					max = cols[i];
+			}
+			when (max > 0.0)
+			{
+				def foreColor = Color.FromArgb(255, 51, 0);
+				def backColor = Color.White;
+				for (mutable pixelX = 0; pixelX != w; ++pixelX)
+				{
+					def value = (y - 1) * cols[pixelX] / max;
+					def h = y - Math.Floor(value) :> int;
+					for (mutable pixelY = h; pixelY != y; ++pixelY)
+						bmp.SetPixel(pixelX, pixelY, foreColor);
+					// antialiasing
+					def δ = value - Math.Floor(value);
+					def color = Color.FromArgb
+						( red   = (δ * foreColor.R + (1.0 - δ) * backColor.R) :> int
+						, green = (δ * foreColor.G + (1.0 - δ) * backColor.G) :> int
+						, blue  = (δ * foreColor.B + (1.0 - δ) * backColor.B) :> int
+						);
+					when (δ > 0.0)
+						bmp.SetPixel(pixelX, h - 1, color);
+				}
+			}
+		}
 		def DrawTicks(gfx, times, r)
 		{
 			def brush = Brushes.Black;
@@ -95,6 +135,8 @@ class GraphTimeTask : ITask
 			gfx.SmoothingMode = SmoothingMode.HighQuality;
 
 			gfx.Clear(Color.White);
+
+			DrawDistribution(graph.Image, times);
 
 			DrawGrid(gfx, minDate, maxDate);
 
