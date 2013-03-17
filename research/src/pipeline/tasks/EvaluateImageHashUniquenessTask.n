@@ -1,5 +1,6 @@
 using Nemerle.Collections;
 using PipelineMacro;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 
@@ -7,32 +8,26 @@ class EvaluateImageHashUniquenessTask : ITask
 {
 	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
 	{
-		mutable images     = [];
-		mutable thumbnails = [];
-		foreach (item is ImageCollectionItem in items)
-		{
-			def name = Path.GetFileName(item.Path);
-			match (Path.GetDirectoryName(item.Path))
-			{
-			| "images"     => images     ::= (name, item)
-			| "thumbnails" => thumbnails ::= (name, item)
-			| _            => ()
-			}
-		}
+		def thumbnails = Dictionary();
+		foreach (item is ThumbnailCollectionItem in items)
+			thumbnails[item.Name] = item;
+
+		// pair up images and thumbnails
 		mutable mappings = [];
-		foreach ((name, image) in images)
+		foreach (item is ImageCollectionItem when thumbnails.ContainsKey(item.Name) in items)
 		{
-			def thumbnail = thumbnails.Find(x => x[0] == name).Value[1];
-			def path = Path.Combine("eval",  $"$name hash uniqueness.html");
-			def result = ImageHashUniquenessEvaluationItem(path);
-			mappings ::= TaskMapping(this, [ image, thumbnail ], [ result ]);
+			mappings ::= TaskMapping
+				( this
+				, [ item, thumbnails[item.Name] ]
+				, [ ImageHashUniquenessEvaluationItem(item.Name) ]
+				);
 		}
 		mappings;
 	}
 
 	private Compute
-		( [InItem]  thumbnails : ImageCollectionItem
-		, [InItem]  images     : ImageCollectionItem
+		( [InItem]  images     : ImageCollectionItem
+		, [InItem]  thumbnails : ThumbnailCollectionItem
 		, [OutItem] evaluation : ImageHashUniquenessEvaluationItem
 		, hashMethod      : ImageHash.HashMethod
 		, hashedImageSize : int

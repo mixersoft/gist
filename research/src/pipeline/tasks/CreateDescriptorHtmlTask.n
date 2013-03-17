@@ -7,25 +7,19 @@ using PipelineMacro;
 using System.IO;
 using System.Text;
 
-class CreateDescriptorsHtmlTask : ITask
+class CreateDescriptorHtmlTask : ITask
 {
 	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
 	{
 		mutable mappings = [];
-		foreach (item is DescriptorItem when item.Path.StartsWith(@"descriptors\") in items)
-		{
-			def path = Path.Combine
-				( "descriptors-html"
-				, Path.GetFileNameWithoutExtension(item.Path) + ".html"
-				);
-			mappings ::= TaskMapping(this, [ item ], [ DescriptorsHtmlItem(path) ]);
-		}
+		foreach (item is DescriptorItem in items)
+			mappings ::= TaskMapping(this, [ item ], [ DescriptorHtmlItem(item.Name) ]);
 		mappings;
 	}
 
 	private Compute
 		( [InItem]  descriptors : DescriptorItem
-		, [OutItem] html        : DescriptorsHtmlItem
+		, [OutItem] html        : DescriptorHtmlItem
 		, dominantColorCount : int
 		, colorWeight        : double
 		) : void

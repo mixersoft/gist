@@ -1,8 +1,23 @@
+/// <summary>
+/// Base interface for the task items. A task item the basic unit of data in the
+/// pipeline. Make sure that every class implementing this interface has a
+/// TaskItemInfo attribute from the PipelineMacro namespace. This attribute
+/// takes one parameter that can be either File(extension), where extension is a
+/// string with a leading period, or Directory. An implementing class need only
+/// define Save and Load members; the rest is generated automatically.
+/// </summary>
 public interface ITaskItem
 {
-	Path : string { get };
+	// a constructor taking a name and storing it in this property is
+	// generated automatically
+	Name : string { get }
 
+	// set automatically based on the name, TaskItemInfo, and class name
+	Path : string { get }
+
+	// automatically generated
 	HasCache() : bool;
-	Save()     : void;
-	Load()     : void;
+
+	Save(path : string) : void;
+	Load(path : string) : void;
 }

@@ -1,7 +1,8 @@
 using Nemerle.Collections;
-using Nemerle.Utility;
+using PipelineMacro;
 using System.IO;
 
+[ TaskItemInfo(Directory) ]
 public class DescriptorItem : ITaskItem
 {
 	[ Record ]
@@ -11,26 +12,14 @@ public class DescriptorItem : ITaskItem
 		public Data : array[double];
 	}
 
-	[ Accessor ] private path : string;
-
 	public mutable Descriptors : array[Descriptor];
-
-	public this(path : string)
-	{
-		this.path = path;
-	}
 
 	public MakePath(id : string) : string
 	{
 		Path.Combine(path, id + ".txt")
 	}
 
-	public HasCache() : bool
-	{
-		Directory.Exists(path);
-	}
-
-	public Save() : void
+	public Save(path : string) : void
 	{
 		_ = Directory.CreateDirectory("descriptors");
 		_ = Directory.CreateDirectory(path);
@@ -43,7 +32,7 @@ public class DescriptorItem : ITaskItem
 		}
 	}
 
-	public Load() : void
+	public Load(path : string) : void
 	{
 		def MakeDescriptor(path)
 		{

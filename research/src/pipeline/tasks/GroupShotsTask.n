@@ -11,17 +11,13 @@ class GroupShotsTask : ITask
 	{
 		mutable mappings = [];
 		foreach (item is JsonItem in items)
-		{
-			def path = Path.Combine
-				("shot-groups", Path.GetFileNameWithoutExtension(item.Path) + ".txt");
-			mappings ::= TaskMapping(this, [ item ], [ ClusterItem(path) ]);
-		}
+			mappings ::= TaskMapping(this, [ item ], [ ShotClusterItem(item.Name) ]);
 		mappings;
 	}
 
 	private Compute
 		( [InItem]  jsonItem    : JsonItem
-		, [OutItem] clusterItem : ClusterItem
+		, [OutItem] clusterItem : ShotClusterItem
 		) : void
 	{
 		mutable id = 0;
@@ -29,7 +25,7 @@ class GroupShotsTask : ITask
 		{
 		| _ when photo.ShotID == "" =>
 			++id;
-			JsonItem.PhotoInfo
+			JsonIO.PhotoInfo
 				( id        = photo.ID
 				, rootSrc   = photo.RootSrc
 				, shotID    = id + "-unique"

@@ -1,155 +1,22 @@
-using Nemerle.Collections;
-using Nemerle.Utility;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using PipelineMacro;
 using System.IO;
 using System;
 
+[ TaskItemInfo(File(".json")) ]
 public class JsonItem : ITaskItem
 {
-	public class PhotoInfo
-	{
-		public ID        : string;
-		public RootSrc   : string;
-		public ShotID    : string;
-		public CameraID  : string;
-		public DateTaken : DateTime;
 
-		public this
-			( id        : string
-			, rootSrc   : string
-			, shotID    : string
-			, cameraID  : string
-			, dateTaken : DateTime
-			)
-		{
-			ID        = id;
-			RootSrc   = rootSrc;
-			ShotID    = shotID;
-			CameraID  = cameraID;
-			DateTaken = dateTaken;
-		}
-	}
-
-	[ Accessor ] private path : string;
-
-	public mutable Photos  : list[PhotoInfo];
+	public mutable Photos  : list[JsonIO.PhotoInfo];
 	public mutable BaseUrl : string;
 
-	public this(path : string)
-	{
-		this.path = path;
-	}
-
-	public HasCache() : bool
-	{
-		File.Exists(path);
-	}
-
-	public Save() : void
+	public Save(path : string) : void
 	{
 		_ = Directory.CreateDirectory(Path.GetDirectoryName(path));
-
-		using (writer = JsonTextWriter(File.CreateText(path)))
-		{
-			writer.Formatting  = Formatting.Indented;
-			writer.Indentation = 1;
-			writer.IndentChar  = '\t';
-
-			writer.WriteStartObject();
-			{
-				writer.WritePropertyName("response");
-				writer.WriteStartObject();
-				{
-					writer.WritePropertyName("castingCall");
-					writer.WriteStartObject();
-					{
-						writer.WritePropertyName("CastingCall");
-						writer.WriteStartObject();
-						{
-							writer.WritePropertyName("Auditions");
-							writer.WriteStartObject();
-							{
-								writer.WritePropertyName("Audition");
-								writer.WriteStartArray();
-								foreach (photo in Photos)
-								{
-									writer.WriteStartObject();
-
-									writer.WritePropertyName("id");
-									writer.WriteValue(photo.ID);
-
-									writer.WritePropertyName("Photo");
-									writer.WriteStartObject();
-									{
-										writer.WritePropertyName("Img");
-										writer.WriteStartObject();
-										{
-											writer.WritePropertyName("Src");
-											writer.WriteStartObject();
-											{
-												writer.WritePropertyName("rootSrc");
-												writer.WriteValue(photo.RootSrc);
-											}
-											writer.WriteEndObject();
-										}
-										writer.WriteEndObject();
-
-										writer.WritePropertyName("CameraId");
-										writer.WriteValue(photo.CameraID);
-
-										writer.WritePropertyName("DateTaken");
-										writer.WriteValue(photo.DateTaken.ToString("yyyy-MM-dd HH:mm:ss"));
-									}
-									writer.WriteEndObject();
-
-									writer.WritePropertyName("Shot");
-									writer.WriteStartObject();
-									{
-										writer.WritePropertyName("id");
-										writer.WriteValue(photo.ShotID);
-									}
-									writer.WriteEndObject();
-
-									writer.WriteEndObject();
-								}
-								writer.WriteEnd();
-
-								writer.WritePropertyName("BaseUrl");
-								writer.WriteValue(BaseUrl);
-							}
-							writer.WriteEndObject();
-						}
-						writer.WriteEndObject();
-					}
-					writer.WriteEndObject();
-				}
-				writer.WriteEndObject();
-			}
-			writer.WriteEndObject();
-		}
+		JsonIO.Save(path, Photos, BaseUrl);
 	}
 
-	public Load() : void
+	public Load(path : string) : void
 	{
-		def data = JObject.Parse(File.ReadAllText(path));
-
-		def castingCall = data["response"]["castingCall"];
-
-		BaseUrl = "http://dev.snaphappi.com" + castingCall["CastingCall"]["Auditions"]["Baseurl"];
-
-		def GetPhotoInfo(record)
-		{
-			PhotoInfo
-				( id        = record["id"] :> string
-				, rootSrc   = record["Photo"]["Img"]["Src"]["rootSrc"] :> string
-				, shotID    = record["Shot"]["id"] :> string
-				, cameraID  = record["Photo"]["CameraId"] :> string
-				, dateTaken = DateTime.Parse(record["Photo"]["DateTaken"] :> string)
-				)
-		}
-		Photos = castingCall["CastingCall"]["Auditions"]["Audition"]
-			.Children()
-			.MapToList(GetPhotoInfo);
+		(Photos, BaseUrl) = JsonIO.Load(path);
 	}
 }

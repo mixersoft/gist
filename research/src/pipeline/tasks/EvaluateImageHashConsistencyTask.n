@@ -15,15 +15,14 @@ class EvaluateImageHashConsistencyTask : ITask
 {
 	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
 	{
-		def images = items
-			.TypedFind(item : ImageCollectionItem => item.Path == "image-sample")
-			.Value;
-		def evaluation = ImageHashConsistencyEvaluationItem(@"eval\hash consistency.txt");
-		[ TaskMapping(this, [ images ], [ evaluation ]) ]
+		mutable mappings = [];
+		foreach (item is SampleImageCollectionItem in items)
+			mappings ::= TaskMapping(this, [ item ], [ ImageHashConsistencyEvaluationItem(item.Name) ]);
+		mappings;
 	}
 
 	private Compute
-		( [InItem]  images     : ImageCollectionItem
+		( [InItem]  images     : SampleImageCollectionItem
 		, [OutItem] evaluation : ImageHashConsistencyEvaluationItem
 		, hashMethod      : ImageHash.HashMethod
 		, hashedImageSize : int

@@ -34,13 +34,13 @@ module Main
 	{
 		def parameters = Parameters();
 		parameters.Load("parameters.txt");
-		TaskManager
+		_ = TaskManager
 			( tasks =
-				[ LoadJsonDataTask("data")
+				[ LoadJsonDataTask()
 				, DownloadDataTask()
 				, CreateThumbnailsTask()
 				, ExtractDescriptorsTask()
-				, CreateDescriptorsHtmlTask()
+				, CreateDescriptorHtmlTask()
 				, ClusterDataTask()
 				, CreateClusterHtmlTask()
 				, LoadReferenceClustersTask()
@@ -52,7 +52,7 @@ module Main
 				, EvaluateImageHashUniquenessTask()
 				, EvaluateImageHashConsistencyTask()
 				
-				, SplitTimelineTask("saturday.json")
+				, SplitTimelineTask()
 				, AlignTimelinesTask()
 				]
 			, persistData     = true
@@ -68,7 +68,7 @@ module Main
 
 		def taskManager = TaskManager
 			( tasks =
-				[ LoadJsonDataTask("data")
+				[ LoadJsonDataTask()
 				, DownloadDataTask()
 				, ExtractDescriptorsTask()
 				, ClusterDataTask()
@@ -123,7 +123,7 @@ module Main
 
 		def taskManager = TaskManager
 			( tasks =
-				[ LoadJsonDataTask("data")
+				[ LoadJsonDataTask()
 				, DownloadDataTask()
 				, ExtractDescriptorsTask()
 				, ClusterDataTask()
@@ -167,7 +167,7 @@ module Main
 
 		def taskManager = TaskManager
 			( tasks =
-				[ LoadJsonDataTask("data")
+				[ LoadJsonDataTask()
 				, DownloadDataTask()
 				, ExtractDescriptorsTask()
 				, ClusterDataTask()
@@ -226,7 +226,7 @@ module Main
 
 		def taskManager = TaskManager
 			( tasks =
-				[ LoadJsonDataTask("data")
+				[ LoadJsonDataTask()
 				, DownloadDataTask()
 				, SampleImagesTask()
 				, EvaluateImageHashUniquenessTask()

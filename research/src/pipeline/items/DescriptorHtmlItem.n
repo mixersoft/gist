@@ -1,0 +1,24 @@
+using PipelineMacro;
+using System.IO;
+using System;
+
+[ TaskItemInfo(File(".html")) ]
+public class DescriptorHtmlItem : ITaskItem
+{
+	public mutable Text : string;
+
+	public Save(path : string) : void
+	{
+		_ = Directory.CreateDirectory(Path.GetDirectoryName(path));
+
+		File.WriteAllText
+			( path     = path
+			, contents = Text
+			);
+	}
+
+	public Load(_ : string) : void
+	{
+		throw NotImplementedException();
+	}
+}

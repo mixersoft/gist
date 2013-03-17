@@ -80,7 +80,7 @@ public class TaskManager
 							when (displayProgress)
 								Console.WriteLine($"Load $(item.Path)");
 							loaded = loaded.Add(item.Path);
-							item.Load();
+							item.Load(item.Path);
 						}
 					}
 					when (displayProgress)
@@ -100,7 +100,7 @@ public class TaskManager
 						{
 							when (displayProgress)
 								Console.WriteLine($"Save $(item.Path)");
-							item.Save();
+							item.Save(item.Path);
 						}
 					}
 					toCompute = toCompute.ReplaceList(o.Map(_.Path));

@@ -10,11 +10,8 @@ class DownloadDataTask : ITask
 	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
 	{
 		mutable mappings = [];
-		foreach (item is JsonItem when item.Path.StartsWith(@"data\") in items)
-		{
-			def path = Path.Combine("images", Path.GetFileNameWithoutExtension(item.Path));
-			mappings ::= TaskMapping(this, [ item ], [ ImageCollectionItem(path) ]);
-		}
+		foreach (item is JsonItem in items)
+			mappings ::= TaskMapping(this, [ item ], [ ImageCollectionItem(item.Name) ]);
 		mappings;
 	}
 

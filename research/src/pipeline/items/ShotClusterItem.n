@@ -2,7 +2,7 @@ using PipelineMacro;
 using System.IO;
 
 [ TaskItemInfo(File(".txt")) ]
-public class ClusterItem : ITaskItem
+public class ShotClusterItem : ITaskItem
 {
 	public mutable Clusters : array[array[string]];
 

@@ -10,11 +10,8 @@ class AlignTimelinesTask : ITask
 	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
 	{
 		mutable mappings = [];
-		foreach (item is JsonItem when item.Path.StartsWith("simulation") in items)
-		{
-			def path = Path.Combine("timelines", Path.GetFileNameWithoutExtension(item.Path) + ".png");
-			mappings ::= TaskMapping(this, [ item ], [ TimelineAlignmentItem(path) ]);
-		}
+		foreach (item is JsonItem in items)
+			mappings ::= TaskMapping(this, [ item ], [ TimelineAlignmentItem(item.Name) ]);
 		mappings;
 	}
 

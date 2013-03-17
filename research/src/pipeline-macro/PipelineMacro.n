@@ -2,12 +2,19 @@ using Nemerle.Collections;
 using Nemerle.Compiler;
 using Nemerle.Compiler.Parsetree;
 using Nemerle.Macros;
+using Nemerle.Utility;
+using System.Collections.Generic;
 using System.IO;
 
 using PipelineMacro.Helper;
 
 namespace PipelineMacro
 {
+	//-------
+	// macros
+	//-------
+
+	// collect additional data for Parameters fields
 	[ Nemerle.MacroUsage
 		( Nemerle.MacroPhase.BeforeInheritance
 		, Nemerle.MacroTargets.Field
@@ -22,12 +29,10 @@ namespace PipelineMacro
 		)
 	{
 		mutable longName  = null;
-		mutable shortName = null;
 
 		foreach (arg in args)
 		{
-		| <[ LongName  = $(expr:string) ]> => longName  = expr;
-		| <[ ShortName = $(expr:string) ]> => shortName = expr;
+		| <[ LongName = $(expr:string) ]> => longName = expr;
 		| _ => Message.Error("$invalid argument: '$arg'");
 		}
 
@@ -35,12 +40,11 @@ namespace PipelineMacro
 
 		when (longName == null)
 			Message.Error($"missing 'LongName' for the $srcName parameter");
-		when (shortName == null)
-			Message.Error($"missing 'ShortName' for the $srcName parameter");
 
-		Parameters ::= ParameterInfo(srcName, longName, shortName);
+		Parameters ::= ParameterInfo(srcName, longName);
 	}
 
+	// mark ITaskItem.Compute parameters as input
 	[ Nemerle.MacroUsage
 		( Nemerle.MacroPhase.BeforeInheritance
 		, Nemerle.MacroTargets.Parameter
@@ -53,10 +57,11 @@ namespace PipelineMacro
 		)
 	{
 		when (method.Name != "Compute")
-			Message.Error("InItem can only be used on task Compute parameters");
+			Message.Error(method.Location, "InItem can only be used on task Compute parameters");
 		ItemArgs ::= ItemArgumentInfo(builder.Name, parameter.Name, true);
 	}
 
+	// mark ITaskItem.Compute parameters as output
 	[ Nemerle.MacroUsage
 		( Nemerle.MacroPhase.BeforeInheritance
 		, Nemerle.MacroTargets.Parameter
@@ -69,10 +74,29 @@ namespace PipelineMacro
 		)
 	{
 		when (method.Name != "Compute")
-			Message.Error("InItem can only be used on task Compute parameters");
+			Message.Error(method.Location, "InItem can only be used on task Compute parameters");
 		ItemArgs ::= ItemArgumentInfo(builder.Name, parameter.Name, false);
 	}
 
+	[ Nemerle.MacroUsage
+		( Nemerle.MacroPhase.BeforeInheritance
+		, Nemerle.MacroTargets.Class
+		)
+	]
+	macro TaskItemInfo
+		( builder     : TypeBuilder
+		, params args : list[PExpr]
+		)
+	{
+		match (args)
+		{
+		| [ <[ File($(extension:string)) ]> ] => TaskItemInfos[builder.Name] = TaskItemInfo.File(extension)
+		| [ <[ Directory ]> ]                 => TaskItemInfos[builder.Name] = TaskItemInfo.Directory()
+		| _ => Message.Hint(builder.Location, "specify one of File(extension) or Directory")
+		}
+	}
+
+	// main point for automatic convention-based code generation
 	[ Nemerle.MacroUsage
 		( Nemerle.MacroPhase.BeforeTypedMembers
 		, Nemerle.MacroTargets.Assembly
@@ -82,6 +106,10 @@ namespace PipelineMacro
 	{
 		Setup(ImplicitCTX().Env);
 	}
+
+	//---------------
+	// implementation
+	//---------------
 
 	[ Record ]
 	internal class ItemArgumentInfo
@@ -96,13 +124,20 @@ namespace PipelineMacro
 	{
 		public SrcName   : string;
 		public LongName  : string;
-		public ShortName : string;
+	}
+
+	internal variant TaskItemInfo
+	{
+	| Directory
+	| File { extension : string }
 	}
 
 	internal module Helper
 	{
 		public mutable Parameters : list[ParameterInfo]    = [];
 		public mutable ItemArgs   : list[ItemArgumentInfo] = [];
+
+		public mutable TaskItemInfos : Dictionary.[string, TaskItemInfo] = Dictionary();
 
 		public Setup(env : GlobalEnv) : void
 		{
@@ -135,8 +170,21 @@ namespace PipelineMacro
 						)
 					}
 				}
-			| _ =>
-				Message.Error("ITask type not found")
+			| _ => Message.Error("ITask interface not found")
+			}
+
+			// complete task item implementations
+			match (env.LookupType(["ITaskItem"]))
+			{
+			| Some(ty is TypeBuilder) =>
+				foreach (superTy in ty.GetAllSubTypes())
+				{
+					superTy.Define(<[ decl: [ Accessor ] private name : string ]>);
+					superTy.Define(<[ decl: [ Accessor ] private path : string ]>);
+					superTy.Define(CreateTaskItemConstructor(superTy));
+					superTy.Define(CreateTaskItemHasCache(superTy));
+				}
+			| _ => Message.Error("ITaskItem interface not found")
 			}
 		}
 
@@ -161,7 +209,7 @@ namespace PipelineMacro
 
 		public CreateTaskCompute
 			( ty : TypeBuilder
-			, f : ClassMember.Function
+			, f  : ClassMember.Function
 			) : ClassMember
 		{
 			def AsParameterArg(p)
@@ -205,6 +253,42 @@ namespace PipelineMacro
 					Compute(..$(f.header.Parameters.Map(MapParameter)));
 				}
 			]>
+		}
+
+		public CreateTaskItemConstructor(ty : TypeBuilder) : ClassMember
+		{
+			def StripSuffix(name, suffix)
+			{
+				if (name.EndsWith(suffix) && name != suffix)
+					name.Substring(0, name.Length - suffix.Length)
+				else
+					name
+			}
+
+			def dir = StripSuffix(ty.Name, "Item");
+
+			def name = match (TaskItemInfos[ty.Name])
+			{
+			| Directory       => <[ name ]>
+			| File(extension) => <[ name + $(extension:string) ]>
+			}
+
+			<[ decl:
+				public this(name : string)
+				{
+					this.name = name;
+					this.path = System.IO.Path.Combine("work", $(dir:string), $name);
+				}
+			]>
+		}
+
+		public CreateTaskItemHasCache(ty : TypeBuilder) : ClassMember
+		{
+			match (TaskItemInfos[ty.Name])
+			{
+			| Directory => <[ decl: public HasCache() : bool { Directory.Exists(path) } ]>
+			| File      => <[ decl: public HasCache() : bool { File.Exists(path)      } ]>
+			}
 		}
 	}
 }

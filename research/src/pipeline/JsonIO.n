@@ -1,0 +1,137 @@
+using Nemerle.Collections;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System.IO;
+using System;
+
+public module JsonIO
+{
+	public class PhotoInfo
+	{
+		public ID        : string;
+		public RootSrc   : string;
+		public ShotID    : string;
+		public CameraID  : string;
+		public DateTaken : DateTime;
+
+		public this
+			( id        : string
+			, rootSrc   : string
+			, shotID    : string
+			, cameraID  : string
+			, dateTaken : DateTime
+			)
+		{
+			ID        = id;
+			RootSrc   = rootSrc;
+			ShotID    = shotID;
+			CameraID  = cameraID;
+			DateTaken = dateTaken;
+		}
+	}
+
+	public Save(path : string, photos : list[PhotoInfo], baseUrl : string) : void
+	{
+		using (writer = JsonTextWriter(File.CreateText(path)))
+		{
+			writer.Formatting  = Formatting.Indented;
+			writer.Indentation = 1;
+			writer.IndentChar  = '\t';
+
+			writer.WriteStartObject();
+			{
+				writer.WritePropertyName("response");
+				writer.WriteStartObject();
+				{
+					writer.WritePropertyName("castingCall");
+					writer.WriteStartObject();
+					{
+						writer.WritePropertyName("CastingCall");
+						writer.WriteStartObject();
+						{
+							writer.WritePropertyName("Auditions");
+							writer.WriteStartObject();
+							{
+								writer.WritePropertyName("Audition");
+								writer.WriteStartArray();
+								foreach (photo in photos)
+								{
+									writer.WriteStartObject();
+
+									writer.WritePropertyName("id");
+									writer.WriteValue(photo.ID);
+
+									writer.WritePropertyName("Photo");
+									writer.WriteStartObject();
+									{
+										writer.WritePropertyName("Img");
+										writer.WriteStartObject();
+										{
+											writer.WritePropertyName("Src");
+											writer.WriteStartObject();
+											{
+												writer.WritePropertyName("rootSrc");
+												writer.WriteValue(photo.RootSrc);
+											}
+											writer.WriteEndObject();
+										}
+										writer.WriteEndObject();
+
+										writer.WritePropertyName("CameraId");
+										writer.WriteValue(photo.CameraID);
+
+										writer.WritePropertyName("DateTaken");
+										writer.WriteValue(photo.DateTaken.ToString("yyyy-MM-dd HH:mm:ss"));
+									}
+									writer.WriteEndObject();
+
+									writer.WritePropertyName("Shot");
+									writer.WriteStartObject();
+									{
+										writer.WritePropertyName("id");
+										writer.WriteValue(photo.ShotID);
+									}
+									writer.WriteEndObject();
+
+									writer.WriteEndObject();
+								}
+								writer.WriteEnd();
+
+								writer.WritePropertyName("BaseUrl");
+								writer.WriteValue(baseUrl);
+							}
+							writer.WriteEndObject();
+						}
+						writer.WriteEndObject();
+					}
+					writer.WriteEndObject();
+				}
+				writer.WriteEndObject();
+			}
+			writer.WriteEndObject();
+		}
+	}
+
+	public Load(path : string) : list[PhotoInfo] * string
+	{
+		def data = JObject.Parse(File.ReadAllText(path));
+
+		def castingCall = data["response"]["castingCall"];
+
+		def GetPhotoInfo(record)
+		{
+			PhotoInfo
+				( id        = record["id"] :> string
+				, rootSrc   = record["Photo"]["Img"]["Src"]["rootSrc"] :> string
+				, shotID    = record["Shot"]["id"] :> string
+				, cameraID  = record["Photo"]["CameraId"] :> string
+				, dateTaken = DateTime.Parse(record["Photo"]["DateTaken"] :> string)
+				)
+		}
+		( castingCall["CastingCall"]["Auditions"]["Audition"]
+			.Children()
+			.MapToList(GetPhotoInfo)
+		, "http://dev.snaphappi.com" + castingCall["CastingCall"]["Auditions"]["Baseurl"]
+		)
+	}
+}

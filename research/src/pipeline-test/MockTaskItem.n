@@ -1,30 +1,37 @@
 using Nemerle.Utility;
 using System;
 
-[ Record ]
 class MockTaskItem : ITaskItem, IComparable[MockTaskItem]
 {
 	[ Accessor ] private path : string;
 
-	private hasCache : bool;
+	private mutable hasCache : bool;
 
-	[ Accessor ] private mutable isSaved      : bool;
-	[ Accessor ] private mutable isLoaded     : bool;
+	[ Accessor ] private mutable savePath     : string;
+	[ Accessor ] private mutable loadPath     : string;
 	[ Accessor ] private mutable computeCount : int;
+
+	public Name : string { get { "name" } }
+
+	public this(path : string, hasCache : bool)
+	{
+		this.path     = path;
+		this.hasCache = hasCache;
+	}
 
 	public HasCache() : bool
 	{
 		hasCache;
 	}
 
-	public Save() : void
+	public Save(path : string) : void
 	{
-		isSaved = true;
+		savePath = path;
 	}
 
-	public Load() : void
+	public Load(path : string) : void
 	{
-		isLoaded = true;
+		loadPath = path;
 	}
 
 	public CompareTo(other : MockTaskItem) : int
@@ -39,8 +46,8 @@ class MockTaskItem : ITaskItem, IComparable[MockTaskItem]
 
 	public Reset() : void
 	{
-		isSaved      = false;
-		isLoaded     = false;
+		savePath     = null;
+		loadPath     = null;
 		computeCount = 0;
 	}
 }

@@ -2,6 +2,7 @@ using Nemerle.Collections;
 using Nemerle.Utility;
 using PipelineMacro;
 using Profiling;
+using System.Collections.Generic;
 using System.IO;
 using System;
 
@@ -9,22 +10,19 @@ public class EvaluateClustersTask: ITask
 {
 	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
 	{
-		def clusters   = items.Filter(item => item.Path.StartsWith(@"clusters\"));
-		def references = items.Filter(item => item.Path.StartsWith(@"clusters-ref\"));
+		def refs = Dictionary();
+		foreach (item is RefClusterItem in items)
+			refs[item.Name] = item;
 
-		def references = Hashtable(references.Map(item => (item.Path, item)));
-
+		// map those clusters for which there are references
 		mutable mappings = [];
-		foreach (cluster is ClusterItem in clusters)
+		foreach (cluster is ClusterItem when refs.ContainsKey(cluster.Name) in items)
 		{
-			def fileName = Path.GetFileName(cluster.Path);
-			match (references.Get(Path.Combine("clusters-ref", fileName)))
-			{
-			| Some(reference is ClusterItem ) =>
-				def path = Path.Combine("eval", fileName);
-				mappings ::= TaskMapping(this, [ cluster, reference ], [ ClusterEvaluationItem(path) ]);
-			| _ => ()
-			}
+			mappings ::= TaskMapping
+				( this
+				, [ cluster, refs[cluster.Name] ]
+				, [ ClusterEvaluationItem(cluster.Name) ]
+				);
 		}
 		mappings;
 	}
@@ -32,7 +30,7 @@ public class EvaluateClustersTask: ITask
 	[ Profile(Recursive) ]
 	private Compute
 		( [InItem]  autoClusters : ClusterItem
-		, [InItem]  refClusters  : ClusterItem
+		, [InItem]  refClusters  : RefClusterItem
 		, [OutItem] result       : ClusterEvaluationItem
 		) : void
 	{

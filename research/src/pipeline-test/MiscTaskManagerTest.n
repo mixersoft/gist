@@ -9,21 +9,11 @@ public class MiscTaskManagerTest
 	[ Test ]
 	public TestDualRoleLoading() : void
 	{
-		def MakeTaskItem(path, hasCache)
-		{
-			MockTaskItem
-				( path         = path
-				, hasCache     = hasCache
-				, isSaved      = false
-				, isLoaded     = false
-				, computeCount = 0
-				)
-		}
 		def items =
 			[ ("item-1", false)
 			, ("item-2", true)
 			, ("item-3", false)
-			].Map(MakeTaskItem);
+			].Map(MockTaskItem);
 
 		def taskManager = TaskManager
 			( tasks =
@@ -50,8 +40,8 @@ public class MiscTaskManagerTest
 		taskManager.Compute(Parameters());
 
 		CollectionAssert.AreEqual
-			( expected = [ false, false, false ]
-			, actual   = items.Map(_.IsLoaded)
+			( expected = [ null, null, null ]
+			, actual   = items.Map(_.LoadPath)
 			, message  = "Is any item loaded?"
 			);
 	}

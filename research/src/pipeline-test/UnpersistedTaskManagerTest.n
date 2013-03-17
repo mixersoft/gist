@@ -12,23 +12,13 @@ public class UnpersistedTaskManagerTest
 	[ SetUp ]
 	public Setup() : void
 	{
-		def MakeTaskItem(path, hasCache)
-		{
-			MockTaskItem
-				( path         = path
-				, hasCache     = hasCache
-				, isSaved      = false
-				, isLoaded     = false
-				, computeCount = 0
-				)
-		}
 		items =
 			[ ("item-1", false)
 			, ("item-2", true)
 			, ("item-3", false)
 			, ("item-4", true)
 			, ("item-5", false)
-			].Map(MakeTaskItem);
+			].Map(MockTaskItem);
 
 		taskManager = TaskManager
 			( tasks =
@@ -72,7 +62,7 @@ public class UnpersistedTaskManagerTest
 			);
 
 		Assert.IsFalse
-			( condition = items.Exists(_.IsLoaded)
+			( condition = items.Exists(item => item.LoadPath != null)
 			, message   = "Were any items loaded on startup?"
 			);
 	}
@@ -104,12 +94,12 @@ public class UnpersistedTaskManagerTest
 
 		CollectionAssert.AreEqual
 			( expected = [ false, true, false, false, false ]
-			, actual   = items.Map(_.IsLoaded)
+			, actual   = items.Map(item => item.LoadPath != null)
 			, message  = "Were the appropriate items loaded?"
 			);
 
 		Assert.IsFalse
-			( condition = items.Exists(_.IsSaved)
+			( condition = items.Exists(item => item.SavePath != null)
 			, message   = "Has any item been saved?"
 			);
 	}

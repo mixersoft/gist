@@ -7,12 +7,14 @@ class ExtractHashTask : ITask
 {
 	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
 	{
-		def imageSample = items.TypedFind(item : ImageCollectionItem => item.Path == "image-sample").Value;
-		[ TaskMapping(this, [ imageSample ], [ ImageHashItem(@"eval\hashes.txt") ]) ]
+		mutable mappings = [];
+		foreach (item is SampleImageCollectionItem in items)
+			mappings ::= TaskMapping(this, [ item ], [ ImageHashItem(item.Name) ]);
+		mappings;
 	}
 
 	private Compute
-		( [InItem]  imageSample : ImageCollectionItem
+		( [InItem]  imageSample : SampleImageCollectionItem
 		, [OutItem] hashes      : ImageHashItem
 		, hashMethod      : ImageHash.HashMethod
 		, hashedImageSize : int

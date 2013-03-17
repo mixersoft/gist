@@ -7,49 +7,31 @@ class SampleImagesTask : ITask
 {
 	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
 	{
-		mutable images = [];
-		foreach (item is ImageCollectionItem when item.Path.StartsWith(@"images\") in items)
-			images ::= item;
-		def sample = ImageCollectionItem("image-sample");
-		[ TaskMapping(this, images.Map(_ : ITaskItem), [ sample ]) ];
+		mutable mappings = [];
+		foreach (item is ImageCollectionItem in items)
+			mappings ::= TaskMapping(this, [ item ], [ SampleImageCollectionItem(item.Name) ]);
+		mappings;
 	}
 
 	private Compute
-		( [InItem]  images : list[ImageCollectionItem]
-		, [OutItem] sample : ImageCollectionItem
+		( [InItem]  images : ImageCollectionItem
+		, [OutItem] sample : SampleImageCollectionItem
 		, imageSampleSize : int
 		) : void
 	{
-		def random = Random(0);
+		def randomIDs = images.ImageIDs.Clone() :> array[string];
+		randomIDs.RandomShuffle(Random(0));
 
-		def n = images.Fold(0, (item, sum) => sum + item.ImageIDs.Length);
-		mutable indices = Set();
-		while (indices.Count < imageSampleSize)
-		{
-			def index = random.Next(n);
-			unless (indices.Contains(index))
-				indices = indices.Add(index);
-		}
+		sample.ImageIDs = array(Math.Min(randomIDs.Length, imageSampleSize));
+		Array.Copy(randomIDs, 0, sample.ImageIDs, 0, sample.ImageIDs.Length);
 
 		_ = Directory.CreateDirectory(sample.Path);
-
-		mutable ids = [];
-		foreach (index in indices)
+		foreach (id in sample.ImageIDs)
 		{
-			mutable l = images;
-			mutable i = index;
-			while (i > l.Head.ImageIDs.Length)
-			{
-				i -= l.Head.ImageIDs.Length;
-				l = l.Tail;
-			}
-			def id = l.Head.ImageIDs[i];
-			ids ::= id;
 			File.Copy
-				( sourceFileName = l.Head.MakePath(id)
+				( sourceFileName = images.MakePath(id)
 				, destFileName   = sample.MakePath(id)
 				);
 		}
-		sample.ImageIDs = ids.ToArray();
 	}
 }

@@ -1,24 +1,13 @@
-using Nemerle.Utility;
+using PipelineMacro;
 using System.IO;
 using System;
 
+[ TaskItemInfo(File(".html")) ]
 class ClusterHtmlItem : ITaskItem
 {
-	[ Accessor ] private path : string;
-
 	public mutable Clusters : array[array[string]];
 
-	public this(path : string)
-	{
-		this.path = path;
-	}
-	
-	public HasCache() : bool
-	{
-		File.Exists(path);
-	}
-
-	public Save() : void
+	public Save(path : string) : void
 	{
 		_ = Directory.CreateDirectory(Path.GetDirectoryName(path));
 
@@ -53,7 +42,7 @@ class ClusterHtmlItem : ITaskItem
 		}
 	}
 
-	public Load() : void
+	public Load(_ : string) : void
 	{
 		throw NotImplementedException();
 	}

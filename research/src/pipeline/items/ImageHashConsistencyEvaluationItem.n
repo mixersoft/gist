@@ -1,25 +1,14 @@
 using Nemerle.Collections;
-using Nemerle.Utility;
+using PipelineMacro;
 using System.IO;
 using System;
 
+[ TaskItemInfo(File(".txt")) ]
 class ImageHashConsistencyEvaluationItem : ITaskItem
 {
-	[ Accessor ] private path : string;
-
 	public mutable Hashes : list[string * list[int]];
 
-	public this(path : string)
-	{
-		this.path = path;
-	}
-
-	public HasCache() : bool
-	{
-		File.Exists(path);
-	}
-
-	public Save() : void
+	public Save(path : string) : void
 	{
 		def Score(hashes)
 		{
@@ -33,7 +22,8 @@ class ImageHashConsistencyEvaluationItem : ITaskItem
 		}
 	}
 
-	public Load() : void
+	public Load(_ : string) : void
 	{
+		throw NotImplementedException();
 	}
 }

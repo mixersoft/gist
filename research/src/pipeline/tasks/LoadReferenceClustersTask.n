@@ -1,19 +1,25 @@
 using Nemerle.Collections;
 using PipelineMacro;
+using System.Collections.Generic;
 using System.IO;
 
 class LoadReferenceClustersTask : ITask
 {
+	private items : Dictionary[string, string] = Dictionary();
+
 	public MapItems(_ : list[ITaskItem]) : list[TaskMapping]
 	{
-		def MakeMapping(path)
+		def CreateMapping(path)
 		{
-			TaskMapping(this, [], [ ClusterItem(path) ]);
+			def name = Path.GetFileNameWithoutExtension(path);
+			items[name] = path;
+			TaskMapping(this, [], [ RefClusterItem(name) ]);
 		}
-		Directory.GetFiles("clusters-ref").MapToList(MakeMapping);
+		Directory.GetFiles("clusters-ref", "*.txt").MapToList(CreateMapping);
 	}
 
-	public Compute() : void
+	public Compute([OutItem] cluster : RefClusterItem) : void
 	{
+		cluster.Load(items[cluster.Name]);
 	}
 }

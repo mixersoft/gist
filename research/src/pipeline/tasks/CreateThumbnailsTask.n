@@ -9,16 +9,13 @@ class CreateThumbnailsTask : ITask
 	{
 		mutable mappings = [];
 		foreach (item is ImageCollectionItem in items)
-		{
-			def path = Path.Combine("thumbnails", Path.GetFileName(item.Path));
-			mappings ::= TaskMapping(this, [ item ], [ ImageCollectionItem(path) ]);
-		}
+			mappings ::= TaskMapping(this, [ item ], [ ThumbnailCollectionItem(item.Name) ]);
 		mappings;
 	}
 
 	private Compute
 		( [InItem]  images     : ImageCollectionItem
-		, [OutItem] thumbnails : ImageCollectionItem
+		, [OutItem] thumbnails : ThumbnailCollectionItem
 		) : void
 	{
 		def height = 64;

@@ -7,10 +7,7 @@ class CreateClusterHtmlTask : ITask
 	{
 		mutable mappings = [];
 		foreach (item is ClusterItem in items)
-		{
-			def path = Path.ChangeExtension(item.Path, ".html");
-			mappings ::= TaskMapping(this, [ item ], [ ClusterHtmlItem(path) ]);
-		}
+			mappings ::= TaskMapping(this, [ item ], [ ClusterHtmlItem(item.Name) ]);
 		mappings;
 	}
 

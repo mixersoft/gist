@@ -1,28 +1,18 @@
 using Nemerle.Collections;
 using Nemerle.Utility;
+using PipelineMacro;
 using System.IO;
 using System;
 
 /// <summary>
 /// This data item holds image paths without the data.
 /// </summary>
+[ TaskItemInfo(File(".txt")) ]
 class ImageHashItem : ITaskItem
 {
-	[ Accessor ] private path : string;
-
 	public mutable ImageHashes : Map[string, int];
 
-	public this(path : string)
-	{
-		this.path = path;
-	}
-
-	public HasCache() : bool
-	{
-		File.Exists(path);
-	}
-
-	public Save() : void
+	public Save(path : string) : void
 	{
 		_ = Directory.CreateDirectory(Path.GetDirectoryName(path));
 		using (writer = File.CreateText(path))
@@ -32,7 +22,7 @@ class ImageHashItem : ITaskItem
 		}
 	}
 
-	public Load() : void
+	public Load(path : string) : void
 	{
 		ImageHashes = Map();
 		try
