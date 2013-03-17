@@ -68,7 +68,6 @@ public class TimelineAlignmentItem : ITaskItem
 		def rowSpacing        = 8.0f;
 		def rowHeight = timelineThickness + notchHeight + rowSpacing;
 
-		_ = Directory.CreateDirectory(Path.GetDirectoryName(path));
 		using (bmp = Bitmap(1366, (rowHeight * Timelines.Length) :> int))
 		{
 			using (gfx = Graphics.FromImage(bmp))

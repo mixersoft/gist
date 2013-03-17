@@ -9,7 +9,6 @@ class ImageHashUniquenessEvaluationItem : ITaskItem
 
 	public Save(path : string) : void
 	{
-		_ = Directory.CreateDirectory(Path.GetDirectoryName(path));
 		using (writer = File.CreateText(path))
 		{
 			[ "<html>"

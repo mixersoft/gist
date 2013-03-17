@@ -9,8 +9,6 @@ public class DescriptorHtmlItem : ITaskItem
 
 	public Save(path : string) : void
 	{
-		_ = Directory.CreateDirectory(Path.GetDirectoryName(path));
-
 		File.WriteAllText
 			( path     = path
 			, contents = Text

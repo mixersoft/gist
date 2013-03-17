@@ -1,0 +1,19 @@
+using PipelineMacro;
+using System.Drawing;
+using System;
+
+[ TaskItemInfo(File(".png")) ]
+public class TimeGraphItem : ITaskItem
+{
+	public mutable Image : Bitmap;
+
+	public Save(path : string) : void
+	{
+		Image.Save(path);
+	}
+
+	public Load(path : string) : void
+	{
+		Image = Bitmap(path);
+	}
+}

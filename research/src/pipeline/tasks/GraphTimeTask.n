@@ -1,0 +1,106 @@
+using Nemerle.Collections;
+using PipelineMacro;
+using System.Drawing.Drawing2D;
+using System.Drawing;
+using System;
+
+class GraphTimeTask : ITask
+{
+	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
+	{
+		mutable mappings = [];
+		foreach (item is JsonItem in items)
+			mappings ::= TaskMapping(this, [ item ], [ TimeGraphItem(item.Name) ]);
+		mappings;
+	}
+
+	private Compute
+		( [InItem]  json  : JsonItem
+		, [OutItem] graph : TimeGraphItem
+		) : void
+	{
+		def (w, h, y) = (512, 96, 64);
+
+		def DrawTicks(gfx, times, r)
+		{
+			def brush = Brushes.Black;
+			foreach (t in times)
+			{
+				gfx.FillEllipse
+					( brush  = brush
+					, x      = (Math.Round(t * w) :> float) - r
+					, y      = y - r
+					, width  = r * 2.0f
+					, height = r * 2.0f
+					);
+			}
+		}
+		def DrawGrid(gfx, min, max)
+		{
+			def scale = w / ((max.Ticks - min.Ticks) :> double);
+
+			def totalDays = (max - min).TotalDays :> int;
+			when (10 * totalDays <= w)
+			{
+				def pen = Pen(Color.FromArgb(194, 194, 194));
+				for (mutable i = 0; i <= totalDays + 1; ++i)
+				{
+					def t = DateTime(min.Year, min.Month, min.Day).AddDays(i);
+					def span = t.Ticks - min.Ticks :> double;
+					def x = Math.Round(scale * span) :> int;
+					gfx.DrawLine(pen, x, 0, x, h);
+				}
+			}
+			def totalMonths = ((max - min).TotalDays / 30.0) :> int;
+			when (10 * totalMonths <= w)
+			{
+				def pen = Pen(Color.FromArgb(137, 137, 137));
+				for (mutable i = 0; i <= totalMonths + 1; ++i)
+				{
+					def t = DateTime(min.Year, min.Month, 1).AddMonths(i);
+					def span = t.Ticks - min.Ticks :> double;
+					def x = Math.Round(scale * span) :> int;
+					gfx.DrawLine(pen, x, 0, x, h);
+				}
+			}
+			def totalYears = ((max - min).TotalDays / 365.0) :> int;
+			when (10 * totalYears <= w)
+			{
+				def pen = Pen(Color.FromArgb(70, 70, 70));
+				for (mutable i = 0; i <= totalYears + 1; ++i)
+				{
+					def t = DateTime(min.Year, 1, 1).AddYears(i);
+					def span = t.Ticks - min.Ticks :> double;
+					def x = Math.Round(scale * span) :> int;
+					gfx.DrawLine(pen, x, 0, x, h);
+				}
+			}
+		}
+		def Normalize(l, min, max)
+		{
+			foreach (x in l with i)
+				l[i] = (x - min) / (max - min);
+		}
+
+		def dates = json.Photos.MapToArray(_.DateTaken);
+		Array.Sort(dates);
+		def (minDate, maxDate) = (dates[0], dates[dates.Length - 1]);
+
+		def times = dates.Map(date => date.Ticks :> double);
+		Normalize(times, minDate.Ticks, maxDate.Ticks);
+
+		graph.Image = Bitmap(w, h);
+		using (gfx = Graphics.FromImage(graph.Image))
+		{
+			gfx.SmoothingMode = SmoothingMode.HighQuality;
+
+			gfx.Clear(Color.White);
+
+			DrawGrid(gfx, minDate, maxDate);
+
+			gfx.DrawLine(Pen(Color.FromArgb(37, 37, 37)), 0, y, w, y);
+
+			DrawTicks(gfx, times, 3.0f);
+		}
+	}
+}

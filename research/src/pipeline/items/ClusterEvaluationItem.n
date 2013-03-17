@@ -8,7 +8,6 @@ public class ClusterEvaluationItem : ITaskItem
 
 	public Save(path : string) : void
 	{
-		_ = Directory.CreateDirectory("eval");
 		File.WriteAllText(path, Value.ToString());
 	}
 

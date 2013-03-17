@@ -21,7 +21,6 @@ public class DescriptorItem : ITaskItem
 
 	public Save(path : string) : void
 	{
-		_ = Directory.CreateDirectory("descriptors");
 		_ = Directory.CreateDirectory(path);
 		foreach (descriptor in Descriptors)
 		{

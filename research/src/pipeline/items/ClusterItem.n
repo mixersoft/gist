@@ -8,8 +8,6 @@ public class ClusterItem : ITaskItem
 
 	public Save(path : string) : void
 	{
-		_ = Directory.CreateDirectory(Path.GetDirectoryName(path));
-
 		using (file = File.CreateText(path))
 		{
 			file.WriteLine(Clusters.Length);

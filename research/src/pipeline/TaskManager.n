@@ -1,4 +1,5 @@
 using Nemerle.Collections;
+using System.IO;
 using System;
 
 using SCG = System.Collections.Generic;
@@ -100,6 +101,9 @@ public class TaskManager
 						{
 							when (displayProgress)
 								Console.WriteLine($"Save $(item.Path)");
+							def dir = Path.GetDirectoryName(item.Path);
+							when (dir != "")
+								_ = Directory.CreateDirectory(dir);
 							item.Save(item.Path);
 						}
 					}

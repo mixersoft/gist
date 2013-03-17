@@ -54,6 +54,8 @@ module Main
 				
 				, SplitTimelineTask()
 				, AlignTimelinesTask()
+
+				, GraphTimeTask()
 				]
 			, persistData     = true
 			, displayProgress = true
