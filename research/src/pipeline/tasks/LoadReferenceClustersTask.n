@@ -15,7 +15,7 @@ class LoadReferenceClustersTask : ITask
 			items[name] = path;
 			TaskMapping(this, [], [ RefClusterItem(name) ]);
 		}
-		Directory.GetFiles("clusters-ref", "*.txt").MapToList(CreateMapping);
+		Directory.GetFiles(@"data\clusters-ref", "*.txt").MapToList(CreateMapping);
 	}
 
 	public Compute([OutItem] cluster : RefClusterItem) : void

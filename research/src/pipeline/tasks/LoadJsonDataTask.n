@@ -15,7 +15,7 @@ class LoadJsonDataTask : ITask
 			items[name] = path;
 			TaskMapping(this, [], [ JsonItem(name) ]);
 		}
-		Directory.GetFiles("data", "*.json").MapToList(CreateMapping);
+		Directory.GetFiles(@"data\json", "*.json").MapToList(CreateMapping);
 	}
 
 	private Compute([OutItem] json : JsonItem) : void
