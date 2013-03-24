@@ -1,11 +1,14 @@
 #include "InputData.hpp"
+#include "Processor.hpp"
 
 #include "json/json.h"
 
 #include <algorithm>
+#include <ctime>
 #include <iterator>
 #include <stdexcept>
 #include <fstream>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -15,7 +18,19 @@ using namespace std;
 
 namespace po = boost::program_options;
 
-void Read(const string & basePath, InputData & inputData)
+time_t ParseDateTime(const char * text)
+{
+	tm time;
+	if (NULL == strptime(text, "%Y-%m-%d %T", &time))
+	{
+		stringstream msg;
+		msg << "Failed to parse date '" << text << "'.";
+		throw runtime_error(msg.str().c_str());
+	}
+	return mktime(&time);
+}
+
+void Read(InputData & inputData)
 {
 	Json::Value  root;
 	Json::Reader reader;
@@ -27,36 +42,33 @@ void Read(const string & basePath, InputData & inputData)
 	Json::Value castingCall (root["response"]["castingCall"]);
 	Json::Value photos      (castingCall["CastingCall"]["Auditions"]["Audition"]);
 
-	inputData.ID        = castingCall["CastingCall"]["ID"].asUInt();
-	inputData.Timestamp = castingCall["CastingCall"]["Timestamp"].asUInt();
+	inputData.ID = castingCall["CastingCall"]["ID"].asUInt();
 
 	inputData.Photos.resize(photos.size());
 
 	for (int i(0), size(photos.size()); i != size; ++i)
 	{
-		inputData.Photos[i].ID   = photos[i]["id"].asString();
-		inputData.Photos[i].Path = basePath + photos[i]["Photo"]["Img"]["Src"]["rootSrc"].asString();
+		inputData.Photos[i].ID        = photos[i]["id"].asString();
+		inputData.Photos[i].DateTaken = ParseDateTime(photos[i]["Photo"]["DateTaken"].asCString());
 	}
 }
 
-/*
 void Write
-	( const InputData          & inputData
-	, const vector<PhotoGroup> & groups
-	,       bool                 prettyPrint
+	( const InputData         & inputData
+	, const vector<EventInfo> & events
+	,       bool                prettyPrint
 	)
 {
 	Json::Value result(Json::objectValue);
-	result["ID"]        = inputData.ID;
-	result["Timestamp"] = inputData.Timestamp;
-	result["Groups"]    = Json::Value(Json::arrayValue);
+	result["ID"]     = inputData.ID;
+	result["Events"] = Json::Value(Json::arrayValue);
 
-	for (int i(0), size(groups.size()); i != size; ++i)
+	for (int i(0), size(events.size()); i != size; ++i)
 	{
-		Json::Value group(Json::arrayValue);
-		for (int j(0), size(groups[i].size()); j != size; ++j)
-			group.append(groups[i][j]->ID);
-		result["Groups"].append(group);
+		Json::Value event(Json::arrayValue);
+		event["FirstPhotoID"] = events[i].FirstPhotoID;
+		event["PhotoCount"]   = events[i].PhotoCount;
+		result["Events"].append(event);
 	}
 
 	if (prettyPrint)
@@ -64,29 +76,32 @@ void Write
 	else
 		cout << Json::FastWriter().write(result);
 }
-*/
 
-void Process
-	( const string & basePath
-	,       bool     //sort
-	,       bool     //prettyPrint
-	)
+void Process(bool sortPhotos, bool prettyPrint)
 {
 	InputData inputData;
-	Read(basePath, inputData);
+	Read(inputData);
 
-	//Write(inputData, groups, prettyPrint);
+	if (sortPhotos)
+		SortPhotos(inputData.Photos);
+
+	std::vector<EventInfo> events;
+	GroupPhotos(inputData.Photos, events);
+
+	Write(inputData, events, prettyPrint);
 }
 
+// Main entry point.
+// Handles command line arguments and unhandled exceptions.
 int main(int argc, char * argv[])
 try
 {
 	po::options_description desc("Supported options");
 	desc.add_options()
 		("help", "display this help message")
-		("sort", po::value<bool>()->default_value(false), "set when input is not already sorted by time")
-		("base_path", po::value<string>()->default_value("./"), "base path for images")
-		("pretty_print", po::value<bool>()->default_value(false), "format output")
+		("scale", po::value<int>()->default_value(1), "time scale, in days")
+		("sort", "set when input is not already sorted by time")
+		("pretty_print", "format output")
 		;
 
 	po::variables_map vm;
@@ -108,8 +123,7 @@ try
 	}
 
 	Process
-		( vm["base_path"].as<string>()
-		, vm["sort"].as<bool>()
+		( vm.count("sort")
 		, vm.count("pretty_print")
 		);
 

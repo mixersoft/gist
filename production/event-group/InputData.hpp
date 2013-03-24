@@ -7,7 +7,5 @@
 struct InputData
 {
 	unsigned int ID;
-	unsigned int Timestamp;
-
 	std::vector<PhotoInfo> Photos;
 };

@@ -1,6 +1,7 @@
 add_executable(
 	event-group
-	Main.cpp
+	Main.cpp EventInfo.hpp PhotoInfo.hpp
+	Processor.cpp Processor.hpp EventInfo.hpp PhotoInfo.hpp
 	jsoncpp.cpp json/json.h json/json-forwards.h
 	)
 

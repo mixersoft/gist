@@ -6,5 +6,5 @@
 struct PhotoInfo
 {
 	std::string ID;
-	std::string Path;
+	time_t DateTaken;
 };
