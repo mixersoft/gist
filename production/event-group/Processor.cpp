@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <stdexcept>
+#include <iostream>
 
 using namespace std;
 
@@ -21,6 +22,8 @@ bool PhotoGreaterThanByDate
 	return lhs.DateTaken > rhs.DateTaken;
 }
 
+// Find where each event ends and another begins.
+// An event is a set of points no farther than eventSpacing apart.
 void Aggregate
 	( const vector<double> & data
 	,       vector<size_t> & separators
@@ -38,9 +41,10 @@ void Aggregate
 	}
 }
 
+// Gather data points around the modes of the kernel density estimate.
 void MeanShift
 	( const vector<double> & data
-	,       vector<double>   modes
+	,       vector<double> & modes
 	,       double           windowWidth
 	,       int              iterationCount
 	)
@@ -51,6 +55,7 @@ void MeanShift
 	const double widthFactor (1.0 / (windowWidth * windowWidth));
 
 	modes.resize(n);
+	copy(data.begin(), data.end(), modes.begin());
 
 	for (int iteration(0); iteration != iterationCount; ++iteration)
 	{
@@ -75,6 +80,7 @@ void MeanShift
 	}
 }
 
+// Gather the necessary event information from photos in every group.
 void CreateEvents
 	( const vector<PhotoInfo> & photos
 	,       vector<size_t>    & separators
@@ -108,7 +114,22 @@ void CreateEvents
 	events[eventIndex].PhotoCount   = photos.size() - eventStart;
 }
 
-void GroupPhotos
+// Text-mode data visualization for debugging purposes.
+string MakeTimelineString(const vector<double> & data, size_t stringLength)
+{
+	vector<char> chars(stringLength + 1);
+	fill (chars.begin(), chars.end() - 1, ' ');
+
+	double min(data[0]);
+	double max(data[data.size() - 1]);
+
+	for (size_t i(0), size(data.size()); i != size; ++i)
+		chars[(data[i] - min) / (max - min) * (stringLength - 1)] = '*';
+
+	return &chars[0];
+}
+
+void DetectEvents
 	( const vector<PhotoInfo> & photos
 	,       vector<EventInfo> & events
 	,       double              windowWidth
@@ -126,6 +147,9 @@ void GroupPhotos
 
 	vector<size_t> separators;
 	Aggregate(modes, separators, eventSpacing);
+
+	//cout << "data:  |" << MakeTimelineString(data,  100) << "|\n";
+	//cout << "modes: |" << MakeTimelineString(modes, 100) << "|\n";
 
 	CreateEvents(photos, separators, events);
 }

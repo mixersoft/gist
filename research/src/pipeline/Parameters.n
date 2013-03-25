@@ -44,6 +44,12 @@ public class Parameters
 	[ Parameter(LongName = "kde window") ]
 	public mutable KdeWindow : double;
 
+	[ Parameter(LongName = "mean shift iteration count") ]
+	public mutable MSIterationCount : int;
+
+	[ Parameter(LongName = "mean shift kernel") ]
+	public mutable MSKernel : MeanShiftKernel;
+
 	[ Parameter(LongName = "simulated timeline count") ]
 	public mutable SimulatedTimelineCount : int;
 
@@ -79,7 +85,7 @@ public class Parameters
 		{
 		| ["median", size] => ImageHash.BlurMethod.Median(int.Parse(size))
 		| ["gaussian", σ]  => ImageHash.BlurMethod.Gaussian(double.Parse(σ))
-		| _ => throw Exception($"Incorrect blur format: '$text'.")
+		| _ => throw Exception($"Invalid blur format: '$text'.")
 		}
 	}
 
@@ -89,7 +95,17 @@ public class Parameters
 		{
 		| "md5"  => ImageHash.HashMethod.MD5
 		| "mean" => ImageHash.HashMethod.Mean
-		| _ => throw Exception($"Incorrect hash method: '$text'.")
+		| _ => throw Exception($"Invalid hash method: '$text'.")
+		}
+	}
+
+	private Parse(text : string, value : out MeanShiftKernel) : void
+	{
+		value = match (text)
+		{
+		| "epanechnikov" => MeanShiftKernel.Epanechnikov
+		| "gaussian"     => MeanShiftKernel.Gaussian
+		| _ => throw Exception($"Invalid mean shift kernel: '$text'.")
 		}
 	}
 

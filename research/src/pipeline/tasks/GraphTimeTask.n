@@ -1,7 +1,9 @@
 using Nemerle.Collections;
 using PipelineMacro;
+using System.Collections.Generic;
 using System.Drawing.Drawing2D;
 using System.Drawing;
+using System.Math;
 using System;
 
 class GraphTimeTask : ITask
@@ -15,29 +17,62 @@ class GraphTimeTask : ITask
 	}
 
 	private Compute
-		( [InItem]  json  : JsonItem
-		, [OutItem] graph : TimeGraphItem
-		, kdeWindow : double
+		( [InItem]  json   : JsonItem
+		, [OutItem] graph  : TimeGraphItem
+		, kdeWindow        : double
+		, msIterationCount : int
+		, msKernel         : MeanShiftKernel
 		) : void
 	{
 		def (w, h, y) = (512, 96, 64);
 
-		def DrawDistribution(bmp, times)
+		// returns the list of indices at which new groups begin
+		// assumes the data is sorted in increasing order
+		def Aggregate(data, step)
 		{
-			def hFactor = 1.0 / (kdeWindow * kdeWindow);
+			def events = List();
+			when (data.Length > 0)
+			{
+				mutable prev = data[0];
+				for (mutable i = 1; i != data.Length; ++i)
+				{
+					when (data[i] - prev > step)
+						events.Add(i);
+					prev = data[i];
+				}
+			}
+			events.ToArray();
+		}
+		def DrawDistribution(bmp, times, window)
+		{
+			def minTime = times[0];
+			def maxTime = times[times.Length - 1];
+
+			def hFactor = 1.0 / (window * window);
 			def cols = array(w);
 			mutable max = 0.0;
 			for (mutable i = 0; i != w; ++i)
 			{
-				def x = (i :> double) / w;
-				foreach (t in times)
+				def x = minTime + (maxTime - minTime) * (i :> double) / w;
+				match (msKernel)
 				{
-					def w = hFactor * (x - t) * (x - t);
-					when (w <= 1.0)
-						cols[i] += 1.0 - w;
+				| MeanShiftKernel.Epanechnikov =>
+					foreach (t in times)
+					{
+						def w = hFactor * (x - t) * (x - t);
+						when (w <= 1.0)
+							cols[i] += 1.0 - w;
+					}
+				| MeanShiftKernel.Gaussian =>
+					foreach (t in times)
+					{
+						def w = Exp(-0.5 * hFactor * (x - t) * (x - t));
+						cols[i] += w;
+					}
 				}
 				when (cols[i] > max)
 					max = cols[i];
+
 			}
 			when (max > 0.0)
 			{
@@ -46,11 +81,11 @@ class GraphTimeTask : ITask
 				for (mutable pixelX = 0; pixelX != w; ++pixelX)
 				{
 					def value = (y - 1) * cols[pixelX] / max;
-					def h = y - Math.Floor(value) :> int;
+					def h = y - Floor(value) :> int;
 					for (mutable pixelY = h; pixelY != y; ++pixelY)
 						bmp.SetPixel(pixelX, pixelY, foreColor);
 					// antialiasing
-					def δ = value - Math.Floor(value);
+					def δ = value - Floor(value);
 					def color = Color.FromArgb
 						( red   = (δ * foreColor.R + (1.0 - δ) * backColor.R) :> int
 						, green = (δ * foreColor.G + (1.0 - δ) * backColor.G) :> int
@@ -61,14 +96,24 @@ class GraphTimeTask : ITask
 				}
 			}
 		}
-		def DrawTicks(gfx, times, r)
+		def DrawTicks(gfx, times, r, y, groups)
 		{
-			def brush = Brushes.Black;
-			foreach (t in times)
+			def min = times[0];
+			def max = times[times.Length - 1];
+
+			mutable brush1 = SolidBrush(Color.FromArgb(51,  51, 51));
+			mutable brush2 = SolidBrush(Color.FromArgb(153, 1,  0));
+			mutable groupIndex = 0;
+			foreach (t in times with i)
 			{
+				when (groupIndex < groups.Length && i == groups[groupIndex])
+				{
+					brush1 <-> brush2;
+					++groupIndex;
+				}
 				gfx.FillEllipse
-					( brush  = brush
-					, x      = (Math.Round(t * w) :> float) - r
+					( brush  = brush1
+					, x      = (((t - min) / (max - min) * w) :> float) - r
 					, y      = y - r
 					, width  = r * 2.0f
 					, height = r * 2.0f
@@ -87,7 +132,7 @@ class GraphTimeTask : ITask
 				{
 					def t = DateTime(min.Year, min.Month, min.Day).AddDays(i);
 					def span = t.Ticks - min.Ticks :> double;
-					def x = Math.Round(scale * span) :> int;
+					def x = Round(scale * span) :> int;
 					gfx.DrawLine(pen, x, 0, x, h);
 				}
 			}
@@ -99,7 +144,7 @@ class GraphTimeTask : ITask
 				{
 					def t = DateTime(min.Year, min.Month, 1).AddMonths(i);
 					def span = t.Ticks - min.Ticks :> double;
-					def x = Math.Round(scale * span) :> int;
+					def x = Round(scale * span) :> int;
 					gfx.DrawLine(pen, x, 0, x, h);
 				}
 			}
@@ -111,23 +156,71 @@ class GraphTimeTask : ITask
 				{
 					def t = DateTime(min.Year, 1, 1).AddYears(i);
 					def span = t.Ticks - min.Ticks :> double;
-					def x = Math.Round(scale * span) :> int;
+					def x = Round(scale * span) :> int;
 					gfx.DrawLine(pen, x, 0, x, h);
 				}
 			}
 		}
-		def Normalize(l, min, max)
+		def MeanShift(data, window)
 		{
-			foreach (x in l with i)
-				l[i] = (x - min) / (max - min);
+			def hFactor = 1.0 / (window * window);
+			def n       = data.Length;
+
+			def modes = array(n);
+			data.CopyTo(modes, 0);
+
+			repeat (msIterationCount)
+			{
+				for (mutable i = 0; i != n; ++i)
+				{
+					mutable xi    = modes[i];
+					mutable mode  = 0.0;
+					mutable total = 0.0;
+					match (msKernel)
+					{
+					| MeanShiftKernel.Epanechnikov =>
+						for (mutable j = 0; j != n; ++j)
+						{
+							def xj = data[j];
+							def w = 1.0 - hFactor * (xi - xj) * (xi - xj);
+							when (w > 0.0)
+							{
+								total += w;
+								mode += xj * w;
+							}
+						}
+					| MeanShiftKernel.Gaussian =>
+						for (mutable j = 0; j != n; ++j)
+						{
+							def xj = data[j];
+							def w = Exp(-0.5 * hFactor * (xi - xj) * (xi - xj));
+							total += w;
+							mode += data[j] * w;
+						}
+					}
+					modes[i] = mode / total;
+				}
+			}
+			modes;
 		}
+
+		def hoursPerDay      = 24;
+		def minutesPerHours  = 60;
+		def secondsPerMinute = 60;
+		def ticksPerSecond   = 10_000_000;
+		def window       = kdeWindow * hoursPerDay * minutesPerHours * secondsPerMinute * ticksPerSecond;
+		def groupSpacing = 10.0 * secondsPerMinute * ticksPerSecond;
+
 
 		def dates = json.Photos.MapToArray(_.DateTaken);
 		Array.Sort(dates);
 		def (minDate, maxDate) = (dates[0], dates[dates.Length - 1]);
 
 		def times = dates.Map(date => date.Ticks :> double);
-		Normalize(times, minDate.Ticks, maxDate.Ticks);
+
+		def modes = MeanShift(times, window);
+
+		def groups = Aggregate(modes, groupSpacing);
 
 		graph.Image = Bitmap(w, h);
 		using (gfx = Graphics.FromImage(graph.Image))
@@ -136,13 +229,17 @@ class GraphTimeTask : ITask
 
 			gfx.Clear(Color.White);
 
-			DrawDistribution(graph.Image, times);
+			DrawDistribution(graph.Image, times, window);
 
 			DrawGrid(gfx, minDate, maxDate);
 
 			gfx.DrawLine(Pen(Color.FromArgb(37, 37, 37)), 0, y, w, y);
 
-			DrawTicks(gfx, times, 3.0f);
+			DrawTicks(gfx, times, 3.0f, y, groups);
+
+			gfx.DrawLine(Pen(Color.FromArgb(37, 37, 37)), 0, (y+h)/2, w, (y+h)/2);
+
+			DrawTicks(gfx, modes, 3.0f, (y+h)/2, groups);
 		}
 	}
 }

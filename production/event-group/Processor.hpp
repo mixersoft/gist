@@ -5,7 +5,7 @@
 
 #include <vector>
 
-void GroupPhotos
+void DetectEvents
 	( const std::vector<PhotoInfo> & photos
 	,       std::vector<EventInfo> & events
 	,       double                   windowWidth

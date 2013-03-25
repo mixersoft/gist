@@ -18,8 +18,8 @@ void Process(int scale, int iterationCount, bool prettyPrint)
 	const int minutesPerHour   (60);
 	const int secondsPerMinute (60);
 
-	const double windowWidth  (static_cast<double>(scale * hoursPerDay * minutesPerHour * secondsPerMinute));
-	const double eventSpacing (static_cast<double>(1 * minutesPerHour * secondsPerMinute));
+	const double windowWidth  (0.5 * scale * hoursPerDay * minutesPerHour * secondsPerMinute);
+	const double eventSpacing (10.0 * secondsPerMinute);
 
 	InputData inputData;
 	Read(inputData);
@@ -27,7 +27,7 @@ void Process(int scale, int iterationCount, bool prettyPrint)
 	SortPhotos(inputData.Photos);
 
 	std::vector<EventInfo> events;
-	GroupPhotos(inputData.Photos, events, windowWidth, eventSpacing, iterationCount);
+	DetectEvents(inputData.Photos, events, windowWidth, eventSpacing, iterationCount);
 
 	Write(inputData, events, prettyPrint);
 }
