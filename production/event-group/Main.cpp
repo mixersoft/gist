@@ -19,7 +19,7 @@ void Process(double scale, int iterationCount, bool prettyPrint, bool verbose)
 	const int secondsPerMinute (60);
 
 	const double windowWidth  (0.5 * scale * hoursPerDay * minutesPerHour * secondsPerMinute);
-	const double eventSpacing (10.0 * secondsPerMinute);
+	const double eventSpacing (0.05 * windowWidth);
 
 	InputData inputData;
 	Read(inputData);
