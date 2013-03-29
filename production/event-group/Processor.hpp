@@ -11,6 +11,10 @@ void DetectEvents
 	,       double                   windowWidth
 	,       double                   eventSpacing
 	,       int                      iterationCount
+	,       bool                     verbose
 	);
 
-void SortPhotos(std::vector<PhotoInfo> & photos);
+void SortPhotos
+	( std::vector<PhotoInfo> & photos
+	, bool                     verbose
+	);

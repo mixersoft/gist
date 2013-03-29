@@ -12,7 +12,7 @@ using namespace std;
 
 namespace po = boost::program_options;
 
-void Process(int scale, int iterationCount, bool prettyPrint)
+void Process(double scale, int iterationCount, bool prettyPrint, bool verbose)
 {
 	const int hoursPerDay      (24);
 	const int minutesPerHour   (60);
@@ -24,10 +24,10 @@ void Process(int scale, int iterationCount, bool prettyPrint)
 	InputData inputData;
 	Read(inputData);
 
-	SortPhotos(inputData.Photos);
+	SortPhotos(inputData.Photos, verbose);
 
 	std::vector<EventInfo> events;
-	DetectEvents(inputData.Photos, events, windowWidth, eventSpacing, iterationCount);
+	DetectEvents(inputData.Photos, events, windowWidth, eventSpacing, iterationCount, verbose);
 
 	Write(inputData, events, prettyPrint);
 }
@@ -37,16 +37,18 @@ void Process(int scale, int iterationCount, bool prettyPrint)
 int main(int argc, char * argv[])
 try
 {
-	bool prettyPrint    (false);
-	int  iterationCount (20);
-	int  scale          (1);
+	double scale          (1.0);
+	int    iterationCount (20);
+	bool   prettyPrint    (false);
+	bool   verbose        (false);
 
 	po::options_description desc("Supported options");
 	desc.add_options()
 		("help",         "display this help message")
-		("scale",        po::value<int>(&scale)->required(),                 "time scale, in days")
+		("scale",        po::value<double>(&scale)->required(),              "time scale, in days")
 		("iterations",   po::value<int>(&iterationCount)->default_value(20), "number of mean shift iterations")
 		("pretty_print", po::value<bool>(&prettyPrint)->zero_tokens(),       "format output")
+		("verbose",      po::value<bool>(&verbose)->zero_tokens(),           "print additional information")
 		;
 
 	po::variables_map vm;
@@ -67,7 +69,7 @@ try
 		return EXIT_FAILURE;
 	}
 
-	Process(scale, iterationCount, prettyPrint);
+	Process(scale, iterationCount, prettyPrint, verbose);
 
 	return EXIT_SUCCESS;
 }

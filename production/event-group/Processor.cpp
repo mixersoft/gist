@@ -93,25 +93,40 @@ void CreateEvents
 	events.resize(separators.size() + 1);
 
 	size_t firstPhotoIndex (0);
+	size_t lastPhotoIndex  (0);
 	size_t eventStart      (0);
 	size_t eventIndex      (0);
 	for (size_t i(1), size(photos.size()); i != size; ++i)
 	{
 		if (eventIndex != separators.size() && i == separators[eventIndex])
 		{
-			events[eventIndex].FirstPhotoID = photos[firstPhotoIndex].ID;
-			events[eventIndex].PhotoCount   = i - eventStart;
+			EventInfo & event(events.at(eventIndex));
+
+			event.FirstPhotoID = photos[firstPhotoIndex].ID;
+			event.PhotoCount   = i - eventStart;
+			event.BeginDate    = photos[firstPhotoIndex].DateTaken;
+			event.EndDate      = photos[lastPhotoIndex].DateTaken;
+
 			firstPhotoIndex = i;
+			lastPhotoIndex  = i;
 			eventStart      = i;
+
 			++eventIndex;
 		}
 		if (photos[i].DateTaken < photos[firstPhotoIndex].DateTaken)
 			firstPhotoIndex = i;
+		if (photos[i].DateTaken > photos[lastPhotoIndex].DateTaken)
+			lastPhotoIndex = i;
 	}
 	if (eventIndex != separators.size())
 		throw runtime_error("Event creation indexing error.");
-	events[eventIndex].FirstPhotoID = photos[firstPhotoIndex].ID;
-	events[eventIndex].PhotoCount   = photos.size() - eventStart;
+
+	EventInfo & event(events.at(eventIndex));
+
+	event.FirstPhotoID = photos[firstPhotoIndex].ID;
+	event.PhotoCount   = photos.size() - eventStart;
+	event.BeginDate    = photos[firstPhotoIndex].DateTaken;
+	event.EndDate      = photos[lastPhotoIndex].DateTaken;
 }
 
 // Text-mode data visualization for debugging purposes.
@@ -135,6 +150,7 @@ void DetectEvents
 	,       double              windowWidth
 	,       double              eventSpacing
 	,       int                 iterationCount
+	,       bool                verbose
 	)
 {
 	const int    n(photos.size());
@@ -148,16 +164,23 @@ void DetectEvents
 	vector<size_t> separators;
 	Aggregate(modes, separators, eventSpacing);
 
-	//cout << "data:  |" << MakeTimelineString(data,  100) << "|\n";
-	//cout << "modes: |" << MakeTimelineString(modes, 100) << "|\n";
+	if (verbose)
+	{
+		cout << "data:  |" << MakeTimelineString(data,  100) << "|\n";
+		cout << "modes: |" << MakeTimelineString(modes, 100) << "|\n";
+	}
 
 	CreateEvents(photos, separators, events);
 }
 
-void SortPhotos(vector<PhotoInfo> & photos)
+void SortPhotos(vector<PhotoInfo> & photos, bool verbose)
 {
 	bool isSorted(photos.end() == adjacent_find(photos.begin(), photos.end(), &PhotoGreaterThanByDate));
 	if (!isSorted)
+	{
+		if (verbose)
+			cout << "The input is unsorted and will be sorted.\n";
 		sort(photos.begin(), photos.end(), &PhotoLessThanByDate);
+	}
 }
 

@@ -5,6 +5,7 @@
 #include <ctime>
 #include <iterator>
 #include <sstream>
+#include <string>
 #include <stdexcept>
 
 using namespace std;
@@ -59,6 +60,8 @@ void Write
 		Json::Value event(Json::objectValue);
 		event["FirstPhotoID"] = events[i].FirstPhotoID;
 		event["PhotoCount"]   = events[i].PhotoCount;
+		event["BeginDate"]    = static_cast<unsigned int>(events[i].BeginDate);
+		event["EndDate"]      = static_cast<unsigned int>(events[i].EndDate);
 		result["Events"].append(event);
 	}
 
