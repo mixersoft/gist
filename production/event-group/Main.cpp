@@ -17,9 +17,10 @@ void Process(double scale, int iterationCount, bool prettyPrint, bool verbose)
 	const int hoursPerDay      (24);
 	const int minutesPerHour   (60);
 	const int secondsPerMinute (60);
+	const double eventSpacingToWindowWidthRatio(0.05);
 
 	const double windowWidth  (0.5 * scale * hoursPerDay * minutesPerHour * secondsPerMinute);
-	const double eventSpacing (0.05 * windowWidth);
+	const double eventSpacing (eventSpacingToWindowWidthRatio * windowWidth);
 
 	InputData inputData;
 	Read(inputData);
