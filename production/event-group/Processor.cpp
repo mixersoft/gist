@@ -170,7 +170,8 @@ void DetectEvents
 	,       vector<EventInfo> & events
 	,       double              windowWidth
 	,       double              eventSpacing
-	,       int                 iterationCount
+	,       unsigned int        maxEventSize
+	,       unsigned int        iterationCount
 	,       bool                verbose
 	)
 {
@@ -181,8 +182,6 @@ void DetectEvents
 	for (int i(0); i != n; ++i)
 		modes[i] = data[i] = static_cast<double>(photos[i].DateTaken);
 
-	vector<size_t> separators;
-
 	MeanShift
 		( data.begin(),  data.end()
 		, modes.begin(), modes.end()
@@ -190,8 +189,45 @@ void DetectEvents
 		, iterationCount
 		);
 
-	separators.clear();
+	vector<size_t> separators;
 	Aggregate(modes, separators, eventSpacing);
+
+	for (;;)
+	{
+		windowWidth /= 1.5;
+
+		size_t eventStart      (0);
+		bool   foundLargeGroup (false);
+		for (size_t i(0), size(separators.size()); i != size; ++i)
+		{
+			size_t eventEnd(separators[i]);
+			if (eventEnd - eventStart > maxEventSize)
+			{
+				if (verbose)
+					cout << "splitting " << eventStart << "-" << eventEnd << "\n";
+				copy
+					( data.begin() + eventStart
+					, data.begin() + eventEnd
+					, modes.begin() + eventStart
+					);
+				MeanShift
+					( data.begin()
+					, data.end()
+					, modes.begin() + eventStart
+					, modes.begin() + eventEnd
+					, windowWidth
+					, iterationCount
+					);
+				foundLargeGroup = true;
+			}
+			eventStart = eventEnd;
+		}
+		if (!foundLargeGroup)
+			break;
+
+		separators.clear();
+		Aggregate(modes, separators, eventSpacing);
+	}
 
 	CreateEvents(photos, separators, events);
 

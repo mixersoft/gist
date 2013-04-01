@@ -10,7 +10,8 @@ void DetectEvents
 	,       std::vector<EventInfo> & events
 	,       double                   windowWidth
 	,       double                   eventSpacing
-	,       int                      iterationCount
+	,       unsigned int             maxEventSize
+	,       unsigned int             iterationCount
 	,       bool                     verbose
 	);
 
