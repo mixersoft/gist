@@ -2,13 +2,14 @@
 
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
-using System.IO.File;
-using System.IO.Directory;
+using System.Console;
+using System.IO;
 
-foreach (file in GetFiles("data", "*.json"))
 {
-	def data = JObject.Parse(ReadAllText(file));
-	using (file = JsonTextWriter(CreateText(file)))
+	def data =
+		using (reader = StreamReader(OpenStandardInput()))
+			JObject.Parse(reader.ReadToEnd());
+	using (file = JsonTextWriter(StreamWriter(OpenStandardOutput())))
 	{
 		file.Formatting  = Formatting.Indented;
 		file.Indentation = 1;
