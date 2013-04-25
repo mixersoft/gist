@@ -1,0 +1,25 @@
+using Nemerle.Collections;
+using PipelineMacro;
+using System.Collections.Generic;
+using System.IO;
+
+class LoadEventsTask : ITask
+{
+	private items : Dictionary[string, string] = Dictionary();
+
+	public MapItems(_ : list[ITaskItem]) : list[TaskMapping]
+	{
+		def CreateMapping(path)
+		{
+			def name = Path.GetFileNameWithoutExtension(path);
+			items[name] = path;
+			TaskMapping(this, [], [ EventItem(name) ]);
+		}
+		Directory.GetFiles(@"data\events", "*.txt").MapToList(CreateMapping);
+	}
+
+	private Compute([OutItem] eventItem : EventItem) : void
+	{
+		eventItem.Load(items[eventItem.Name]);
+	}
+}

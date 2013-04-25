@@ -10,21 +10,32 @@ class GraphTimeTask : ITask
 {
 	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
 	{
+		def eventItems = Hashtable();
+		foreach(item is EventItem in items)
+			eventItems[item.Name] = item;
+
 		mutable mappings = [];
-		foreach (item is JsonItem in items)
-			mappings ::= TaskMapping(this, [ item ], [ TimeGraphItem(item.Name) ]);
+		foreach (item is JsonItem when eventItems.Contains(item.Name) in items)
+		{
+			mappings ::= TaskMapping
+				( this
+				, [ item, eventItems[item.Name] ]
+				, [ TimeGraphItem(item.Name) ]
+				);
+		}
 		mappings;
 	}
 
 	private Compute
 		( [InItem]  json   : JsonItem
+		, [InItem]  events : EventItem
 		, [OutItem] graph  : TimeGraphItem
 		, kdeWindow        : double
 		, msIterationCount : int
 		, msKernel         : MeanShiftKernel
 		) : void
 	{
-		def (w, h, y) = (512, 96, 64);
+		def (w, h, y) = (512, 112, 64);
 
 		// returns the list of indices at which new groups begin
 		// assumes the data is sorted in increasing order
@@ -77,7 +88,6 @@ class GraphTimeTask : ITask
 			when (max > 0.0)
 			{
 				def foreColor = Color.FromArgb(255, 51, 0);
-				def backColor = Color.White;
 				for (mutable pixelX = 0; pixelX != w; ++pixelX)
 				{
 					def value = (y - 1) * cols[pixelX] / max;
@@ -86,18 +96,23 @@ class GraphTimeTask : ITask
 						bmp.SetPixel(pixelX, pixelY, foreColor);
 					// antialiasing
 					def δ = value - Floor(value);
-					def color = Color.FromArgb
-						( red   = (δ * foreColor.R + (1.0 - δ) * backColor.R) :> int
-						, green = (δ * foreColor.G + (1.0 - δ) * backColor.G) :> int
-						, blue  = (δ * foreColor.B + (1.0 - δ) * backColor.B) :> int
-						);
 					when (δ > 0.0)
+					{
+						def backColor = bmp.GetPixel(pixelX, h - 1);
+						def color = Color.FromArgb
+							( red   = (δ * foreColor.R + (1.0 - δ) * backColor.R) :> int
+							, green = (δ * foreColor.G + (1.0 - δ) * backColor.G) :> int
+							, blue  = (δ * foreColor.B + (1.0 - δ) * backColor.B) :> int
+							);
 						bmp.SetPixel(pixelX, h - 1, color);
+					}
 				}
 			}
 		}
 		def DrawTicks(gfx, times, r, y, groups)
 		{
+			gfx.DrawLine(Pen(Color.FromArgb(37, 37, 37)), 0, y, w, y);
+
 			def min = times[0];
 			def max = times[times.Length - 1];
 
@@ -222,6 +237,8 @@ class GraphTimeTask : ITask
 
 		def groups = Aggregate(modes, groupSpacing);
 
+		def events = events.Dates.Map(date => date.Ticks :> double);
+
 		graph.Image = Bitmap(w, h);
 		using (gfx = Graphics.FromImage(graph.Image))
 		{
@@ -229,17 +246,13 @@ class GraphTimeTask : ITask
 
 			gfx.Clear(Color.White);
 
-			DrawDistribution(graph.Image, times, window);
-
 			DrawGrid(gfx, minDate, maxDate);
 
-			gfx.DrawLine(Pen(Color.FromArgb(37, 37, 37)), 0, y, w, y);
+			DrawDistribution(graph.Image, times, window);
 
-			DrawTicks(gfx, times, 3.0f, y, groups);
-
-			gfx.DrawLine(Pen(Color.FromArgb(37, 37, 37)), 0, (y+h)/2, w, (y+h)/2);
-
-			DrawTicks(gfx, modes, 3.0f, (y+h)/2, groups);
+			DrawTicks(gfx, times,  3.0f, y,      groups);
+			DrawTicks(gfx, modes,  3.0f, y + 16, groups);
+			DrawTicks(gfx, events, 3.0f, y + 32, array(0));
 		}
 	}
 }

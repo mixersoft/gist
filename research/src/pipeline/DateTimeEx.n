@@ -1,0 +1,17 @@
+﻿using System.Globalization;
+using System;
+
+module DateTimeEx
+{
+	private epoch : DateTime = DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+
+	public FromUnixTime(time : int) : DateTime
+	{
+		epoch.AddSeconds(time)
+	}
+
+	public ToUnixTime(this time : DateTime) : int
+	{
+		(time.ToUniversalTime() - epoch).TotalSeconds :> int
+	}
+}

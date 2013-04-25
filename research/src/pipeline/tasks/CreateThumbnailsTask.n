@@ -22,10 +22,10 @@ class CreateThumbnailsTask : ITask
 
 		_ = Directory.CreateDirectory(Path.GetDirectoryName(thumbnails.Path));
 		_ = Directory.CreateDirectory(thumbnails.Path);
-		System.Console.WriteLine("directory: {0}", Path.GetDirectoryName(thumbnails.Path));
-		System.Console.WriteLine("filename: {0}", Path.GetFileName(thumbnails.Path));
 
-		foreach (id in images.ImageIDs)
+		thumbnails.ImageIDs = images.ImageIDs;
+
+		foreach (id in thumbnails.ImageIDs)
 		{
 			using (src = Bitmap(images.MakePath(id)))
 			{
