@@ -27,15 +27,18 @@ class GraphTimeTask : ITask
 	}
 
 	private Compute
-		( [InItem]  json   : JsonItem
-		, [InItem]  events : EventItem
-		, [OutItem] graph  : TimeGraphItem
-		, kdeWindow        : double
-		, msIterationCount : int
-		, msKernel         : MeanShiftKernel
+		( [InItem]  json      : JsonItem
+		, [InItem]  refEvents : EventItem
+		, [OutItem] graph     : TimeGraphItem
+		, kdeWindow           : double
+		, msIterationCount    : int
+		, msKernel            : MeanShiftKernel
 		) : void
 	{
-		def (w, h, y) = (512, 112, 64);
+		def (w, h, y) = (1600, 112, 64);
+		def dataY     = 64;
+		def eventY    = 80;
+		def refEventY = 96;
 
 		// returns the list of indices at which new groups begin
 		// assumes the data is sorted in increasing order
@@ -56,28 +59,45 @@ class GraphTimeTask : ITask
 		}
 		def DrawDistribution(bmp, times, window)
 		{
+			def hFactor = 1.0 / (window * window);
+			def n       = times.Length;
+
+			def GetRange(x, support)
+			{
+				mutable min = 0;
+				while (times[min] < x - support)
+					++min;
+				mutable max = min;
+				while (max < n && times[max] <= x + support)
+					++max;
+				(min, max);
+			}
+
 			def minTime = times[0];
 			def maxTime = times[times.Length - 1];
 
-			def hFactor = 1.0 / (window * window);
 			def cols = array(w);
 			mutable max = 0.0;
 			for (mutable i = 0; i != w; ++i)
 			{
-				def x = minTime + (maxTime - minTime) * (i :> double) / w;
+				def xi = minTime + (maxTime - minTime) * (i :> double) / w;
 				match (msKernel)
 				{
 				| MeanShiftKernel.Epanechnikov =>
-					foreach (t in times)
+					def (minJ, maxJ) = GetRange(xi, window);
+					for (mutable j = minJ; j != maxJ; ++j)
 					{
-						def w = hFactor * (x - t) * (x - t);
-						when (w <= 1.0)
-							cols[i] += 1.0 - w;
+						def xj = times[j];
+						def w = 1.0 - hFactor * (xi - xj) * (xi - xj);
+						when (w > 0.0)
+							cols[i] += w;
 					}
 				| MeanShiftKernel.Gaussian =>
-					foreach (t in times)
+					def (minJ, maxJ) = GetRange(xi, window * 4.0);
+					for (mutable j = minJ; j != maxJ; ++j)
 					{
-						def w = Exp(-0.5 * hFactor * (x - t) * (x - t));
+						def xj = times[j];
+						def w = Exp(-0.5 * hFactor * (xi - xj) * (xi - xj));
 						cols[i] += w;
 					}
 				}
@@ -180,6 +200,19 @@ class GraphTimeTask : ITask
 			def hFactor = 1.0 / (window * window);
 			def n       = data.Length;
 
+			def GetRange(i, support)
+			{
+				def (lo, hi) = (data[i] - support, data[i] + support);
+				mutable min = i - 1;
+				while (min >= 0 && data[min] >= lo)
+					--min;
+				++min;
+				mutable max = i + 1;
+				while (max < n && data[max] <= hi)
+					++max;
+				(min, max);
+			}
+
 			def modes = array(n);
 			data.CopyTo(modes, 0);
 
@@ -193,7 +226,8 @@ class GraphTimeTask : ITask
 					match (msKernel)
 					{
 					| MeanShiftKernel.Epanechnikov =>
-						for (mutable j = 0; j != n; ++j)
+						def (minJ, maxJ) = GetRange(i, window);
+						for (mutable j = minJ; j != maxJ; ++j)
 						{
 							def xj = data[j];
 							def w = 1.0 - hFactor * (xi - xj) * (xi - xj);
@@ -204,7 +238,8 @@ class GraphTimeTask : ITask
 							}
 						}
 					| MeanShiftKernel.Gaussian =>
-						for (mutable j = 0; j != n; ++j)
+						def (minJ, maxJ) = GetRange(i, window * 5.0);
+						for (mutable j = minJ; j != maxJ; ++j)
 						{
 							def xj = data[j];
 							def w = Exp(-0.5 * hFactor * (xi - xj) * (xi - xj));
@@ -223,7 +258,7 @@ class GraphTimeTask : ITask
 		def secondsPerMinute = 60;
 		def ticksPerSecond   = 10_000_000;
 		def window       = kdeWindow * hoursPerDay * minutesPerHours * secondsPerMinute * ticksPerSecond;
-		def groupSpacing = 0.05 * window;
+		def groupSpacing = 0.1 * window;
 
 
 		def dates = json.Photos.MapToArray(_.DateTaken);
@@ -237,7 +272,7 @@ class GraphTimeTask : ITask
 
 		def groups = Aggregate(modes, groupSpacing);
 
-		def events = events.Dates.Map(date => date.Ticks :> double);
+		def refEvents = refEvents.Dates.Map(date => date.Ticks :> double);
 
 		graph.Image = Bitmap(w, h);
 		using (gfx = Graphics.FromImage(graph.Image))
@@ -250,9 +285,9 @@ class GraphTimeTask : ITask
 
 			DrawDistribution(graph.Image, times, window);
 
-			DrawTicks(gfx, times,  y,      groups,   range);
-			DrawTicks(gfx, modes,  y + 16, groups,   range);
-			DrawTicks(gfx, events, y + 32, array(0), range);
+			DrawTicks(gfx, times,     dataY,     groups,   range);
+			DrawTicks(gfx, modes,     eventY,    groups,   range);
+			DrawTicks(gfx, refEvents, refEventY, array(0), range);
 		}
 	}
 }
