@@ -35,10 +35,9 @@ class GraphTimeTask : ITask
 		, msKernel            : MeanShiftKernel
 		) : void
 	{
-		def (w, h, y) = (1600, 112, 64);
+		def (w, h, y) = (1600, 96, 64);
 		def dataY     = 64;
 		def eventY    = 80;
-		def refEventY = 96;
 
 		// returns the list of indices at which new groups begin
 		// assumes the data is sorted in increasing order
@@ -154,43 +153,13 @@ class GraphTimeTask : ITask
 					);
 			}
 		}
-		def DrawGrid(gfx, min, max)
+		def DrawGrid(gfx, times, (min, max), color)
 		{
-			def scale = w / ((max.Ticks - min.Ticks) :> double);
-
-			def totalDays = (max - min).TotalDays :> int;
-			when (10 * totalDays <= w)
+			using (pen = Pen(color))
 			{
-				def pen = Pen(Color.FromArgb(194, 194, 194));
-				for (mutable i = 0; i <= totalDays + 1; ++i)
+				foreach (t in times)
 				{
-					def t = DateTime(min.Year, min.Month, min.Day).AddDays(i);
-					def span = t.Ticks - min.Ticks :> double;
-					def x = Round(scale * span) :> int;
-					gfx.DrawLine(pen, x, 0, x, h);
-				}
-			}
-			def totalMonths = ((max - min).TotalDays / 30.0) :> int;
-			when (10 * totalMonths <= w)
-			{
-				def pen = Pen(Color.FromArgb(137, 137, 137));
-				for (mutable i = 0; i <= totalMonths + 1; ++i)
-				{
-					def t = DateTime(min.Year, min.Month, 1).AddMonths(i);
-					def span = t.Ticks - min.Ticks :> double;
-					def x = Round(scale * span) :> int;
-					gfx.DrawLine(pen, x, 0, x, h);
-				}
-			}
-			def totalYears = ((max - min).TotalDays / 365.0) :> int;
-			when (10 * totalYears <= w)
-			{
-				def pen = Pen(Color.FromArgb(70, 70, 70));
-				for (mutable i = 0; i <= totalYears + 1; ++i)
-				{
-					def t = DateTime(min.Year, 1, 1).AddYears(i);
-					def span = t.Ticks - min.Ticks :> double;
-					def x = Round(scale * span) :> int;
+					def x = ((t - min) / (max - min) * w) :> float;
 					gfx.DrawLine(pen, x, 0, x, h);
 				}
 			}
@@ -263,7 +232,6 @@ class GraphTimeTask : ITask
 
 		def dates = json.Photos.MapToArray(_.DateTaken);
 		Array.Sort(dates);
-		def (minDate, maxDate) = (dates[0], dates[dates.Length - 1]);
 
 		def times = dates.Map(date => date.Ticks :> double);
 		def range = (times[0], times[times.Length - 1]);
@@ -281,13 +249,12 @@ class GraphTimeTask : ITask
 
 			gfx.Clear(Color.White);
 
-			DrawGrid(gfx, minDate, maxDate);
+			DrawGrid(gfx, refEvents, range, Color.FromArgb(194, 194, 194));
 
 			DrawDistribution(graph.Image, times, window);
 
 			DrawTicks(gfx, times,     dataY,     groups,   range);
 			DrawTicks(gfx, modes,     eventY,    groups,   range);
-			DrawTicks(gfx, refEvents, refEventY, array(0), range);
 		}
 	}
 }
