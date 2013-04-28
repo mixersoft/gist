@@ -199,9 +199,10 @@ namespace PipelineMacro
 				public Load(path : string) : void
 				{
 					def map = Hashtable();
-					foreach (line in File.ReadAllLines(path))
-						map.Add(SplitParameterLine(line));
-
+					File.ReadAllLines(path)
+						.Map(SplitParameterLine)
+						.MapToArrayFiltered(_.IsSome, _.Value)
+						.Iter(map.Add);
 					{ ..$(Parameters.Map(CreateParameterInitializer)) }
 				}
 			]>

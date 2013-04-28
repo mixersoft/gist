@@ -14,14 +14,23 @@ public class Parameters
 	[ Parameter(LongName = "clustering threshold") ]
 	public mutable ClusteringThreshold : double;
 
+	[ Parameter(LongName = "coarse event spacing") ]
+	public mutable CoarseEventSpacing : double;
+
 	[ Parameter(LongName = "color component weight") ]
 	public mutable ColorWeight : double;
+
+	[ Parameter(LongName = "day quota") ]
+	public mutable DayQuota : int;
 
 	[ Parameter(LongName = "dominant color count") ]
 	public mutable DominantColorCount : int;
 
 	[ Parameter(LongName = "download image prefix") ]
 	public mutable DownloadImagePrefix : string;
+
+	[ Parameter(LongName = "fine event spacing") ]
+	public mutable FineEventSpacing : double;
 
 	[ Parameter(LongName = "hashed image blur") ]
 	public mutable HashedImageBlur : ImageHash.BlurMethod;
@@ -57,12 +66,16 @@ public class Parameters
 	// implementation methods
 	//-----------------------
 
-	private SplitParameterLine(line : string) : string * string
+	private SplitParameterLine(line : string) : option[string * string]
 	{
-		def i = line.IndexOf('=');
-		def name  = line.Substring(0, i).Trim();
-		def value = line.Substring(i + 1).Trim();
-		(name, value);
+		match (line.IndexOf('='))
+		{
+		| -1 => None()
+		| i  =>
+			def name  = line.Substring(0, i).Trim();
+			def value = line.Substring(i + 1).Trim();
+			Some(name, value);
+		}
 	}
 
 	//--------

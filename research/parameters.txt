@@ -2,13 +2,18 @@ clustering threshold = 0.540193980531857
 color component weight = 0.00153788994898586
 dominant color count = 2
 download image prefix = 
+image sample size = 10
+image size = 120 120
+simulated timeline count = 10
+
 hash method = md5
 hashed image blur = gaussian 1
 hashed image bpp = 2
 hashed image size = 8
-image sample size = 10
-image size = 120 120
+
+day quota = 6
+coarse event spacing = 1
+fine event spacing = 0.5
 kde window = 0.25
-mean shift iteration count = 200
+mean shift iteration count = 100
 mean shift kernel = gaussian
-simulated timeline count = 10

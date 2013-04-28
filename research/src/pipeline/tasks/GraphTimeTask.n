@@ -33,11 +33,16 @@ class GraphTimeTask : ITask
 		, kdeWindow           : double
 		, msIterationCount    : int
 		, msKernel            : MeanShiftKernel
+		, fineEventSpacing    : double
+		, coarseEventSpacing  : double
+		, dayQuota            : int
 		) : void
 	{
-		def (w, h, y) = (1600, 96, 64);
-		def dataY     = 64;
-		def eventY    = 80;
+		def (w, h, y) = (1600, 128, 64);
+		def dataY        = 64;
+		def dayEventY    = 80;
+		def coarseEventY = 96;
+		def fineEventY   = 112;
 
 		// returns the list of indices at which new groups begin
 		// assumes the data is sorted in increasing order
@@ -53,8 +58,22 @@ class GraphTimeTask : ITask
 						events.Add(i);
 					prev = data[i];
 				}
+				events.Add(data.Length);
 			}
 			events.ToArray();
+		}
+		def AverageGroup(data, separators)
+		{
+			def means = array(separators.Length);
+			mutable i = 0;
+			foreach (separator in separators with j)
+			{
+				mutable acc, n;
+				while (i != separator)
+					(acc, n, i) = (acc + data[i], n + 1, i + 1);
+				means[j] = acc / n;
+			}
+			means;
 		}
 		def DrawDistribution(bmp, times, window)
 		{
@@ -128,31 +147,6 @@ class GraphTimeTask : ITask
 				}
 			}
 		}
-		def DrawTicks(gfx, times, y, groups, (min, max))
-		{
-			def r = 2.5f;
-
-			gfx.DrawLine(Pen(Color.FromArgb(37, 37, 37)), 0, y, w, y);
-
-			mutable brush1 = SolidBrush(Color.FromArgb(51,  51, 51));
-			mutable brush2 = SolidBrush(Color.FromArgb(153, 1,  0));
-			mutable groupIndex = 0;
-			foreach (t in times with i)
-			{
-				when (groupIndex < groups.Length && i == groups[groupIndex])
-				{
-					brush1 <-> brush2;
-					++groupIndex;
-				}
-				gfx.FillEllipse
-					( brush  = brush1
-					, x      = (((t - min) / (max - min) * w) :> float) - r
-					, y      = y - r
-					, width  = r * 2.0f
-					, height = r * 2.0f
-					);
-			}
-		}
 		def DrawGrid(gfx, times, (min, max), color)
 		{
 			using (pen = Pen(color))
@@ -163,6 +157,100 @@ class GraphTimeTask : ITask
 					gfx.DrawLine(pen, x, 0, x, h);
 				}
 			}
+		}
+		def DrawRanges(gfx, data, y, separators, (min, max))
+		{
+			def r = 2.5f;
+
+			gfx.DrawLine(Color.FromArgb(37, 37, 37) |> Pen, 0, y, w, y);
+
+			def brush = Color.FromArgb(51, 51, 51) |> SolidBrush;
+
+			mutable begin = 0;
+			foreach (end in separators)
+			{
+				def s = (((data[begin] - min) / (max - min) * w) :> float);
+				def f = (((data[end-1] - min) / (max - min) * w) :> float);
+				gfx.FillRectangle(brush, s, y - r, f - s, r + r);
+				begin = end;
+			}
+		}
+		def DrawTicks(gfx, data, y, groups, empties, (min, max))
+		{
+			def (r1, r2) = (2.5f, 5.5f);
+
+			gfx.DrawLine(Pen(Color.FromArgb(37, 37, 37)), 0, y, w, y);
+
+			def colors  = array[(51,  51, 51), (153, 1,  0)].Map(Color.FromArgb);
+			def pens    = colors.Map(Pen);
+			def brushes = colors.Map(SolidBrush);
+
+			mutable groupIndex = 0;
+			foreach (x in data with i)
+			{
+				when (i == groups[groupIndex])
+					++groupIndex;
+				def x  = (((x - min) / (max - min) * w) :> float);
+				gfx.FillEllipse(brushes[groupIndex % 2], x - r1, y - r1, r1 + r1, r1 + r1);
+				when (empties.Contains(i))
+					gfx.DrawEllipse(pens[groupIndex % 2], x - r2, y - r2, r2 + r2, r2 + r2);
+			}
+		}
+		def FindCoarseEvents(data, noise, spacing)
+		{
+			def separators = List();
+			mutable prev = 0;
+			while (prev != data.Length && noise.Contains(prev))
+				++prev;
+			for (mutable i = prev; i != data.Length; ++i)
+			{
+				when (!noise.Contains(i))
+				{
+					when (data[i] - data[prev] > spacing)
+						separators.Add(i);
+					prev = i;
+				}
+			}
+			separators.Add(data.Length);
+			separators.ToArray();
+		}
+		def FindFineEvents(data, noise, coarseSeparators, spacing)
+		{
+			def separators = List();
+			mutable i = 0;
+			foreach (coarseSep in coarseSeparators)
+			{
+				mutable prev = i;
+				while (prev != data.Length && noise.Contains(prev))
+					++prev;
+				for (i = prev; i != coarseSep; ++i)
+				{
+					when (!noise.Contains(i))
+					{
+						when (data[i] - data[prev] > spacing)
+							separators.Add(i);
+						prev = i;
+					}
+				}
+				separators.Add(coarseSep);
+			}
+			separators.ToArray();
+		}
+		def FindNoise(separators)
+		{
+			mutable noiseData   = Set();
+			mutable noiseGroups = Set();
+			mutable prev = 0;
+			foreach (separator in separators with i)
+			{
+				when (separator - prev < dayQuota)
+				{
+					noiseData   = noiseData.AddList($[prev .. separator - 1]);
+					noiseGroups = noiseGroups.Add(i);
+				}
+				prev = separator;
+			}
+			(noiseData, noiseGroups);
 		}
 		def MeanShift(data, window)
 		{
@@ -222,12 +310,11 @@ class GraphTimeTask : ITask
 			modes;
 		}
 
-		def hoursPerDay      = 24;
-		def minutesPerHours  = 60;
-		def secondsPerMinute = 60;
-		def ticksPerSecond   = 10_000_000;
-		def window       = kdeWindow * hoursPerDay * minutesPerHours * secondsPerMinute * ticksPerSecond;
-		def groupSpacing = 0.1 * window;
+		def ticksPerDay        = 24 * 60 * 60 * 10_000_000;
+		def coarseEventSpacing = coarseEventSpacing * ticksPerDay;
+		def fineEventSpacing   = fineEventSpacing * ticksPerDay;
+		def window             = kdeWindow * ticksPerDay;
+		def groupSpacing       = 0.1 * window;
 
 
 		def dates = json.Photos.MapToArray(_.DateTaken);
@@ -238,7 +325,14 @@ class GraphTimeTask : ITask
 
 		def modes = MeanShift(times, window);
 
-		def groups = Aggregate(modes, groupSpacing);
+		def dayGroups     = Aggregate(modes, groupSpacing);
+		def dayTimes      = AverageGroup(modes, dayGroups);
+		def dayTimeGroups = $[1..dayTimes.Length].ToArray();
+
+		def (noiseTimes, noiseDays) = FindNoise(dayGroups);
+
+		def coarseGroups = FindCoarseEvents(times, noiseTimes, coarseEventSpacing);
+		def fineGroups   = FindFineEvents(times, noiseTimes, coarseGroups, fineEventSpacing);
 
 		def refEvents = refEvents.Dates.Map(date => date.Ticks :> double);
 
@@ -253,8 +347,11 @@ class GraphTimeTask : ITask
 
 			DrawDistribution(graph.Image, times, window);
 
-			DrawTicks(gfx, times,     dataY,     groups,   range);
-			DrawTicks(gfx, modes,     eventY,    groups,   range);
+			DrawTicks(gfx, times,    dataY,        dayGroups,     Set(),     range);
+			DrawTicks(gfx, dayTimes, dayEventY,    dayTimeGroups, noiseDays, range);
+
+			DrawRanges(gfx, times, coarseEventY, coarseGroups, range);
+			DrawRanges(gfx, times, fineEventY,   fineGroups,   range);
 		}
 	}
 }
