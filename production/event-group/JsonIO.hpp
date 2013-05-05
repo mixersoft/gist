@@ -8,6 +8,7 @@
 void Write
 	( const InputData              & inputData
 	, const std::vector<EventInfo> & events
+	, const std::vector<EventInfo> & noise
 	,       bool                     prettyPrint
 	);
 

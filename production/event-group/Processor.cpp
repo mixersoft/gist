@@ -4,6 +4,7 @@
 #include <cmath>
 #include <iomanip>
 #include <iostream>
+#include <set>
 #include <stdexcept>
 #include <utility>
 
@@ -29,7 +30,6 @@ bool PhotoGreaterThanByDate
 
 // Find where each event ends and another begins.
 // An event is a set of points no farther than eventSpacing apart.
-/*
 void Aggregate
 	( const vector<double> & data
 	,       vector<size_t> & separators
@@ -47,24 +47,50 @@ void Aggregate
 	}
 	separators.push_back(data.size());
 }
-*/
 
 void FindEvents
 	( const vector<double> & data
+	, const set<size_t>    & noise
 	,       vector<Range>  & ranges
 	,       Range            range
 	,       double           spacing
 	)
 {
 	size_t s(range.first), f(range.second);
+	while (s != f && noise.end() != noise.find(s))
+		++s;
 	for (size_t i(s); i != f; ++i)
 	{
 		if (data[i + 1] - data[i] < spacing)
+			continue;
+		if (noise.end() != noise.find(i + 1))
 			continue;
 		ranges.push_back(make_pair(s, i));
 		s = i + 1;
 	}
 	ranges.push_back(make_pair(s, f));
+}
+
+void GetNoise(const vector<size_t> & separators, vector<Range> & noise, size_t quota)
+{
+	size_t s(0);
+	for (size_t i(0), size(separators.size()); i != size; ++i)
+	{
+		size_t f(separators[i]);
+		if (f - s < quota)
+			noise.push_back(make_pair(s, f - 1));
+		s = f;
+	}
+}
+
+void GetIndicesFromRanges(const vector<Range> & ranges, set<size_t> & points)
+{
+	for (size_t i(0), size(ranges.size()); i != size; ++i)
+	{
+		size_t s(ranges[i].first), f(ranges[i].second);
+		for (size_t j(s); j <= f; ++j)
+			points.insert(j);
+	}
 }
 
 // Gather data points around the modes of the kernel density estimate.
@@ -185,13 +211,16 @@ void PrintStemAndLeafPlot(const vector<EventInfo> & events)
 }
 
 // Text-mode data visualization for debugging purposes.
-void PrintTimelineString(const vector<double> & data, size_t stringLength, const char * label)
+void PrintTimelineString
+	( const vector<double> & data
+	,       double           min
+	,       double           max
+	,       size_t           stringLength
+	, const char           * label
+	)
 {
 	vector<char> chars(stringLength + 1);
 	fill(chars.begin(), chars.end() - 1, ' ');
-
-	const double min(data.front());
-	const double max(data.back());
 
 	for (size_t i(0), size(data.size()); i != size; ++i)
 		chars.at((data[i] - min) * (stringLength - 1) / (max - min)) = '*';
@@ -202,20 +231,25 @@ void PrintTimelineString(const vector<double> & data, size_t stringLength, const
 void DetectEvents
 	( const vector<PhotoInfo> & photos             // photo input
 	,       vector<EventInfo> & events             // event output
+	,       vector<EventInfo> & noise              // noise events
 	,       double              windowWidth        // kernel density estimation window
 	,       unsigned int        iterationCount     // number of Mean Shift iterations
-	,       double              fineEventSpacing   // min time between fine events
 	,       double              coarseEventSpacing // min time between coarse events
-	,       int                                    // min number of events per day to not be noise
+	,       double              fineEventSpacing   // min time between fine events
+	,       unsigned int        dayQuota           // min number of events per day to not be noise
 	,       bool                verbose            // output additional information
 	)
 {
-	const int n(photos.size());
+	const size_t n(photos.size());
+
+	// get raw data points
 
 	vector<double> data(n);
 	vector<double> modes(n);
-	for (int i(0); i != n; ++i)
+	for (size_t i(0); i != n; ++i)
 		modes[i] = data[i] = static_cast<double>(photos[i].DateTaken);
+
+	// find noise
 
 	MeanShift
 		( data.begin(),  data.end()
@@ -223,32 +257,54 @@ void DetectEvents
 		, windowWidth
 		, iterationCount
 		);
-	//vector<size_t> separators;
-	//Aggregate(modes, separators, eventSpacing);
+
+	vector<size_t> separators;
+	Aggregate(modes, separators, 0.1 * windowWidth);
+
+	vector<Range> noiseRanges;
+	GetNoise(separators, noiseRanges, dayQuota);
+
+	set<size_t> noiseIndices;
+	GetIndicesFromRanges(noiseRanges, noiseIndices);
+
+	CreateEvents(photos, noiseRanges, noise);
+
+	// form events
 
 	vector<Range> ranges;
-	FindEvents(data, ranges, make_pair(0, n - 1), coarseEventSpacing);
+	FindEvents(data, noiseIndices, ranges, make_pair(0, n - 1), coarseEventSpacing);
 
 	CreateEvents(photos, ranges, events);
 
-	vector<Range> allSubRanges;
+	vector<Range>     allSubRanges;
 	vector<EventInfo> allChildren;
 	for (size_t i(0), size(ranges.size()); i != size; ++i)
 	{
 		vector<Range> subRanges;
-		FindEvents(data, subRanges, ranges[i], fineEventSpacing);
+		FindEvents(data, noiseIndices, subRanges, ranges[i], fineEventSpacing);
 		CreateEvents(photos, subRanges, events[i].Children);
-		copy(subRanges.begin(), subRanges.end(), back_inserter(allSubRanges));
-		copy(events[i].Children.begin(), events[i].Children.end(), back_inserter(allChildren));
+		if (verbose)
+		{
+			copy(subRanges.begin(), subRanges.end(), back_inserter(allSubRanges));
+			copy(events[i].Children.begin(), events[i].Children.end(), back_inserter(allChildren));
+		}
 	}
+
+	// display debugging information
 
 	if (verbose)
 	{
-		PrintTimelineString(data,  100, "data:   ");
-		PrintTimelineString(modes, 100, "modes:  ");
+		const size_t diagramLength(100);
 
-		PrintRanges(data, ranges,       100, "events: ");
-		PrintRanges(data, allSubRanges, 100, "        ");
+		const double min(data.front());
+		const double max(data.back());
+
+		PrintTimelineString(data,  min, max, diagramLength, "data:   ");
+		PrintTimelineString(modes, min, max, diagramLength, "modes:  ");
+
+		PrintRanges(data, noiseRanges,  diagramLength, "noise:  ");
+		PrintRanges(data, ranges,       diagramLength, "events: ");
+		PrintRanges(data, allSubRanges, diagramLength, "        ");
 
 		cout << "\ncoarse event sizes:\n";
 		PrintStemAndLeafPlot(events);

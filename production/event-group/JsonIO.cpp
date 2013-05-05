@@ -57,13 +57,14 @@ void Read(InputData & inputData)
 void Write
 	( const InputData         & inputData
 	, const vector<EventInfo> & events
+	, const vector<EventInfo> & noise
 	,       bool                prettyPrint
 	)
 {
 	Value result(objectValue);
-	result["ID"]     = inputData.ID;
-	result["Events"] = Value(arrayValue);
+	result["ID"] = inputData.ID;
 
+	result["Events"] = Value(arrayValue);
 	for (int i(0), size(events.size()); i != size; ++i)
 	{
 		Value event(objectValue);
@@ -79,6 +80,14 @@ void Write
 			}
 		}
 		result["Events"].append(event);
+	}
+
+	result["Noise"] = Value(arrayValue);
+	for (int i(0), size(noise.size()); i != size; ++i)
+	{
+		Value event(objectValue);
+		GetEventInfoValue(noise[i], event);
+		result["Noise"].append(event);
 	}
 
 	if (prettyPrint)

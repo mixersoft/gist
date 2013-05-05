@@ -13,41 +13,37 @@ using namespace std;
 namespace po = boost::program_options;
 
 void Process
-	( double       scale
+	( double       coarseEventSpacing
+	, double       fineEventSpacing
+	, unsigned int dayQuota
 	, unsigned int iterationCount
-	, unsigned int maxEventSize
 	, bool         prettyPrint
 	, bool         verbose
 	)
 {
-	const int secondsPerDay(24 * 60 * 60);
-
-	const double windowWidth        (0.5 * scale * secondsPerDay);
-	const double fineEventSpacing   (0.5 * secondsPerDay);
-	const double coarseEventSpacing (1.0 * secondsPerDay);
-	const int    dayQuota           (6);
+	const double secondsPerDay (24 * 60 * 60);
+	const double windowWidth   (0.5);
 
 	InputData inputData;
 	Read(inputData);
 
-	if (maxEventSize == 0)
-		maxEventSize = inputData.Photos.size();
-
 	SortPhotos(inputData.Photos, verbose);
 
 	std::vector<EventInfo> events;
+	std::vector<EventInfo> noise;
 	DetectEvents
 		( inputData.Photos
 		, events
-		, windowWidth
+		, noise
+		, windowWidth * secondsPerDay
 		, iterationCount
-		, fineEventSpacing
-		, coarseEventSpacing
+		, coarseEventSpacing * secondsPerDay
+		, fineEventSpacing * secondsPerDay
 		, dayQuota
 		, verbose
 		);
 
-	Write(inputData, events, prettyPrint);
+	Write(inputData, events, noise, prettyPrint);
 }
 
 // Main entry point.
@@ -55,20 +51,22 @@ void Process
 int main(int argc, char * argv[])
 try
 {
-	double       scale          (1.0);
-	unsigned int iterationCount (20);
-	unsigned int maxEventSize   (0);
-	bool         prettyPrint    (false);
-	bool         verbose        (false);
+	double       coarseEventSpacing (1.0);
+	double       fineEventSpacing   (0.5);
+	unsigned int iterationCount     (20);
+	unsigned int dayQuota           (6);
+	bool         prettyPrint        (false);
+	bool         verbose            (false);
 
 	po::options_description desc("Supported options");
 	desc.add_options()
-		("help",         "display this help message")
-		("scale",        po::value<double>(&scale)->required(),                       "time scale, in days")
-		("iterations",   po::value<unsigned int>(&iterationCount)->default_value(20), "number of mean shift iterations")
-		("max_event",    po::value<unsigned int>(&maxEventSize),                      "inclusive upper limit on the event size")
-		("pretty_print", po::value<bool>(&prettyPrint)->zero_tokens(),                "format output")
-		("verbose",      po::value<bool>(&verbose)->zero_tokens(),                    "print additional information")
+		("help",           "display this help message")
+		("iterations",     po::value<unsigned int>(&iterationCount)->default_value(iterationCount),   "number of mean shift iterations")
+		("coarse_spacing", po::value<double>(&coarseEventSpacing)->default_value(coarseEventSpacing), "coarse event spacing, in days")
+		("fine_spacing",   po::value<double>(&fineEventSpacing)->default_value(fineEventSpacing),     "fine event spacing, in days")
+		("day quota",      po::value<unsigned int>(&dayQuota)->default_value(dayQuota),               "days with fewer photos count as noise")
+		("pretty_print",   po::value<bool>(&prettyPrint)->zero_tokens(),                              "format output")
+		("verbose",        po::value<bool>(&verbose)->zero_tokens(),                                  "print additional information")
 		;
 
 	po::variables_map vm;
@@ -89,7 +87,7 @@ try
 		return EXIT_FAILURE;
 	}
 
-	Process(scale, iterationCount, maxEventSize, prettyPrint, verbose);
+	Process(coarseEventSpacing, fineEventSpacing, dayQuota, iterationCount, prettyPrint, verbose);
 
 	return EXIT_SUCCESS;
 }
