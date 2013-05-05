@@ -20,13 +20,12 @@ void Process
 	, bool         verbose
 	)
 {
-	const int hoursPerDay      (24);
-	const int minutesPerHour   (60);
-	const int secondsPerMinute (60);
-	const double eventSpacingToWindowWidthRatio(0.05);
+	const int secondsPerDay(24 * 60 * 60);
 
-	const double windowWidth  (0.5 * scale * hoursPerDay * minutesPerHour * secondsPerMinute);
-	const double eventSpacing (eventSpacingToWindowWidthRatio * windowWidth);
+	const double windowWidth        (0.5 * scale * secondsPerDay);
+	const double fineEventSpacing   (0.5 * secondsPerDay);
+	const double coarseEventSpacing (1.0 * secondsPerDay);
+	const int    dayQuota           (6);
 
 	InputData inputData;
 	Read(inputData);
@@ -37,7 +36,16 @@ void Process
 	SortPhotos(inputData.Photos, verbose);
 
 	std::vector<EventInfo> events;
-	DetectEvents(inputData.Photos, events, windowWidth, eventSpacing, maxEventSize, iterationCount, verbose);
+	DetectEvents
+		( inputData.Photos
+		, events
+		, windowWidth
+		, iterationCount
+		, fineEventSpacing
+		, coarseEventSpacing
+		, dayQuota
+		, verbose
+		);
 
 	Write(inputData, events, prettyPrint);
 }

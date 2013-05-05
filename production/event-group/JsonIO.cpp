@@ -9,6 +9,7 @@
 #include <stdexcept>
 
 using namespace std;
+using namespace Json;
 
 time_t ParseDateTime(const char * text)
 {
@@ -22,17 +23,25 @@ time_t ParseDateTime(const char * text)
 	return mktime(&time);
 }
 
+void GetEventInfoValue(const EventInfo & event, Value & value)
+{
+	value["FirstPhotoID"] = event.FirstPhotoID;
+	value["PhotoCount"]   = event.PhotoCount;
+	value["BeginDate"]    = static_cast<unsigned int>(event.BeginDate);
+	value["EndDate"]      = static_cast<unsigned int>(event.EndDate);
+}
+
 void Read(InputData & inputData)
 {
-	Json::Value  root;
-	Json::Reader reader;
+	Value  root;
+	Reader reader;
 
 	string doc = string(istream_iterator<char>(cin), istream_iterator<char>());
 	if (!reader.parse(doc, root, false))
 		throw std::runtime_error(reader.getFormattedErrorMessages());
 
-	Json::Value castingCall (root["response"]["castingCall"]);
-	Json::Value photos      (castingCall["CastingCall"]["Auditions"]["Audition"]);
+	Value castingCall (root["response"]["castingCall"]);
+	Value photos      (castingCall["CastingCall"]["Auditions"]["Audition"]);
 
 	inputData.ID = castingCall["CastingCall"]["ID"].asUInt();
 
@@ -51,22 +60,29 @@ void Write
 	,       bool                prettyPrint
 	)
 {
-	Json::Value result(Json::objectValue);
+	Value result(objectValue);
 	result["ID"]     = inputData.ID;
-	result["Events"] = Json::Value(Json::arrayValue);
+	result["Events"] = Value(arrayValue);
 
 	for (int i(0), size(events.size()); i != size; ++i)
 	{
-		Json::Value event(Json::objectValue);
-		event["FirstPhotoID"] = events[i].FirstPhotoID;
-		event["PhotoCount"]   = events[i].PhotoCount;
-		event["BeginDate"]    = static_cast<unsigned int>(events[i].BeginDate);
-		event["EndDate"]      = static_cast<unsigned int>(events[i].EndDate);
+		Value event(objectValue);
+		GetEventInfoValue(events[i], event);
+		if (events[i].Children.size() > 1)
+		{
+			event["Children"] = Value(arrayValue);
+			for (int j(0), size(events[i].Children.size()); j != size; ++j)
+			{
+				Value child(objectValue);
+				GetEventInfoValue(events[i].Children[j], child);
+				event["Children"].append(child);
+			}
+		}
 		result["Events"].append(event);
 	}
 
 	if (prettyPrint)
-		cout << Json::StyledWriter().write(result);
+		cout << StyledWriter().write(result);
 	else
-		cout << Json::FastWriter().write(result);
+		cout << FastWriter().write(result);
 }

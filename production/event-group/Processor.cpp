@@ -9,6 +9,8 @@
 
 using namespace std;
 
+typedef pair<size_t, size_t> Range;
+
 bool PhotoLessThanByDate
 	( const PhotoInfo & lhs
 	, const PhotoInfo & rhs
@@ -27,6 +29,7 @@ bool PhotoGreaterThanByDate
 
 // Find where each event ends and another begins.
 // An event is a set of points no farther than eventSpacing apart.
+/*
 void Aggregate
 	( const vector<double> & data
 	,       vector<size_t> & separators
@@ -43,6 +46,25 @@ void Aggregate
 		prev = data[i];
 	}
 	separators.push_back(data.size());
+}
+*/
+
+void FindEvents
+	( const vector<double> & data
+	,       vector<Range>  & ranges
+	,       Range            range
+	,       double           spacing
+	)
+{
+	size_t s(range.first), f(range.second);
+	for (size_t i(s); i != f; ++i)
+	{
+		if (data[i + 1] - data[i] < spacing)
+			continue;
+		ranges.push_back(make_pair(s, i));
+		s = i + 1;
+	}
+	ranges.push_back(make_pair(s, f));
 }
 
 // Gather data points around the modes of the kernel density estimate.
@@ -85,38 +107,50 @@ void MeanShift
 // Gather the necessary event information from photos in every group.
 void CreateEvents
 	( const vector<PhotoInfo> & photos
-	,       vector<size_t>    & separators
+	,       vector<Range>     & ranges
 	,       vector<EventInfo> & events
 	)
 {
 	if (photos.empty())
 		return;
 
-	events.resize(separators.size());
+	events.resize(ranges.size());
 
-	size_t firstPhotoIndex (0);
-	size_t lastPhotoIndex  (0);
-	size_t eventStart      (0);
-	size_t photoIndex      (0);
-	for (size_t i(0), size(separators.size()); i != size; ++i)
+	for (size_t i(0), size(ranges.size()); i != size; ++i)
 	{
-		for (; photoIndex != separators[i]; ++photoIndex)
-		{
-			if (photos[photoIndex].DateTaken < photos[firstPhotoIndex].DateTaken)
-				firstPhotoIndex = photoIndex;
-			if (photos[photoIndex].DateTaken > photos[lastPhotoIndex].DateTaken)
-				lastPhotoIndex = photoIndex;
-		}
+		size_t s(ranges[i].first), f(ranges[i].second);
 
 		EventInfo & event(events.at(i));
 
-		event.FirstPhotoID = photos[firstPhotoIndex].ID;
-		event.PhotoCount   = separators[i] - eventStart;
-		event.BeginDate    = photos[firstPhotoIndex].DateTaken;
-		event.EndDate      = photos[lastPhotoIndex].DateTaken;
-
-		firstPhotoIndex = lastPhotoIndex = eventStart = separators[i];
+		event.FirstPhotoID = photos[s].ID;
+		event.PhotoCount   = f - s + 1;
+		event.BeginDate    = photos[s].DateTaken;
+		event.EndDate      = photos[f].DateTaken;
 	}
+}
+
+void PrintRanges
+	( const vector<double> & data
+	, const vector<Range>  & ranges
+	,       size_t           stringLength
+	, const char           * label
+	)
+{
+	vector<char> chars(stringLength + 1);
+	fill(chars.begin(), chars.end() - 1, ' ');
+
+	const double min(data.front());
+	const double max(data.back());
+
+	for (int i(0), size(ranges.size()); i != size; ++i)
+	{
+		size_t s((data[ranges[i].first]  - min) * (stringLength - 1) / (max - min));
+		size_t f((data[ranges[i].second] - min) * (stringLength - 1) / (max - min));
+		chars.at(s) = '(';
+		chars.at(f) = (chars.at(f) == '(') ? 'O' : ')';
+	}
+
+	cout << label << "|" << &chars[0] << "|\n";
 }
 
 void PrintStemAndLeafPlot(const vector<EventInfo> & events)
@@ -156,23 +190,24 @@ void PrintTimelineString(const vector<double> & data, size_t stringLength, const
 	vector<char> chars(stringLength + 1);
 	fill(chars.begin(), chars.end() - 1, ' ');
 
-	double min(data[0]);
-	double max(data[data.size() - 1]);
+	const double min(data.front());
+	const double max(data.back());
 
 	for (size_t i(0), size(data.size()); i != size; ++i)
-		chars[(data[i] - min) / (max - min) * (stringLength - 1)] = '*';
+		chars.at((data[i] - min) * (stringLength - 1) / (max - min)) = '*';
 
 	cout << label << "|" << &chars[0] << "|\n";
 }
 
 void DetectEvents
-	( const vector<PhotoInfo> & photos
-	,       vector<EventInfo> & events
-	,       double              windowWidth
-	,       double              eventSpacing
-	,       unsigned int        maxEventSize
-	,       unsigned int        iterationCount
-	,       bool                verbose
+	( const vector<PhotoInfo> & photos             // photo input
+	,       vector<EventInfo> & events             // event output
+	,       double              windowWidth        // kernel density estimation window
+	,       unsigned int        iterationCount     // number of Mean Shift iterations
+	,       double              fineEventSpacing   // min time between fine events
+	,       double              coarseEventSpacing // min time between coarse events
+	,       int                                    // min number of events per day to not be noise
+	,       bool                verbose            // output additional information
 	)
 {
 	const int n(photos.size());
@@ -188,56 +223,38 @@ void DetectEvents
 		, windowWidth
 		, iterationCount
 		);
+	//vector<size_t> separators;
+	//Aggregate(modes, separators, eventSpacing);
 
-	vector<size_t> separators;
-	Aggregate(modes, separators, eventSpacing);
+	vector<Range> ranges;
+	FindEvents(data, ranges, make_pair(0, n - 1), coarseEventSpacing);
 
-	for (;;)
+	CreateEvents(photos, ranges, events);
+
+	vector<Range> allSubRanges;
+	vector<EventInfo> allChildren;
+	for (size_t i(0), size(ranges.size()); i != size; ++i)
 	{
-		windowWidth /= 1.5;
-
-		size_t eventStart      (0);
-		bool   foundLargeGroup (false);
-		for (size_t i(0), size(separators.size()); i != size; ++i)
-		{
-			size_t eventEnd(separators[i]);
-			if (eventEnd - eventStart > maxEventSize)
-			{
-				if (verbose)
-					cout << "splitting " << eventStart << "-" << eventEnd << "\n";
-				copy
-					( data.begin() + eventStart
-					, data.begin() + eventEnd
-					, modes.begin() + eventStart
-					);
-				MeanShift
-					( data.begin()
-					, data.end()
-					, modes.begin() + eventStart
-					, modes.begin() + eventEnd
-					, windowWidth
-					, iterationCount
-					);
-				foundLargeGroup = true;
-			}
-			eventStart = eventEnd;
-		}
-		if (!foundLargeGroup)
-			break;
-
-		separators.clear();
-		Aggregate(modes, separators, eventSpacing);
+		vector<Range> subRanges;
+		FindEvents(data, subRanges, ranges[i], fineEventSpacing);
+		CreateEvents(photos, subRanges, events[i].Children);
+		copy(subRanges.begin(), subRanges.end(), back_inserter(allSubRanges));
+		copy(events[i].Children.begin(), events[i].Children.end(), back_inserter(allChildren));
 	}
-
-	CreateEvents(photos, separators, events);
 
 	if (verbose)
 	{
-		PrintTimelineString(data,  100, "data:  ");
-		PrintTimelineString(modes, 100, "modes: ");
+		PrintTimelineString(data,  100, "data:   ");
+		PrintTimelineString(modes, 100, "modes:  ");
 
-		cout << "\nevent sizes:\n";
+		PrintRanges(data, ranges,       100, "events: ");
+		PrintRanges(data, allSubRanges, 100, "        ");
+
+		cout << "\ncoarse event sizes:\n";
 		PrintStemAndLeafPlot(events);
+
+		cout << "\nfine event sizes:\n";
+		PrintStemAndLeafPlot(allChildren);
 
 		cout << endl;
 	}

@@ -15,9 +15,7 @@ set_target_properties(
 add_definitions(-DJSON_IS_AMALGAMATION)
 
 find_package(Boost REQUIRED program_options)
-find_package(OpenCV REQUIRED)
 
 include_directories(".")
 
 target_link_libraries(event-group ${Boost_PROGRAM_OPTIONS_LIBRARY})
-target_link_libraries(event-group ${OpenCV_LIBS})

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 struct EventInfo
 {
@@ -8,4 +9,6 @@ struct EventInfo
 	unsigned int PhotoCount;
 	time_t       BeginDate;
 	time_t       EndDate;
+
+	std::vector<EventInfo> Children;
 };
