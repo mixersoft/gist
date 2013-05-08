@@ -64,7 +64,7 @@ try
 		("iterations",     po::value<unsigned int>(&iterationCount)->default_value(iterationCount),   "number of mean shift iterations")
 		("coarse_spacing", po::value<double>(&coarseEventSpacing)->default_value(coarseEventSpacing), "coarse event spacing, in days")
 		("fine_spacing",   po::value<double>(&fineEventSpacing)->default_value(fineEventSpacing),     "fine event spacing, in days")
-		("day quota",      po::value<unsigned int>(&dayQuota)->default_value(dayQuota),               "days with fewer photos count as noise")
+		("day_quota",      po::value<unsigned int>(&dayQuota)->default_value(dayQuota),               "days with fewer photos count as noise")
 		("pretty_print",   po::value<bool>(&prettyPrint)->zero_tokens(),                              "format output")
 		("verbose",        po::value<bool>(&verbose)->zero_tokens(),                                  "print additional information")
 		;
