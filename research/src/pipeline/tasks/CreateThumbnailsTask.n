@@ -21,7 +21,7 @@ class CreateThumbnailsTask : ITask
 		def height = 64;
 
 		_ = Directory.CreateDirectory(Path.GetDirectoryName(thumbnails.Path));
-		_ = Directory.CreateDirectory(thumbnails.Path);
+		DirectoryEx.Recreate(thumbnails.Path);
 
 		thumbnails.ImageIDs = images.ImageIDs;
 

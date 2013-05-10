@@ -1,0 +1,10 @@
+using System.IO;
+
+module DirectoryEx
+{
+	public Recreate(path : string) : void
+	{
+		Directory.Delete(path, recursive = true);
+		_ = Directory.CreateDirectory(path);
+	}
+}

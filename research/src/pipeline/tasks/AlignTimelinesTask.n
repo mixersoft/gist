@@ -35,14 +35,14 @@ class AlignTimelinesTask : ITask
 			TimelineAlignmentItem.Timeline
 				( offset = random.Next(24)
 				, photos = json.Photos
-					.FilterToArray(photo => photo.CameraID == id)
+					.FilterToArray(photo => photo.OwnerID == id)
 					.Map(MapPhoto)
 				)
 		}
 
 		timelineAlignments.EventCount = eventCount;
 		timelineAlignments.Timelines  = json.Photos
-			.Fold(Set(), (photo, ids) => ids.Replace(photo.CameraID))
+			.Fold(Set(), (photo, ids) => ids.Replace(photo.OwnerID))
 			.MapToArray(MapID);
 	}
 }

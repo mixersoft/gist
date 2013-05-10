@@ -29,7 +29,7 @@ class GroupShotsTask : ITask
 				( id        = photo.ID
 				, rootSrc   = photo.RootSrc
 				, shotID    = id + "-unique"
-				, cameraID  = photo.CameraID
+				, ownerID  = photo.OwnerID
 				, dateTaken = photo.DateTaken
 				)
 		| _ => photo
