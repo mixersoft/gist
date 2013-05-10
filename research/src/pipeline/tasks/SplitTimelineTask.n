@@ -27,7 +27,7 @@ class SplitTimelineTask : ITask
 				( id        = photo.ID
 				, rootSrc   = photo.RootSrc
 				, shotID    = photo.ShotID
-				, cameraID  = random.Next(simulatedTimelineCount).ToString()
+				, ownerID  = random.Next(simulatedTimelineCount).ToString()
 				, dateTaken = photo.DateTaken
 				)
 		}

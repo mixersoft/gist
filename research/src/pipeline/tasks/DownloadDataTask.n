@@ -28,11 +28,10 @@ class DownloadDataTask : ITask
 		images.ImageIDs = array(jsonItem.Photos.Length);
 
 		_ = Directory.CreateDirectory(Path.GetDirectoryName(images.Path));
-		_ = Directory.CreateDirectory(images.Path);
+		DirectoryEx.Recreate(images.Path);
 
 		foreach (photo in jsonItem.Photos with i)
 		{
-			_ = Directory.CreateDirectory(Path.GetDirectoryName(images.Path));
 			client.DownloadFile
 				( address  = jsonItem.BaseUrl + photo.RootSrc.Replace("/", downloadPrefix)
 				, fileName = images.MakePath(photo.ID)

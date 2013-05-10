@@ -25,7 +25,7 @@ class SampleImagesTask : ITask
 		sample.ImageIDs = array(Math.Min(randomIDs.Length, imageSampleSize));
 		Array.Copy(randomIDs, 0, sample.ImageIDs, 0, sample.ImageIDs.Length);
 
-		_ = Directory.CreateDirectory(sample.Path);
+		DirectoryEx.Recreate(sample.Path);
 		foreach (id in sample.ImageIDs)
 		{
 			File.Copy

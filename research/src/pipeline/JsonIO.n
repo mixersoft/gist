@@ -11,21 +11,21 @@ public module JsonIO
 		public ID        : string;
 		public RootSrc   : string;
 		public ShotID    : string;
-		public CameraID  : string;
+		public OwnerID   : string;
 		public DateTaken : DateTime;
 
 		public this
 			( id        : string
 			, rootSrc   : string
 			, shotID    : string
-			, cameraID  : string
+			, ownerID   : string
 			, dateTaken : DateTime
 			)
 		{
 			ID        = id;
 			RootSrc   = rootSrc;
 			ShotID    = shotID;
-			CameraID  = cameraID;
+			OwnerID   = ownerID;
 			DateTaken = dateTaken;
 		}
 	}
@@ -77,8 +77,8 @@ public module JsonIO
 										}
 										writer.WriteEndObject();
 
-										writer.WritePropertyName("CameraId");
-										writer.WriteValue(photo.CameraID);
+										writer.WritePropertyName("OwnerId");
+										writer.WriteValue(photo.OwnerID);
 
 										writer.WritePropertyName("DateTaken");
 										writer.WriteValue(photo.DateTaken.ToString("yyyy-MM-dd HH:mm:ss"));
@@ -124,7 +124,7 @@ public module JsonIO
 				( id        = record["id"] :> string
 				, rootSrc   = record["Photo"]["Img"]["Src"]["rootSrc"] :> string
 				, shotID    = record["Shot"]["id"] :> string
-				, cameraID  = record["Photo"]["CameraId"] :> string
+				, ownerID  = record["Photo"]["OwnerId"] :> string
 				, dateTaken = DateTime.Parse(record["Photo"]["DateTaken"] :> string)
 				)
 		}
