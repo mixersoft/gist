@@ -2,10 +2,10 @@ using PipelineMacro;
 using System.IO;
 using System;
 
+/// <summary>Json items with random owner IDs.</summary>
 [ TaskItemInfo(File(".json")) ]
 public class SplitJsonItem : ITaskItem
 {
-
 	public mutable Photos  : list[JsonIO.PhotoInfo];
 	public mutable BaseUrl : string;
 

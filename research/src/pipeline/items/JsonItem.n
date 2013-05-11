@@ -5,7 +5,6 @@ using System;
 [ TaskItemInfo(File(".json")) ]
 public class JsonItem : ITaskItem
 {
-
 	public mutable Photos  : list[JsonIO.PhotoInfo];
 	public mutable BaseUrl : string;
 

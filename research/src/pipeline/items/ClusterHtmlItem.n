@@ -9,7 +9,7 @@ class ClusterHtmlItem : ITaskItem
 
 	public Save(path : string) : void
 	{
-		def imageDir = Path.Combine(@"..\thumbnails", Path.GetFileNameWithoutExtension(path));
+		def imageDir = Path.Combine(@"..\ThumbnailCollection", Path.GetFileNameWithoutExtension(path));
 
 		using (writer = File.CreateText(path))
 		{

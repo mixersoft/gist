@@ -1,0 +1,50 @@
+using Nemerle.Collections;
+using PipelineMacro;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Math;
+
+class GraphTimelineTask : ITask
+{
+	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
+	{
+		mutable mappings = [];
+		foreach (item is JsonItem in items)
+			mappings ::= TaskMapping(this, [ item ], [ TimelineGraphItem(item.Name) ]);
+		mappings;
+	}
+
+	private Compute
+		( [InItem]  json  : JsonItem
+		, [OutItem] graph : TimelineGraphItem
+		) : void
+	{
+		def ids = json.Photos.Fold(Set(), (photo, ids) => ids.Replace(photo.OwnerID));
+
+		def (min, max) = json.Photos.Map(photo => photo.DateTaken.Ticks).Fold
+			( (long.MaxValue, long.MinValue)
+			, (time, (min, max)) => (Min(min, time), Max(max, time))
+			);
+
+		def (w, h, r) = (1600, ids.Count * 16, 2.5f);
+
+		graph.Image = Bitmap(w, h);
+		using (gfx = Graphics.FromImage(graph.Image))
+		{
+			gfx.SmoothingMode = SmoothingMode.HighQuality;
+
+			gfx.Clear(Color.White);
+
+			foreach (id in ids with i)
+			{
+				def y = 8 + i * 16;
+				gfx.DrawLine(Pens.Black, 0, y, w, y);
+				foreach (photo when photo.OwnerID == id in json.Photos)
+				{
+					def x = w * (photo.DateTaken.Ticks - min) / (max - min);
+					gfx.FillEllipse(Brushes.Black, x - r, y - r, r + r, r + r);
+				}
+			}
+		}
+	}
+}

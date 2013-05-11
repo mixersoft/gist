@@ -27,7 +27,7 @@ class CreateDescriptorHtmlTask : ITask
 		def GetThumbnailPath(id)
 		{
 			def folder = Path.GetFileName(descriptors.Path);
-			$"../thumbnails/$folder/$id.jpg"
+			$"../ThumbnailCollection/$folder/$id.jpg"
 		}
 		def GetDominantColor(data, n)
 		{
