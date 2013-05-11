@@ -2,6 +2,7 @@ using PipelineMacro;
 using System.IO;
 using System;
 
+/// <summary>Assigns random owner IDs to Json items.
 [ Record ]
 class SplitTimelineTask : ITask
 {

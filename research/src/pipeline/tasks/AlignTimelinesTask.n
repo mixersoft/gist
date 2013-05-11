@@ -4,7 +4,6 @@ using PipelineMacro;
 using System.IO;
 using System;
 
-[ Record ]
 class AlignTimelinesTask : ITask
 {
 	public MapItems(items : list[ITaskItem]) : list[TaskMapping]

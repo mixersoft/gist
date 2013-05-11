@@ -123,8 +123,8 @@ public module JsonIO
 			PhotoInfo
 				( id        = record["id"] :> string
 				, rootSrc   = record["Photo"]["Img"]["Src"]["rootSrc"] :> string
-				, shotID    = record["Shot"]["id"] :> string
-				, ownerID  = record["Photo"]["OwnerId"] :> string
+				, shotID    = (record["Shot"]["id"] :> string) ?? ""
+				, ownerID   = (record["Photo"]["OwnerId"] :> string) ?? ""
 				, dateTaken = DateTime.Parse(record["Photo"]["DateTaken"] :> string)
 				)
 		}

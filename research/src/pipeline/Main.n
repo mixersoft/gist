@@ -52,6 +52,7 @@ module Main
 				, EvaluateImageHashUniquenessTask()
 				, EvaluateImageHashConsistencyTask()
 				
+				, GraphTimelineTask()
 				, SplitTimelineTask()
 				, AlignTimelinesTask()
 
