@@ -60,6 +60,7 @@
 
 	<PropertyGroup>
 		<Defines>DEBUG;TRACE</Defines>
+		<Platform>x64</Platform>
 	</PropertyGroup>
 
 <!-- Library targets -->
@@ -80,7 +81,7 @@
 			EmitDebugInformation = "true"
 			NoLogo               = "true"
 			OutputAssembly       = "@(PipelineBin)"
-			Platform             = "x64"
+			Platform             = "$(Platform)"
 			References           = "@(PipelineRef)"
 			Sources              = "@(PipelineSrc)"
 			TargetType           = "exe"
@@ -97,7 +98,7 @@
 			EmitDebugInformation = "true"
 			NoLogo               = "true"
 			OutputAssembly       = "@(PipelineMacroBin)"
-			Platform             = "x64"
+			Platform             = "$(Platform)"
 			References           = "@(PipelineMacroRef)"
 			Sources              = "@(PipelineMacroSrc)"
 			TargetType           = "library"
@@ -115,7 +116,7 @@
 			EmitDebugInformation = "true"
 			NoLogo               = "true"
 			OutputAssembly       = "@(PipelineTestBin)"
-			Platform             = "x64"
+			Platform             = "$(Platform)"
 			References           = "@(PipelineTestRef)"
 			Sources              = "@(PipelineTestSrc)"
 			TargetType           = "library"
@@ -133,7 +134,7 @@
 			EmitDebugInformation = "true"
 			NoLogo               = "true"
 			OutputAssembly       = "@(ClusterUiBin)"
-			Platform             = "x64"
+			Platform             = "$(Platform)"
 			References           = "@(ClusterUiRef)"
 			Sources              = "@(ClusterUiSrc)"
 			TargetType           = "exe"
@@ -151,7 +152,7 @@
 			EmitDebugInformation = "true"
 			NoLogo               = "true"
 			OutputAssembly       = "@(PrettyPrintBin)"
-			Platform             = "x64"
+			Platform             = "$(Platform)"
 			References           = "@(PrettyPrintRef)"
 			Sources              = "@(PrettyPrintSrc)"
 			TargetType           = "exe"
@@ -169,7 +170,7 @@
 			EmitDebugInformation = "true"
 			NoLogo               = "true"
 			OutputAssembly       = "@(DominantColorsBin)"
-			Platform             = "x64"
+			Platform             = "$(Platform)"
 			References           = "@(DominantColorsRef)"
 			Sources              = "@(DominantColorsSrc)"
 			TargetType           = "exe"
