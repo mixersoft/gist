@@ -4,7 +4,11 @@ module DirectoryEx
 {
 	public Recreate(path : string) : void
 	{
-		Directory.Delete(path, recursive = true);
+		try Directory.Delete(path, recursive = true);
+		catch
+		{
+		| _ is DirectoryNotFoundException => () // it's ok
+		}
 		_ = Directory.CreateDirectory(path);
 	}
 }

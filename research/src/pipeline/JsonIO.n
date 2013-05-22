@@ -97,7 +97,7 @@ public module JsonIO
 								}
 								writer.WriteEnd();
 
-								writer.WritePropertyName("BaseUrl");
+								writer.WritePropertyName("Baseurl");
 								writer.WriteValue(baseUrl);
 							}
 							writer.WriteEndObject();
@@ -131,7 +131,7 @@ public module JsonIO
 		( castingCall["CastingCall"]["Auditions"]["Audition"]
 			.Children()
 			.MapToList(GetPhotoInfo)
-		, "http://dev.snaphappi.com" + castingCall["CastingCall"]["Auditions"]["Baseurl"]
+		, castingCall["CastingCall"]["Auditions"]["Baseurl"] :> string
 		)
 	}
 }

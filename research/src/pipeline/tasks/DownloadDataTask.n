@@ -30,10 +30,12 @@ class DownloadDataTask : ITask
 		_ = Directory.CreateDirectory(Path.GetDirectoryName(images.Path));
 		DirectoryEx.Recreate(images.Path);
 
+		def baseUrl = "http://dev.snaphappi.com" + jsonItem.BaseUrl;
+
 		foreach (photo in jsonItem.Photos with i)
 		{
 			client.DownloadFile
-				( address  = jsonItem.BaseUrl + photo.RootSrc.Replace("/", downloadPrefix)
+				( address  = baseUrl + photo.RootSrc.Replace("/", downloadPrefix)
 				, fileName = images.MakePath(photo.ID)
 				);
 			images.ImageIDs[i] = photo.ID;

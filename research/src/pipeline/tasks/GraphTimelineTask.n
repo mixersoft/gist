@@ -39,10 +39,18 @@ class GraphTimelineTask : ITask
 			{
 				def y = 8 + i * 16;
 				gfx.DrawLine(Pens.Black, 0, y, w, y);
-				foreach (photo when photo.OwnerID == id in json.Photos)
+				if (min == max)
 				{
-					def x = w * (photo.DateTaken.Ticks - min) / (max - min);
-					gfx.FillEllipse(Brushes.Black, x - r, y - r, r + r, r + r);
+						def x = 0.5f * w;
+						gfx.FillEllipse(Brushes.Black, x - r, y - r, r + r, r + r);
+				}
+				else
+				{
+					foreach (photo when photo.OwnerID == id in json.Photos)
+					{
+						def x = w * (photo.DateTaken.Ticks - min) / (max - min);
+						gfx.FillEllipse(Brushes.Black, x - r, y - r, r + r, r + r);
+					}
 				}
 			}
 		}
