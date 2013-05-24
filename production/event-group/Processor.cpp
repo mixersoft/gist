@@ -60,24 +60,19 @@ void FindEvents
 	size_t s(range.first), f(range.second);
 	while (s != f && noise.end() != noise.find(s))
 		++s;
-	for (size_t i(s); i != f; ++i)
+	f = s;
+	for (size_t i(s); i != range.second; ++i)
 	{
-		if (data[i + 1] - data[i] < spacing)
+		if (noise.end() == noise.find(i))
+			f = i;
+		if (data[i + 1] - data[f] < spacing)
 			continue;
 		if (noise.end() != noise.find(i + 1))
 			continue;
-		ranges.push_back(make_pair(s, i));
+		ranges.push_back(make_pair(s, f));
 		s = i + 1;
 	}
 	ranges.push_back(make_pair(s, f));
-	// trim noise at the end of each event
-	for (size_t i(0), size(ranges.size()); i != size; ++i)
-	{
-		size_t & s(ranges[i].first);
-		size_t & f(ranges[i].second);
-		while (noise.end() != noise.find(f) && f >= s)
-			--f;
-	}
 }
 
 void GetNoise(const vector<size_t> & separators, vector<Range> & noise, size_t quota)
