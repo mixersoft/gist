@@ -23,12 +23,31 @@ time_t ParseDateTime(const char * text)
 	return mktime(&time);
 }
 
-void GetEventInfoValue(const EventInfo & event, Value & value)
+string PrintDateTime(time_t time)
+{
+	char buff[20];
+	strftime(buff, 20, "%Y-%m-%d %H:%M:%S", localtime(&time));
+	return buff;
+}
+
+string MakeComment(const string & text)
+{
+	string result("// ");
+	result.append(text);
+	return result;
+}
+
+void GetEventInfoValue(const EventInfo & event, Value & value, bool prettyPrint)
 {
 	value["FirstPhotoID"] = event.FirstPhotoID;
 	value["PhotoCount"]   = event.PhotoCount;
 	value["BeginDate"]    = static_cast<unsigned int>(event.BeginDate);
 	value["EndDate"]      = static_cast<unsigned int>(event.EndDate);
+	if (prettyPrint)
+	{
+		value["BeginDate" ].setComment(MakeComment(PrintDateTime(event.BeginDate)), commentAfterOnSameLine);
+		value["EndDate"   ].setComment(MakeComment(PrintDateTime(event.EndDate)),   commentAfterOnSameLine);
+	}
 }
 
 void Read(InputData & inputData)
@@ -68,14 +87,14 @@ void Write
 	for (int i(0), size(events.size()); i != size; ++i)
 	{
 		Value event(objectValue);
-		GetEventInfoValue(events[i], event);
+		GetEventInfoValue(events[i], event, prettyPrint);
 		if (events[i].Children.size() > 1)
 		{
 			event["Children"] = Value(arrayValue);
 			for (int j(0), size(events[i].Children.size()); j != size; ++j)
 			{
 				Value child(objectValue);
-				GetEventInfoValue(events[i].Children[j], child);
+				GetEventInfoValue(events[i].Children[j], child, prettyPrint);
 				event["Children"].append(child);
 			}
 		}
@@ -86,7 +105,7 @@ void Write
 	for (int i(0), size(noise.size()); i != size; ++i)
 	{
 		Value event(objectValue);
-		GetEventInfoValue(noise[i], event);
+		GetEventInfoValue(noise[i], event, prettyPrint);
 		result["Noise"].append(event);
 	}
 
