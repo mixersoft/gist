@@ -10,6 +10,7 @@
 
 using namespace std;
 
+// indices of the first and last points in a range
 typedef pair<size_t, size_t> Range;
 
 bool PhotoLessThanByDate
@@ -69,6 +70,14 @@ void FindEvents
 		s = i + 1;
 	}
 	ranges.push_back(make_pair(s, f));
+	// trim noise at the end of each event
+	for (size_t i(0), size(ranges.size()); i != size; ++i)
+	{
+		size_t & s(ranges[i].first);
+		size_t & f(ranges[i].second);
+		while (noise.end() != noise.find(f) && f >= s)
+			--f;
+	}
 }
 
 void GetNoise(const vector<size_t> & separators, vector<Range> & noise, size_t quota)
