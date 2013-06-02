@@ -14,13 +14,20 @@ class GraphEvents : ITask
 		foreach(item is EventItem in items)
 			eventItems[item.Name] = item;
 
+		def thumbItems = Hashtable();
+		foreach(item is ThumbnailCollectionItem in items)
+			thumbItems[item.Name] = item;
+
+		def IsValid(name) { eventItems.Contains(name) && thumbItems.Contains(name) }
+
 		mutable mappings = [];
-		foreach (item is JsonItem when eventItems.Contains(item.Name) in items)
+		foreach (item is JsonItem when IsValid(item.Name) in items)
 		{
+			def name = item.Name;
 			mappings ::= TaskMapping
 				( this
-				, [ item, eventItems[item.Name] ]
-				, [ EventGraphItem(item.Name) ]
+				, [ item, eventItems[name], thumbItems[name] ]
+				, [ EventGraphItem(name) ]
 				);
 		}
 		mappings;
@@ -29,6 +36,7 @@ class GraphEvents : ITask
 	private Compute
 		( [InItem]  json      : JsonItem
 		, [InItem]  refEvents : EventItem
+		, [InItem]  thumbs    : ThumbnailCollectionItem
 		, [OutItem] graph     : EventGraphItem
 		, kdeWindow           : double
 		, msIterationCount    : int
@@ -36,6 +44,7 @@ class GraphEvents : ITask
 		, fineEventSpacing    : double
 		, coarseEventSpacing  : double
 		, dayQuota            : int
+		, thumbHeight         : int
 		) : void
 	{
 		def (w, h, y) = (1600, 128, 64);
@@ -43,6 +52,7 @@ class GraphEvents : ITask
 		def dayEventY    = 80;
 		def coarseEventY = 96;
 		def fineEventY   = 112;
+		def thumbLimit   = 10;
 
 		// returns the list of indices at which new groups begin
 		// assumes the data is sorted in increasing order
@@ -196,6 +206,44 @@ class GraphEvents : ITask
 					gfx.DrawEllipse(pens[groupIndex % 2], x - r2, y - r2, r2 + r2, r2 + r2);
 			}
 		}
+		def DrawThumbs(gfx, data, separators, (min, max))
+		{
+			def GetThumbIndices(begin, end)
+			{
+				def selection = List();
+				if (end - begin > thumbLimit)
+				{
+					for (mutable i = 0; i != thumbLimit / 2; ++i)
+						selection.Add(begin + i);
+					for (mutable i = 0; i != thumbLimit / 2; ++i)
+						selection.Add(end - thumbLimit / 2 + i);
+				}
+				else
+				{
+					for (mutable i = begin; i != end; ++i)
+						selection.Add(i);
+				}
+				selection;
+			}
+
+			mutable begin = 0;
+			foreach (end in separators)
+			{
+				def s = ((data[begin] - min) / (max - min) * w);
+				def f = ((data[end-1] - min) / (max - min) * w);
+				def m = (s + 0.5 * (f - s)) :> float;
+				foreach (i in GetThumbIndices(begin, end) with n)
+				{
+					using (bmp = Bitmap(thumbs.MakePath(thumbs.ImageIDs[i])))
+					{
+						def x = m - 0.5f * bmp.Width;
+						def y = h + n * (thumbHeight + 1);
+						gfx.DrawImage(bmp, x, y);
+					}
+				}
+				begin = end;
+			}
+		}
 		def FindCoarseEvents(data, noise, spacing)
 		{
 			def separators = List();
@@ -251,6 +299,13 @@ class GraphEvents : ITask
 				prev = separator;
 			}
 			(noiseData, noiseGroups);
+		}
+		def MaxGroupSize(groups)
+		{
+			mutable max = groups[0];
+			for (mutable i = 1; i != groups.Length; ++i)
+				max = Max(max, groups[i] - groups[i - 1]);
+			Min(thumbLimit, max);
 		}
 		def MeanShift(data, window)
 		{
@@ -336,7 +391,7 @@ class GraphEvents : ITask
 
 		def refEvents = refEvents.Dates.Map(date => date.Ticks :> double);
 
-		graph.Image = Bitmap(w, h);
+		graph.Image = Bitmap(w, h + (thumbHeight + 1) * MaxGroupSize(fineGroups));
 		using (gfx = Graphics.FromImage(graph.Image))
 		{
 			gfx.SmoothingMode = SmoothingMode.HighQuality;
@@ -352,6 +407,8 @@ class GraphEvents : ITask
 
 			DrawRanges(gfx, times, coarseEventY, coarseGroups, range);
 			DrawRanges(gfx, times, fineEventY,   fineGroups,   range);
+
+			DrawThumbs(gfx, times, fineGroups, range);
 		}
 	}
 }
