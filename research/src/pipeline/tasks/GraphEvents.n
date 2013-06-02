@@ -6,7 +6,7 @@ using System.Drawing;
 using System.Math;
 using System;
 
-class GraphTimeTask : ITask
+class GraphEvents : ITask
 {
 	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
 	{
@@ -20,7 +20,7 @@ class GraphTimeTask : ITask
 			mappings ::= TaskMapping
 				( this
 				, [ item, eventItems[item.Name] ]
-				, [ TimeGraphItem(item.Name) ]
+				, [ EventGraphItem(item.Name) ]
 				);
 		}
 		mappings;
@@ -29,7 +29,7 @@ class GraphTimeTask : ITask
 	private Compute
 		( [InItem]  json      : JsonItem
 		, [InItem]  refEvents : EventItem
-		, [OutItem] graph     : TimeGraphItem
+		, [OutItem] graph     : EventGraphItem
 		, kdeWindow           : double
 		, msIterationCount    : int
 		, msKernel            : MeanShiftKernel

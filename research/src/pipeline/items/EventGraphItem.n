@@ -2,7 +2,7 @@ using PipelineMacro;
 using System.Drawing;
 
 [ TaskItemInfo(File(".png")) ]
-public class TimeGraphItem : ITaskItem
+public class EventGraphItem : ITaskItem
 {
 	public mutable Image : Bitmap;
 

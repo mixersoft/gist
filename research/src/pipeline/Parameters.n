@@ -62,6 +62,9 @@ public class Parameters
 	[ Parameter(LongName = "simulated timeline count") ]
 	public mutable SimulatedTimelineCount : int;
 
+	[ Parameter(LongName = "thumbnail height") ]
+	public mutable ThumbHeight : int;
+
 	//-----------------------
 	// implementation methods
 	//-----------------------

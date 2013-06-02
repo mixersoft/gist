@@ -16,10 +16,9 @@ class CreateThumbnailsTask : ITask
 	private Compute
 		( [InItem]  images     : ImageCollectionItem
 		, [OutItem] thumbnails : ThumbnailCollectionItem
+		, thumbHeight : int
 		) : void
 	{
-		def height = 64;
-
 		_ = Directory.CreateDirectory(Path.GetDirectoryName(thumbnails.Path));
 		DirectoryEx.Recreate(thumbnails.Path);
 
@@ -29,14 +28,14 @@ class CreateThumbnailsTask : ITask
 		{
 			using (src = Bitmap(images.MakePath(id)))
 			{
-				def width = src.Width * height / src.Height;
-				using (dst = Bitmap(width, height))
+				def thumbWidth = src.Width * thumbHeight / src.Height;
+				using (dst = Bitmap(thumbWidth, thumbHeight))
 				{
 					using (gfx = Graphics.FromImage(dst))
 					{
 						gfx.PixelOffsetMode   = PixelOffsetMode.HighQuality;
 						gfx.InterpolationMode = InterpolationMode.HighQualityBicubic;
-						gfx.DrawImage(src, 0, 0, width, height);
+						gfx.DrawImage(src, 0, 0, thumbWidth, thumbHeight);
 					}
 					dst.Save(thumbnails.MakePath(id));
 				}

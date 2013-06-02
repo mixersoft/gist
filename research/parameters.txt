@@ -5,6 +5,7 @@ download image prefix =
 image sample size = 10
 image size = 120 120
 simulated timeline count = 10
+thumbnail height = 64
 
 hash method = md5
 hashed image blur = gaussian 1
