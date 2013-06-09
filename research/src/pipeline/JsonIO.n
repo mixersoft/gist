@@ -30,7 +30,7 @@ public module JsonIO
 		}
 	}
 
-	public Save(path : string, photos : list[PhotoInfo], baseUrl : string) : void
+	public Save(path : string, photos : array[PhotoInfo], baseUrl : string) : void
 	{
 		using (writer = JsonTextWriter(File.CreateText(path)))
 		{
@@ -112,7 +112,7 @@ public module JsonIO
 		}
 	}
 
-	public Load(path : string) : list[PhotoInfo] * string
+	public Load(path : string) : array[PhotoInfo] * string
 	{
 		def data = JObject.Parse(File.ReadAllText(path));
 
@@ -130,7 +130,7 @@ public module JsonIO
 		}
 		( castingCall["CastingCall"]["Auditions"]["Audition"]
 			.Children()
-			.MapToList(GetPhotoInfo)
+			.MapToArray(GetPhotoInfo)
 		, castingCall["CastingCall"]["Auditions"]["Baseurl"] :> string
 		)
 	}

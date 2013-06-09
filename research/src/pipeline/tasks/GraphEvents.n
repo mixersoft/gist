@@ -52,7 +52,7 @@ class GraphEvents : ITask
 		def dayEventY    = 80;
 		def coarseEventY = 96;
 		def fineEventY   = 112;
-		def thumbLimit   = 10;
+		def thumbLimit   = 12;
 
 		// returns the list of indices at which new groups begin
 		// assumes the data is sorted in increasing order
@@ -234,7 +234,7 @@ class GraphEvents : ITask
 				def m = (s + 0.5 * (f - s)) :> float;
 				foreach (i in GetThumbIndices(begin, end) with n)
 				{
-					using (bmp = Bitmap(thumbs.MakePath(thumbs.ImageIDs[i])))
+					using (bmp = Bitmap(thumbs.MakePath(json.Photos[i].ID)))
 					{
 						def x = m - 0.5f * bmp.Width;
 						def y = h + n * (thumbHeight + 1);
