@@ -1,0 +1,41 @@
+using PipelineMacro;
+using System.IO;
+using System;
+
+/// <summary>Json items with random owner IDs.</summary>
+[ TaskItemInfo(File(".html")) ]
+public class DuplicatesItem : ITaskItem
+{
+	public mutable ImageIDs  : array[array[string]];
+
+	public Save(path : string) : void
+	{
+		def ImgPath(id)
+		{
+			Path.Combine
+				( @"..\ThumbnailCollection"
+				, Path.GetFileNameWithoutExtension(path)
+				, id + ".jpg"
+				)
+		}
+
+		using (writer = File.CreateText(path))
+		{
+			writer.WriteLine("<html><body>");
+
+			foreach (group in ImageIDs)
+			{
+				foreach (id in group)
+					writer.WriteLine("<img src='{0}'><br>", ImgPath(id));
+				writer.WriteLine("<br>");
+			}
+
+			writer.WriteLine("</body></html>");
+		}
+	}
+
+	public Load(_ : string) : void
+	{
+		throw NotImplementedException();
+	}
+}

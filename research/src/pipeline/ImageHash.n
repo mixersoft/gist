@@ -34,7 +34,7 @@ public module ImageHash
 		}
 	}
 
-	private static GetMeanHashCode(image : Bitmap) : int
+	public static GetMeanHashCode(image : Bitmap) : int
 	{
 		def Resize(src : Bitmap) : Image.[Gray, byte]
 		{
@@ -64,7 +64,7 @@ public module ImageHash
 		image |> Resize |> GetHash;
 	}
 
-	private static GetMD5HashCode(image : Bitmap, imageSize : int, bpp : int) : int
+	public static GetMD5HashCode(image : Bitmap, imageSize : int, bpp : int) : int
 	{
 		def Resize(src : Bitmap) : Image.[Gray, byte]
 		{

@@ -9,7 +9,14 @@ class ClusterHtmlItem : ITaskItem
 
 	public Save(path : string) : void
 	{
-		def imageDir = Path.Combine(@"..\ThumbnailCollection", Path.GetFileNameWithoutExtension(path));
+		def ImgPath(id)
+		{
+			Path.Combine
+				( @"..\ThumbnailCollection"
+				, Path.GetFileNameWithoutExtension(path)
+				, id + ".jpg"
+				)
+		}
 
 		using (writer = File.CreateText(path))
 		{
@@ -28,10 +35,7 @@ class ClusterHtmlItem : ITaskItem
 				writer.WriteLine($"<span class='$spanClass'>");
 
 				foreach (id in cluster)
-				{
-					def src = Path.Combine(imageDir, id + ".jpg");
-					writer.WriteLine($"<img height='64' src='$src'>");
-				}
+					writer.WriteLine("<img src='{0}'>", ImgPath(id));
 
 				writer.WriteLine("</span>");
 			}

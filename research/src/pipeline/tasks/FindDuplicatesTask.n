@@ -1,0 +1,61 @@
+using Nemerle.Collections;
+using PipelineMacro;
+using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
+using System;
+
+/// <summary>Assigns random owner IDs to Json items.
+[ Record ]
+class FindDuplicatesTask : ITask
+{
+	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
+	{
+		mutable mappings = [];
+		foreach (item is ImageCollectionItem in items)
+			mappings ::= TaskMapping(this, [ item ], [ DuplicatesItem(item.Name) ]);
+		mappings;
+	}
+
+	private Compute
+		( [InItem]  images     : ImageCollectionItem
+		, [OutItem] duplicates : DuplicatesItem
+		) : void
+	{
+		def Hash(id)
+		{
+			using (bmp = Bitmap(images.MakePath(id)))
+				ImageHash.GetMeanHashCode(bmp);
+		}
+
+		def ids = images.ImageIDs;
+
+		if (ids.Length == 0)
+		{
+			duplicates.ImageIDs = array(0);
+		}
+		else
+		{
+			def groups = List(); // sequence of groups
+			def group  = List(); // sequence of duplicates
+
+			group.Add(ids[0]);
+
+			def prev = Hash(ids[0]);
+
+			for (mutable i = 1; i != ids.Length; ++i)
+			{
+				def curr = Hash(ids[i]);
+				when (curr != prev)
+				{
+					groups.Add(group.ToArray());
+					group.Clear();
+				}
+				group.Add(ids[i]);
+			}
+			groups.Add(group.ToArray());
+
+			duplicates.ImageIDs = groups.ToArray();
+		}
+	}
+}
