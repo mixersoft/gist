@@ -29,6 +29,9 @@ public class Parameters
 	[ Parameter(LongName = "download image prefix") ]
 	public mutable DownloadImagePrefix : string;
 
+	[ Parameter(LongName = "duplicate threshold") ]
+	public mutable DuplicateThreshold : int;
+
 	[ Parameter(LongName = "fine event spacing") ]
 	public mutable FineEventSpacing : double;
 

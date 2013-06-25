@@ -1,0 +1,22 @@
+using Nemerle.Collections;
+using PipelineMacro;
+using System.IO;
+
+class CreateSequenceHtmlTask : ITask
+{
+	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
+	{
+		mutable mappings = [];
+		foreach (item is JsonItem in items)
+			mappings ::= TaskMapping(this, [ item ], [ SequenceHtmlItem(item.Name) ]);
+		mappings;
+	}
+
+	private Compute
+		( [InItem]  json : JsonItem
+		, [OutItem] html : SequenceHtmlItem
+		) : void
+	{
+		html.IDs = json.Photos.Sort(_.DateTaken).Map(_.ID);
+	}
+}

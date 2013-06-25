@@ -7,6 +7,8 @@ image size = 120 120
 simulated timeline count = 10
 thumbnail height = 64
 
+duplicate threshold = 10
+
 hash method = md5
 hashed image blur = gaussian 1
 hashed image bpp = 2

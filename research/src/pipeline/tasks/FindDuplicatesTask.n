@@ -20,12 +20,24 @@ class FindDuplicatesTask : ITask
 	private Compute
 		( [InItem]  images     : ImageCollectionItem
 		, [OutItem] duplicates : DuplicatesItem
+		, duplicateThreshold   : int
 		) : void
 	{
 		def Hash(id)
 		{
 			using (bmp = Bitmap(images.MakePath(id)))
 				ImageHash.GetMeanHashCode(bmp);
+		}
+		def Hamming(a : int, b : int) : int
+		{
+			mutable xor = unchecked { (a :> uint) ^ (b :> uint) };
+			mutable distance = 0u;
+			while (xor != 0)
+			{
+				distance += xor & 1;
+				xor >>= 1;
+			}
+			distance :> int;
 		}
 
 		def ids = images.ImageIDs;
@@ -46,7 +58,7 @@ class FindDuplicatesTask : ITask
 			for (mutable i = 1; i != ids.Length; ++i)
 			{
 				def curr = Hash(ids[i]);
-				when (curr != prev)
+				when (Hamming(curr, prev) > duplicateThreshold)
 				{
 					groups.Add(group.ToArray());
 					group.Clear();

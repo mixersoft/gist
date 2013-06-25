@@ -1,0 +1,34 @@
+using Nemerle.Collections;
+using PipelineMacro;
+using System.IO;
+using System;
+
+[ TaskItemInfo(File(".html")) ]
+public class SequenceHtmlItem : ITaskItem
+{
+	public mutable IDs : array[string];
+
+	public Save(path : string) : void
+	{
+		def ImgPath(id)
+		{
+			Path.Combine
+				( @"..\ThumbnailCollection"
+				, Path.GetFileNameWithoutExtension(path)
+				, id + ".jpg"
+				)
+		}
+		using (writer = File.CreateText(path))
+		{
+			writer.WriteLine("<html><body><table>");
+			foreach (id in IDs with i)
+				writer.WriteLine("<tr><td>{0}</td><td><img src='{1}' /></td></tr>", i + 1, ImgPath(id));
+			writer.WriteLine("</table></body></html>");
+		}
+	}
+
+	public Load(_ : string) : void
+	{
+		throw NotImplementedException();
+	}
+}

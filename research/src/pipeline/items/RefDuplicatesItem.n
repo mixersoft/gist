@@ -1,0 +1,23 @@
+using Nemerle.Collections;
+using PipelineMacro;
+using System.IO;
+using System;
+
+[ TaskItemInfo(File(".txt")) ]
+public class RefDuplicatesItem : ITaskItem
+{
+	public mutable Indices : array[int];
+
+	public Save(path : string) : void
+	{
+		File.WriteAllText(path, string.Join(" ", Indices.Map(_.ToString())));
+	}
+
+	public Load(path : string) : void
+	{
+		Indices = File.ReadAllText(path).Split
+			( array[' ', '\t', '\r', '\n']
+			, StringSplitOptions.RemoveEmptyEntries
+			).Map(int.Parse);
+	}
+}

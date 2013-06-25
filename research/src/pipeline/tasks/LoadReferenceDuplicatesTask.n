@@ -1,0 +1,25 @@
+using Nemerle.Collections;
+using PipelineMacro;
+using System.Collections.Generic;
+using System.IO;
+
+class LoadReferenceDuplicatesTask : ITask
+{
+	private items : Dictionary[string, string] = Dictionary();
+
+	public MapItems(_ : list[ITaskItem]) : list[TaskMapping]
+	{
+		def CreateMapping(path)
+		{
+			def name = Path.GetFileNameWithoutExtension(path);
+			items[name] = path;
+			TaskMapping(this, [], [ RefDuplicatesItem(name) ]);
+		}
+		Directory.GetFiles(@"data\duplicates-ref", "*.txt").MapToList(CreateMapping);
+	}
+
+	public Compute([OutItem] duplicates : RefDuplicatesItem) : void
+	{
+		duplicates.Load(items[duplicates.Name]);
+	}
+}

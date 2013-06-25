@@ -45,7 +45,11 @@ module Main
 				, CreateClusterHtmlTask()
 				, LoadReferenceClustersTask()
 				, EvaluateClustersTask()
+				, CreateSequenceHtmlTask()
+
 				, FindDuplicatesTask()
+				, LoadReferenceDuplicatesTask()
+				, EvaluateDuplicatesTask()
 
 				, SampleImagesTask()
 				, ExtractHashTask()

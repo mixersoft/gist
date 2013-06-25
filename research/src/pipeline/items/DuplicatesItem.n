@@ -1,41 +1,38 @@
+using Nemerle.Collections;
 using PipelineMacro;
 using System.IO;
 using System;
 
 /// <summary>Json items with random owner IDs.</summary>
-[ TaskItemInfo(File(".html")) ]
+[ TaskItemInfo(File(".txt")) ]
 public class DuplicatesItem : ITaskItem
 {
 	public mutable ImageIDs  : array[array[string]];
 
 	public Save(path : string) : void
 	{
-		def ImgPath(id)
-		{
-			Path.Combine
-				( @"..\ThumbnailCollection"
-				, Path.GetFileNameWithoutExtension(path)
-				, id + ".jpg"
-				)
-		}
-
 		using (writer = File.CreateText(path))
 		{
-			writer.WriteLine("<html><body>");
-
+			writer.WriteLine(ImageIDs.Length);
 			foreach (group in ImageIDs)
 			{
-				foreach (id in group)
-					writer.WriteLine("<img src='{0}'><br>", ImgPath(id));
-				writer.WriteLine("<br>");
+				writer.WriteLine(group.Length);
+				group.Iter(writer.WriteLine);
 			}
-
-			writer.WriteLine("</body></html>");
 		}
 	}
 
 	public Load(_ : string) : void
 	{
-		throw NotImplementedException();
+		using (reader = File.OpenText(path))
+		{
+			ImageIDs = array(int.Parse(reader.ReadLine()));
+			for (mutable i = 0; i != ImageIDs.Length; ++i)
+			{
+				ImageIDs[i] = array(int.Parse(reader.ReadLine()));
+				for (mutable j = 0; j != ImageIDs[i].Length; ++j)
+					ImageIDs[i][j] = reader.ReadLine();
+			}
+		}
 	}
 }
