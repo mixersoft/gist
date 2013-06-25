@@ -1,3 +1,4 @@
+base data url = http://dev.snaphappi.com
 clustering threshold = 0.540193980531857
 color component weight = 0.00153788994898586
 dominant color count = 2

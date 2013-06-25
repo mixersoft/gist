@@ -11,6 +11,9 @@ public class Parameters
 	// meta-parameters
 	//----------------
 
+	[ Parameter(LongName = "base data url") ]
+	public mutable BaseDataUrl : string;
+
 	[ Parameter(LongName = "clustering threshold") ]
 	public mutable ClusteringThreshold : double;
 

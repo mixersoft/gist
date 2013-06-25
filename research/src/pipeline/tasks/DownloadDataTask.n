@@ -19,6 +19,7 @@ class DownloadDataTask : ITask
 		( [InItem]  jsonItem : JsonItem
 		, [OutItem] images   : ImageCollectionItem
 		, downloadImagePrefix : string
+		, baseDataUrl         : string
 		) : void
 	{
 		def downloadPrefix = "/" + downloadImagePrefix;
@@ -30,7 +31,7 @@ class DownloadDataTask : ITask
 		_ = Directory.CreateDirectory(Path.GetDirectoryName(images.Path));
 		DirectoryEx.Recreate(images.Path);
 
-		def baseUrl = "http://dev.snaphappi.com" + jsonItem.BaseUrl;
+		def baseUrl = baseDataUrl + jsonItem.BaseUrl;
 
 		foreach (photo in jsonItem.Photos with i)
 		{
