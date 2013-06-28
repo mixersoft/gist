@@ -62,7 +62,8 @@ module Main
 				, AlignTimelinesTask()
 
 				, LoadEventsTask()
-				, GraphEvents()
+				, GroupEventsTask()
+				, GraphEventsTask()
 				]
 			, persistData     = true
 			, displayProgress = true

@@ -1,0 +1,59 @@
+using Nemerle.Collections;
+using PipelineMacro;
+using System.IO;
+
+[ TaskItemInfo(File(".txt")) ]
+public class EventGroupItem : ITaskItem
+{
+	public mutable CoarseGroups : array[array[double]];
+	public mutable FineGroups   : array[array[double]];
+	public mutable DayGroups    : array[int];
+	public mutable DayTimes     : array[double];
+	public mutable NoiseDays    : array[int];
+
+	public Save(path : string) : void
+	{
+		def Join = o : object => string.Join(" ", o);
+
+		using (writer = File.CreateText(path))
+		{
+			writer.WriteLine(CoarseGroups.Length);
+			foreach (group in CoarseGroups)
+				writer.WriteLine(Join(group));
+
+			writer.WriteLine(FineGroups.Length);
+			foreach (group in FineGroups)
+				writer.WriteLine(Join(group));
+
+			writer.WriteLine(Join(DayGroups));
+			writer.WriteLine(Join(DayTimes));
+			writer.WriteLine(Join(NoiseDays));
+		}
+	}
+
+	public Load(path : string) : void
+	{
+		def SplitDbl(str)
+		{
+			str.Split(array[' ']).Map(double.Parse)
+		}
+		def SplitInt(str)
+		{
+			str.Split(array[' ']).Map(int.Parse)
+		}
+		using (reader = File.OpenText(path))
+		{
+			CoarseGroups = array(int.Parse(reader.ReadLine()));
+			for (mutable i = 0; i != CoarseGroups.Length; ++i)
+				CoarseGroups[i] = SplitDbl(reader.ReadLine());
+
+			FineGroups = array(int.Parse(reader.ReadLine()));
+			for (mutable i = 0; i != FineGroups.Length; ++i)
+				FineGroups[i] = SplitDbl(reader.ReadLine());
+
+			DayGroups = SplitInt(reader.ReadLine());
+			DayTimes  = SplitDbl(reader.ReadLine());
+			NoiseDays = SplitInt(reader.ReadLine());
+		}
+	}
+}

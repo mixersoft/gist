@@ -1,0 +1,16 @@
+using PipelineMacro;
+using System;
+
+[ TaskItemInfo(File(".json")) ]
+public class EventGroupJsonItem : ITaskItem
+{
+	public Save(_path : string) : void
+	{
+		throw NotImplementedException();
+	}
+
+	public Load(_path : string) : void
+	{
+		throw NotImplementedException();
+	}
+}
