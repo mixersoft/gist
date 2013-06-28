@@ -13,12 +13,12 @@ class LoadReferenceDuplicatesTask : ITask
 		{
 			def name = Path.GetFileNameWithoutExtension(path);
 			items[name] = path;
-			TaskMapping(this, [], [ RefDuplicatesItem(name) ]);
+			TaskMapping(this, [], [ DuplicatesRefItem(name) ]);
 		}
 		Directory.GetFiles(@"data\duplicates-ref", "*.txt").MapToList(CreateMapping);
 	}
 
-	public Compute([OutItem] duplicates : RefDuplicatesItem) : void
+	public Compute([OutItem] duplicates : DuplicatesRefItem) : void
 	{
 		duplicates.Load(items[duplicates.Name]);
 	}

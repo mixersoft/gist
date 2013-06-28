@@ -15,7 +15,7 @@ class GraphEventsTask : ITask
 			jsonItems[item.Name] = item;
 
 		def eventItems = Hashtable();
-		foreach(item is EventItem in items)
+		foreach(item is EventRefItem in items)
 			eventItems[item.Name] = item;
 
 		def thumbItems = Hashtable();
@@ -40,7 +40,7 @@ class GraphEventsTask : ITask
 	private Compute
 		( [InItem]  events    : EventGroupItem
 		, [InItem]  json      : JsonItem
-		, [InItem]  refEvents : EventItem
+		, [InItem]  refEvents : EventRefItem
 		, [InItem]  thumbs    : ThumbnailCollectionItem
 		, [OutItem] graph     : EventGraphItem
 		, kdeWindow           : double

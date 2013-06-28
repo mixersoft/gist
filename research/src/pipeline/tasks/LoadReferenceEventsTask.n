@@ -3,7 +3,7 @@ using PipelineMacro;
 using System.Collections.Generic;
 using System.IO;
 
-class LoadEventsTask : ITask
+class LoadReferenceEventsTask : ITask
 {
 	private items : Dictionary[string, string] = Dictionary();
 
@@ -13,12 +13,12 @@ class LoadEventsTask : ITask
 		{
 			def name = Path.GetFileNameWithoutExtension(path);
 			items[name] = path;
-			TaskMapping(this, [], [ EventItem(name) ]);
+			TaskMapping(this, [], [ EventRefItem(name) ]);
 		}
 		Directory.GetFiles(@"data\events", "*.txt").MapToList(CreateMapping);
 	}
 
-	private Compute([OutItem] eventItem : EventItem) : void
+	private Compute([OutItem] eventItem : EventRefItem) : void
 	{
 		eventItem.Load(items[eventItem.Name]);
 	}

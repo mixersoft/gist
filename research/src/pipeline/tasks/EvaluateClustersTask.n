@@ -11,7 +11,7 @@ public class EvaluateClustersTask: ITask
 	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
 	{
 		def refs = Dictionary();
-		foreach (item is RefClusterItem in items)
+		foreach (item is ClusterRefItem in items)
 			refs[item.Name] = item;
 
 		// map those clusters for which there are references
@@ -30,7 +30,7 @@ public class EvaluateClustersTask: ITask
 	[ Profile(Recursive) ]
 	private Compute
 		( [InItem]  autoClusters : ClusterItem
-		, [InItem]  refClusters  : RefClusterItem
+		, [InItem]  refClusters  : ClusterRefItem
 		, [OutItem] result       : ClusterEvaluationItem
 		) : void
 	{

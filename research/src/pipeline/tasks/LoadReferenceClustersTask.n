@@ -13,12 +13,12 @@ class LoadReferenceClustersTask : ITask
 		{
 			def name = Path.GetFileNameWithoutExtension(path);
 			items[name] = path;
-			TaskMapping(this, [], [ RefClusterItem(name) ]);
+			TaskMapping(this, [], [ ClusterRefItem(name) ]);
 		}
 		Directory.GetFiles(@"data\clusters-ref", "*.txt").MapToList(CreateMapping);
 	}
 
-	public Compute([OutItem] cluster : RefClusterItem) : void
+	public Compute([OutItem] cluster : ClusterRefItem) : void
 	{
 		cluster.Load(items[cluster.Name]);
 	}

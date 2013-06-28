@@ -8,18 +8,18 @@ public class EvaluateDuplicatesTask: ITask
 	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
 	{
 		def refs = Dictionary();
-		foreach (item is RefDuplicatesItem in items)
+		foreach (item is DuplicatesRefItem in items)
 			refs[item.Name] = item;
-		def IsRef(item) { refs.ContainsKey(item.Name) }
 
 		def json = Dictionary();
 		foreach (item is JsonItem in items)
 			json[item.Name] = item;
-		def IsJson(item) { json.ContainsKey(item.Name) }
+
+		def IsValid(item) { refs.ContainsKey(item.Name) && json.ContainsKey(item.Name) }
 
 		// map those clusters for which there are references
 		mutable mappings = [];
-		foreach (item is DuplicatesItem when IsRef(item) && IsJson(item) in items)
+		foreach (item is DuplicatesItem when IsValid(item) in items)
 		{
 			def name = item.Name;
 			mappings ::= TaskMapping
@@ -33,7 +33,7 @@ public class EvaluateDuplicatesTask: ITask
 
 	private Compute
 		( [InItem]  autoDuplicates : DuplicatesItem
-		, [InItem]  refDuplicates  : RefDuplicatesItem
+		, [InItem]  refDuplicates  : DuplicatesRefItem
 		, [InItem]  json           : JsonItem
 		, [OutItem] result         : DuplicatesEvaluationItem
 		) : void

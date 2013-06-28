@@ -61,7 +61,7 @@ module Main
 				, SplitTimelineTask()
 				, AlignTimelinesTask()
 
-				, LoadEventsTask()
+				, LoadReferenceEventsTask()
 				, GroupEventsTask()
 				, GraphEventsTask()
 				]

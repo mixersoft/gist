@@ -4,7 +4,7 @@ using System.IO.File;
 using System;
 
 [ TaskItemInfo(File(".txt")) ]
-public class EventItem : ITaskItem
+public class EventRefItem : ITaskItem
 {
 	public mutable Dates : array[DateTime];
 
