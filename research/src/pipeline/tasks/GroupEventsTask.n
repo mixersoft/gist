@@ -56,21 +56,27 @@ class GroupEventsTask : ITask
 			}
 			means;
 		}
-		def FilterData(data, noise)
+		def FilterData(indices, noise)
 		{
 			def result = List();
-			foreach (x when !noise.Contains(i) in data with i)
-				result.Add(x);
+			foreach (i when !noise.Contains(i) in indices)
+				result.Add(i);
 			result.ToArray();
 		}
-		def FindEvents(data, spacing)
+		def FindEvents(indices, times, spacing)
 		{
+			def IsFarFromNext(i)
+			{
+				def curr = times[indices[i]];
+				def next = times[indices[i+1]];
+				next - curr > spacing;
+			}
 			def events = List();
 			def e = List();
-			for (mutable i = 0; i < data.Length; ++i)
+			for (mutable i = 0; i < indices.Length; ++i)
 			{
-				e.Add(data[i]);
-				when (i + 1 == data.Length || data[i+1] - data[i] > spacing)
+				e.Add(indices[i]);
+				when (i + 1 == indices.Length || IsFarFromNext(i))
 				{
 					events.Add(e.ToArray());
 					e.Clear();
@@ -172,10 +178,12 @@ class GroupEventsTask : ITask
 		def (noiseTimes, noiseDays) = FindNoise(events.DayGroups);
 		events.NoiseDays = noiseDays.ToArray();
 
-		events.CoarseGroups = FindEvents(FilterData(times, noiseTimes), coarseEventSpacing);
+		def filteredTimes = FilterData($[1..times.Length-1].ToArray(), noiseTimes);
+
+		events.CoarseGroups = FindEvents(filteredTimes, times, coarseEventSpacing);
 
 		events.FineGroups = events.CoarseGroups
-			.Map(FindEvents(_, fineEventSpacing))
+			.Map(FindEvents(_, times, fineEventSpacing))
 			.Flatten()
 			.NToArray();
 	}

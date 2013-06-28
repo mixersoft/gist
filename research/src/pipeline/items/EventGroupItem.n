@@ -5,8 +5,8 @@ using System.IO;
 [ TaskItemInfo(File(".txt")) ]
 public class EventGroupItem : ITaskItem
 {
-	public mutable CoarseGroups : array[array[double]];
-	public mutable FineGroups   : array[array[double]];
+	public mutable CoarseGroups : array[array[int]];
+	public mutable FineGroups   : array[array[int]];
 	public mutable DayGroups    : array[int];
 	public mutable DayTimes     : array[double];
 	public mutable NoiseDays    : array[int];
@@ -45,11 +45,11 @@ public class EventGroupItem : ITaskItem
 		{
 			CoarseGroups = array(int.Parse(reader.ReadLine()));
 			for (mutable i = 0; i != CoarseGroups.Length; ++i)
-				CoarseGroups[i] = SplitDbl(reader.ReadLine());
+				CoarseGroups[i] = SplitInt(reader.ReadLine());
 
 			FineGroups = array(int.Parse(reader.ReadLine()));
 			for (mutable i = 0; i != FineGroups.Length; ++i)
-				FineGroups[i] = SplitDbl(reader.ReadLine());
+				FineGroups[i] = SplitInt(reader.ReadLine());
 
 			DayGroups = SplitInt(reader.ReadLine());
 			DayTimes  = SplitDbl(reader.ReadLine());

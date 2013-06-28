@@ -226,11 +226,11 @@ class GraphEventsTask : ITask
 
 		def refEvents = refEvents.Dates.Map(date => date.Ticks :> double);
 
-		def coarseGroups = events.CoarseGroups;
-		def fineGroups = events.FineGroups;
-		def dayGroups = events.DayGroups;
-		def dayTimes = events.DayTimes;
-		def noiseDays = events.NoiseDays;
+		def coarseGroups = events.CoarseGroups.Map(g => g.Map(i => times[i]));
+		def fineGroups   = events.FineGroups.Map(g => g.Map(i => times[i]));
+		def dayGroups    = events.DayGroups;
+		def dayTimes     = events.DayTimes;
+		def noiseDays    = events.NoiseDays;
 
 		def dayTimeGroups = $[1..dayTimes.Length].ToArray();
 
