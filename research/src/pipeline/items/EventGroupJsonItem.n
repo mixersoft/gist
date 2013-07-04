@@ -4,9 +4,12 @@ using System;
 [ TaskItemInfo(File(".json")) ]
 public class EventGroupJsonItem : ITaskItem
 {
-	public Save(_path : string) : void
+	public mutable Events : array[JsonIO.EventInfo];
+	public mutable Noise  : array[JsonIO.EventInfo];
+
+	public Save(path : string) : void
 	{
-		throw NotImplementedException();
+		JsonIO.Save(path, Events, Noise);
 	}
 
 	public Load(_path : string) : void

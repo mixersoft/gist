@@ -1,0 +1,86 @@
+using Nemerle.Collections;
+using PipelineMacro;
+using System.Collections.Generic;
+using System.IO;
+
+class CreateEventGroupJsonTask : ITask
+{
+	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
+	{
+		def json = Hashtable();
+		foreach (item is JsonItem in items)
+			json[item.Name] = item;
+
+		mutable mappings = [];
+		foreach (item is EventGroupItem when json.Contains(item.Name) in items)
+		{
+			mappings ::= TaskMapping
+				( this
+				, [ item, json[item.Name] ]
+				, [ EventGroupJsonItem(item.Name) ]
+				);
+		}
+		mappings;
+	}
+
+	private Compute
+		( [InItem]  groups : EventGroupItem
+		, [InItem]  json   : JsonItem
+		, [OutItem] events : EventGroupJsonItem
+		) : void
+	{
+		def MakeEventInfo(s, f, count, children)
+		{
+			JsonIO.EventInfo
+				( firstPhotoID = s.ID
+				, photoCount   = count
+				, beginDate    = s.DateTaken
+				, endDate      = f.DateTaken
+				, children     = children
+				);
+		}
+		def MakeCoarseGroupEventInfo(fineGroups : array[array[int]])
+		{
+			def First ['T] (arr : array['T]) { arr[0] }
+			def Last  ['T] (arr : array['T]) { arr[arr.Length - 1] }
+			def MakeFine(group : array[int])
+			{
+				MakeEventInfo
+					( json.Photos[First(group)]
+					, json.Photos[Last(group)]
+					, group.Length
+					, array(0)
+					)
+			}
+			MakeEventInfo
+				( json.Photos[First(First(fineGroups))]
+				, json.Photos[Last(Last(fineGroups))]
+				, fineGroups.Map(_.Length).Fold(0, _ + _ )
+				, fineGroups.Map(MakeFine)
+				)
+		}
+		def MakeNoiseEventInfo(separators : array[int], noise : Set[int])
+		{
+			def events = List();
+			mutable begin = 0;
+			foreach (end in separators with i)
+			{
+				when (noise.Contains(i))
+				{
+					events.Add
+						( MakeEventInfo
+							( json.Photos[begin]
+							, json.Photos[end-1]
+							, end - begin
+							, array(0)
+							)
+						)
+				}
+				begin = end;
+			}
+			events.ToArray();
+		}
+		events.Events = groups.Groups.Map(MakeCoarseGroupEventInfo);
+		events.Noise  = MakeNoiseEventInfo(groups.DayGroups, groups.NoiseDays);
+	}
+}

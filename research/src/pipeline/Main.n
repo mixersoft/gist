@@ -64,6 +64,7 @@ module Main
 				, LoadReferenceEventsTask()
 				, GroupEventsTask()
 				, GraphEventsTask()
+				, CreateEventGroupJsonTask()
 				]
 			, persistData     = true
 			, displayProgress = true

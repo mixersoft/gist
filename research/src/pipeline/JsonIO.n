@@ -6,6 +6,10 @@ using System;
 
 public module JsonIO
 {
+	//--------------------
+	// source JSON data IO
+	//--------------------
+
 	public class PhotoInfo
 	{
 		public ID        : string;
@@ -73,9 +77,9 @@ public module JsonIO
 												writer.WritePropertyName("rootSrc");
 												writer.WriteValue(photo.RootSrc);
 											}
-											writer.WriteEndObject();
+											writer.WriteEnd();
 										}
-										writer.WriteEndObject();
+										writer.WriteEnd();
 
 										writer.WritePropertyName("OwnerId");
 										writer.WriteValue(photo.OwnerID);
@@ -83,7 +87,7 @@ public module JsonIO
 										writer.WritePropertyName("DateTaken");
 										writer.WriteValue(photo.DateTaken.ToString("yyyy-MM-dd HH:mm:ss"));
 									}
-									writer.WriteEndObject();
+									writer.WriteEnd();
 
 									writer.WritePropertyName("Shot");
 									writer.WriteStartObject();
@@ -91,24 +95,24 @@ public module JsonIO
 										writer.WritePropertyName("id");
 										writer.WriteValue(photo.ShotID);
 									}
-									writer.WriteEndObject();
+									writer.WriteEnd();
 
-									writer.WriteEndObject();
+									writer.WriteEnd();
 								}
 								writer.WriteEnd();
 
 								writer.WritePropertyName("Baseurl");
 								writer.WriteValue(baseUrl);
 							}
-							writer.WriteEndObject();
+							writer.WriteEnd();
 						}
-						writer.WriteEndObject();
+						writer.WriteEnd();
 					}
-					writer.WriteEndObject();
+					writer.WriteEnd();
 				}
-				writer.WriteEndObject();
+				writer.WriteEnd();
 			}
-			writer.WriteEndObject();
+			writer.WriteEnd();
 		}
 	}
 
@@ -133,5 +137,76 @@ public module JsonIO
 			.MapToArray(GetPhotoInfo)
 		, castingCall["CastingCall"]["Auditions"]["Baseurl"] :> string
 		)
+	}
+
+	//---------------
+	// event group IO
+	//---------------
+
+	[ Record ]
+	public class EventInfo
+	{
+		public FirstPhotoID : string;
+		public PhotoCount   : int;
+		public BeginDate    : DateTime;
+		public EndDate      : DateTime;
+
+		public Children : array[EventInfo];
+	}
+
+	public Save(path : string, events : array[EventInfo], noise : array[EventInfo]) : void
+	{
+		using (writer = JsonTextWriter(File.CreateText(path)))
+		{
+			def WriteEvent(e)
+			{
+				writer.WriteStartObject();
+
+				writer.WritePropertyName("FirstPhotoID");
+				writer.WriteValue(e.FirstPhotoID);
+
+				writer.WritePropertyName("PhotoCount");
+				writer.WriteValue(e.PhotoCount);
+
+				writer.WritePropertyName("BeginDate");
+				writer.WriteValue(e.BeginDate);
+
+				writer.WritePropertyName("EndDate");
+				writer.WriteValue(e.EndDate);
+
+				when (e.Children.Length > 0)
+				{
+					writer.WritePropertyName("Children");
+					writer.WriteStartArray();
+					foreach (child in e.Children)
+						WriteEvent(child);
+					writer.WriteEnd();
+				}
+
+				writer.WriteEnd();
+			}
+
+			writer.Formatting  = Formatting.Indented;
+			writer.Indentation = 1;
+			writer.IndentChar  = '\t';
+
+			writer.WriteStartObject();
+			{
+				//writer.WritePropertyName("ID");
+
+				writer.WritePropertyName("Events");
+				writer.WriteStartArray();
+				foreach (e in events)
+					WriteEvent(e);
+				writer.WriteEnd();
+
+				writer.WritePropertyName("Noise");
+				writer.WriteStartArray();
+				foreach (e in noise)
+					WriteEvent(e);
+				writer.WriteEnd();
+			}
+			writer.WriteEnd();
+		}
 	}
 }

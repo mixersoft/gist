@@ -214,6 +214,17 @@ class GraphEventsTask : ITask
 				}
 			}
 		}
+		def Flatten['T](arr : array[array['T]]) : array['T]
+		{
+			def result = array(arr.Map(_.Length).Fold(0, _ + _));
+			mutable i = 0;
+			foreach (group in arr)
+			{
+				group.CopyTo(result, i);
+				i += group.Length;
+			}
+			result;
+		}
 
 		def ticksPerDay = 24 * 60 * 60 * 10_000_000;
 		def window      = kdeWindow * ticksPerDay;
@@ -226,8 +237,8 @@ class GraphEventsTask : ITask
 
 		def refEvents = refEvents.Dates.Map(date => date.Ticks :> double);
 
-		def coarseGroups = events.CoarseGroups.Map(g => g.Map(i => times[i]));
-		def fineGroups   = events.FineGroups.Map(g => g.Map(i => times[i]));
+		def coarseGroups = events.Groups.Map(Flatten).Map(g => g.Map(i => times[i]));
+		def fineGroups   = Flatten(events.Groups).Map(g => g.Map(i => times[i]));
 		def dayGroups    = events.DayGroups;
 		def dayTimes     = events.DayTimes;
 		def noiseDays    = events.NoiseDays;

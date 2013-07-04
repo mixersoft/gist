@@ -176,15 +176,14 @@ class GroupEventsTask : ITask
 		events.DayTimes  = AverageGroup(modes, events.DayGroups);
 
 		def (noiseTimes, noiseDays) = FindNoise(events.DayGroups);
-		events.NoiseDays = noiseDays.ToArray();
+		events.NoiseDays = noiseDays;
 
 		def filteredTimes = FilterData($[1..times.Length-1].ToArray(), noiseTimes);
 
-		events.CoarseGroups = FindEvents(filteredTimes, times, coarseEventSpacing);
+		def coarseGroups = FindEvents(filteredTimes, times, coarseEventSpacing);
 
-		events.FineGroups = events.CoarseGroups
-			.Map(FindEvents(_, times, fineEventSpacing))
-			.Flatten()
-			.NToArray();
+		def fineGroups = coarseGroups.Map(FindEvents(_, times, fineEventSpacing));
+
+		events.Groups = fineGroups;
 	}
 }
