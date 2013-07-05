@@ -1,0 +1,55 @@
+using Nemerle.Collections;
+using Nemerle.Utility;
+using PipelineMacro;
+using System.IO;
+using System.Text;
+
+public class CreateDuplicatesHtmlTask : ITask
+{
+	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
+	{
+		mutable mappings = [];
+		foreach (item is DuplicatesItem in items)
+			mappings ::= TaskMapping(this, [ item ], [ DuplicatesHtmlItem(item.Name) ]);
+		mappings;
+	}
+
+	private Compute
+		( [InItem]  duplicates : DuplicatesItem
+		, [OutItem] html       : DuplicatesHtmlItem
+		) : void
+	{
+		def GetThumbnailPath(id)
+		{
+			def folder = Path.GetFileNameWithoutExtension(duplicates.Path);
+			$"../ThumbnailCollection/$folder/$id.jpg"
+		}
+
+		def text = StringBuilder();
+		def Write    (line) { _ = text.Append(line)     }
+		def WriteLine(line) { _ = text.AppendLine(line) }
+
+		[ "<html>"
+		, "<head><style type='text/css'>"
+		, "	tr td              { width: 32px }"
+		, "	tr td:nth-child(1) { width: auto; text-align: right }"
+		, "</style></head>"
+		, "<body><table>"
+		].Iter(WriteLine);
+
+		foreach (group in duplicates.ImageIDs)
+		{
+			Write("<tr>");
+			foreach (id in group)
+			{
+				def thumb = GetThumbnailPath(id);
+				Write($"<td><img src='$thumb' /></td>");
+			}
+			WriteLine("</tr>");
+		}
+
+		WriteLine("</table></html></body>");
+
+		html.Text = text.ToString();
+	}
+}

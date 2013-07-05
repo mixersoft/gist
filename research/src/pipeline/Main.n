@@ -48,6 +48,7 @@ module Main
 				, CreateSequenceHtmlTask()
 
 				, FindDuplicatesTask()
+				, CreateDuplicatesHtmlTask()
 				, LoadReferenceDuplicatesTask()
 				, EvaluateDuplicatesTask()
 

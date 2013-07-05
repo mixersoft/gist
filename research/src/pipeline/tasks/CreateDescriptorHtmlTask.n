@@ -57,7 +57,7 @@ class CreateDescriptorHtmlTask : ITask
 		[ "<html>"
 		, "<head><style type='text/css'>"
 		, "	tr td              { width: 32px }"
-		, "	tr td:nth-child(1) { width: autho; text-align: right }"
+		, "	tr td:nth-child(1) { width: auto; text-align: right }"
 		, "</style></head>"
 		, "<body><table>"
 		].Iter(WriteLine);
