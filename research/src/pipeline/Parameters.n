@@ -11,65 +11,26 @@ public class Parameters
 	// meta-parameters
 	//----------------
 
-	[ Parameter(LongName = "base data url") ]
-	public mutable BaseDataUrl : string;
-
-	[ Parameter(LongName = "clustering threshold") ]
-	public mutable ClusteringThreshold : double;
-
-	[ Parameter(LongName = "coarse event spacing") ]
-	public mutable CoarseEventSpacing : double;
-
-	[ Parameter(LongName = "color component weight") ]
-	public mutable ColorWeight : double;
-
-	[ Parameter(LongName = "day quota") ]
-	public mutable DayQuota : int;
-
-	[ Parameter(LongName = "dominant color count") ]
-	public mutable DominantColorCount : int;
-
-	[ Parameter(LongName = "download image prefix") ]
-	public mutable DownloadImagePrefix : string;
-
-	[ Parameter(LongName = "duplicate threshold") ]
-	public mutable DuplicateThreshold : int;
-
-	[ Parameter(LongName = "fine event spacing") ]
-	public mutable FineEventSpacing : double;
-
-	[ Parameter(LongName = "hashed image blur") ]
-	public mutable HashedImageBlur : ImageHash.BlurMethod;
-
-	[ Parameter(LongName = "hashed image bpp") ]
-	public mutable HashedImageBpp : int;
-
-	[ Parameter(LongName = "hashed image size") ]
-	public mutable HashedImageSize : int;
-
-	[ Parameter(LongName = "hash method") ]
-	public mutable HashMethod : ImageHash.HashMethod;
-
-	[ Parameter(LongName = "image sample size") ]
-	public mutable ImageSampleSize : int;
-
-	[ Parameter(LongName = "image size") ]
-	public mutable ImageSize : int * int;
-
-	[ Parameter(LongName = "kde window") ]
-	public mutable KdeWindow : double;
-
-	[ Parameter(LongName = "mean shift iteration count") ]
-	public mutable MSIterationCount : int;
-
-	[ Parameter(LongName = "mean shift kernel") ]
-	public mutable MSKernel : MeanShiftKernel;
-
-	[ Parameter(LongName = "simulated timeline count") ]
-	public mutable SimulatedTimelineCount : int;
-
-	[ Parameter(LongName = "thumbnail height") ]
-	public mutable ThumbHeight : int;
+	[ Parameter(LongName = "base data url") ]             public mutable BaseDataUrl            : string;
+	[ Parameter(LongName = "clustering threshold") ]      public mutable ClusteringThreshold    : double;
+	[ Parameter(LongName = "coarse event spacing") ]      public mutable CoarseEventSpacing     : double;
+	[ Parameter(LongName = "color component weight") ]    public mutable ColorWeight            : double;
+	[ Parameter(LongName = "day quota") ]                 public mutable DayQuota               : int;
+	[ Parameter(LongName = "dominant color count") ]      public mutable DominantColorCount     : int;
+	[ Parameter(LongName = "download image prefix") ]     public mutable DownloadImagePrefix    : string;
+	[ Parameter(LongName = "duplicate threshold") ]       public mutable DuplicateThreshold     : int;
+	[ Parameter(LongName = "fine event spacing") ]        public mutable FineEventSpacing       : double;
+	[ Parameter(LongName = "hash method") ]               public mutable HashMethod             : ImageHash.HashMethod;
+	[ Parameter(LongName = "hashed image blur") ]         public mutable HashedImageBlur        : ImageHash.BlurMethod;
+	[ Parameter(LongName = "hashed image bpp") ]          public mutable HashedImageBpp         : int;
+	[ Parameter(LongName = "hashed image size") ]         public mutable HashedImageSize        : int;
+	[ Parameter(LongName = "image sample size") ]         public mutable ImageSampleSize        : int;
+	[ Parameter(LongName = "image size") ]                public mutable ImageSize              : int * int;
+	[ Parameter(LongName = "kde window") ]                public mutable KdeWindow              : double;
+	[ Parameter(LongName = "mean shift iteration count") ]public mutable MSIterationCount       : int;
+	[ Parameter(LongName = "mean shift kernel") ]         public mutable MSKernel               : MeanShiftKernel;
+	[ Parameter(LongName = "simulated timeline count") ]  public mutable SimulatedTimelineCount : int;
+	[ Parameter(LongName = "thumbnail height") ]          public mutable ThumbHeight            : int;
 
 	//-----------------------
 	// implementation methods
