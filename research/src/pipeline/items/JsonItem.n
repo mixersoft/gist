@@ -7,14 +7,15 @@ public class JsonItem : ITaskItem
 {
 	public mutable Photos  : array[JsonIO.PhotoInfo];
 	public mutable BaseUrl : string;
+	public mutable ID      : uint;
 
 	public Save(path : string) : void
 	{
-		JsonIO.Save(path, Photos, BaseUrl);
+		JsonIO.Save(path, Photos, BaseUrl, ID);
 	}
 
 	public Load(path : string) : void
 	{
-		(Photos, BaseUrl) = JsonIO.Load(path);
+		(Photos, BaseUrl, ID) = JsonIO.Load(path);
 	}
 }

@@ -33,19 +33,14 @@ public class EventGroupItem : ITaskItem
 
 	public Load(path : string) : void
 	{
+		def RemoveEmpties = StringSplitOptions.RemoveEmptyEntries;
 		def SplitDbl(str)
 		{
-			str.Split
-				( array[' ']
-				, StringSplitOptions.RemoveEmptyEntries
-				).Map(double.Parse)
+			str.Split(array[' '], RemoveEmpties).Map(double.Parse)
 		}
 		def SplitInt(str)
 		{
-			str.Split
-				( array[' ']
-				, StringSplitOptions.RemoveEmptyEntries
-				).Map(int.Parse)
+			str.Split(array[' '], RemoveEmpties).Map(int.Parse)
 		}
 		using (reader = File.OpenText(path))
 		{

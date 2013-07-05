@@ -6,10 +6,11 @@ public class EventGroupJsonItem : ITaskItem
 {
 	public mutable Events : array[JsonIO.EventInfo];
 	public mutable Noise  : array[JsonIO.EventInfo];
+	public mutable ID     : uint;
 
 	public Save(path : string) : void
 	{
-		JsonIO.Save(path, Events, Noise);
+		JsonIO.Save(path, Events, Noise, ID);
 	}
 
 	public Load(_path : string) : void

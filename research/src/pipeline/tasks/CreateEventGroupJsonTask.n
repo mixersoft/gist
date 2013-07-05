@@ -3,7 +3,7 @@ using PipelineMacro;
 using System.Collections.Generic;
 using System.IO;
 
-class CreateEventGroupJsonTask : ITask
+public class CreateEventGroupJsonTask : ITask
 {
 	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
 	{
@@ -82,5 +82,6 @@ class CreateEventGroupJsonTask : ITask
 		}
 		events.Events = groups.Groups.Map(MakeCoarseGroupEventInfo);
 		events.Noise  = MakeNoiseEventInfo(groups.DayGroups, groups.NoiseDays);
+		events.ID     = json.ID;
 	}
 }

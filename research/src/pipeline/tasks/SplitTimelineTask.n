@@ -36,5 +36,6 @@ class SplitTimelineTask : ITask
 
 		dst.Photos  = src.Photos.Map(MapPhoto);
 		dst.BaseUrl = src.BaseUrl;
+		dst.ID      = src.ID;
 	}
 }

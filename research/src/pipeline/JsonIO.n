@@ -34,7 +34,7 @@ public module JsonIO
 		}
 	}
 
-	public Save(path : string, photos : array[PhotoInfo], baseUrl : string) : void
+	public Save(path : string, photos : array[PhotoInfo], baseUrl : string, id : uint) : void
 	{
 		using (writer = JsonTextWriter(File.CreateText(path)))
 		{
@@ -53,6 +53,9 @@ public module JsonIO
 						writer.WritePropertyName("CastingCall");
 						writer.WriteStartObject();
 						{
+							writer.WritePropertyName("ID");
+							writer.WriteValue(id);
+
 							writer.WritePropertyName("Auditions");
 							writer.WriteStartObject();
 							{
@@ -116,7 +119,7 @@ public module JsonIO
 		}
 	}
 
-	public Load(path : string) : array[PhotoInfo] * string
+	public Load(path : string) : array[PhotoInfo] * string * uint
 	{
 		def data = JObject.Parse(File.ReadAllText(path));
 
@@ -136,6 +139,7 @@ public module JsonIO
 			.Children()
 			.MapToArray(GetPhotoInfo)
 		, castingCall["CastingCall"]["Auditions"]["Baseurl"] :> string
+		, castingCall["CastingCall"]["ID"] :> uint
 		)
 	}
 
@@ -154,7 +158,7 @@ public module JsonIO
 		public Children : array[EventInfo];
 	}
 
-	public Save(path : string, events : array[EventInfo], noise : array[EventInfo]) : void
+	public Save(path : string, events : array[EventInfo], noise : array[EventInfo], id : uint) : void
 	{
 		using (writer = JsonTextWriter(File.CreateText(path)))
 		{
@@ -192,7 +196,8 @@ public module JsonIO
 
 			writer.WriteStartObject();
 			{
-				//writer.WritePropertyName("ID");
+				writer.WritePropertyName("ID");
+				writer.WriteValue(id);
 
 				writer.WritePropertyName("Events");
 				writer.WriteStartArray();
