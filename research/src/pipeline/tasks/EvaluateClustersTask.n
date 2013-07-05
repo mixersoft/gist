@@ -2,7 +2,6 @@ using Nemerle.Collections;
 using Nemerle.Utility;
 using PipelineMacro;
 using Profiling;
-using System.Collections.Generic;
 using System.IO;
 using System;
 
@@ -10,18 +9,13 @@ public class EvaluateClustersTask: ITask
 {
 	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
 	{
-		def refs = Dictionary();
-		foreach (item is ClusterRefItem in items)
-			refs[item.Name] = item;
-
-		// map those clusters for which there are references
 		mutable mappings = [];
-		foreach (cluster is ClusterItem when refs.ContainsKey(cluster.Name) in items)
+		foreach ((name, autos, refs) in items.Join.[ClusterItem, ClusterRefItem]())
 		{
 			mappings ::= TaskMapping
 				( this
-				, [ cluster, refs[cluster.Name] ]
-				, [ ClusterEvaluationItem(cluster.Name) ]
+				, [ autos, refs ]
+				, [ ClusterEvaluationItem(name) ]
 				);
 		}
 		mappings;
@@ -29,9 +23,9 @@ public class EvaluateClustersTask: ITask
 
 	[ Profile(Recursive) ]
 	private Compute
-		( [InItem]  autoClusters : ClusterItem
-		, [InItem]  refClusters  : ClusterRefItem
-		, [OutItem] result       : ClusterEvaluationItem
+		( [InItem]  autos  : ClusterItem
+		, [InItem]  refs   : ClusterRefItem
+		, [OutItem] result : ClusterEvaluationItem
 		) : void
 	{
 		def MakeHash(c)
@@ -43,14 +37,14 @@ public class EvaluateClustersTask: ITask
 		/// Remove the last reference cluster and all items containined in it.
 		/// This cluster is reserved for unsorted items.
 		/// </summary>
-		def PrepareClusters(autoClusters, mutable refClusters)
+		def PrepareClusters(autos, mutable refs)
 		{
-			def set = Set(refClusters[refClusters.Length - 1]);
-			Array.Resize(ref refClusters, refClusters.Length - 1);
-			( autoClusters
+			def set = Set(refs[refs.Length - 1]);
+			Array.Resize(ref refs, refs.Length - 1);
+			( autos
 				.MapToArray(clusters => clusters.FilterToArray(id => !set.Contains(id)))
 				.FilterToArray(clusters => clusters.Length > 0)
-			, refClusters
+			, refs
 			);
 		}
 
@@ -94,12 +88,12 @@ public class EvaluateClustersTask: ITask
 			unchecked (n2 * ab - a * b) / (0.5 * n2 * (a + b) - a * b);
 		}
 
-		def autoClusters = autoClusters.Clusters;
-		def refClusters  = refClusters.Clusters;
+		def autos = autos.Clusters;
+		def refs  = refs.Clusters;
 
-		when (MakeHash(autoClusters) != MakeHash(refClusters))
+		when (MakeHash(autos) != MakeHash(refs))
 			throw Exception("Cannot compare clusters of different items.");
 
-		result.Value = EvaluateClusters(PrepareClusters(autoClusters, refClusters));
+		result.Value = EvaluateClusters(PrepareClusters(autos, refs));
 	}
 }

@@ -10,27 +10,12 @@ class GraphEventsTask : ITask
 {
 	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
 	{
-		def jsonItems = Hashtable();
-		foreach(item is JsonItem in items)
-			jsonItems[item.Name] = item;
-
-		def eventItems = Hashtable();
-		foreach(item is EventRefItem in items)
-			eventItems[item.Name] = item;
-
-		def thumbItems = Hashtable();
-		foreach(item is ThumbnailCollectionItem in items)
-			thumbItems[item.Name] = item;
-
-		def IsValid(name) { eventItems.Contains(name) && thumbItems.Contains(name) && jsonItems.Contains(name) }
-
 		mutable mappings = [];
-		foreach (item is EventGroupItem when IsValid(item.Name) in items)
+		foreach ((name, events, json, refs, thumbs) in items.Join.[EventGroupItem, JsonItem, EventRefItem, ThumbnailCollectionItem]())
 		{
-			def name = item.Name;
 			mappings ::= TaskMapping
 				( this
-				, [ item, jsonItems[name], eventItems[name], thumbItems[name] ]
+				, [ events, json, refs, thumbs ]
 				, [ EventGraphItem(name) ]
 				);
 		}

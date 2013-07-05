@@ -1,6 +1,5 @@
 using Nemerle.Collections;
 using PipelineMacro;
-using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 
@@ -8,18 +7,13 @@ class EvaluateImageHashUniquenessTask : ITask
 {
 	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
 	{
-		def thumbnails = Dictionary();
-		foreach (item is ThumbnailCollectionItem in items)
-			thumbnails[item.Name] = item;
-
-		// pair up images and thumbnails
 		mutable mappings = [];
-		foreach (item is ImageCollectionItem when thumbnails.ContainsKey(item.Name) in items)
+		foreach ((name, images, thumbnails) in items.Join.[ImageCollectionItem, ThumbnailCollectionItem]())
 		{
 			mappings ::= TaskMapping
 				( this
-				, [ item, thumbnails[item.Name] ]
-				, [ ImageHashUniquenessEvaluationItem(item.Name) ]
+				, [ images, thumbnails ]
+				, [ ImageHashUniquenessEvaluationItem(name) ]
 				);
 		}
 		mappings;

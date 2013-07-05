@@ -7,17 +7,13 @@ public class CreateEventGroupJsonTask : ITask
 {
 	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
 	{
-		def json = Hashtable();
-		foreach (item is JsonItem in items)
-			json[item.Name] = item;
-
 		mutable mappings = [];
-		foreach (item is EventGroupItem when json.Contains(item.Name) in items)
+		foreach ((name, groups, json) in items.Join.[EventGroupItem, JsonItem]())
 		{
 			mappings ::= TaskMapping
 				( this
-				, [ item, json[item.Name] ]
-				, [ EventGroupJsonItem(item.Name) ]
+				, [ groups, json ]
+				, [ EventGroupJsonItem(name) ]
 				);
 		}
 		mappings;

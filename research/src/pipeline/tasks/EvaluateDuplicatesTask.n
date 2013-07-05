@@ -7,24 +7,12 @@ public class EvaluateDuplicatesTask: ITask
 {
 	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
 	{
-		def refs = Dictionary();
-		foreach (item is DuplicatesRefItem in items)
-			refs[item.Name] = item;
-
-		def json = Dictionary();
-		foreach (item is JsonItem in items)
-			json[item.Name] = item;
-
-		def IsValid(item) { refs.ContainsKey(item.Name) && json.ContainsKey(item.Name) }
-
-		// map those clusters for which there are references
 		mutable mappings = [];
-		foreach (item is DuplicatesItem when IsValid(item) in items)
+		foreach ((name, autos, refs, json) in items.Join.[DuplicatesItem, DuplicatesRefItem, JsonItem]())
 		{
-			def name = item.Name;
 			mappings ::= TaskMapping
 				( this
-				, [ item, refs[name], json[name] ]
+				, [ autos, refs, json ]
 				, [ DuplicatesEvaluationItem(name) ]
 				);
 		}
@@ -32,17 +20,17 @@ public class EvaluateDuplicatesTask: ITask
 	}
 
 	private Compute
-		( [InItem]  autoDuplicates : DuplicatesItem
-		, [InItem]  refDuplicates  : DuplicatesRefItem
-		, [InItem]  json           : JsonItem
-		, [OutItem] result         : DuplicatesEvaluationItem
+		( [InItem]  autos  : DuplicatesItem
+		, [InItem]  refs   : DuplicatesRefItem
+		, [InItem]  json   : JsonItem
+		, [OutItem] result : DuplicatesEvaluationItem
 		) : void
 	{
 		def GatherIndices()
 		{
 			mutable indices = Set();
 			mutable i = 1;
-			foreach (group in autoDuplicates.ImageIDs)
+			foreach (group in autos.ImageIDs)
 			for (mutable j = 0; j != group.Length; ++j)
 			{
 				when (j != 0)
@@ -52,7 +40,7 @@ public class EvaluateDuplicatesTask: ITask
 			indices;
 		}
 
-		def refs = Set(refDuplicates.Indices);
+		def refs = Set(refs.Indices);
 		def auto = GatherIndices();
 
 		def photos = json.Photos.Sort(_.DateTaken);

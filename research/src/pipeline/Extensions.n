@@ -1,7 +1,6 @@
+using System.Collections.Generic;
 using Nemerle.Imperative;
 using System;
-
-using SCG = System.Collections.Generic;
 
 public module Extensions
 {
@@ -28,21 +27,96 @@ public module Extensions
 	}
 
 	public TypedFilter[T1, T2]
-		( this l : SCG.IEnumerable[T1]
+		( this l : IEnumerable[T1]
 		, pred : T2 -> bool
-		) : SCG.IEnumerable[T2] where T2 : T1
+		) : IEnumerable[T2] where T2 : T1
 	{
 		foreach (x is T2 when pred(x) in l)
 			yield x;
 	}
 
 	public TypedFind[T1, T2]
-		( this l : SCG.IEnumerable[T1]
+		( this l : IEnumerable[T1]
 		, pred : T2 -> bool
 		) : option[T2] where T2 : T1
 	{
 		foreach (x is T2 when pred(x) in l)
 			return Some(x);
 		None();
+	}
+
+	public Join[T1, T2]
+		( this items : IEnumerable[ITaskItem]
+		) : IEnumerable[string * T1 * T2]
+		where T1 : ITaskItem
+		where T2 : ITaskItem
+	{
+		def t1s = Dictionary.[string, T1]();
+		foreach (t1 is T1 in items)
+			t1s[t1.Name] = t1;
+
+		mutable tuples = [];
+		foreach (t2 is T2 in items)
+		{
+			def name = t2.Name;
+			when (t1s.ContainsKey(name))
+				tuples ::= ( name, t1s[name], t2 );
+		}
+		tuples;
+	}
+
+	public Join[T1, T2, T3]
+		( this items : IEnumerable[ITaskItem]
+		) : IEnumerable[string * T1 * T2 * T3]
+		where T1 : ITaskItem
+		where T2 : ITaskItem
+		where T3 : ITaskItem
+	{
+		def t1s = Dictionary.[string, T1]();
+		foreach (t1 is T1 in items)
+			t1s[t1.Name] = t1;
+
+		def t2s = Dictionary.[string, T2]();
+		foreach (t2 is T2 in items)
+			t2s[t2.Name] = t2;
+
+		mutable tuples = [];
+		foreach (t3 is T3 in items)
+		{
+			def name = t3.Name;
+			when (t1s.ContainsKey(name) && t2s.ContainsKey(name))
+				tuples ::= ( name, t1s[name], t2s[name], t3 );
+		}
+		tuples;
+	}
+
+	public Join[T1, T2, T3, T4]
+		( this items : IEnumerable[ITaskItem]
+		) : IEnumerable[string * T1 * T2 * T3 * T4]
+		where T1 : ITaskItem
+		where T2 : ITaskItem
+		where T3 : ITaskItem
+		where T4 : ITaskItem
+	{
+		def t1s = Dictionary.[string, T1]();
+		foreach (t1 is T1 in items)
+			t1s[t1.Name] = t1;
+
+		def t2s = Dictionary.[string, T2]();
+		foreach (t2 is T2 in items)
+			t2s[t2.Name] = t2;
+
+		def t3s = Dictionary.[string, T3]();
+		foreach (t3 is T3 in items)
+			t3s[t3.Name] = t3;
+
+		mutable tuples = [];
+		foreach (t4 is T4 in items)
+		{
+			def name = t4.Name;
+			when (t1s.ContainsKey(name) && t2s.ContainsKey(name) && t3s.ContainsKey(name))
+				tuples ::= ( name, t1s[name], t2s[name], t3s[name], t4 );
+		}
+		tuples;
 	}
 }
