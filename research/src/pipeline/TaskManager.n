@@ -55,11 +55,11 @@ public class TaskManager
 		get { items.Values }
 	}
 
-	public DiscardItemData(name : string) : void
+	public DiscardItemData(path : string) : void
 	{
-		when (!items.Contains(name))
-			throw ArgumentException("name");
-		toCompute = toCompute.Replace(name);
+		when (!items.Contains(path))
+			throw ArgumentException("path");
+		toCompute = toCompute.Replace(path);
 	}
 
 	public Compute(parameters : Parameters) : void

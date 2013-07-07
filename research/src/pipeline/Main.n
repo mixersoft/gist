@@ -18,6 +18,7 @@ variant RunMode
 {
 | Normal
 | OptimizeColor
+| OptimizeDuplicates
 | OptimizeThreshold { min : double; max : double; count : int }
 | OptimizeImageSize
 | OptimizeImageHash
@@ -39,8 +40,10 @@ module Main
 				[ LoadJsonDataTask()
 				, DownloadDataTask()
 				, CreateThumbnailsTask()
+
 				, ExtractDescriptorsTask()
 				, CreateDescriptorHtmlTask()
+
 				, ClusterDataTask()
 				, CreateClusterHtmlTask()
 				, LoadReferenceClustersTask()
@@ -125,6 +128,40 @@ module Main
 				, task.Value
 				);
 			outFile.Flush();
+		}
+	}
+
+	private RunDuplicateOptimization() : void
+	{
+		def parameters = Parameters();
+		parameters.Load("parameters.txt");
+
+		def taskManager = TaskManager
+			( tasks =
+				[ LoadJsonDataTask()
+				, DownloadDataTask()
+
+				, FindDuplicatesTask()
+				, LoadReferenceDuplicatesTask()
+				, EvaluateDuplicatesTask()
+				]
+			, persistData     = false
+			, displayProgress = false
+			);
+
+		foreach (eval is DuplicatesEvaluationItem in taskManager.Items)
+		{
+			Console.WriteLine(eval.Name);
+
+			foreach (threshold in [0..63])
+			{
+				parameters.DuplicateThreshold = threshold;
+
+				taskManager.DiscardItemData($@"work\Duplicates\$(eval.Name).txt");
+				taskManager.Compute(parameters);
+
+				Console.WriteLine("{0,2}: {1}", threshold, eval.Score);
+			}
 		}
 	}
 
@@ -386,6 +423,11 @@ module Main
 				, () => runMode = RunMode.OptimizeColor()
 				)
 			, Getopt.CliOption.Flag
+				( "-optimize-duplicates"
+				, "Optimize duplicate threshold."
+				, () => runMode = RunMode.OptimizeDuplicates()
+				)
+			, Getopt.CliOption.Flag
 				( "-optimize-image-size"
 				, "Optimize the image size."
 				, () => runMode = RunMode.OptimizeImageSize()
@@ -414,6 +456,7 @@ module Main
 			{
 			| Normal                             => Run()
 			| OptimizeColor                      => RunColorOptimization()
+			| OptimizeDuplicates                 => RunDuplicateOptimization()
 			| OptimizeImageHash                  => RunImageHashOptimization()
 			| OptimizeImageSize                  => RunImageSizeOptimization()
 			| OptimizeThreshold(min, max, count) => RunThresholdOptimization(min, max, count)
