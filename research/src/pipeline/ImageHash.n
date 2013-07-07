@@ -36,28 +36,57 @@ public module ImageHash
 
 	public static GetMeanHashCode(image : Bitmap) : int
 	{
-		def Resize(src : Bitmap) : Image.[Gray, byte]
+		def Resize(src : Bitmap) : Image.[Gray, float]
 		{
 			def (w, h) = if (src.Width > src.Height) (8, 4) else (4, 8);
-			Image.[Gray, byte](src).Resize(w, h, INTER.CV_INTER_AREA);
+			Image.[Gray, float](src).Resize(w, h, INTER.CV_INTER_LINEAR);
 		}
-		def GetHash(src : Image.[Gray, byte])
+		def GetHash(src : Image.[Gray, float])
 		{
-			def data : array[3, byte] = src.Data;
+			def data : array[3, float] = src.Data;
 			def (w, h) = (src.Width, src.Height);
 
-			mutable mean = 0;
+			mutable mean = 0.0f;
 			for (mutable y = 0; y != h; ++y)
 			for (mutable x = 0; x != w; ++x)
 				mean += data[y, x, 0];
 			mean /= w * h;
 
-			mutable hash = 0;
+			mutable hash = 0u;
 			for (mutable y = 0; y != h; ++y)
 			for (mutable x = 0; x != w; ++x)
 			{
 				when (data[y, x, 0] > mean)
-					hash |= 1 << (y * w + x);
+					hash |= 1u << (y * w + x);
+			}
+			unchecked { hash :> int }
+		}
+		image |> Resize |> GetHash;
+	}
+
+	public static GetMeanHashCodeLong(image : Bitmap) : ulong
+	{
+		def Resize(src : Bitmap) : Image.[Gray, float]
+		{
+			Image.[Gray, float](src).Resize(8, 8, INTER.CV_INTER_LINEAR);
+		}
+		def GetHash(src : Image.[Gray, float])
+		{
+			def data : array[3, float] = src.Data;
+			def (w, h) = (src.Width, src.Height);
+
+			mutable mean = 0.0f;
+			for (mutable y = 0; y != h; ++y)
+			for (mutable x = 0; x != w; ++x)
+				mean += data[y, x, 0];
+			mean /= w * h;
+
+			mutable hash = 0ul;
+			for (mutable y = 0; y != h; ++y)
+			for (mutable x = 0; x != w; ++x)
+			{
+				when (data[y, x, 0] > mean)
+					hash |= (1:ulong) << (y * w + x);
 			}
 			hash;
 		}

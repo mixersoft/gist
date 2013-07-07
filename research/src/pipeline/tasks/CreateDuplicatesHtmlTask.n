@@ -29,26 +29,19 @@ public class CreateDuplicatesHtmlTask : ITask
 		def Write    (line) { _ = text.Append(line)     }
 		def WriteLine(line) { _ = text.AppendLine(line) }
 
-		[ "<html>"
-		, "<head><style type='text/css'>"
-		, "	tr td              { width: 32px }"
-		, "	tr td:nth-child(1) { width: auto; text-align: right }"
-		, "</style></head>"
-		, "<body><table>"
-		].Iter(WriteLine);
+		WriteLine("<html><body>");
 
 		foreach (group in duplicates.ImageIDs)
 		{
-			Write("<tr>");
 			foreach (id in group)
 			{
 				def thumb = GetThumbnailPath(id);
-				Write($"<td><img src='$thumb' /></td>");
+				Write($"<img src='$thumb' /> ");
 			}
-			WriteLine("</tr>");
+			WriteLine("<br>");
 		}
 
-		WriteLine("</table></html></body>");
+		WriteLine("</html></body>");
 
 		html.Text = text.ToString();
 	}

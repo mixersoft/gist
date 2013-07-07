@@ -12,13 +12,14 @@ class FindDuplicatesTask : ITask
 	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
 	{
 		mutable mappings = [];
-		foreach (item is ImageCollectionItem in items)
-			mappings ::= TaskMapping(this, [ item ], [ DuplicatesItem(item.Name) ]);
+		foreach ((name, images, json) in items.Join.[ImageCollectionItem, JsonItem]())
+			mappings ::= TaskMapping(this, [ images, json ], [ DuplicatesItem(name) ]);
 		mappings;
 	}
 
 	private Compute
 		( [InItem]  images     : ImageCollectionItem
+		, [InItem]  json       : JsonItem
 		, [OutItem] duplicates : DuplicatesItem
 		, duplicateThreshold   : int
 		) : void
@@ -26,23 +27,21 @@ class FindDuplicatesTask : ITask
 		def Hash(id)
 		{
 			using (bmp = Bitmap(images.MakePath(id)))
-				ImageHash.GetMeanHashCode(bmp);
+				ImageHash.GetMeanHashCodeLong(bmp);
 		}
-		def Hamming(a : int, b : int) : int
+		def HammingDistance(a : ulong, b : ulong) : int
 		{
-			mutable xor = unchecked { (a :> uint) ^ (b :> uint) };
-			mutable distance = 0u;
+			mutable xor = a ^ b;
+			mutable distance = 0ul;
 			while (xor != 0)
 			{
-				distance += xor & 1;
+				distance += xor & 1ul;
 				xor >>= 1;
 			}
 			distance :> int;
 		}
 
-		def ids = images.ImageIDs;
-
-		if (ids.Length == 0)
+		if (json.Photos.Length == 0)
 		{
 			duplicates.ImageIDs = array(0);
 		}
@@ -51,19 +50,23 @@ class FindDuplicatesTask : ITask
 			def groups = List(); // sequence of groups
 			def group  = List(); // sequence of duplicates
 
+			def ids = json.Photos.Sort(_.DateTaken).Map(_.ID);
+
 			group.Add(ids[0]);
 
-			def prev = Hash(ids[0]);
+			mutable prev = Hash(ids[0]);
 
 			for (mutable i = 1; i != ids.Length; ++i)
 			{
 				def curr = Hash(ids[i]);
-				when (Hamming(curr, prev) > duplicateThreshold)
+				when (HammingDistance(curr, prev) > duplicateThreshold)
 				{
+					//start a new group with the current item
 					groups.Add(group.ToArray());
 					group.Clear();
 				}
 				group.Add(ids[i]);
+				prev = curr;
 			}
 			groups.Add(group.ToArray());
 
