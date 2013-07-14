@@ -42,7 +42,9 @@ module Main
 				, CreateThumbnailsTask()
 
 				, ExtractDescriptorsTask()
-				, CreateDescriptorHtmlTask()
+
+				, FindDominantColorTask()
+				, CreateDominantColorHtmlTask()
 
 				, ClusterDataTask()
 				, CreateClusterHtmlTask()

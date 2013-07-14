@@ -21,7 +21,7 @@ public class CreateDuplicatesHtmlTask : ITask
 	{
 		def GetThumbnailPath(id)
 		{
-			def folder = Path.GetFileNameWithoutExtension(duplicates.Path);
+			def folder = duplicates.Name;
 			$"../ThumbnailCollection/$folder/$id.jpg"
 		}
 

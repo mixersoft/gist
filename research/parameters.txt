@@ -1,5 +1,6 @@
 base data url = http://dev.snaphappi.com
 clustering threshold = 0.540193980531857
+color sampling step = 10
 color component weight = 0.00153788994898586
 dominant colors = 2
 download image prefix = 

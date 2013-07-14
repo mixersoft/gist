@@ -1,0 +1,66 @@
+using Nemerle.Collections;
+using Nemerle.Utility;
+using PipelineMacro;
+using System.IO;
+using System.Text;
+
+class CreateDominantColorHtmlTask : ITask
+{
+	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
+	{
+		mutable mappings = [];
+		foreach ((name, color, images) in items.Join.[DominantColorItem, ImageCollectionItem]())
+			mappings ::= TaskMapping(this, [ color, images ], [ DominantColorHtmlItem(name) ]);
+		mappings;
+	}
+
+	private Compute
+		( [InItem]  colors : DominantColorItem
+		, [InItem]  images : ImageCollectionItem
+		, [OutItem] html   : DominantColorHtmlItem
+		) : void
+	{
+		def GetThumbnailPath(id)
+		{
+			def folder = colors.Name;
+			$"../ThumbnailCollection/$folder/$id.jpg"
+		}
+		def ToString(color)
+		{
+			string.Format
+				( "#{0:X2}{1:X2}{2:X2}"
+				, color.R, color.G, color.B
+				);
+		}
+
+		def text = StringBuilder();
+		def Write    (line) { _ = text.Append(line)     }
+		def WriteLine(line) { _ = text.AppendLine(line) }
+
+		[ "<html>"
+		, "<head><style type='text/css'>"
+		, "	tr td              { width: 32px }"
+		, "	tr td:nth-child(1) { width: auto; text-align: right }"
+		, "</style></head>"
+		, "<body><table>"
+		].Iter(WriteLine);
+
+		for (mutable i = 0; i != colors.Colors.GetLength(0); ++i)
+		{
+			def thumb = GetThumbnailPath(images.ImageIDs[i]);
+			Write($"<tr><td><img src='$thumb' /></td>");
+
+			for (mutable j = 0; j != colors.Colors.GetLength(1); ++j)
+			{
+				def color = ToString(colors.Colors[i, j]);
+				Write($"<td bgcolor='$color'>&nbsp;</td>");
+			}
+
+			WriteLine("</tr>");
+		}
+
+		WriteLine("</table></html></body>");
+
+		html.Text = text.ToString();
+	}
+}

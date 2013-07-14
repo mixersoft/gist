@@ -14,6 +14,7 @@ public class Parameters
 	[ Parameter(LongName = "base data url") ]          public mutable BaseDataUrl            : string;
 	[ Parameter(LongName = "clustering threshold") ]   public mutable ClusteringThreshold    : double;
 	[ Parameter(LongName = "coarse event spacing") ]   public mutable CoarseEventSpacing     : double;
+	[ Parameter(LongName = "color sampling step") ]    public mutable ColorSamplingStep      : int;
 	[ Parameter(LongName = "color component weight") ] public mutable ColorWeight            : double;
 	[ Parameter(LongName = "day quota") ]              public mutable DayQuota               : int;
 	[ Parameter(LongName = "dominant colors") ]        public mutable DominantColorCount     : int;

@@ -1,0 +1,56 @@
+using PipelineMacro;
+using System.Drawing;
+using System.IO;
+using System;
+
+[ TaskItemInfo(File(".txt")) ]
+public class DominantColorItem : ITaskItem
+{
+	public mutable Colors : array[2, Color];
+
+	public Save(path : string) : void
+	{
+		def ToString(c)
+		{
+			$"$(c.R) $(c.G) $(c.B)"
+		}
+
+		using (writer = File.CreateText(path))
+		{
+			def m = Colors.GetLength(0);
+			def n = Colors.GetLength(1);
+
+			writer.WriteLine(m);
+			writer.WriteLine(n);
+
+			for (mutable i = 0; i != m; ++i)
+			for (mutable j = 0; j != n; ++j)
+				writer.WriteLine("{0} ", ToString(Colors[i, j]));
+		}
+	}
+
+	public Load(path : string) : void
+	{
+		def Parse(line)
+		{
+			def parts = line.Split();
+			Color.FromArgb
+				( red   = int.Parse(parts[0])
+				, green = int.Parse(parts[1])
+				, blue  = int.Parse(parts[2])
+				);
+		}
+
+		using (reader = File.OpenText(path))
+		{
+			def m = int.Parse(reader.ReadLine());
+			def n = int.Parse(reader.ReadLine());
+
+			Colors = array(m, n);
+
+			for (mutable i = 0; i != m; ++i)
+			for (mutable j = 0; j != n; ++j)
+				Colors[i, j] = Parse(reader.ReadLine());
+		}
+	}
+}
