@@ -1,0 +1,32 @@
+using Nemerle.Collections;
+using PipelineMacro;
+using System.Collections.Generic;
+using System.IO;
+
+public class CreateClusterJsonTask : ITask
+{
+	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
+	{
+		mutable mappings = [];
+		foreach ((name, clusters, json) in items.Join.[ClusterItem, JsonItem]())
+		{
+			mappings ::= TaskMapping
+				( this
+				, [ clusters, json ]
+				, [ ClusterJsonItem(name) ]
+				);
+		}
+		mappings;
+	}
+
+	private Compute
+		( [InItem]  clusters : ClusterItem
+		, [InItem]  json     : JsonItem
+		, [OutItem] result   : ClusterJsonItem
+		) : void
+	{
+		result.ID        = json.ID;
+		result.Timestamp = json.Timestamp;
+		result.Clusters  = clusters.Clusters;
+	}
+}

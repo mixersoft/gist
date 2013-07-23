@@ -1,0 +1,20 @@
+using PipelineMacro;
+using System;
+
+[ TaskItemInfo(File(".json")) ]
+public class ClusterJsonItem : ITaskItem
+{
+	public mutable Clusters  : array[array[string]];
+	public mutable ID        : uint;
+	public mutable Timestamp : uint;
+
+	public Save(path : string) : void
+	{
+		JsonIO.WriteClusters(path, Clusters, ID, Timestamp);
+	}
+
+	public Load(_path : string) : void
+	{
+		throw NotImplementedException();
+	}
+}

@@ -5,17 +5,18 @@ using System;
 [ TaskItemInfo(File(".json")) ]
 public class JsonItem : ITaskItem
 {
-	public mutable Photos  : array[JsonIO.PhotoInfo];
-	public mutable BaseUrl : string;
-	public mutable ID      : uint;
+	public mutable Photos    : array[JsonIO.PhotoInfo];
+	public mutable BaseUrl   : string;
+	public mutable ID        : uint;
+	public mutable Timestamp : uint;
 
 	public Save(path : string) : void
 	{
-		JsonIO.Save(path, Photos, BaseUrl, ID);
+		JsonIO.WritePhotos(path, Photos, BaseUrl, ID, Timestamp);
 	}
 
 	public Load(path : string) : void
 	{
-		(Photos, BaseUrl, ID) = JsonIO.Load(path);
+		(Photos, BaseUrl, ID, Timestamp) = JsonIO.ReadPhotos(path);
 	}
 }

@@ -48,6 +48,7 @@ module Main
 
 				, ClusterDataTask()
 				, CreateClusterHtmlTask()
+				, CreateClusterJsonTask()
 				, LoadReferenceClustersTask()
 				, EvaluateClustersTask()
 				, CreateSequenceHtmlTask()

@@ -10,6 +10,10 @@ public module JsonIO
 	// source JSON data IO
 	//--------------------
 
+	//---------
+	// photo IO
+	//---------
+
 	public class PhotoInfo
 	{
 		public ID        : string;
@@ -34,13 +38,17 @@ public module JsonIO
 		}
 	}
 
-	public Save(path : string, photos : array[PhotoInfo], baseUrl : string, id : uint) : void
+	public WritePhotos
+		( path      : string
+		, photos    : array[PhotoInfo]
+		, baseUrl   : string
+		, id        : uint
+		, timestamp : uint
+		) : void
 	{
 		using (writer = JsonTextWriter(File.CreateText(path)))
 		{
-			writer.Formatting  = Formatting.Indented;
-			writer.Indentation = 1;
-			writer.IndentChar  = '\t';
+			PrepareWriter(writer);
 
 			writer.WriteStartObject();
 			{
@@ -55,6 +63,9 @@ public module JsonIO
 						{
 							writer.WritePropertyName("ID");
 							writer.WriteValue(id);
+
+							writer.WritePropertyName("Timestamp");
+							writer.WriteValue(timestamp);
 
 							writer.WritePropertyName("Auditions");
 							writer.WriteStartObject();
@@ -119,7 +130,7 @@ public module JsonIO
 		}
 	}
 
-	public Load(path : string) : array[PhotoInfo] * string * uint
+	public ReadPhotos(path : string) : array[PhotoInfo] * string * uint * uint
 	{
 		def data = JObject.Parse(File.ReadAllText(path));
 
@@ -140,12 +151,17 @@ public module JsonIO
 			.MapToArray(GetPhotoInfo)
 		, castingCall["CastingCall"]["Auditions"]["Baseurl"] :> string
 		, castingCall["CastingCall"]["ID"] :> uint
+		, castingCall["CastingCall"]["Timestamp"] :> uint
 		)
 	}
 
 	//---------------
 	// event group IO
 	//---------------
+
+	//---------
+	// event IO
+	//---------
 
 	[ Record ]
 	public class EventInfo
@@ -158,7 +174,12 @@ public module JsonIO
 		public Children : array[EventInfo];
 	}
 
-	public Save(path : string, events : array[EventInfo], noise : array[EventInfo], id : uint) : void
+	public WriteEvents
+		( path   : string
+		, events : array[EventInfo]
+		, noise  : array[EventInfo]
+		, id     : uint
+		) : void
 	{
 		using (writer = JsonTextWriter(File.CreateText(path)))
 		{
@@ -190,9 +211,7 @@ public module JsonIO
 				writer.WriteEnd();
 			}
 
-			writer.Formatting  = Formatting.Indented;
-			writer.Indentation = 1;
-			writer.IndentChar  = '\t';
+			PrepareWriter(writer);
 
 			writer.WriteStartObject();
 			{
@@ -213,5 +232,54 @@ public module JsonIO
 			}
 			writer.WriteEnd();
 		}
+	}
+
+	//-----------
+	// cluster IO
+	//-----------
+
+	public WriteClusters
+		( path      : string
+		, clusters  : array[array[string]]
+		, id        : uint
+		, timestamp : uint
+		) : void
+	{
+		using (writer = JsonTextWriter(File.CreateText(path)))
+		{
+			PrepareWriter(writer);
+
+			writer.WriteStartObject();
+
+			writer.WritePropertyName("ID");
+			writer.WriteValue(id);
+
+			writer.WritePropertyName("Timestamp");
+			writer.WriteValue(timestamp);
+
+			writer.WritePropertyName("Groups");
+			writer.WriteStartArray();
+			foreach (cluster in clusters)
+			{
+				writer.WriteStartArray();
+				foreach (id in cluster)
+					writer.WriteValue(id);
+				writer.WriteEnd();
+			}
+			writer.WriteEnd();
+
+			writer.WriteEnd();
+		}
+	}
+
+	//-------------
+	// common tools
+	//-------------
+
+	private PrepareWriter(writer : JsonTextWriter) : void
+	{
+		writer.Formatting  = Formatting.Indented;
+		writer.Indentation = 1;
+		writer.IndentChar  = '\t';
 	}
 }
