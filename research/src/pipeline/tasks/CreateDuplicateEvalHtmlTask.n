@@ -1,0 +1,104 @@
+using PipelineMacro;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
+using System.Text;
+using System;
+
+class CreateDuplicateEvalHtmlTask : ITask
+{
+	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
+	{
+		mutable mappings = [];
+		foreach ((name, eval, json) in items.Join.[DuplicatesEvaluationItem, JsonItem]())
+			mappings ::= TaskMapping(this, [ eval, json ], [ DuplicatesEvalHtmlItem(name) ]);
+		mappings;
+	}
+
+	private Compute
+		( [InItem]  eval : DuplicatesEvaluationItem
+		, [InItem]  json : JsonItem
+		, [OutItem] html : DuplicatesEvalHtmlItem
+		) : void
+	{
+		def ImgPath(id)
+		{
+			Path.Combine(@"..\ThumbnailCollection", eval.Name, id + ".jpg")
+		}
+		def HashImg(id)
+		{
+			using (bmp = MakeHashBitmap(id, eval.Name))
+			using (bmp = ResizeBitmap(bmp))
+				ToBase64(bmp)
+		}
+
+		def text = StringBuilder();
+		def Write    (line) { _ = text.Append(line)     }
+		def WriteLine(line) { _ = text.AppendLine(line) }
+
+		WriteLine("<html><body><table>");
+
+		foreach (photo in json.Photos)
+		{
+			def id = photo.ID;
+			def isFP = eval.FalsePositives.Contains(id);
+			def isFN = eval.FalseNegatives.Contains(id);
+
+			Write("<tr>");
+			Write($"<td><img src='$(HashImg(id))' /></td>");
+			Write($"<td><img src='$(ImgPath(id))' /></td>");
+			when (isFP)
+				Write("<td>FP</td>");
+			when (isFN)
+				Write("<td>FN</td>");
+			WriteLine("</tr>");
+		}
+
+		WriteLine("</table></body></html>");
+
+		html.Text = text.ToString();
+	}
+
+	private MakeHashBitmap(id : string, name : string) : Bitmap
+	{
+		def path = Path.Combine(@"work\ImageCollection", name, id + ".jpg");
+		def hash = using (bmp = Bitmap(path))
+			ImageHash.GetMeanHashCodeLong(bmp);
+
+		def bmp = Bitmap(8, 8);
+		for (mutable y = 0; y != 8; ++y)
+		for (mutable x = 0; x != 8; ++x)
+		{
+			def color = if (hash & ((1:ulong) << (y * 8 + x)) != 0) Color.White else Color.Black;
+			bmp.SetPixel(x, y, color);
+		}
+		bmp;
+	}
+
+	private ResizeBitmap(src : Bitmap) : Bitmap
+	{
+		def dst = Bitmap(64, 64);
+		using (gfx = Graphics.FromImage(dst))
+		{
+			gfx.InterpolationMode = Drawing2D.InterpolationMode.NearestNeighbor;
+			gfx.DrawImage(src, 0, 0, dst.Width, dst.Height);
+		}
+		dst;
+	}
+
+	private ToBase64(bmp : Bitmap) : string
+	{
+		using (stream = MemoryStream())
+		{
+			bmp.Save(stream, ImageFormat.Png);
+			_ = stream.Seek(0, SeekOrigin.Begin);
+			def size = stream.Length :> int;
+
+			def data = array(size);
+			_ = stream.Read(data, 0, data.Length);
+
+			def str = Convert.ToBase64String(data, Base64FormattingOptions.None);
+			"data:image/png;base64," + str;
+		}
+	}
+}

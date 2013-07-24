@@ -1,0 +1,23 @@
+using Nemerle.Collections;
+using PipelineMacro;
+using System.IO;
+using System;
+
+[ TaskItemInfo(File(".html")) ]
+public class DuplicatesEvalHtmlItem : ITaskItem
+{
+	public mutable Text : string;
+
+	public Save(path : string) : void
+	{
+		File.WriteAllText
+			( path     = path
+			, contents = Text
+			);
+	}
+
+	public Load(_ : string) : void
+	{
+		throw NotImplementedException();
+	}
+}

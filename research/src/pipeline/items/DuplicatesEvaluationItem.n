@@ -6,8 +6,8 @@ using System.IO;
 public class DuplicatesEvaluationItem : ITaskItem
 {
 	public mutable Score : int;
-	public mutable FalsePositives : array[string];
-	public mutable FalseNegatives : array[string];
+	public mutable FalsePositives : Set[string];
+	public mutable FalseNegatives : Set[string];
 
 	public Save(path : string) : void
 	{
@@ -15,10 +15,10 @@ public class DuplicatesEvaluationItem : ITaskItem
 		{
 			file.WriteLine(Score.ToString());
 
-			file.WriteLine(FalsePositives.Length);
+			file.WriteLine(FalsePositives.Count);
 			FalsePositives.Iter(file.WriteLine);
 
-			file.WriteLine(FalseNegatives.Length);
+			file.WriteLine(FalseNegatives.Count);
 			FalseNegatives.Iter(file.WriteLine);
 		}
 	}
@@ -29,13 +29,13 @@ public class DuplicatesEvaluationItem : ITaskItem
 		{
 			Score = int.Parse(file.ReadLine());
 
-			FalsePositives = array[file.ReadLine()];
-			for (mutable i = 0; i != FalsePositives.Length; ++i)
-				FalsePositives[i] = file.ReadLine();
+			FalsePositives = Set();
+			repeat (int.Parse(file.ReadLine()))
+				FalsePositives = FalsePositives.Add(file.ReadLine());
 
-			FalseNegatives = array[file.ReadLine()];
-			for (mutable i = 0; i != FalseNegatives.Length; ++i)
-				FalseNegatives[i] = file.ReadLine();
+			FalseNegatives = Set();
+			repeat (int.Parse(file.ReadLine()))
+				FalseNegatives = FalseNegatives.Add(file.ReadLine());
 		}
 	}
 }

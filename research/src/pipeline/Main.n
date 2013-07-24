@@ -57,6 +57,7 @@ module Main
 				, CreateDuplicatesHtmlTask()
 				, LoadReferenceDuplicatesTask()
 				, EvaluateDuplicatesTask()
+				, CreateDuplicateEvalHtmlTask()
 
 				, SampleImagesTask()
 				, ExtractHashTask()

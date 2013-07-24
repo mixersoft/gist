@@ -12,11 +12,7 @@ public class SequenceHtmlItem : ITaskItem
 	{
 		def ImgPath(id)
 		{
-			Path.Combine
-				( @"..\ThumbnailCollection"
-				, Path.GetFileNameWithoutExtension(path)
-				, id + ".jpg"
-				)
+			Path.Combine(@"..\ThumbnailCollection", Name, id + ".jpg")
 		}
 		using (writer = File.CreateText(path))
 		{

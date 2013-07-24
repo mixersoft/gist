@@ -8,11 +8,11 @@ public class EvaluateDuplicatesTask: ITask
 	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
 	{
 		mutable mappings = [];
-		foreach ((name, autos, refs, json) in items.Join.[DuplicatesItem, DuplicatesRefItem, JsonItem]())
+		foreach ((name, auto, refs, json) in items.Join.[DuplicatesItem, DuplicatesRefItem, JsonItem]())
 		{
 			mappings ::= TaskMapping
 				( this
-				, [ autos, refs, json ]
+				, [ auto, refs, json ]
 				, [ DuplicatesEvaluationItem(name) ]
 				);
 		}
@@ -20,7 +20,7 @@ public class EvaluateDuplicatesTask: ITask
 	}
 
 	private Compute
-		( [InItem]  autos  : DuplicatesItem
+		( [InItem]  auto  : DuplicatesItem
 		, [InItem]  refs   : DuplicatesRefItem
 		, [InItem]  json   : JsonItem
 		, [OutItem] result : DuplicatesEvaluationItem
@@ -30,7 +30,7 @@ public class EvaluateDuplicatesTask: ITask
 		{
 			mutable indices = Set();
 			mutable i = 1;
-			foreach (group in autos.ImageIDs)
+			foreach (group in auto.ImageIDs)
 			for (mutable j = 0; j != group.Length; ++j)
 			{
 				when (j != 0)
@@ -46,8 +46,8 @@ public class EvaluateDuplicatesTask: ITask
 		def photos = json.Photos.Sort(_.DateTaken);
 		def GetPhotoID(i) { photos[i - 1].ID }
 
-		result.FalsePositives = auto.Subtract(refs).ToArray().Map(GetPhotoID);
-		result.FalseNegatives = refs.Subtract(auto).ToArray().Map(GetPhotoID);
-		result.Score = result.FalsePositives.Length + result.FalseNegatives.Length;
+		result.FalsePositives = Set(auto.Subtract(refs).Map(GetPhotoID));
+		result.FalseNegatives = Set(refs.Subtract(auto).Map(GetPhotoID));
+		result.Score = result.FalsePositives.Count + result.FalseNegatives.Count;
 	}
 }
