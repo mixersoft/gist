@@ -10,6 +10,7 @@
 
 	<ItemGroup>
 	<!-- source code -->
+		<CannySrc          Include="src\canny\*.n"           />
 		<ClusterUiSrc      Include="src\cluster-ui\*.n"      />
 		<DominantColorsSrc Include="src\dominant-colors\*.n" />
 		<PipelineMacroSrc  Include="src\pipeline-macro\*.n"  />
@@ -19,6 +20,7 @@
 		<PipelineTestSrc   Include="src\pipeline-test\*.n"   />
 		<PrettyPrintSrc    Include="src\pretty-print\*.n"    />
 	<!-- output -->
+		<CannyBin          Include="bin\Canny.exe"          />
 		<ClusterUiBin      Include="bin\ClusterUI.exe"      />
 		<DominantColorsBin Include="bin\DominantColors.exe" />
 		<PipelineBin       Include="bin\Pipeline.exe"       />
@@ -27,6 +29,11 @@
 		<PrettyPrintBin    Include="bin\PrettyPrint.exe"    />
 		<Out Include="bin\" />
 	<!-- references -->
+		<CannyRef          Include="System.Drawing.dll"       />
+		<CannyRef          Include="System.Windows.Forms.dll" />
+		<CannyRef          Include="lib\Emgu.CV.ML.dll"       />
+		<CannyRef          Include="lib\Emgu.CV.dll"          />
+		<CannyRef          Include="lib\Emgu.Util.dll"        />
 		<ClusterUiRef      Include="System.Drawing.dll"       />
 		<ClusterUiRef      Include="System.Windows.Forms.dll" />
 		<ClusterUiRef      Include="lib\Newtonsoft.Json.dll"  />
@@ -67,7 +74,7 @@
 
 	<Target
 		Name             = "All"
-		DependsOnTargets = "Pipeline; PipelineTest; ClusterUI; PrettyPrint; DominantColors"
+		DependsOnTargets = "Canny; Pipeline; PipelineTest; ClusterUI; PrettyPrint; DominantColors"
 		/>
 
 	<Target
@@ -120,6 +127,24 @@
 			References           = "@(PipelineTestRef)"
 			Sources              = "@(PipelineTestSrc)"
 			TargetType           = "library"
+			/>
+	</Target>
+
+	<Target
+		Name             = "Canny"
+		Inputs           = "@(CannySrc)"
+		Outputs          = "@(CannyBin)"
+		DependsOnTargets = "Dependencies"
+		>
+		<ncc
+			DefineConstants      = "$(Defines)"
+			EmitDebugInformation = "true"
+			NoLogo               = "true"
+			OutputAssembly       = "@(CannyBin)"
+			Platform             = "$(Platform)"
+			References           = "@(CannyRef)"
+			Sources              = "@(CannySrc)"
+			TargetType           = "exe"
 			/>
 	</Target>
 

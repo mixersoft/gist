@@ -167,10 +167,10 @@ module Main
 			{
 				parameters.DuplicateThreshold = threshold;
 
-				parameters.HashMethod = ImageHash.HashMethod.Mean;
+				parameters.DuplicateHash = ImageHash.HashMethod.Mean;
 				def meanScore = Eval(eval);
 
-				parameters.HashMethod = ImageHash.HashMethod.Median;
+				parameters.DuplicateHash = ImageHash.HashMethod.Median;
 				def medianScore = Eval(eval);
 
 				Console.WriteLine("{0,2}: {1} {2}", threshold, meanScore, medianScore);

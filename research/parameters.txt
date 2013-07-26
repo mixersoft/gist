@@ -9,8 +9,8 @@ image size = 120 120
 simulated timelines = 10
 thumbnail height = 64
 
-duplicate threshold = 20
-duplicate hash = mean
+duplicate threshold = 14
+duplicate hash = median
 
 hash method = md5
 hashed image blur = gaussian 1

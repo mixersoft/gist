@@ -1,0 +1,62 @@
+using System.Drawing;
+using System.Threading;
+using System.Windows.Forms;
+
+using Emgu.CV.CvEnum;
+using Emgu.CV.Structure;
+using Emgu.CV;
+
+def CreateForm()
+{
+	def picture = PictureBox();
+	picture.Dock     = DockStyle.Fill;
+	picture.SizeMode = PictureBoxSizeMode.CenterImage;
+
+	def threshold = NumericUpDown();
+	threshold.Minimum = 0;
+	threshold.Maximum = 255;
+
+	def linking = NumericUpDown();
+	linking.Minimum = 0;
+	linking.Maximum = 255;
+
+	def src = Image.[Gray, byte](@"work\ImageCollection\bali\00CD79AB-04C3-4DA4-BC3F-280DA27BB4CD.jpg");
+	def OnUpdate()
+	{
+		def threshold = threshold.Value :> double;
+		def linking   = linking.Value   :> double;
+
+		def old = picture.Image;
+		picture.Image =
+			using (edges = src.Canny(Gray(threshold), Gray(linking)))
+				edges.ToBitmap();
+		unless (old == null)
+			old.Dispose();
+	}
+	OnUpdate();
+
+	def update = Button();
+	update.Text = "Update";
+	update.Click += _ => OnUpdate();
+
+	def toolbar = FlowLayoutPanel();
+	toolbar.Dock = DockStyle.Top;
+	toolbar.Controls.Add(threshold);
+	toolbar.Controls.Add(linking);
+	toolbar.Controls.Add(update);
+
+	def form = Form();
+	form.Text        = "Canny detector tuning";
+	form.WindowState = FormWindowState.Maximized;
+	form.Controls.Add(picture);
+	form.Controls.Add(toolbar);
+
+	form;
+}
+
+Application.EnableVisualStyles();
+Application.SetCompatibleTextRenderingDefault(false);
+
+def thread = Thread(ThreadStart(() => Application.Run(CreateForm())));
+thread.SetApartmentState(ApartmentState.STA);
+thread.Start();

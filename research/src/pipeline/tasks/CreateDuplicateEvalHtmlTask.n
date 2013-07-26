@@ -38,6 +38,10 @@ class CreateDuplicateEvalHtmlTask : ITask
 		def WriteLine(line) { _ = text.AppendLine(line) }
 
 		WriteLine("<html><body><table>");
+		WriteLine($"<tr><td>false positives:</td><td>$(eval.FalsePositives.Count)</td></tr>");
+		WriteLine($"<tr><td>false negatives:</td><td>$(eval.FalseNegatives.Count)</td></tr>");
+		WriteLine($"<tr><td>total score:</td><td>$(eval.Score)</td></tr>");
+		WriteLine("</table><table>");
 
 		foreach (photo in json.Photos)
 		{

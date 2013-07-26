@@ -65,7 +65,11 @@ public module ImageHash
 	{
 		def Resize(src : Bitmap) : Image.[Gray, float]
 		{
-			Image.[Gray, float](src).Resize(8, 8, INTER.CV_INTER_LINEAR);
+			Image.[Gray, float](src).Resize(8, 8, INTER.CV_INTER_AREA);
+			//Image.[Gray, byte](src)
+			//	.Canny(Gray(128.0), Gray(128.0))
+			//	.Convert.[Gray, float]()
+			//	.Resize(8, 8, INTER.CV_INTER_AREA)
 		}
 		def GetHash(src : Image.[Gray, float])
 		{
