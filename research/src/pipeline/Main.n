@@ -152,6 +152,12 @@ module Main
 			, persistData     = false
 			, displayProgress = false
 			);
+		def Eval(eval)
+		{
+			taskManager.DiscardItemData($@"work\Duplicates\$(eval.Name).txt");
+			taskManager.Compute(parameters);
+			eval.Score;
+		}
 
 		foreach (eval is DuplicatesEvaluationItem in taskManager.Items)
 		{
@@ -161,10 +167,13 @@ module Main
 			{
 				parameters.DuplicateThreshold = threshold;
 
-				taskManager.DiscardItemData($@"work\Duplicates\$(eval.Name).txt");
-				taskManager.Compute(parameters);
+				parameters.HashMethod = ImageHash.HashMethod.Mean;
+				def meanScore = Eval(eval);
 
-				Console.WriteLine("{0,2}: {1}", threshold, eval.Score);
+				parameters.HashMethod = ImageHash.HashMethod.Median;
+				def medianScore = Eval(eval);
+
+				Console.WriteLine("{0,2}: {1} {2}", threshold, meanScore, medianScore);
 			}
 		}
 	}

@@ -19,6 +19,7 @@ class CreateDuplicateEvalHtmlTask : ITask
 		( [InItem]  eval : DuplicatesEvaluationItem
 		, [InItem]  json : JsonItem
 		, [OutItem] html : DuplicatesEvalHtmlItem
+		, duplicateHash : ImageHash.HashMethod
 		) : void
 	{
 		def ImgPath(id)
@@ -27,7 +28,7 @@ class CreateDuplicateEvalHtmlTask : ITask
 		}
 		def HashImg(id)
 		{
-			using (bmp = MakeHashBitmap(id, eval.Name))
+			using (bmp = MakeHashBitmap(id, eval.Name, duplicateHash))
 			using (bmp = ResizeBitmap(bmp))
 				ToBase64(bmp)
 		}
@@ -59,11 +60,11 @@ class CreateDuplicateEvalHtmlTask : ITask
 		html.Text = text.ToString();
 	}
 
-	private MakeHashBitmap(id : string, name : string) : Bitmap
+	private MakeHashBitmap(id : string, name : string, hashMethod : ImageHash.HashMethod) : Bitmap
 	{
 		def path = Path.Combine(@"work\ImageCollection", name, id + ".jpg");
 		def hash = using (bmp = Bitmap(path))
-			ImageHash.GetMeanHashCodeLong(bmp);
+			ImageHash.GetMeanHashCodeLong(bmp, hashMethod);
 
 		def bmp = Bitmap(8, 8);
 		for (mutable y = 0; y != 8; ++y)

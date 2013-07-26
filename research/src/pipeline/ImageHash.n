@@ -17,6 +17,7 @@ public module ImageHash
 	public enum HashMethod
 	{
 	| Mean
+	| Median
 	| MD5
 	}
 
@@ -29,12 +30,12 @@ public module ImageHash
 	{
 		match (hashMethod)
 		{
-		| Mean => GetMeanHashCode(image)
-		| MD5  => GetMD5HashCode(image, hashedImageSize, hashedImageBpp);
+		| Mean | Median => GetMeanHashCode(image, hashMethod)
+		| MD5           => GetMD5HashCode(image, hashedImageSize, hashedImageBpp);
 		}
 	}
 
-	public static GetMeanHashCode(image : Bitmap) : int
+	public GetMeanHashCode(image : Bitmap, method : HashMethod) : int
 	{
 		def Resize(src : Bitmap) : Image.[Gray, float]
 		{
@@ -46,17 +47,13 @@ public module ImageHash
 			def data : array[3, float] = src.Data;
 			def (w, h) = (src.Width, src.Height);
 
-			mutable mean = 0.0f;
-			for (mutable y = 0; y != h; ++y)
-			for (mutable x = 0; x != w; ++x)
-				mean += data[y, x, 0];
-			mean /= w * h;
+			def pivot = GetPivot(data, method);
 
 			mutable hash = 0u;
 			for (mutable y = 0; y != h; ++y)
 			for (mutable x = 0; x != w; ++x)
 			{
-				when (data[y, x, 0] > mean)
+				when (data[y, x, 0] > pivot)
 					hash |= 1u << (y * w + x);
 			}
 			unchecked { hash :> int }
@@ -64,7 +61,7 @@ public module ImageHash
 		image |> Resize |> GetHash;
 	}
 
-	public static GetMeanHashCodeLong(image : Bitmap) : ulong
+	public GetMeanHashCodeLong(image : Bitmap, method : HashMethod) : ulong
 	{
 		def Resize(src : Bitmap) : Image.[Gray, float]
 		{
@@ -75,17 +72,13 @@ public module ImageHash
 			def data : array[3, float] = src.Data;
 			def (w, h) = (src.Width, src.Height);
 
-			mutable mean = 0.0f;
-			for (mutable y = 0; y != h; ++y)
-			for (mutable x = 0; x != w; ++x)
-				mean += data[y, x, 0];
-			mean /= w * h;
+			def pivot = GetPivot(data, method);
 
 			mutable hash = 0ul;
 			for (mutable y = 0; y != h; ++y)
 			for (mutable x = 0; x != w; ++x)
 			{
-				when (data[y, x, 0] > mean)
+				when (data[y, x, 0] > pivot)
 					hash |= (1:ulong) << (y * w + x);
 			}
 			hash;
@@ -93,7 +86,7 @@ public module ImageHash
 		image |> Resize |> GetHash;
 	}
 
-	public static GetMD5HashCode(image : Bitmap, imageSize : int, bpp : int) : int
+	public GetMD5HashCode(image : Bitmap, imageSize : int, bpp : int) : int
 	{
 		def Resize(src : Bitmap) : Image.[Gray, byte]
 		{
@@ -129,5 +122,38 @@ public module ImageHash
 			hash[0] | (hash[1] << 8) | (hash[2] << 16) | (hash[3] << 24)
 		}
 		image |> Resize |> ToByteArray |> Hash |> GetFirst32Bits;
+	}
+
+	private GetPivot(data : array[3, float], method : HashMethod) : float
+	{
+		def (w, h) = (data.GetLength(1), data.GetLength(0));
+		def n = w * h;
+
+		def GetMean()
+		{
+			mutable mean = 0.0f;
+			for (mutable y = 0; y != h; ++y)
+			for (mutable x = 0; x != w; ++x)
+				mean += data[y, x, 0];
+			mean / n;
+		}
+		def GetMedian()
+		{
+			def values = array(n);
+			for (mutable y = 0; y != h; ++y)
+			for (mutable x = 0; x != w; ++x)
+				values[y * w + x] = data[y, x, 0];
+			Array.Sort(values);
+			if (n % 2 == 0)
+				(values[n / 2 - 1] + values[n / 2]) / 2
+			else
+				values[n / 2]
+		}
+
+		match (method)
+		{
+		| MD5 | Mean => GetMean()
+		| Median     => GetMedian()
+		}
 	}
 }

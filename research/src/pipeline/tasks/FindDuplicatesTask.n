@@ -21,13 +21,14 @@ class FindDuplicatesTask : ITask
 		( [InItem]  images     : ImageCollectionItem
 		, [InItem]  json       : JsonItem
 		, [OutItem] duplicates : DuplicatesItem
-		, duplicateThreshold   : int
+		, duplicateThreshold : int
+		, duplicateHash      : ImageHash.HashMethod
 		) : void
 	{
 		def Hash(id)
 		{
 			using (bmp = Bitmap(images.MakePath(id)))
-				ImageHash.GetMeanHashCodeLong(bmp);
+				ImageHash.GetMeanHashCodeLong(bmp, duplicateHash);
 		}
 		def HammingDistance(a : ulong, b : ulong) : int
 		{
