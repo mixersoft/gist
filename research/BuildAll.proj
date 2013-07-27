@@ -19,6 +19,7 @@
 		<PipelineSrc       Include="src\pipeline\tasks\*.n"  />
 		<PipelineTestSrc   Include="src\pipeline-test\*.n"   />
 		<PrettyPrintSrc    Include="src\pretty-print\*.n"    />
+		<SelectorSrc       Include="src\selector\*.n"        />
 	<!-- output -->
 		<CannyBin          Include="bin\Canny.exe"          />
 		<ClusterUiBin      Include="bin\ClusterUI.exe"      />
@@ -27,6 +28,7 @@
 		<PipelineMacroBin  Include="bin\PipelineMacro.dll"  />
 		<PipelineTestBin   Include="bin\PipelineTest.dll"   />
 		<PrettyPrintBin    Include="bin\PrettyPrint.exe"    />
+		<SelectorBin       Include="bin\Selector.exe"       />
 		<Out Include="bin\" />
 	<!-- references -->
 		<CannyRef          Include="System.Drawing.dll"       />
@@ -58,6 +60,9 @@
 		<PipelineTestRef   Include="System.Core"              />
 		<PipelineTestRef   Include="lib\nunit.framework.dll"  />
 		<PrettyPrintRef    Include="lib\Newtonsoft.Json.dll"  />
+		<SelectorRef       Include="System.Drawing.dll"       />
+		<SelectorRef       Include="System.Windows.Forms.dll" />
+		<SelectorRef       Include="lib\Newtonsoft.Json.dll"  />
 	<!-- dependencies -->
 		<Dependencies Include="lib\*" />
 		<Dependencies Include="..\common\ImageMagick\*">
@@ -74,7 +79,7 @@
 
 	<Target
 		Name             = "All"
-		DependsOnTargets = "Canny; Pipeline; PipelineTest; ClusterUI; PrettyPrint; DominantColors"
+		DependsOnTargets = "Canny; Pipeline; PipelineTest; ClusterUI; PrettyPrint; DominantColors; Selector"
 		/>
 
 	<Target
@@ -198,6 +203,24 @@
 			Platform             = "$(Platform)"
 			References           = "@(DominantColorsRef)"
 			Sources              = "@(DominantColorsSrc)"
+			TargetType           = "exe"
+			/>
+	</Target>
+
+	<Target
+		Name             = "Selector"
+		Inputs           = "@(SelectorSrc)"
+		Outputs          = "@(SelectorBin)"
+		DependsOnTargets = "Dependencies"
+		>
+		<ncc
+			DefineConstants      = "$(Defines)"
+			EmitDebugInformation = "true"
+			NoLogo               = "true"
+			OutputAssembly       = "@(SelectorBin)"
+			Platform             = "$(Platform)"
+			References           = "@(SelectorRef)"
+			Sources              = "@(SelectorSrc)"
 			TargetType           = "exe"
 			/>
 	</Target>

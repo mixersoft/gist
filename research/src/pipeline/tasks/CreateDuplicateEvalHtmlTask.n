@@ -86,6 +86,7 @@ class CreateDuplicateEvalHtmlTask : ITask
 		using (gfx = Graphics.FromImage(dst))
 		{
 			gfx.InterpolationMode = Drawing2D.InterpolationMode.NearestNeighbor;
+			gfx.PixelOffsetMode   = Drawing2D.PixelOffsetMode.HighQuality;
 			gfx.DrawImage(src, 0, 0, dst.Width, dst.Height);
 		}
 		dst;

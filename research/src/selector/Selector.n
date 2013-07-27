@@ -1,0 +1,162 @@
+using Nemerle.Collections;
+using Newtonsoft.Json.Linq;
+using System.IO;
+using System.Drawing;
+using System.Threading;
+using System.Windows.Forms;
+using System;
+
+def backgroundColor = Color.FromArgb(255, 255, 255);
+def selectionColor  = Color.FromArgb(185, 5,   4);
+
+mutable selection = Set();
+
+mutable SetLoaded;
+mutable SetSaved;
+
+def LoadPhotoIdsFromJson(path)
+{
+	def data = JObject.Parse(File.ReadAllText(path));
+
+	def castingCall = data["response"]["castingCall"];
+	def photos      = castingCall["CastingCall"]["Auditions"]["Audition"];
+
+	photos.Children().Map(photo => photo["id"] :> string)
+}
+
+def LoadSelection(layout, item, dataset)
+{
+	def Select(i)
+	{
+		layout.Controls[i].BackColor = selectionColor;
+		selection = selection.Add(i);
+	}
+	try
+	{
+		File.ReadAllText(Path.Combine("data", item, dataset + ".txt"))
+			.Split(array[' '], StringSplitOptions.RemoveEmptyEntries)
+			.Map(int.Parse)
+			.Map(_ - 1)
+			.Iter(Select);
+	}
+	catch
+	{
+	| _ is FileNotFoundException      => () // its ok
+	| _ is DirectoryNotFoundException => () // its ok
+	}
+}
+
+def SaveSelection(item, dataset)
+{
+	_ = Directory.CreateDirectory(Path.Combine("data", item));
+	File.WriteAllText
+		( path     = Path.Combine("work", item, dataset + ".txt")
+		, contents = string.Join(" ", selection.Map(_ + 1))
+		);
+}
+
+def LoadDataset(layout, tooltip, dataset)
+{
+	tooltip.RemoveAll();
+
+	layout.SuspendLayout();
+	layout.Controls.Clear();
+	foreach (id in LoadPhotoIdsFromJson(Path.Combine(@"work\Json", dataset + ".json")) with i)
+	{
+		def picture = PictureBox();
+		picture.AutoSize  = true;
+		picture.BackColor = backgroundColor;
+		picture.Padding   = Padding(8);
+		picture.Image     = Bitmap(Path.Combine(@"work\ThumbnailCollection", dataset, id + ".jpg"));
+
+		picture.Click += fun(_)
+		{
+			if (selection.Contains(i))
+			{
+				picture.BackColor = backgroundColor;
+				selection = selection.Remove(i);
+			}
+			else
+			{
+				picture.BackColor = selectionColor;
+				selection = selection.Add(i);
+			}
+			SetLoaded();
+		}
+
+		tooltip.SetToolTip(picture, id);
+		layout.Controls.Add(picture);
+	}
+	layout.ResumeLayout();
+}
+
+def CreateForm()
+{
+	def itemsList = ToolStripComboBox();
+	itemsList.DropDownStyle = ComboBoxStyle.DropDownList;
+	itemsList.Items.AddRange(array["duplicates-ref" : object, "faces-ref" ]);
+	itemsList.SelectedIndex = 0;
+
+	def datasetsList = ToolStripComboBox();
+	datasetsList.DropDownStyle = ComboBoxStyle.DropDownList;
+	Directory.GetFiles(@"work\Json").Map(Path.GetFileNameWithoutExtension).Map(_ : object)
+		|> datasetsList.Items.AddRange;
+	datasetsList.SelectedIndex = 0;
+
+	def openButton = ToolStripButton();
+	openButton.Text = "&Open";
+
+	def saveButton = ToolStripButton();
+	saveButton.Text = "&Save";
+
+	def toolbar = ToolStrip();
+	toolbar.Dock = DockStyle.Top;
+	toolbar.Items.AddRange(array[ itemsList, datasetsList, openButton, saveButton ]);
+
+	def layout = FlowLayoutPanel();
+	layout.AutoScroll    = true;
+	layout.BackColor     = backgroundColor;
+	layout.FlowDirection = FlowDirection.TopDown;
+	layout.Dock          = DockStyle.Fill;
+
+	def tooltip = ToolTip();
+	tooltip.InitialDelay = 3000;
+	tooltip.AutoPopDelay = 5000;
+	tooltip.ReshowDelay  = 3000;
+
+	openButton.Click += fun(_)
+	{
+		def item    = itemsList.SelectedItem    :> string;
+		def dataset = datasetsList.SelectedItem :> string;
+		selection = Set();
+		LoadDataset(layout, tooltip, dataset);
+		LoadSelection(layout, item, dataset);
+		SetLoaded();
+	}
+
+	saveButton.Click += fun(_)
+	{
+		def item    = itemsList.SelectedItem    :> string;
+		def dataset = datasetsList.SelectedItem :> string;
+		SaveSelection(item, dataset);
+		SetSaved();
+	}
+
+	def form = Form();
+	form.Text        = "Image selector";
+	form.WindowState = FormWindowState.Maximized;
+	form.Controls.Add(layout);
+	form.Controls.Add(toolbar);
+
+	SetLoaded  = () => form.Text = "Image selector";
+	SetSaved   = () => form.Text = "Image selector [saved]";
+
+	form;
+}
+
+Application.EnableVisualStyles();
+Application.SetCompatibleTextRenderingDefault(false);
+
+def thread = Thread(ThreadStart(() => Application.Run(CreateForm())));
+thread.SetApartmentState(ApartmentState.STA);
+thread.Start();
