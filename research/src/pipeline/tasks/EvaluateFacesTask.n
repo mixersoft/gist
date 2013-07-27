@@ -1,0 +1,38 @@
+using Nemerle.Collections;
+using PipelineMacro;
+using System.Collections.Generic;
+using System;
+
+public class EvaluateFacesTask: ITask
+{
+	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
+	{
+		mutable mappings = [];
+		foreach ((name, auto, refs, json) in items.Join.[FacesItem, FacesRefItem, JsonItem]())
+		{
+			mappings ::= TaskMapping
+				( this
+				, [ auto, refs, json ]
+				, [ FacesEvaluationItem(name) ]
+				);
+		}
+		mappings;
+	}
+
+	private Compute
+		( [InItem]  auto   : FacesItem
+		, [InItem]  refs   : FacesRefItem
+		, [InItem]  json   : JsonItem
+		, [OutItem] result : FacesEvaluationItem
+		) : void
+	{
+		def photos = json.Photos.Sort(_.DateTaken);
+
+		def refs = Set(refs.Indices.Map(i => photos[i].ID));
+		def auto = auto.ImageIDs;
+
+		result.FalsePositives = Set(auto.Subtract(refs));
+		result.FalseNegatives = Set(refs.Subtract(auto));
+		result.Score = result.FalsePositives.Count + result.FalseNegatives.Count;
+	}
+}

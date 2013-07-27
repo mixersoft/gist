@@ -1,0 +1,41 @@
+using Nemerle.Collections;
+using PipelineMacro;
+using System.IO;
+
+[ TaskItemInfo(File(".txt")) ]
+public class FacesEvaluationItem : ITaskItem
+{
+	public mutable Score : int;
+	public mutable FalsePositives : Set[string];
+	public mutable FalseNegatives : Set[string];
+
+	public Save(path : string) : void
+	{
+		using (file = File.CreateText(path))
+		{
+			file.WriteLine(Score.ToString());
+
+			file.WriteLine(FalsePositives.Count);
+			FalsePositives.Iter(file.WriteLine);
+
+			file.WriteLine(FalseNegatives.Count);
+			FalseNegatives.Iter(file.WriteLine);
+		}
+	}
+
+	public Load(path : string) : void
+	{
+		using (file = File.OpenText(path))
+		{
+			Score = int.Parse(file.ReadLine());
+
+			FalsePositives = Set();
+			repeat (int.Parse(file.ReadLine()))
+				FalsePositives = FalsePositives.Add(file.ReadLine());
+
+			FalseNegatives = Set();
+			repeat (int.Parse(file.ReadLine()))
+				FalseNegatives = FalseNegatives.Add(file.ReadLine());
+		}
+	}
+}

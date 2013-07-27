@@ -1,0 +1,27 @@
+using Nemerle.Collections;
+using PipelineMacro;
+using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
+using System;
+
+[ Record ]
+class DetectFacesTask : ITask
+{
+	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
+	{
+		mutable mappings = [];
+		foreach (images is ImageCollectionItem in items)
+			mappings ::= TaskMapping(this, [ images ], [ FacesItem(images.Name) ]);
+		mappings;
+	}
+
+	private Compute
+		( [InItem]  images : ImageCollectionItem
+		, [OutItem] faces  : FacesItem
+		) : void
+	{
+		_ = images;
+		faces.ImageIDs = Set();
+	}
+}

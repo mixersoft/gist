@@ -37,15 +37,19 @@ module Main
 		parameters.Load("parameters.txt");
 		_ = TaskManager
 			( tasks =
+				// source Json and image data
 				[ LoadJsonDataTask()
 				, DownloadDataTask()
 				, CreateThumbnailsTask()
 
+				// descriptor extraction
 				, ExtractDescriptorsTask()
 
+				// dominant colour detection
 				, FindDominantColorTask()
 				, CreateDominantColorHtmlTask()
 
+				// image clustering
 				, ClusterDataTask()
 				, CreateClusterHtmlTask()
 				, CreateClusterJsonTask()
@@ -53,22 +57,31 @@ module Main
 				, EvaluateClustersTask()
 				, CreateSequenceHtmlTask()
 
+				// duplicate detection
 				, FindDuplicatesTask()
 				, CreateDuplicatesHtmlTask()
 				, LoadReferenceDuplicatesTask()
 				, EvaluateDuplicatesTask()
 				, CreateDuplicateEvalHtmlTask()
 
+				// face detection
+				, DetectFacesTask()
+				, LoadReferenceFacesTask()
+				, EvaluateFacesTask()
+
+				// image hashing
 				, SampleImagesTask()
 				, ExtractHashTask()
 				, GroupShotsTask()
 				, EvaluateImageHashUniquenessTask()
 				, EvaluateImageHashConsistencyTask()
-				
+
+				// timeline alignment
 				, GraphTimelineTask()
 				, SplitTimelineTask()
 				, AlignTimelinesTask()
 
+				// event grouping
 				, LoadReferenceEventsTask()
 				, GroupEventsTask()
 				, GraphEventsTask()

@@ -1,0 +1,25 @@
+using Nemerle.Collections;
+using PipelineMacro;
+using System.Collections.Generic;
+using System.IO;
+
+class LoadReferenceFacesTask : ITask
+{
+	private items : Dictionary[string, string] = Dictionary();
+
+	public MapItems(_ : list[ITaskItem]) : list[TaskMapping]
+	{
+		def CreateMapping(path)
+		{
+			def name = Path.GetFileNameWithoutExtension(path);
+			items[name] = path;
+			TaskMapping(this, [], [ FacesRefItem(name) ]);
+		}
+		Directory.GetFiles(@"data\faces-ref", "*.txt").MapToList(CreateMapping);
+	}
+
+	public Compute([OutItem] faces : FacesRefItem) : void
+	{
+		faces.Load(items[faces.Name]);
+	}
+}

@@ -50,7 +50,7 @@ def SaveSelection(item, dataset)
 {
 	_ = Directory.CreateDirectory(Path.Combine("data", item));
 	File.WriteAllText
-		( path     = Path.Combine("work", item, dataset + ".txt")
+		( path     = Path.Combine("data", item, dataset + ".txt")
 		, contents = string.Join(" ", selection.Map(_ + 1))
 		);
 }
@@ -120,9 +120,9 @@ def CreateForm()
 	layout.Dock          = DockStyle.Fill;
 
 	def tooltip = ToolTip();
-	tooltip.InitialDelay = 3000;
+	tooltip.InitialDelay = 1000;
 	tooltip.AutoPopDelay = 5000;
-	tooltip.ReshowDelay  = 3000;
+	tooltip.ReshowDelay  = 1000;
 
 	openButton.Click += fun(_)
 	{

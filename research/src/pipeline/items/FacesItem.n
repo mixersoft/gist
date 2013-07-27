@@ -1,0 +1,22 @@
+using Nemerle.Collections;
+using PipelineMacro;
+using System.IO;
+
+[ TaskItemInfo(File(".txt")) ]
+class FacesItem : ITaskItem
+{
+	public mutable ImageIDs : Set[string];
+
+	public Save(path : string) : void
+	{
+		File.WriteAllLines
+			( path     = path
+			, contents = ImageIDs.ToArray()
+			)
+	}
+
+	public Load(path : string) : void
+	{
+		ImageIDs = Set(File.ReadAllLines(path))
+	}
+}

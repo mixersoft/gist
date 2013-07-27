@@ -29,7 +29,7 @@ public class EvaluateDuplicatesTask: ITask
 		def GatherIndices()
 		{
 			mutable indices = Set();
-			mutable i = 1;
+			mutable i = 0;
 			foreach (group in auto.ImageIDs)
 			for (mutable j = 0; j != group.Length; ++j)
 			{
@@ -44,7 +44,7 @@ public class EvaluateDuplicatesTask: ITask
 		def auto = GatherIndices();
 
 		def photos = json.Photos.Sort(_.DateTaken);
-		def GetPhotoID(i) { photos[i - 1].ID }
+		def GetPhotoID(i) { photos[i].ID }
 
 		result.FalsePositives = Set(auto.Subtract(refs).Map(GetPhotoID));
 		result.FalseNegatives = Set(refs.Subtract(auto).Map(GetPhotoID));
