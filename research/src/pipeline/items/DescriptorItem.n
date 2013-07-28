@@ -2,6 +2,9 @@ using Nemerle.Collections;
 using PipelineMacro;
 using System.IO;
 
+/// <summary>
+/// This data item holds image descriptors.
+/// </summary>
 [ TaskItemInfo(Directory) ]
 public class DescriptorItem : ITaskItem
 {

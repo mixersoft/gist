@@ -1,22 +1,50 @@
 using Nemerle.Collections;
 using PipelineMacro;
+using System.Drawing;
 using System.IO;
 
 [ TaskItemInfo(File(".txt")) ]
 class FacesItem : ITaskItem
 {
-	public mutable ImageIDs : Set[string];
+	public mutable ImageFaces : Hashtable[string, array[Rectangle]];
 
 	public Save(path : string) : void
 	{
-		File.WriteAllLines
-			( path     = path
-			, contents = ImageIDs.ToArray()
-			)
+		using (writer = File.CreateText(path))
+		{
+			writer.WriteLine(ImageFaces.Count);
+			foreach (pair in ImageFaces)
+			{
+				def (id, rects) = (pair.Key, pair.Value);
+				writer.WriteLine(id);
+				writer.WriteLine(rects.Length);
+				foreach (rect in rects)
+					writer.WriteLine("{0} {1} {2} {3}", rect.X, rect.Y, rect.Width, rect.Height);
+			}
+		}
 	}
 
 	public Load(path : string) : void
 	{
-		ImageIDs = Set(File.ReadAllLines(path))
+		using (reader = File.OpenText(path))
+		{
+			ImageFaces = Hashtable();
+			def imageCount = int.Parse(reader.ReadLine());
+			repeat (imageCount)
+			{
+				def id = reader.ReadLine();
+				def rects = array(int.Parse(reader.ReadLine()));
+				for (mutable i = 0; i != rects.Length; ++i)
+				{
+					def parts = reader.ReadLine().Split(array[' ']);
+					def x = int.Parse(parts[0]);
+					def y = int.Parse(parts[1]);
+					def w = int.Parse(parts[2]);
+					def h = int.Parse(parts[3]);
+					rects[i] = Rectangle(x, y, w, h);
+				}
+				ImageFaces[id] = rects;
+			}
+		}
 	}
 }

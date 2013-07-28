@@ -1,3 +1,6 @@
+using Emgu.CV.CvEnum;
+using Emgu.CV.Structure;
+using Emgu.CV;
 using Nemerle.Collections;
 using PipelineMacro;
 using System.Collections.Generic;
@@ -16,12 +19,45 @@ class DetectFacesTask : ITask
 		mappings;
 	}
 
+	// Image<Gray, byte> grayframe = nextFrame.Convert<Gray, byte>();
+	// var faces =
+	// 	grayframe.DetectHaarCascade(
+	// 		haar, 1.4, 4,
+	// 		HAAR_DETECTION_TYPE.DO_CANNY_PRUNING,
+	// 		new Size(nextFrame.Width/8, nextFrame.Height/8)
+	// 		)[0];
+	// 
+	// foreach (var face in faces)
+	// {
+	// 	nextFrame.Draw(face.rect, new Bgr(0,double.MaxValue,0), 3);
+	// }
+	// pictureBox1.Image = nextFrame.ToBitmap();
+
 	private Compute
 		( [InItem]  images : ImageCollectionItem
 		, [OutItem] faces  : FacesItem
 		) : void
 	{
-		_ = images;
-		faces.ImageIDs = Set();
+		mutable imageFaces = Hashtable();
+
+		def haar = HaarCascade("haarcascade_frontalface_default.xml");
+
+		foreach (id in images.ImageIDs)
+		{
+			using (img = Image.[Gray, byte](images.MakePath(id)))
+			{
+				def rects = img.DetectHaarCascade
+					( haarObj      = haar
+					, scaleFactor  = 1.4
+					, minNeighbors = 4
+					, flag         = HAAR_DETECTION_TYPE.DO_CANNY_PRUNING
+					, minSize      = Size(img.Cols / 8, img.Rows / 8)
+					);
+				when (rects[0].Length > 0)
+					imageFaces[id] = rects[0].Map(_.rect);
+			}
+		}
+
+		faces.ImageFaces = imageFaces;
 	}
 }

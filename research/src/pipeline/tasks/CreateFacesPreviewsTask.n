@@ -1,0 +1,65 @@
+using Nemerle.Collections;
+using PipelineMacro;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
+using System.IO;
+
+class CreateFacesPreviewsTask : ITask
+{
+	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
+	{
+		mutable mappings = [];
+		foreach ((name, faces, images) in items.Join.[FacesItem, ImageCollectionItem]())
+			mappings ::= TaskMapping(this, [ faces, images ], [ FacesPreviewItem(name) ]);
+		mappings;
+	}
+
+	private Compute
+		( [InItem]  faces   : FacesItem
+		, [InItem]  images  : ImageCollectionItem
+		, [OutItem] preview : FacesPreviewItem
+		) : void
+	{
+		def LoadBitmapAs24bpp(path)
+		{
+			def invalidFormats =
+				[ PixelFormat.Format1bppIndexed
+				, PixelFormat.Format4bppIndexed
+				, PixelFormat.Format8bppIndexed
+				, PixelFormat.Undefined
+				, PixelFormat.DontCare
+				, PixelFormat.Format16bppArgb1555
+				, PixelFormat.Format16bppGrayScale
+				];
+				
+			mutable bmp = Bitmap(path);
+			when (invalidFormats.Contains(bmp.PixelFormat))
+			{
+				def tmp = Bitmap(bmp.Width, bmp.Height, PixelFormat.Format24bppRgb);
+				using (gfx = Graphics.FromImage(tmp))
+				{
+					gfx.PixelOffsetMode = PixelOffsetMode.HighQuality;
+					gfx.DrawImage(bmp, 0, 0, bmp.Width, bmp.Height);
+				}
+				bmp = tmp;
+			}
+			bmp;
+		}
+
+		def pen = Pen(Color.FromArgb(185, 5, 4), 2.0f);
+
+		preview.Images = Hashtable();
+		foreach (pair in faces.ImageFaces)
+		{
+			def (id, rects) = (pair.Key, pair.Value);
+			def bmp = LoadBitmapAs24bpp(images.MakePath(id));
+			using (gfx = Graphics.FromImage(bmp))
+			{
+				gfx.PixelOffsetMode = PixelOffsetMode.HighQuality;
+				gfx.DrawRectangles(pen, rects);
+			}
+			preview.Images[id] = bmp;
+		}
+	}
+}
