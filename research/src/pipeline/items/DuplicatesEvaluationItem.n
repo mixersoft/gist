@@ -5,7 +5,7 @@ using System.IO;
 [ TaskItemInfo(File(".txt")) ]
 public class DuplicatesEvaluationItem : ITaskItem
 {
-	public mutable Score : int;
+	public mutable Score : double;
 	public mutable FalsePositives : Set[string];
 	public mutable FalseNegatives : Set[string];
 
@@ -27,7 +27,7 @@ public class DuplicatesEvaluationItem : ITaskItem
 	{
 		using (file = File.OpenText(path))
 		{
-			Score = int.Parse(file.ReadLine());
+			Score = double.Parse(file.ReadLine());
 
 			FalsePositives = Set();
 			repeat (int.Parse(file.ReadLine()))

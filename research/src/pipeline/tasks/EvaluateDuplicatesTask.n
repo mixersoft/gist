@@ -48,6 +48,10 @@ public class EvaluateDuplicatesTask: ITask
 
 		result.FalsePositives = Set(auto.Subtract(refs).Map(GetPhotoID));
 		result.FalseNegatives = Set(refs.Subtract(auto).Map(GetPhotoID));
-		result.Score = result.FalsePositives.Count + result.FalseNegatives.Count;
+
+		def fp = result.FalsePositives.Count;
+		def fn = result.FalseNegatives.Count;
+
+		result.Score = 1.0 - (fp + fn) / (photos.Length :> double);
 	}
 }
