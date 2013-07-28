@@ -46,15 +46,14 @@ class DetectFacesTask : ITask
 		{
 			using (img = Image.[Gray, byte](images.MakePath(id)))
 			{
-				def rects = haar.Detect(img);
-				//def rects = img.DetectHaarCascade(haar);
-				//def rects = haar.Detect
-				//	( haarObj      = haar
-				//	, scaleFactor  = 1.4
-				//	, minNeighbors = 4
-				//	, flag         = HAAR_DETECTION_TYPE.DO_CANNY_PRUNING
-				//	, minSize      = Size(img.Cols / 8, img.Rows / 8)
-				//	);
+				def rects = haar.Detect
+					( image        = img
+					, scaleFactor  = 1.1
+					, minNeighbors = 3
+					, flag         = HAAR_DETECTION_TYPE.DO_CANNY_PRUNING
+					, minSize      = Size.Empty
+					, maxSize      = Size.Empty
+					);
 				when (rects.Length > 0)
 					imageFaces[id] = rects.Map(_.rect);
 			}

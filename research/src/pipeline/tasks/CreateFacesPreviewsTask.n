@@ -47,7 +47,7 @@ class CreateFacesPreviewsTask : ITask
 			bmp;
 		}
 
-		def pen = Pen(Color.FromArgb(185, 5, 4), 2.0f);
+		def pen = Pen(Color.FromArgb(185, 5, 4), 4.0f);
 
 		preview.Images = Hashtable();
 		foreach (pair in faces.ImageFaces)
