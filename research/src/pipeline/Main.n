@@ -19,9 +19,10 @@ variant RunMode
 | Normal
 | OptimizeColor
 | OptimizeDuplicates
-| OptimizeThreshold { min : double; max : double; count : int }
-| OptimizeImageSize
+| OptimizeFaces
 | OptimizeImageHash
+| OptimizeImageSize
+| OptimizeThreshold { min : double; max : double; count : int }
 }
 
 module Main
@@ -46,8 +47,8 @@ module Main
 				, ExtractDescriptorsTask()
 
 				// dominant colour detection
-				, FindDominantColorTask()
-				, CreateDominantColorHtmlTask()
+				//, FindDominantColorTask()
+				//, CreateDominantColorHtmlTask()
 
 				// image clustering
 				, ClusterDataTask()
@@ -190,6 +191,36 @@ module Main
 				Console.WriteLine("{0,2}: {1} {2}", threshold, meanScore, medianScore);
 			}
 		}
+	}
+
+	private RunFaceOptimization() : void
+	{
+		def parameters = Parameters();
+		parameters.Load("parameters.txt");
+
+		def taskManager = TaskManager
+			( tasks =
+				[ LoadJsonDataTask()
+				, DownloadDataTask()
+
+				, DetectFacesTask()
+				, LoadReferenceFacesTask()
+				, EvaluateFacesTask()
+				]
+			, persistData     = false
+			, displayProgress = true
+			);
+		def Eval(eval)
+		{
+			taskManager.DiscardItemData($@"work\Faces\$(eval.Name).txt");
+			taskManager.Compute(parameters);
+			eval.Score;
+		}
+
+		def sets = [ "bali", "venice" ];
+
+		foreach (eval is FacesEvaluationItem when sets.Contains(eval.Name) in taskManager.Items)
+			Console.WriteLine("{0}: {1}", eval.Name, Eval(eval));
 	}
 
 	private RunThresholdOptimization(min : double, max : double, count : int) : void
@@ -455,6 +486,11 @@ module Main
 				, () => runMode = RunMode.OptimizeDuplicates()
 				)
 			, Getopt.CliOption.Flag
+				( "-optimize-faces"
+				, "Optimize face detection."
+				, () => runMode = RunMode.OptimizeFaces()
+				)
+			, Getopt.CliOption.Flag
 				( "-optimize-image-size"
 				, "Optimize the image size."
 				, () => runMode = RunMode.OptimizeImageSize()
@@ -484,6 +520,7 @@ module Main
 			| Normal                             => Run()
 			| OptimizeColor                      => RunColorOptimization()
 			| OptimizeDuplicates                 => RunDuplicateOptimization()
+			| OptimizeFaces                      => RunFaceOptimization()
 			| OptimizeImageHash                  => RunImageHashOptimization()
 			| OptimizeImageSize                  => RunImageSizeOptimization()
 			| OptimizeThreshold(min, max, count) => RunThresholdOptimization(min, max, count)
