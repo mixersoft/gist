@@ -1,10 +1,22 @@
 using System.IO;
+using System.Diagnostics;
+using System.Threading;
 
 module DirectoryEx
 {
 	public Recreate(path : string) : void
 	{
-		try Directory.Delete(path, recursive = true);
+		try
+		{
+			Directory.Delete(path, recursive = true);
+
+			// the Delete function returns before finishing the operation
+			// wait until the directory no longer exists
+			def watch = Stopwatch.StartNew();
+			while (Directory.Exists(path) && watch.ElapsedMilliseconds < 2000)
+				Thread.Sleep(millisecondsTimeout = 10);
+			watch.Stop();
+		}
 		catch
 		{
 		| _ is DirectoryNotFoundException => () // it's ok

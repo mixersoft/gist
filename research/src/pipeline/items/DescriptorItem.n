@@ -24,7 +24,7 @@ public class DescriptorItem : ITaskItem
 
 	public Save(path : string) : void
 	{
-		_ = Directory.CreateDirectory(path);
+		DirectoryEx.Recreate(path);
 		foreach (descriptor in Descriptors)
 		{
 			File.WriteAllText

@@ -19,20 +19,6 @@ class DetectFacesTask : ITask
 		mappings;
 	}
 
-	// Image<Gray, byte> grayframe = nextFrame.Convert<Gray, byte>();
-	// var faces =
-	// 	grayframe.DetectHaarCascade(
-	// 		haar, 1.4, 4,
-	// 		HAAR_DETECTION_TYPE.DO_CANNY_PRUNING,
-	// 		new Size(nextFrame.Width/8, nextFrame.Height/8)
-	// 		)[0];
-	// 
-	// foreach (var face in faces)
-	// {
-	// 	nextFrame.Draw(face.rect, new Bgr(0,double.MaxValue,0), 3);
-	// }
-	// pictureBox1.Image = nextFrame.ToBitmap();
-
 	private Compute
 		( [InItem]  images : ImageCollectionItem
 		, [OutItem] faces  : FacesItem
@@ -44,13 +30,14 @@ class DetectFacesTask : ITask
 
 		foreach (id in images.ImageIDs)
 		{
+			Console.Write('*');
 			using (img = Image.[Gray, byte](images.MakePath(id)))
 			{
 				def rects = haar.Detect
 					( image        = img
-					, scaleFactor  = 1.1
+					, scaleFactor  = 1.8
 					, minNeighbors = 3
-					, flag         = HAAR_DETECTION_TYPE.DO_CANNY_PRUNING
+					, flag         = 0
 					, minSize      = Size.Empty
 					, maxSize      = Size.Empty
 					);
@@ -58,6 +45,7 @@ class DetectFacesTask : ITask
 					imageFaces[id] = rects.Map(_.rect);
 			}
 		}
+		Console.WriteLine();
 
 		faces.ImageFaces = imageFaces;
 	}

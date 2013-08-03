@@ -47,8 +47,8 @@ module Main
 				, ExtractDescriptorsTask()
 
 				// dominant colour detection
-				//, FindDominantColorTask()
-				//, CreateDominantColorHtmlTask()
+				, FindDominantColorTask()
+				, CreateDominantColorHtmlTask()
 
 				// image clustering
 				, ClusterDataTask()

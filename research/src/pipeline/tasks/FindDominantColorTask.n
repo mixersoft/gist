@@ -83,23 +83,28 @@ class FindDominantColorTask : ITask
 		}
 	}
 
-	private static LoadLabImage(imagePath : string) : Image.[Bgr, float]
+	private static LoadLabImage(imagePath : string) : Image.[Lab, float]
 	{
-		using (srcImage = Image.[Bgr, float](imagePath))
+		// We should be able to simply use the constructor, but there is a bug in EmguCV.
+		// http://www.emgu.com/bugs/show_bug.cgi?id=81
+		//
+		// Image.[Lab, float](imagePath);
+
+		using (img = Image.[Bgr, float](imagePath))
+		using (img = img / 255.0)
 		{
-			def dstImage = Image.[Bgr, float](srcImage.Size);
-			// TODO: use Image.ConvertFrom
+			def lab = Image.[Lab, float](img.Width, img.Height);
 			CvInvoke.cvCvtColor
-				( src  = srcImage.Ptr
-				, dst  = dstImage.Ptr
+				( src  = img.Ptr
+				, dst  = lab.Ptr
 				, code = COLOR_CONVERSION.CV_BGR2Lab
 				);
-			dstImage;
+			lab;
 		}
 	}
 
 	private static SampleImage
-		( image        : Image.[Bgr, float]
+		( image        : Image.[Lab, float]
 		, samplingStep : int
 		) : Matrix.[float]
 	{
@@ -112,39 +117,41 @@ class FindDominantColorTask : ITask
 		{
 			def samplesRow = r * sampledCols + c;
 			def color = image[r * samplingStep, c * samplingStep];
-			samples[samplesRow, 0] = color.Red   :> float;
-			samples[samplesRow, 1] = color.Green :> float;
-			samples[samplesRow, 2] = color.Blue  :> float;
+			samples[samplesRow, 0] = color.X :> float;
+			samples[samplesRow, 1] = color.Y :> float;
+			samples[samplesRow, 2] = color.Z :> float;
 		}
 		samples;
 	}
 
 	private static ToRgb(data : array[float * float * float]) : array[Color]
 	{
-		def src = Image.[Bgr, float](1, data.Length);
-		for (mutable i = 0; i != data.Length; ++i)
+		def GetRgbImg()
 		{
-			def (l, a, b) = data[i];
-			src[i, 0] = Bgr
-				( red   = l
-				, green = a
-				, blue  = b
-				);
+			using (img = Image.[Lab, float](1, data.Length))
+			{
+				for (mutable i = 0; i != data.Length; ++i)
+				{
+					def (x, y, z) = data[i];
+					img[i, 0] = Lab(x, y, z);
+				}
+				img.Convert.[Bgr, float]();
+			}
 		}
 
-		def dst = Image.[Bgr, float](1, src.Rows);
-		CvInvoke.cvCvtColor(src.Ptr, dst.Ptr, COLOR_CONVERSION.CV_Lab2BGR);
-
-		def colors = array(dst.Rows);
-		for (mutable i = 0; i != dst.Rows; ++i)
+		using (img = GetRgbImg())
 		{
-			def color = dst[i, 0];
-			colors[i] = Color.FromArgb
-				( red   = color.Red   :> int
-				, green = color.Green :> int
-				, blue  = color.Blue  :> int
-				);
+			def colors = array(img.Rows);
+			for (mutable i = 0; i != img.Rows; ++i)
+			{
+				def color = img[i, 0];
+				colors[i] = Color.FromArgb
+					( red   = (255.0f * color.Red)   :> int
+					, green = (255.0f * color.Green) :> int
+					, blue  = (255.0f * color.Blue)  :> int
+					);
+			}
+			colors;
 		}
-		colors;
 	}
 }

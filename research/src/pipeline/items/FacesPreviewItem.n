@@ -14,7 +14,7 @@ public class FacesPreviewItem : ITaskItem
 
 	public Save(path : string) : void
 	{
-		_ = Directory.CreateDirectory(path);
+		DirectoryEx.Recreate(path);
 		foreach (pair in Images)
 		{
 			def (id, image) = (pair.Key, pair.Value);
