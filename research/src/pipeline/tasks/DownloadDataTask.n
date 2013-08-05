@@ -16,8 +16,8 @@ class DownloadDataTask : ITask
 	}
 
 	private Compute
-		( [InItem]  jsonItem : JsonItem
-		, [OutItem] images   : ImageCollectionItem
+		( [InItem]  json   : JsonItem
+		, [OutItem] images : ImageCollectionItem
 		, downloadImagePrefix : string
 		, baseDataUrl         : string
 		) : void
@@ -26,20 +26,27 @@ class DownloadDataTask : ITask
 
 		def client = WebClient();
 
-		images.ImageIDs = array(jsonItem.Photos.Length);
+		images.ImageIDs = array(json.Photos.Length);
 
 		_ = Directory.CreateDirectory(Path.GetDirectoryName(images.Path));
 		DirectoryEx.Recreate(images.Path);
 
-		def baseUrl = baseDataUrl + jsonItem.BaseUrl;
+		def baseUrl = baseDataUrl + json.BaseUrl;
 
-		foreach (photo in jsonItem.Photos with i)
+		foreach (photo in json.Photos with i)
 		{
-			client.DownloadFile
-				( address  = baseUrl + photo.RootSrc.Replace("/", downloadPrefix)
-				, fileName = images.MakePath(photo.ID)
-				);
-			images.ImageIDs[i] = photo.ID;
+			Console.Write('*');
+			def address = baseUrl + photo.RootSrc.Replace("/", downloadPrefix);
+			try
+			{
+				client.DownloadFile(address, images.MakePath(photo.ID));
+				images.ImageIDs[i] = photo.ID;
+			}
+			catch
+			{
+			| _ => Console.Write("\nFailed to download '{0}'.", address);
+			}
 		}
+		Console.WriteLine();
 	}
 }
