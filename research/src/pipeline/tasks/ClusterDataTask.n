@@ -38,8 +38,8 @@ class ClusterDataTask : ITask
 				for (mutable i = 0; i != descriptors.Length; ++i)
 				for (mutable j = 0; j != descriptors.Length; ++j)
 				{
-					def d1 = descriptors[i].Data;
-					def d2 = descriptors[j].Data;
+					def d1 = descriptors[i].Value;
+					def d2 = descriptors[j].Value;
 					map[i, j] = SqDistance(d1, d2) < sqThreshold;
 				}
 				map;
@@ -90,11 +90,11 @@ class ClusterDataTask : ITask
 				clusters ::= ChooseLargest(indices.Map(CountNear));
 				Remove(clusters.Head);
 			}
-			clusters.Map(cluster => cluster.Map(i => descriptors[i].ID))
+			clusters.Map(cluster => cluster.Map(i => descriptors[i].Key))
 				.Reverse().ToArray();
 		}
 
-		result.Clusters = Cluster(descriptors.Descriptors);
+		result.Clusters = Cluster(descriptors.Descriptors.NToArray());
 	}
 
 	private SqDistance(v1 : array[double], v2 : array[double]) : double

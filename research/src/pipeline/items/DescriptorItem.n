@@ -8,14 +8,7 @@ using System.IO;
 [ TaskItemInfo(Directory) ]
 public class DescriptorItem : ITaskItem
 {
-	[ Record ]
-	public struct Descriptor
-	{
-		public ID   : string;
-		public Data : array[double];
-	}
-
-	public mutable Descriptors : array[Descriptor];
+	public mutable Descriptors : Hashtable[string, array[double]];
 
 	public MakePath(id : string) : string
 	{
@@ -25,24 +18,24 @@ public class DescriptorItem : ITaskItem
 	public Save(path : string) : void
 	{
 		DirectoryEx.Recreate(path);
-		foreach (descriptor in Descriptors)
+		foreach (pair in Descriptors)
 		{
+			def (id, data) = (pair.Key, pair.Value);
 			File.WriteAllText
-				( path     = MakePath(descriptor.ID)
-				, contents = descriptor.Data.ToString("\r\n")
+				( path     = MakePath(id)
+				, contents = data.ToString("\r\n")
 				);
 		}
 	}
 
 	public Load(path : string) : void
 	{
-		def MakeDescriptor(path)
+		Descriptors = Hashtable();
+		foreach (path in Directory.GetFiles(path))
 		{
-			Descriptor
-				( iD   = Path.GetFileNameWithoutExtension(path)
-				, data = File.ReadAllLines(path).Map(double.Parse)
-				)
+			def id   = Path.GetFileNameWithoutExtension(path);
+			def data = File.ReadAllLines(path).Map(double.Parse);
+			Descriptors[id] = data;
 		}
-		Descriptors = Directory.GetFiles(path).Map(MakeDescriptor);
 	}
 }

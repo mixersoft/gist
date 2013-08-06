@@ -6,6 +6,8 @@ using System;
 [ TaskItemInfo(File(".txt")) ]
 public class DominantColorItem : ITaskItem
 {
+	// array of dominant colours corresponding to ImageCollectionItem.ImageIDs
+	// the size is ImageIDs.Length × DominantColorCount
 	public mutable Colors : array[2, Color];
 
 	public Save(path : string) : void

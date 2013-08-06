@@ -1,0 +1,22 @@
+using Emgu.CV.CvEnum;
+using Emgu.CV.Structure;
+using Emgu.CV;
+using System.Drawing;
+
+public module ColorEx
+{
+	public ToLab(this color : Color) : double * double * double
+	{
+		using (img = Image.[Bgr, float](1, 1))
+		{
+			def (r, g, b) = (color.R, color.G, color.B);
+			img[0, 0] = Bgr(b / 255.0, g / 255.0, r / 255.0);
+
+			using (img = img.Convert.[Lab, float]())
+			{
+				def lab = img[0, 0];
+				(lab.X, lab.Y, lab.Z)
+			}
+		}
+	}
+}
