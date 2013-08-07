@@ -14,17 +14,6 @@ using SCG = System.Collections.Generic;
 [assembly: ProfSetup(Disabled) ]
 [assembly: PipelineSetup ]
 
-variant RunMode
-{
-| Normal
-| OptimizeColor
-| OptimizeDuplicates
-| OptimizeFaces
-| OptimizeImageHash
-| OptimizeImageSize
-| OptimizeThreshold { min : double; max : double; count : int }
-}
-
 module Main
 {
 	[ ProfDump ]
@@ -457,11 +446,16 @@ module Main
 		*/
 	}
 
-	public Main() : void
+	public Main(args : array[string]) : void
 	{
-		mutable runMode     = RunMode.Normal();
-		mutable displayHelp = false;
-		def opts =
+		mutable opts;
+
+		def DisplayHelp()
+		{
+			Console.WriteLine(Getopt.Usage(opts));
+		}
+
+		opts =
 			[ Getopt.CliOption.String
 				( "-optimize-threshold"
 				, "Optimize the threshold meta-parameter over the given range: 'min max count'."
@@ -469,62 +463,48 @@ module Main
 					regexp match (value)
 					{
 					| @"(?<min:double>[^ ]+) (?<max:double>[^ ]+) (?<count:int>[^ ]+)" =>
-						runMode = RunMode.OptimizeThreshold(min, max, count);
+						RunThresholdOptimization(min, max, count)
 					| _ =>
 						Console.WriteLine($"Invalid threshold range: '$value'.");
-						displayHelp = true;
+						DisplayHelp()
 					}
 				)
 			, Getopt.CliOption.Flag
 				( "-optimize-color"
 				, "Optimize dominant color component."
-				, () => runMode = RunMode.OptimizeColor()
+				, RunColorOptimization
 				)
 			, Getopt.CliOption.Flag
 				( "-optimize-duplicates"
 				, "Optimize duplicate threshold."
-				, () => runMode = RunMode.OptimizeDuplicates()
+				, RunDuplicateOptimization
 				)
 			, Getopt.CliOption.Flag
 				( "-optimize-faces"
 				, "Optimize face detection."
-				, () => runMode = RunMode.OptimizeFaces()
+				, RunFaceOptimization
 				)
 			, Getopt.CliOption.Flag
 				( "-optimize-image-size"
 				, "Optimize the image size."
-				, () => runMode = RunMode.OptimizeImageSize()
+				, RunImageSizeOptimization
 				)
 			, Getopt.CliOption.Flag
 				( "-optimize-image-hash"
 				, "Optimize the image hash."
-				, () => runMode = RunMode.OptimizeImageHash()
+				, RunImageHashOptimization
 				)
 			, Getopt.CliOption.Flag
 				( "-help"
 				, [ "-?" ]
 				, "Display this message."
-				, () => displayHelp = true
+				, DisplayHelp
 				)
 			];
-		Getopt.Parse(opts);
 
-		if (displayHelp)
-		{
-			Console.WriteLine(Getopt.Usage(opts));
-		}
+		if (args.Length == 0)
+			Run()
 		else
-		{
-			match (runMode)
-			{
-			| Normal                             => Run()
-			| OptimizeColor                      => RunColorOptimization()
-			| OptimizeDuplicates                 => RunDuplicateOptimization()
-			| OptimizeFaces                      => RunFaceOptimization()
-			| OptimizeImageHash                  => RunImageHashOptimization()
-			| OptimizeImageSize                  => RunImageSizeOptimization()
-			| OptimizeThreshold(min, max, count) => RunThresholdOptimization(min, max, count)
-			}
-		}
+			Getopt.Parse(opts);
 	}
 }
