@@ -212,107 +212,6 @@ module Main
 			Console.WriteLine("{0}: {1}", eval.Name, Eval(eval));
 	}
 
-	private RunThresholdOptimization(min : double, max : double, count : int) : void
-	{
-		def parameters = Parameters();
-		parameters.Load("parameters.txt");
-
-		def taskManager = TaskManager
-			( tasks =
-				[ LoadJsonDataTask()
-				, DownloadDataTask()
-				, ExtractDescriptorsTask()
-				, ClusterDataTask()
-				, LoadReferenceClustersTask()
-				, EvaluateClustersTask()
-				]
-			, persistData     = false
-			, displayProgress = true
-			);
-
-		def taskPath = @"eval\peter-alice.txt";
-		def task =
-			match (taskManager.Items.Find(item : ITaskItem => item.Path == taskPath))
-			{
-			| Some(item is ClusterEvaluationItem) => item
-			| _                                   => throw Exception($"'$taskPath' not found.")
-			}
-
-		def Run(threshold)
-		{
-			parameters.ClusteringThreshold = threshold;
-
-			taskManager.DiscardItemData(@"clusters\peter-alice.txt");
-			taskManager.Compute(parameters);
-
-			Console.WriteLine($"$threshold\t$(task.Value)");
-		}
-
-		Console.WriteLine("Threshold optimization:");
-		def Lerp(step : int)
-		{
-			min + (max - min) * step / count
-		}
-		$[0 .. count].Map(Lerp).Iter(Run);
-	}
-
-	private RunImageSizeOptimization() : void
-	{
-		def parameters = Parameters();
-		parameters.Load("parameters.txt");
-
-		def taskManager = TaskManager
-			( tasks =
-				[ LoadJsonDataTask()
-				, DownloadDataTask()
-				, ExtractDescriptorsTask()
-				, ClusterDataTask()
-				, LoadReferenceClustersTask()
-				, EvaluateClustersTask()
-				]
-			, persistData     = false
-			, displayProgress = false
-			);
-
-		def dataSet = "peter-alice";
-
-		def taskPath = $@"eval\$dataSet.txt";
-		def task =
-			match (taskManager.Items.Find(item => item.Path == taskPath))
-			{
-			| Some(item is ClusterEvaluationItem) => item
-			| _ => throw Exception($"'$taskPath' not found.")
-			}
-
-		def (min, max, count) = (0.1, 0.9, 80);
-
-		def Run(w, h)
-		{
-			def Run(threshold)
-			{
-				parameters.ClusteringThreshold = threshold;
-
-				taskManager.DiscardItemData($@"clusters\$dataSet.txt");
-				taskManager.Compute(parameters);
-
-				Console.WriteLine($"$(w)x$(h)\t$threshold\t$(task.Value)");
-			}
-
-			parameters.ImageSize = (w, h);
-
-			taskManager.DiscardItemData($@"descriptors\$dataSet");
-
-			def Lerp(step : int)
-			{
-				min + (max - min) * step / count
-			}
-			$[0 .. count].Map(Lerp).Iter(Run);
-		}
-
-		Console.WriteLine("Image size optimization:");
-		[ (90, 90), (120, 120), (256, 256) ].Iter(Run);
-	}
-
 	public RunImageHashOptimization() : void
 	{
 		Console.WriteLine("Image hash optimization:");
@@ -446,6 +345,140 @@ module Main
 		*/
 	}
 
+	private RunImageSizeOptimization() : void
+	{
+		def parameters = Parameters();
+		parameters.Load("parameters.txt");
+
+		def taskManager = TaskManager
+			( tasks =
+				[ LoadJsonDataTask()
+				, DownloadDataTask()
+				, ExtractDescriptorsTask()
+				, ClusterDataTask()
+				, LoadReferenceClustersTask()
+				, EvaluateClustersTask()
+				]
+			, persistData     = false
+			, displayProgress = false
+			);
+
+		def dataSet = "peter-alice";
+
+		def taskPath = $@"eval\$dataSet.txt";
+		def task =
+			match (taskManager.Items.Find(item => item.Path == taskPath))
+			{
+			| Some(item is ClusterEvaluationItem) => item
+			| _ => throw Exception($"'$taskPath' not found.")
+			}
+
+		def (min, max, count) = (0.1, 0.9, 80);
+
+		def Run(w, h)
+		{
+			def Run(threshold)
+			{
+				parameters.ClusteringThreshold = threshold;
+
+				taskManager.DiscardItemData($@"clusters\$dataSet.txt");
+				taskManager.Compute(parameters);
+
+				Console.WriteLine($"$(w)x$(h)\t$threshold\t$(task.Value)");
+			}
+
+			parameters.ImageSize = (w, h);
+
+			taskManager.DiscardItemData($@"descriptors\$dataSet");
+
+			def Lerp(step : int)
+			{
+				min + (max - min) * step / count
+			}
+			$[0 .. count].Map(Lerp).Iter(Run);
+		}
+
+		Console.WriteLine("Image size optimization:");
+		[ (90, 90), (120, 120), (256, 256) ].Iter(Run);
+	}
+
+	private RunJson() : void
+	{
+		def parameters = Parameters();
+		parameters.Load("parameters.txt");
+		_ = TaskManager
+			( tasks =
+				// source Json and image data
+				[ LoadJsonDataTask()
+				, DownloadDataTask()
+				, CreateThumbnailsTask()
+
+				// dominant colour detection
+				, FindDominantColorTask()
+				, CreateDominantColorHtmlTask()
+
+				// descriptor extraction
+				, ExtractDescriptorsTask()
+
+				// image clustering
+				, ClusterDataTask()
+				, CreateClusterHtmlTask()
+				, CreateClusterJsonTask()
+
+				// event grouping
+				, LoadReferenceEventsTask()
+				, GroupEventsTask()
+				, CreateEventGroupJsonTask()
+				]
+			, persistData     = true
+			, displayProgress = true
+			).Compute(parameters);
+	}
+
+	private RunThresholdOptimization(min : double, max : double, count : int) : void
+	{
+		def parameters = Parameters();
+		parameters.Load("parameters.txt");
+
+		def taskManager = TaskManager
+			( tasks =
+				[ LoadJsonDataTask()
+				, DownloadDataTask()
+				, ExtractDescriptorsTask()
+				, ClusterDataTask()
+				, LoadReferenceClustersTask()
+				, EvaluateClustersTask()
+				]
+			, persistData     = false
+			, displayProgress = true
+			);
+
+		def taskPath = @"eval\peter-alice.txt";
+		def task =
+			match (taskManager.Items.Find(item : ITaskItem => item.Path == taskPath))
+			{
+			| Some(item is ClusterEvaluationItem) => item
+			| _                                   => throw Exception($"'$taskPath' not found.")
+			}
+
+		def Run(threshold)
+		{
+			parameters.ClusteringThreshold = threshold;
+
+			taskManager.DiscardItemData(@"clusters\peter-alice.txt");
+			taskManager.Compute(parameters);
+
+			Console.WriteLine($"$threshold\t$(task.Value)");
+		}
+
+		Console.WriteLine("Threshold optimization:");
+		def Lerp(step : int)
+		{
+			min + (max - min) * step / count
+		}
+		$[0 .. count].Map(Lerp).Iter(Run);
+	}
+
 	public Main(args : array[string]) : void
 	{
 		mutable opts;
@@ -456,18 +489,10 @@ module Main
 		}
 
 		opts =
-			[ Getopt.CliOption.String
-				( "-optimize-threshold"
-				, "Optimize the threshold meta-parameter over the given range: 'min max count'."
-				, value =>
-					regexp match (value)
-					{
-					| @"(?<min:double>[^ ]+) (?<max:double>[^ ]+) (?<count:int>[^ ]+)" =>
-						RunThresholdOptimization(min, max, count)
-					| _ =>
-						Console.WriteLine($"Invalid threshold range: '$value'.");
-						DisplayHelp()
-					}
+			[ Getopt.CliOption.Flag
+				( "-json"
+				, "Generate JSON output."
+				, RunJson
 				)
 			, Getopt.CliOption.Flag
 				( "-optimize-color"
@@ -485,14 +510,27 @@ module Main
 				, RunFaceOptimization
 				)
 			, Getopt.CliOption.Flag
+				( "-optimize-image-hash"
+				, "Optimize the image hash."
+				, RunImageHashOptimization
+				)
+			, Getopt.CliOption.Flag
 				( "-optimize-image-size"
 				, "Optimize the image size."
 				, RunImageSizeOptimization
 				)
-			, Getopt.CliOption.Flag
-				( "-optimize-image-hash"
-				, "Optimize the image hash."
-				, RunImageHashOptimization
+			, Getopt.CliOption.String
+				( "-optimize-threshold"
+				, "Optimize the threshold meta-parameter over the given range: 'min max count'."
+				, value =>
+					regexp match (value)
+					{
+					| @"(?<min:double>[^ ]+) (?<max:double>[^ ]+) (?<count:int>[^ ]+)" =>
+						RunThresholdOptimization(min, max, count)
+					| _ =>
+						Console.WriteLine($"Invalid threshold range: '$value'.");
+						DisplayHelp()
+					}
 				)
 			, Getopt.CliOption.Flag
 				( "-help"
