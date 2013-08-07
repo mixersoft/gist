@@ -411,7 +411,6 @@ module Main
 				// source Json and image data
 				[ LoadJsonDataTask()
 				, DownloadDataTask()
-				, CreateThumbnailsTask()
 
 				// dominant colour detection
 				, FindDominantColorTask()
