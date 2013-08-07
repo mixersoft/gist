@@ -411,7 +411,6 @@ module Main
 				// source Json and image data
 				[ LoadJsonDataTask()
 				, DownloadDataTask()
-				, CreateThumbnailsTask()
 
 				// dominant colour detection
 				, FindDominantColorTask()
@@ -426,7 +425,6 @@ module Main
 				, CreateClusterJsonTask()
 
 				// event grouping
-				, LoadReferenceEventsTask()
 				, GroupEventsTask()
 				, CreateEventGroupJsonTask()
 				]
