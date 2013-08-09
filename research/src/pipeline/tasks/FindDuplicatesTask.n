@@ -11,19 +11,28 @@ class FindDuplicatesTask : ITask
 	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
 	{
 		mutable mappings = [];
-		foreach ((name, images, json) in items.Join.[ImageCollectionItem, JsonItem]())
-			mappings ::= TaskMapping(this, [ images, json ], [ DuplicatesItem(name) ]);
+		foreach ((name, json, images) in items.Join.[JsonItem, ImageCollectionItem]())
+			mappings ::= TaskMapping(this, [ json, images ], [ DuplicatesItem(name) ]);
 		mappings;
 	}
 
 	private Compute
-		( [InItem]  images     : ImageCollectionItem
-		, [InItem]  json       : JsonItem
+		( [InItem]  json       : JsonItem
+		, [InItem]  images     : ImageCollectionItem
 		, [OutItem] duplicates : DuplicatesItem
 		, duplicateThreshold : int
 		, duplicateHash      : ImageHash.HashMethod
 		) : void
 	{
+		def HaveAllImages()
+		{
+			def imageIDs = Set(images.ImageIDs);
+			json.Photos.ForAll(photo => imageIDs.Contains(photo.ID));
+		}
+		when (!HaveAllImages())
+			throw InconsistentItemsException("Missing photo images.", [ json, images ]);
+
+
 		def Hash(id)
 		{
 			using (bmp = Bitmap(images.MakePath(id)))

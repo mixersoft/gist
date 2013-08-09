@@ -192,7 +192,6 @@ namespace PipelineMacro
 		{
 			def CreateParameterInitializer(p)
 			{
-				// Parse(map["hashed image blur"], out HashedImageBlur);
 				<[ Parse(map[$(p.LongName:string)], out $(p.SrcName:dyn)) ]>
 			}
 			<[ decl:

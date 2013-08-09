@@ -64,60 +64,89 @@ public class TaskManager
 
 	public Compute(parameters : Parameters) : void
 	{
+		def SetToCompute(items) { toCompute = toCompute.ReplaceList(items.Map(_.Path)) }
+		def ToCompute(item)     { toCompute.Contains(item.Path) }
+
+		mutable failed = Set();
+		def MarkFailed(items) { failed = failed.ReplaceList(items.Map(_.Path)) }
+		def HasFailed(item)   { failed.Contains(item.Path) }
+
 		def stopwatch = Diagnostics.Stopwatch();
-		def ToCompute(item) { toCompute.Contains(item.Path) }
+
 		foreach (layer in taskMappings)
 		{
 			foreach (mapping in layer)
 			{
 				def i = mapping.Inputs;
 				def o = mapping.Outputs;
-				when (i.Exists(ToCompute) || o.Exists(ToCompute))
+				if (i.Exists(HasFailed))
 				{
-					foreach (item in i)
+					MarkFailed(o);
+				}
+				else
+				{
+					when (o.Exists(ToCompute))
 					{
-						when (!ToCompute(item) && !loaded.Contains(item.Path) && item.HasCache())
+						foreach (item in i)
 						{
-							when (displayProgress)
-								Console.WriteLine($"Load $(item.Path)");
-							loaded = loaded.Add(item.Path);
-							item.Load(item.Path);
-						}
-					}
-					try
-					{
-						when (displayProgress)
-						{
-							Console.WriteLine($"..$(i.Map(_.Path)) -> ..$(o.Map(_.Path))");
-							stopwatch.Start();
-						}
-						mapping.Task.Compute(mapping.Inputs, mapping.Outputs, parameters);
-						when (displayProgress)
-						{
-							stopwatch.Stop();
-							Console.WriteLine(stopwatch.Elapsed);
-						}
-						when (persistData)
-						{
-							foreach (item in o)
+							when (!ToCompute(item) && !loaded.Contains(item.Path) && item.HasCache())
 							{
 								when (displayProgress)
-									Console.WriteLine($"Save $(item.Path)");
-								def dir = Path.GetDirectoryName(item.Path);
-								when (dir != "")
-									_ = Directory.CreateDirectory(dir);
-								item.Save(item.Path);
+									Console.WriteLine("Load {0}", item.Path);
+								loaded = loaded.Add(item.Path);
+								item.Load(item.Path);
 							}
 						}
-						toCompute = toCompute.ReplaceList(o.Map(_.Path));
-					}
-					catch
-					{
-						e => Console.WriteLine(e)
+						try
+						{
+							when (displayProgress)
+							{
+								Console.WriteLine($"..$(i.Map(_.Path)) -> ..$(o.Map(_.Path))");
+								stopwatch.Start();
+							}
+							mapping.Task.Compute(i, o, parameters);
+							when (displayProgress)
+							{
+								stopwatch.Stop();
+								Console.WriteLine(stopwatch.Elapsed);
+							}
+
+							when (persistData)
+							{
+								foreach (item in o)
+								{
+									when (displayProgress)
+										Console.WriteLine("Save {0}", item.Path);
+									def dir = Path.GetDirectoryName(item.Path);
+									when (dir != "")
+										_ = Directory.CreateDirectory(dir);
+									item.Save(item.Path);
+								}
+							}
+
+							SetToCompute(o);
+						}
+						catch
+						{
+						| e is InconsistentItemsException =>
+							Console.WriteLine("Error: {0}", e.Message);
+							MarkFailed(o);
+						| e =>
+							Console.WriteLine(e);
+							MarkFailed(o);
+						}
 					}
 				}
 			}
 		}
 		toCompute = toCompute.Clear();
+
+		when (failed.Count > 0)
+		{
+			Console.WriteLine();
+			Console.WriteLine("The following items could not be computed:");
+			foreach (path in failed)
+				Console.WriteLine("  {0}", path);
+		}
 	}
 }

@@ -1,0 +1,13 @@
+using Nemerle.Utility;
+using System;
+
+public class InconsistentItemsException : Exception
+{
+	[ Accessor ] private items : list[ITaskItem];
+
+	public this(message : string, items : list[ITaskItem])
+	{
+		base(message);
+		this.items = items;
+	}
+}
