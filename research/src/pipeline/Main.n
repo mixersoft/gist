@@ -29,6 +29,7 @@ module Main
 			( tasks =
 				// source Json and image data
 				[ LoadJsonDataTask()
+				, ExtractDescriptorsTask()
 				, DownloadDataTask()
 				, CreateThumbnailsTask()
 
@@ -214,8 +215,6 @@ module Main
 
 	public RunImageHashOptimization() : void
 	{
-		Console.WriteLine("Image hash optimization:");
-
 		def parameters = Parameters();
 		parameters.Load("parameters.txt");
 
@@ -295,54 +294,6 @@ module Main
 				writer.Flush();
 			}
 		}
-
-
-		/*
-		def uniquenessTaskPath = $@"eval\\$dataSet hash uniqueness.txt";
-		def uniquenessTask =
-			match (taskManager.Items.Find(item => item.Path == taskPath))
-			{
-			| Some(item is ImageHashUniquenessEvaluationItem) => item
-			| _ => throw Exception($"'$uniquenessTaskPath' not found.")
-			}
-
-		def consistencyTaskPath =  @"eval\image sample.txt";
-		def uniquenessTask =
-			match (taskManager.Items.Find(item => item.Path == taskPath))
-			{
-			| Some(item is ImageHashUniquenessEvaluationItem) => item
-			| _ => throw Exception($"'$consistencyTaskPath' not found.")
-			}
-
-		def sizes = $[4,6..12];
-		def bpps  = $[1..6];
-
-		def Run(w, h)
-		{
-			def Run(threshold)
-			{
-				parameters.ClusteringThreshold = threshold;
-
-				taskManager.DiscardItemData($@"clusters\$dataSet.txt");
-				taskManager.Compute(parameters);
-
-				Console.WriteLine($"$(w)x$(h)\t$threshold\t$(task.Value)");
-			}
-
-			parameters.ImageSize = (w, h);
-
-			taskManager.DiscardItemData($@"descriptors\$dataSet");
-
-			def Lerp(step : int)
-			{
-				min + (max - min) * step / count
-			}
-			$[0 .. count].Map(Lerp).Iter(Run);
-		}
-
-		Console.WriteLine("Image size optimization:");
-		[ (90, 90), (120, 120), (256, 256) ].Iter(Run);
-		*/
 	}
 
 	private RunImageSizeOptimization() : void

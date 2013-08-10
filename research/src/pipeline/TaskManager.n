@@ -32,6 +32,9 @@ public class TaskManager
 			foreach (mapping in mappings)
 				items = mapping.Outputs.Append(items);
 			taskMappings ::= mappings;
+
+			when (mappings.IsEmpty)
+				Console.WriteLine("Warning: {0} does not produce any items.", task.GetType().Name);
 		}
 
 		this.taskMappings = taskMappings.Reverse();
