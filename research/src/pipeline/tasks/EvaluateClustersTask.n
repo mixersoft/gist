@@ -32,6 +32,8 @@ public class EvaluateClustersTask: ITask
 		{
 			c.Fold(0, (c, hash) => c.Fold(hash, (id, hash) => hash ^ id.GetHashCode()))
 		}
+		when (MakeHash(autos.Clusters) != MakeHash(refs.Clusters))
+			throw InconsistentItemsException("Cannot compare clusters of different items.");
 
 		/// <summary>
 		/// Remove the last reference cluster and all items containined in it.
@@ -90,9 +92,6 @@ public class EvaluateClustersTask: ITask
 
 		def autos = autos.Clusters;
 		def refs  = refs.Clusters;
-
-		when (MakeHash(autos) != MakeHash(refs))
-			throw Exception("Cannot compare clusters of different items.");
 
 		result.Value = EvaluateClusters(PrepareClusters(autos, refs));
 	}

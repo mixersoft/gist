@@ -30,7 +30,7 @@ class FindDuplicatesTask : ITask
 			json.Photos.ForAll(photo => imageIDs.Contains(photo.ID));
 		}
 		when (!HaveAllImages())
-			throw InconsistentItemsException("Missing photo images.", [ json, images ]);
+			throw InconsistentItemsException("Missing photo images.");
 
 
 		def Hash(id)

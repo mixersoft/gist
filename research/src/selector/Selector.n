@@ -10,6 +10,7 @@ def backgroundColor = Color.FromArgb(255, 255, 255);
 def selectionColor  = Color.FromArgb(185, 5,   4);
 
 mutable selection = Set();
+mutable hash      = 0;
 
 mutable SetLoaded;
 mutable SetSaved;
@@ -33,7 +34,7 @@ def LoadSelection(layout, item, dataset)
 	}
 	try
 	{
-		File.ReadAllText(Path.Combine("data", item, dataset + ".txt"))
+		File.ReadAllLines(Path.Combine("data", item, dataset + ".txt"))[1]
 			.Split(array[' '], StringSplitOptions.RemoveEmptyEntries)
 			.Map(int.Parse)
 			.Map(_ - 1)
@@ -48,21 +49,26 @@ def LoadSelection(layout, item, dataset)
 
 def SaveSelection(item, dataset)
 {
-	_ = Directory.CreateDirectory(Path.Combine("data", item));
-	File.WriteAllText
-		( path     = Path.Combine("data", item, dataset + ".txt")
-		, contents = string.Join(" ", selection.Map(_ + 1))
-		);
+	def dir  = Path.Combine("data", item);
+	def path = Path.Combine(dir, dataset + ".txt");
+	def ids  = string.Join(" ", selection.Map(_ + 1));
+
+	_ = Directory.CreateDirectory(dir);
+	File.WriteAllLines(path, array[hash.ToString(), ids]);
 }
 
 def LoadDataset(layout, tooltip, dataset)
 {
+	hash = 0;
+
 	tooltip.RemoveAll();
 
 	layout.SuspendLayout();
 	layout.Controls.Clear();
 	foreach (id in LoadPhotoIdsFromJson(Path.Combine(@"work\Json", dataset + ".json")) with i)
 	{
+		hash ^= id.GetHashCode();
+
 		def picture = PictureBox();
 		picture.AutoSize  = true;
 		picture.BackColor = backgroundColor;

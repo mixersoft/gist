@@ -36,16 +36,11 @@ class DownloadDataTask : ITask
 		foreach (photo in json.Photos with i)
 		{
 			Console.Write('*');
+
 			def address = baseUrl + photo.RootSrc.Replace("/", downloadPrefix);
-			try
-			{
-				client.DownloadFile(address, images.MakePath(photo.ID));
-				images.ImageIDs[i] = photo.ID;
-			}
-			catch
-			{
-			| _ => Console.Write("\nFailed to download '{0}'.", address);
-			}
+
+			client.DownloadFile(address, images.MakePath(photo.ID));
+			images.ImageIDs[i] = photo.ID;
 		}
 		Console.WriteLine();
 	}

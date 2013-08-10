@@ -3,11 +3,8 @@ using System;
 
 public class InconsistentItemsException : Exception
 {
-	[ Accessor ] private items : list[ITaskItem];
-
-	public this(message : string, items : list[ITaskItem])
+	public this(message : string)
 	{
 		base(message);
-		this.items = items;
 	}
 }

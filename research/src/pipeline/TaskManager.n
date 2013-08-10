@@ -85,7 +85,7 @@ public class TaskManager
 				}
 				else
 				{
-					when (o.Exists(ToCompute))
+					when (i.Exists(ToCompute) || o.Exists(ToCompute))
 					{
 						foreach (item in i)
 						{

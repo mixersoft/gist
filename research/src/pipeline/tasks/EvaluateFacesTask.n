@@ -26,6 +26,13 @@ public class EvaluateFacesTask: ITask
 		, [OutItem] result : FacesEvaluationItem
 		) : void
 	{
+		def GetPhotosHash()
+		{
+			json.Photos.Fold(0, (photo, hash) => photo.ID.GetHashCode() ^ hash)
+		}
+		when (refs.Hash != GetPhotosHash())
+			throw InconsistentItemsException("Reference generated from different images.");
+
 		def photos = json.Photos.Sort(_.DateTaken);
 
 		def refs = Set(refs.Indices.Map(i => photos[i].ID));

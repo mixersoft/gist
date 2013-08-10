@@ -6,6 +6,7 @@ using System;
 [ TaskItemInfo(File(".txt")) ]
 public class DuplicatesRefItem : ITaskItem
 {
+	public mutable Hash    : int;
 	public mutable Indices : array[int];
 
 	public Save(path : string) : void
@@ -15,7 +16,9 @@ public class DuplicatesRefItem : ITaskItem
 
 	public Load(path : string) : void
 	{
-		Indices = File.ReadAllText(path).Split
+		def lines = File.ReadAllLines(path);
+		Hash    = int.Parse(lines[0]);
+		Indices = lines[1].Split
 			( array[' ', '\t', '\r', '\n']
 			, StringSplitOptions.RemoveEmptyEntries
 			).Map(int.Parse).Map(_ - 1);

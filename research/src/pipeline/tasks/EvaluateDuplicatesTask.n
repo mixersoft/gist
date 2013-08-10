@@ -26,6 +26,13 @@ public class EvaluateDuplicatesTask: ITask
 		, [OutItem] result : DuplicatesEvaluationItem
 		) : void
 	{
+		def GetPhotosHash()
+		{
+			json.Photos.Fold(0, (photo, hash) => photo.ID.GetHashCode() ^ hash)
+		}
+		when (refs.Hash != GetPhotosHash())
+			throw InconsistentItemsException("Reference generated from different images.");
+
 		def GatherIndices()
 		{
 			mutable indices = Set();
