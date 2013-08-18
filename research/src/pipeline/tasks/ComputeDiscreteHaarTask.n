@@ -1,10 +1,10 @@
-using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
 using Emgu.CV;
 using Nemerle.Collections;
 using PipelineMacro;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 
 class ComputeDiscreteHaarTask : ITask
 {
@@ -21,11 +21,15 @@ class ComputeDiscreteHaarTask : ITask
 		, [OutItem] haar   : HaarItem
 		) : void
 	{
-		haar.Images = Hashtable();
+		_ = Directory.CreateDirectory(Path.GetDirectoryName(haar.Path));
+		DirectoryEx.Recreate(haar.Path);
+
+		haar.ImageIDs = images.ImageIDs;
 		foreach (id in images.ImageIDs)
 		{
 			using (src = Image.[Bgr, byte](images.MakePath(id)))
-				haar.Images.Add(id, Transform(src, 3));
+			using (dst = Transform(src, 3))
+				dst.Save(haar.MakePath(id));
 		}
 	}
 

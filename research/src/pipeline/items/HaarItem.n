@@ -1,11 +1,6 @@
-using Emgu.CV.CvEnum;
-using Emgu.CV.Structure;
-using Emgu.CV;
 using Nemerle.Collections;
 using PipelineMacro;
-using System.Drawing;
 using System.IO;
-using System;
 
 /// <summary>
 /// This data item holds discrete Haar wavelet transform output.
@@ -13,25 +8,21 @@ using System;
 [ TaskItemInfo(Directory) ]
 public class HaarItem : ITaskItem
 {
-	public mutable Images : Hashtable[string, Image.[Bgr, byte]];
 
-	public Save(path : string) : void
+	public mutable ImageIDs : array[string];
+
+	public MakePath(id : string) : string
 	{
-		DirectoryEx.Recreate(path);
-		foreach (pair in Images)
-		{
-			def (id, image) = (pair.Key, pair.Value);
-			image.Save(Path.Combine(path, id + ".jpg"));
-		}
+		Path.Combine(path, id + ".png")
+	}
+
+	public Save(_ : string) : void
+	{
 	}
 
 	public Load(path : string) : void
 	{
-		Images = Hashtable();
-		foreach (file in Directory.GetFiles(path))
-		{
-			def id = Path.GetFileNameWithoutExtension(file);
-			Images.Add(id, Image.[Bgr, byte](file));
-		}
+		ImageIDs = Directory.GetFiles(path).Map(Path.GetFileNameWithoutExtension);
 	}
+
 }
