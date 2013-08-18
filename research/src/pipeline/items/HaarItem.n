@@ -1,0 +1,29 @@
+using Nemerle.Collections;
+using PipelineMacro;
+using System.Drawing;
+using System.IO;
+using System;
+
+/// <summary>
+/// This data item holds discrete Haar wavelet transform output.
+/// </summary>
+[ TaskItemInfo(Directory) ]
+public class HaarItem : ITaskItem
+{
+	public mutable Images : Hashtable[string, Bitmap];
+
+	public Save(path : string) : void
+	{
+		DirectoryEx.Recreate(path);
+		foreach (pair in Images)
+		{
+			def (id, image) = (pair.Key, pair.Value);
+			image.Save(Path.Combine(path, id + ".jpg"));
+		}
+	}
+
+	public Load(_ : string) : void
+	{
+		throw NotImplementedException();
+	}
+}

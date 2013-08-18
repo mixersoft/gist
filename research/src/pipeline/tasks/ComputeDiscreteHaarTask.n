@@ -1,0 +1,127 @@
+using Nemerle.Collections;
+using PipelineMacro;
+using System.Diagnostics;
+using System.Drawing;
+
+class ComputeDiscreteHaarTask : ITask
+{
+	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
+	{
+		mutable mappings = [];
+		foreach (item is ImageCollectionItem in items)
+			mappings ::= TaskMapping(this, [ item ], [ HaarItem(item.Name) ]);
+		mappings;
+	}
+
+	private Compute
+		( [InItem]  images : ImageCollectionItem
+		, [OutItem] haar   : HaarItem
+		) : void
+	{
+		DirectoryEx.Recreate(haar.Path);
+
+		haar.Images = Hashtable();
+		foreach (id in images.ImageIDs)
+		{
+			using (src = Bitmap(images.MakePath(id)))
+				haar.Images.Add(id, Transform(src, 3));
+		}
+	}
+
+	private Transform(bmp : Bitmap, iterations : int) : Bitmap
+	{
+		def GetRgb(color) : int * int * int
+		{
+			(color.R, color.G, color.B)
+		}
+
+		def HaarEncode(src, rect)
+		{
+			Trace.Assert(rect.Width  % 2 == 0);
+			Trace.Assert(rect.Height % 2 == 0);
+
+			def Encode(c1, c2)
+			{
+				def (sr1, sg1, sb1) = GetRgb(c1);
+				def (sr2, sg2, sb2) = GetRgb(c2);
+
+				mutable r2 = sr2 - sr1;
+				mutable g2 = sg2 - sg1;
+				mutable b2 = sb2 - sb1;
+
+				when (r2 < -128) r2 += 256; when (r2 > 127) r2 -= 256;
+				when (g2 < -128) g2 += 256; when (g2 > 127) g2 -= 256;
+				when (b2 < -128) b2 += 256; when (b2 > 127) b2 -= 256;
+
+				mutable r1 = (sr1 - 128 + r2 / 2);
+				mutable g1 = (sg1 - 128 + g2 / 2);
+				mutable b1 = (sb1 - 128 + b2 / 2);
+
+				when (r1 < -128) r1 += 256; when (r1 >  127) r1 -= 256;
+				when (g1 < -128) g1 += 256; when (g1 >  127) g1 -= 256;
+				when (b1 < -128) b1 += 256; when (b1 >  127) b1 -= 256;
+
+				r1 += 128; g1 += 128; b1 += 128;
+				r2 += 128; g2 += 128; b2 += 128;
+
+				( Color.FromArgb(r1, g1, b1)
+				, Color.FromArgb(r2, g2, b2)
+				)
+			}
+
+			def RunHorizontalPass(src)
+			{
+				def dst = Bitmap(src);
+				for (mutable y = rect.Y; y != rect.Height; ++y)
+				for (mutable x = rect.X; x != rect.Width; x += 2)
+				{
+					def c1 = src.GetPixel(x, y);
+					def c2 = src.GetPixel(x + 1, y);
+
+					def (c1, c2) = Encode(c1, c2);
+
+					dst.SetPixel(x / 2, y, c1);
+					dst.SetPixel(x / 2 + rect.Width / 2, y, c2);
+				}
+				dst;
+			}
+
+			def RunVerticalPass(src)
+			{
+				def dst = Bitmap(src);
+				for (mutable y = rect.Y; y != rect.Height; y += 2)
+				for (mutable x = rect.X; x != rect.Width; ++x)
+				{
+					def c1 = src.GetPixel(x, y);
+					def c2 = src.GetPixel(x, y + 1);
+
+					def (c1, c2) = Encode(c1, c2);
+
+					dst.SetPixel(x, y / 2, c1);
+					dst.SetPixel(x, y / 2 + rect.Height / 2, c2);
+				}
+				dst;
+			}
+
+			using (tmp = RunHorizontalPass(src))
+				RunVerticalPass(tmp);
+		}
+
+		Trace.Assert(iterations > 0 && iterations < 32);
+
+		def RoundDown(n, multiple) { n / multiple * multiple }
+		mutable w = RoundDown(bmp.Width,  1 << iterations);
+		mutable h = RoundDown(bmp.Height, 1 << iterations);
+
+		mutable src = bmp;
+		mutable dst;
+		repeat (iterations)
+		{
+			dst = HaarEncode(src, Rectangle(0, 0, w, h));
+			w /= 2; h /= 2;
+			src.Dispose();
+			src <-> dst;
+		}
+		src;
+	}
+}

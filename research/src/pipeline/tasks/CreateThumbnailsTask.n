@@ -1,7 +1,6 @@
 using PipelineMacro;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.IO;
 
 class CreateThumbnailsTask : ITask
 {
@@ -19,7 +18,6 @@ class CreateThumbnailsTask : ITask
 		, thumbHeight : int
 		) : void
 	{
-		_ = Directory.CreateDirectory(Path.GetDirectoryName(thumbnails.Path));
 		DirectoryEx.Recreate(thumbnails.Path);
 
 		thumbnails.ImageIDs = images.ImageIDs;
