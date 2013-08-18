@@ -1,3 +1,6 @@
+using Emgu.CV.CvEnum;
+using Emgu.CV.Structure;
+using Emgu.CV;
 using Nemerle.Collections;
 using PipelineMacro;
 using System.Drawing;
@@ -10,7 +13,7 @@ using System;
 [ TaskItemInfo(Directory) ]
 public class HaarItem : ITaskItem
 {
-	public mutable Images : Hashtable[string, Bitmap];
+	public mutable Images : Hashtable[string, Image.[Bgr, byte]];
 
 	public Save(path : string) : void
 	{
@@ -22,8 +25,13 @@ public class HaarItem : ITaskItem
 		}
 	}
 
-	public Load(_ : string) : void
+	public Load(path : string) : void
 	{
-		throw NotImplementedException();
+		Images = Hashtable();
+		foreach (file in Directory.GetFiles(path))
+		{
+			def id = Path.GetFileNameWithoutExtension(file);
+			Images.Add(id, Image.[Bgr, byte](file));
+		}
 	}
 }

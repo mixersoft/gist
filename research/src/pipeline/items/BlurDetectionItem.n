@@ -1,0 +1,46 @@
+using Nemerle.Collections;
+using PipelineMacro;
+using System.IO;
+
+[ TaskItemInfo(File(".txt")) ]
+public class BlurDetectionItem : ITaskItem
+{
+	[ Record ]
+	public class Evaluation
+	{
+		public IsBlurry   : bool;
+		public BlurAmount : double;
+	}
+
+	public mutable Evaluations : Hashtable.[string, Evaluation];
+
+	public Save(path : string) : void
+	{
+		using (file = File.CreateText(path))
+		{
+			file.WriteLine(Evaluations.Count);
+			foreach (pair in Evaluations)
+			{
+				file.WriteLine(pair.Key);
+				file.WriteLine(pair.Value.IsBlurry);
+				file.WriteLine(pair.Value.BlurAmount);
+			}
+		}
+	}
+
+	public Load(path : string) : void
+	{
+		using (file = File.OpenText(path))
+		{
+			Evaluations = Hashtable();
+
+			repeat(int.Parse(file.ReadLine()))
+			{
+				def id         = file.ReadLine();
+				def isBlurry   = bool.Parse(file.ReadLine());
+				def blurAmount = double.Parse(file.ReadLine());
+				Evaluations.Add(id, Evaluation(isBlurry, blurAmount));
+			}
+		}
+	}
+}

@@ -1,3 +1,6 @@
+using Emgu.CV.CvEnum;
+using Emgu.CV.Structure;
+using Emgu.CV;
 using Nemerle.Collections;
 using PipelineMacro;
 using System.Diagnostics;
@@ -18,21 +21,22 @@ class ComputeDiscreteHaarTask : ITask
 		, [OutItem] haar   : HaarItem
 		) : void
 	{
-		DirectoryEx.Recreate(haar.Path);
-
 		haar.Images = Hashtable();
 		foreach (id in images.ImageIDs)
 		{
-			using (src = Bitmap(images.MakePath(id)))
+			using (src = Image.[Bgr, byte](images.MakePath(id)))
 				haar.Images.Add(id, Transform(src, 3));
 		}
 	}
 
-	private Transform(bmp : Bitmap, iterations : int) : Bitmap
+	private Transform(img : Image.[Bgr, byte], iterations : int) : Image.[Bgr, byte]
 	{
-		def GetRgb(color) : int * int * int
+		def GetRgb(color)
 		{
-			(color.R, color.G, color.B)
+			( color.Red   :> int
+			, color.Green :> int
+			, color.Blue  :> int
+			)
 		}
 
 		def HaarEncode(src, rect)
@@ -64,41 +68,41 @@ class ComputeDiscreteHaarTask : ITask
 				r1 += 128; g1 += 128; b1 += 128;
 				r2 += 128; g2 += 128; b2 += 128;
 
-				( Color.FromArgb(r1, g1, b1)
-				, Color.FromArgb(r2, g2, b2)
+				( Bgr(r1, g1, b1)
+				, Bgr(r2, g2, b2)
 				)
 			}
 
-			def RunHorizontalPass(src)
+			def RunHorizontalPass(src) : Image.[Bgr, byte]
 			{
-				def dst = Bitmap(src);
+				def dst = src.Copy();
 				for (mutable y = rect.Y; y != rect.Height; ++y)
 				for (mutable x = rect.X; x != rect.Width; x += 2)
 				{
-					def c1 = src.GetPixel(x, y);
-					def c2 = src.GetPixel(x + 1, y);
+					def c1 = src[y, x];
+					def c2 = src[y, x + 1];
 
 					def (c1, c2) = Encode(c1, c2);
 
-					dst.SetPixel(x / 2, y, c1);
-					dst.SetPixel(x / 2 + rect.Width / 2, y, c2);
+					dst[y, x / 2] = c1;
+					dst[y, x / 2 + rect.Width / 2] = c2;
 				}
 				dst;
 			}
 
-			def RunVerticalPass(src)
+			def RunVerticalPass(src) : Image.[Bgr, byte]
 			{
-				def dst = Bitmap(src);
+				def dst = src.Copy();
 				for (mutable y = rect.Y; y != rect.Height; y += 2)
 				for (mutable x = rect.X; x != rect.Width; ++x)
 				{
-					def c1 = src.GetPixel(x, y);
-					def c2 = src.GetPixel(x, y + 1);
+					def c1 = src[y, x];
+					def c2 = src[y + 1, x];
 
 					def (c1, c2) = Encode(c1, c2);
 
-					dst.SetPixel(x, y / 2, c1);
-					dst.SetPixel(x, y / 2 + rect.Height / 2, c2);
+					dst[y / 2, x] = c1;
+					dst[y / 2 + rect.Height / 2, x] = c2;
 				}
 				dst;
 			}
@@ -110,10 +114,10 @@ class ComputeDiscreteHaarTask : ITask
 		Trace.Assert(iterations > 0 && iterations < 32);
 
 		def RoundDown(n, multiple) { n / multiple * multiple }
-		mutable w = RoundDown(bmp.Width,  1 << iterations);
-		mutable h = RoundDown(bmp.Height, 1 << iterations);
+		mutable w = RoundDown(img.Width,  1 << iterations);
+		mutable h = RoundDown(img.Height, 1 << iterations);
 
-		mutable src = bmp;
+		mutable src = img;
 		mutable dst;
 		repeat (iterations)
 		{

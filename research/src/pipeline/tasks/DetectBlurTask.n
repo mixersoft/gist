@@ -1,0 +1,27 @@
+using Emgu.CV.CvEnum;
+using Emgu.CV.Structure;
+using Emgu.CV;
+using Nemerle.Collections;
+using PipelineMacro;
+using System.Diagnostics;
+using System.Drawing;
+
+class DetectBlurTask : ITask
+{
+	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
+	{
+		mutable mappings = [];
+		foreach (item is HaarItem in items)
+			mappings ::= TaskMapping(this, [ item ], [ BlurDetectionItem(item.Name) ]);
+		mappings;
+	}
+
+	private Compute
+		( [InItem]  haar : HaarItem
+		, [OutItem] blur : BlurDetectionItem
+		) : void
+	{
+		_ = haar;
+		blur.Evaluations = Hashtable();
+	}
+}

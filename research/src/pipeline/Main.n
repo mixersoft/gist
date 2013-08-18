@@ -80,6 +80,7 @@ module Main
 
 				// blur detection
 				, ComputeDiscreteHaarTask()
+				, DetectBlurTask()
 				]
 			, persistData     = true
 			, displayProgress = true
