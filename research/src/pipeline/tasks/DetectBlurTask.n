@@ -3,8 +3,10 @@ using Emgu.CV.Structure;
 using Emgu.CV;
 using Nemerle.Collections;
 using PipelineMacro;
+using System.Console;
 using System.Diagnostics;
 using System.Drawing;
+using System.Math;
 
 class DetectBlurTask : ITask
 {
@@ -19,9 +21,153 @@ class DetectBlurTask : ITask
 	private Compute
 		( [InItem]  haar : HaarItem
 		, [OutItem] blur : BlurDetectionItem
+		, blurThreshold : double
+		, blurMinZero   : double
 		) : void
 	{
-		_ = haar;
 		blur.Evaluations = Hashtable();
+		foreach (id in haar.ImageIDs)
+		{
+			WriteLine(id);
+			using (img = Image.[Bgr, byte](haar.MakePath(id)))
+				blur.Evaluations[id] = Evaluate(img, blurThreshold, blurMinZero, id);
+		}
+	}
+
+	// Based on:
+	//
+	// H. Tong, M. Li, and H. Zhang, “Blur detection for digital images
+	// using wavelet transform,” 2004 IEEE International Conference on
+	// Multimedia and Expo (ICME) (IEEE Cat. No.04TH8763), pp. 17–20.
+	private Evaluate(img : Image.[Bgr, byte], threshold : double, minZero : double, id : string) : BlurDetectionItem.Evaluation
+	{
+		def MakeEdgeMap(w, h)
+		{
+			Trace.Assert(w % 2 == 0);
+			Trace.Assert(h % 2 == 0);
+
+			def Mean(bgr)
+			{
+				(bgr.Blue + bgr.Green + bgr.Red) / 3.0
+			}
+
+			def map = array(w / 2, h / 2);
+			for (mutable y = 0; y != h / 2; ++y)
+			for (mutable x = 0; x != w / 2; ++x)
+			{
+				def lh = Mean(img[h / 2 + y,        x ]);
+				def hl = Mean(img[        y, w / 2 + x]);
+				def hh = Mean(img[h / 2 + y, w / 2 + x]);
+				map[x, y] = Sqrt(lh * lh + hl * hl + hh * hh);
+			}
+			map;
+		}
+
+		def FindMaxima(edges, windowSize)
+		{
+			def w = edges.GetLength(0);
+			def h = edges.GetLength(1);
+
+			Trace.Assert(w % windowSize == 0);
+			Trace.Assert(h % windowSize == 0);
+
+			def maxima = array(w / windowSize, h / windowSize);
+			for (mutable y = 0; y != h; ++y)
+			for (mutable x = 0; x != w; ++x)
+			{
+				def val = edges[x, y];
+				def mx = x / windowSize;
+				def my = y / windowSize;
+				when (val > threshold && val > maxima[mx, my])
+					maxima[mx, my] = val;
+			}
+			maxima;
+		}
+
+		def CountEdges(maxima)
+		{
+			def w = maxima[0].GetLength(0);
+			def h = maxima[0].GetLength(1);
+
+			Trace.Assert(maxima[1].GetLength(0) == w);
+			Trace.Assert(maxima[1].GetLength(1) == h);
+			Trace.Assert(maxima[2].GetLength(0) == w);
+			Trace.Assert(maxima[2].GetLength(1) == h);
+
+			mutable edgeCount = 0;
+			mutable daCount   = 0;
+			mutable brgCount  = 0;
+			mutable rgCount   = 0;
+			for (mutable y = 0; y != h; ++y)
+			for (mutable x = 0; x != w; ++x)
+			{
+				def e1 = maxima[0][x, y];
+				def e2 = maxima[1][x, y];
+				def e3 = maxima[2][x, y];
+				when (e1 > 0.0 || e2 > 0.0 || e3 > 0.0)
+				{
+					++edgeCount;
+					when (e1 > e2 && e2 > e3)
+						++daCount;
+					when (e1 < e2)
+					{
+						++rgCount;
+						when (e1 == 0.0)
+							++brgCount;
+					}
+				}
+			}
+			(edgeCount, daCount, brgCount, rgCount);
+		}
+
+		def ProduceEvaluation
+			( edgeCount : double
+			, daCount   : double
+			, brgCount  : double
+			, rgCount   : double
+			)
+		{
+			BlurDetectionItem.Evaluation
+				( isBlurry   = edgeCount > 0.0 && daCount / edgeCount <= minZero
+				, blurAmount = brgCount / rgCount
+				)
+		}
+
+		def RoundDown(n, multiple) { n / multiple * multiple }
+		def w = RoundDown(img.Width,  8);
+		def h = RoundDown(img.Height, 8);
+
+		def maxima = array(3);
+		for (mutable i = 0; i != maxima.Length; ++i)
+		{
+			def windowSize = 4 >> i; // WARN: the paper uses 8
+			maxima[i] = FindMaxima(MakeEdgeMap(w >> i, h >> i), windowSize);
+		}
+
+		foreach (map in maxima with i)
+		{
+			def w = map.GetLength(0);
+			def h = map.GetLength(1);
+			using (bmp = Bitmap(w, h))
+			{
+				for (mutable y = 0; y != h; ++y)
+				for (mutable x = 0; x != w; ++x)
+				{
+					def val = (map[x, y] / Sqrt(3.0)) :> int;
+					bmp.SetPixel(x, y, Color.FromArgb(val, val, val));
+				}
+				bmp.Save($@"C:\Users\Alexey\Programming\Snaphappi\main\research\work\$id-$i.png");
+			}
+		}
+
+		def (edgeCount, daCount, brgCount, rgCount) = CountEdges(maxima);
+
+		WriteLine("dim = {0}x{1} ({2})", w, h, w * h);
+		WriteLine("all = {0}", edgeCount);
+		WriteLine("da  = {0}", daCount);
+		WriteLine("brg = {0}", brgCount);
+		WriteLine("rg  = {0}", rgCount);
+
+		ProduceEvaluation(edgeCount, daCount, brgCount, rgCount);
 	}
 }

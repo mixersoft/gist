@@ -12,6 +12,8 @@ public class Parameters
 	//----------------
 
 	[ Parameter(LongName = "base data url") ]          public mutable BaseDataUrl            : string;
+	[ Parameter(LongName = "blur threshold") ]         public mutable BlurThreshold          : double;
+	[ Parameter(LongName = "blur min zero") ]          public mutable BlurMinZero            : double;
 	[ Parameter(LongName = "clustering threshold") ]   public mutable ClusteringThreshold    : double;
 	[ Parameter(LongName = "coarse event spacing") ]   public mutable CoarseEventSpacing     : double;
 	[ Parameter(LongName = "color sampling step") ]    public mutable ColorSamplingStep      : int;

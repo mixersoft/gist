@@ -23,3 +23,6 @@ fine event spacing = 0.5
 kde window = 0.25
 mean shift iterations = 100
 mean shift kernel = gaussian
+
+blur threshold = 240
+blur min zero = 0.05
