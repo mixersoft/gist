@@ -3,9 +3,7 @@ using Emgu.CV.Structure;
 using Emgu.CV;
 using Nemerle.Collections;
 using PipelineMacro;
-using System.Console;
 using System.Diagnostics;
-using System.Drawing;
 using System.Math;
 
 class DetectBlurTask : ITask
@@ -28,9 +26,8 @@ class DetectBlurTask : ITask
 		blur.Evaluations = Hashtable();
 		foreach (id in haar.ImageIDs)
 		{
-			WriteLine(id);
 			using (img = Image.[Bgr, byte](haar.MakePath(id)))
-				blur.Evaluations[id] = Evaluate(img, blurThreshold, blurMinZero, id);
+				blur.Evaluations[id] = Evaluate(img, blurThreshold, blurMinZero);
 		}
 	}
 
@@ -39,7 +36,11 @@ class DetectBlurTask : ITask
 	// H. Tong, M. Li, and H. Zhang, “Blur detection for digital images
 	// using wavelet transform,” 2004 IEEE International Conference on
 	// Multimedia and Expo (ICME) (IEEE Cat. No.04TH8763), pp. 17–20.
-	private Evaluate(img : Image.[Bgr, byte], threshold : double, minZero : double, id : string) : BlurDetectionItem.Evaluation
+	private Evaluate
+		( img       : Image.[Bgr, byte]
+		, threshold : double
+		, minZero   : double
+		) : BlurDetectionItem.Evaluation
 	{
 		def MakeEdgeMap(w, h)
 		{
@@ -144,29 +145,7 @@ class DetectBlurTask : ITask
 			maxima[i] = FindMaxima(MakeEdgeMap(w >> i, h >> i), windowSize);
 		}
 
-		foreach (map in maxima with i)
-		{
-			def w = map.GetLength(0);
-			def h = map.GetLength(1);
-			using (bmp = Bitmap(w, h))
-			{
-				for (mutable y = 0; y != h; ++y)
-				for (mutable x = 0; x != w; ++x)
-				{
-					def val = (map[x, y] / Sqrt(3.0)) :> int;
-					bmp.SetPixel(x, y, Color.FromArgb(val, val, val));
-				}
-				bmp.Save($@"C:\Users\Alexey\Programming\Snaphappi\main\research\work\$id-$i.png");
-			}
-		}
-
 		def (edgeCount, daCount, brgCount, rgCount) = CountEdges(maxima);
-
-		WriteLine("dim = {0}x{1} ({2})", w, h, w * h);
-		WriteLine("all = {0}", edgeCount);
-		WriteLine("da  = {0}", daCount);
-		WriteLine("brg = {0}", brgCount);
-		WriteLine("rg  = {0}", rgCount);
 
 		ProduceEvaluation(edgeCount, daCount, brgCount, rgCount);
 	}
