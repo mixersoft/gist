@@ -11,7 +11,11 @@ public class FacesRefItem : ITaskItem
 
 	public Save(path : string) : void
 	{
-		File.WriteAllText(path, string.Join(" ", Indices.Map(_ + 1).Map(_.ToString())));
+		using (writer = File.CreateText(path))
+		{
+			writer.WriteLine(Hash.ToString());
+			writer.WriteLine(string.Join(" ", Indices.Map(_ + 1).Map(_.ToString())));
+		}
 	}
 
 	public Load(path : string) : void

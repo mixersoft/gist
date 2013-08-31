@@ -1,4 +1,5 @@
 using Nemerle.Collections;
+using System.Console;
 using System.IO;
 using System;
 
@@ -21,8 +22,32 @@ public class TaskManager
 		, displayProgress : bool
 		)
 	{
+		this(tasks, persistData, displayProgress, Set());
+	}
+
+	public this
+		( tasks           : list[ITask]
+		, persistData     : bool
+		, displayProgress : bool
+		, whitelist       : Set[string]
+		)
+	{
+		// save settings
+
 		this.persistData     = persistData;
 		this.displayProgress = displayProgress;
+
+		// display whitelist warning, if needed
+
+		when (!whitelist.IsEmpty && displayProgress)
+		{
+			WriteLine("Using a whitelist. Only the following datasets will be computed.");
+			whitelist.Iter(WriteLine("  - {0}", _));
+			WriteLine();
+		}
+		def IsWhitelisted(item) { whitelist.IsEmpty || whitelist.Contains(item.Name) }
+
+		// create the item graph
 
 		mutable taskMappings = [];
 		mutable items        = [];
@@ -30,11 +55,11 @@ public class TaskManager
 		{
 			def mappings = task.MapItems(items);
 			foreach (mapping in mappings)
-				items = mapping.Outputs.Append(items);
+				items = mapping.Outputs.Filter(IsWhitelisted).Append(items);
 			taskMappings ::= mappings;
 
 			when (mappings.IsEmpty)
-				Console.WriteLine("Warning: {0} does not produce any items.", task.GetType().Name);
+				WriteLine("Warning: {0} does not produce any items.", task.GetType().Name);
 		}
 
 		this.taskMappings = taskMappings.Reverse();
@@ -43,12 +68,11 @@ public class TaskManager
 		foreach (item in items)
 			this.items.Add(item.Path, item);
 
+		// gather items to compute
+
 		this.toCompute = Set();
-		foreach (item in items)
-		{
-			unless (item.HasCache())
-				this.toCompute = this.toCompute.Add(item.Path);
-		}
+		foreach (item when !item.HasCache() in items)
+			this.toCompute = this.toCompute.Add(item.Path);
 
 		this.loaded = Set();
 	}
@@ -95,7 +119,7 @@ public class TaskManager
 							when (!ToCompute(item) && !loaded.Contains(item.Path) && item.HasCache())
 							{
 								when (displayProgress)
-									Console.WriteLine("Load {0}", item.Path);
+									WriteLine("Load {0}", item.Path);
 								loaded = loaded.Add(item.Path);
 								item.Load(item.Path);
 							}
@@ -104,14 +128,14 @@ public class TaskManager
 						{
 							when (displayProgress)
 							{
-								Console.WriteLine($"..$(i.Map(_.Path)) -> ..$(o.Map(_.Path))");
+								WriteLine($"..$(i.Map(_.Path)) -> ..$(o.Map(_.Path))");
 								stopwatch.Start();
 							}
 							mapping.Task.Compute(i, o, parameters);
 							when (displayProgress)
 							{
 								stopwatch.Stop();
-								Console.WriteLine(stopwatch.Elapsed);
+								WriteLine(stopwatch.Elapsed);
 							}
 
 							when (persistData)
@@ -119,7 +143,7 @@ public class TaskManager
 								foreach (item in o)
 								{
 									when (displayProgress)
-										Console.WriteLine("Save {0}", item.Path);
+										WriteLine("Save {0}", item.Path);
 									def dir = Path.GetDirectoryName(item.Path);
 									when (dir != "")
 										_ = Directory.CreateDirectory(dir);
@@ -132,10 +156,10 @@ public class TaskManager
 						catch
 						{
 						| e is InconsistentItemsException =>
-							Console.WriteLine("Error: {0}", e.Message);
+							WriteLine("Error: {0}", e.Message);
 							MarkFailed(o);
 						| e =>
-							Console.WriteLine(e);
+							WriteLine(e);
 							MarkFailed(o);
 						}
 					}
@@ -146,10 +170,10 @@ public class TaskManager
 
 		when (failed.Count > 0)
 		{
-			Console.WriteLine();
-			Console.WriteLine("The following items could not be computed:");
+			WriteLine();
+			WriteLine("The following items could not be computed:");
 			foreach (path in failed)
-				Console.WriteLine("  {0}", path);
+				WriteLine("  - {0}", path);
 		}
 	}
 }

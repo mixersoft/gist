@@ -23,6 +23,12 @@ module Main
 
 	private Run() : void
 	{
+		def GetWhitelist() : Set[string]
+		{
+			try   Set(File.ReadAllLines("whitelist.txt"))
+			catch { _ is FileNotFoundException => Set() }
+		}
+
 		def parameters = Parameters();
 		parameters.Load("parameters.txt");
 		_ = TaskManager
@@ -84,6 +90,7 @@ module Main
 				]
 			, persistData     = true
 			, displayProgress = true
+			, whitelist       = GetWhitelist()
 			).Compute(parameters);
 		PrintProfileInfo();
 	}
