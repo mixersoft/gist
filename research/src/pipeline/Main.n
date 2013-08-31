@@ -87,6 +87,9 @@ module Main
 				// blur detection
 				, ComputeDiscreteHaarTask()
 				, DetectBlurTask()
+
+				// contrast evaluation
+				, ComputeContrastTask()
 				]
 			, persistData     = true
 			, displayProgress = true

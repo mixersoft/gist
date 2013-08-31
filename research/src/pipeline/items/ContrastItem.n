@@ -1,0 +1,38 @@
+using Nemerle.Collections;
+using PipelineMacro;
+using System.IO;
+using System;
+
+/// <summary>Json items with random owner IDs.</summary>
+[ TaskItemInfo(File(".txt")) ]
+public class ContrastItem : ITaskItem
+{
+	public mutable Values : Hashtable[string, double];
+
+	public Save(path : string) : void
+	{
+		using (writer = File.CreateText(path))
+		{
+			writer.WriteLine(Values.Count);
+			foreach (pair in Values)
+			{
+				def (id, value) = (pair.Key, pair.Value);
+				writer.WriteLine(id);
+				writer.WriteLine(value);
+			}
+		}
+	}
+
+	public Load(_ : string) : void
+	{
+		using (reader = File.OpenText(path))
+		{
+			repeat (int.Parse(reader.ReadLine()))
+			{
+				def id    = reader.ReadLine();
+				def value = double.Parse(reader.ReadLine());
+				Values.Add(id, value);
+			}
+		}
+	}
+}

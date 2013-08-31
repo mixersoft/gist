@@ -1,0 +1,70 @@
+using Nemerle.Collections;
+using Emgu.CV.CvEnum;
+using Emgu.CV.Structure;
+using Emgu.CV;
+using PipelineMacro;
+
+class ComputeContrastTask : ITask
+{
+	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
+	{
+		mutable mappings = [];
+		foreach (item is ImageCollectionItem in items)
+			mappings ::= TaskMapping(this, [ item ], [ ContrastItem(item.Name) ]);
+		mappings;
+	}
+
+	private Compute
+		( [InItem]  images   : ImageCollectionItem
+		, [OutItem] contrast : ContrastItem
+		) : void
+	{
+		contrast.Values = Hashtable();
+		foreach (id in images.ImageIDs)
+		{
+			using (img = Image(images.MakePath(id)))
+				contrast.Values[id] = ComputeContrast(img);
+		}
+	}
+
+	/// <summary>Compute the range of the middle 98% of the intensity distribution.</summary>
+	private ComputeContrast(img : Image[Gray, byte]) : double
+	{
+		def (w, h) = (img.Width, img.Height);
+		def n = 256;
+
+		// compute the intensity histogram
+		def histogram = array(n);
+		for (mutable y = 0; y != h; ++y)
+		for (mutable x = 0; x != w; ++x)
+			++histogram[img[y, x].Intensity :> int];
+
+		// make it cumulative
+		for (mutable i = 1; i != n; ++i)
+			histogram[i] += histogram[i - 1];
+		def total = histogram[n - 1];
+
+		// 1st percentile
+		def loVal = (0.01 * total) :> int;
+		mutable lo = 1;
+		while (histogram[lo] <= loVal)
+			++lo;
+		--lo;
+
+		// 99th percentile
+		def hiVal = (0.99 * total) :> int;
+		mutable hi = n - 2;
+		while (histogram[hi] > hiVal)
+			--hi;
+
+		// linearly interpolate indices for robustness
+		def Interpolate(i, value)
+		{
+			def min = histogram[i];
+			def max = histogram[i + 1];
+
+			i + (value - min) / (max - min);
+		}
+		Interpolate(hi, (0.99 * total)) - Interpolate(lo, (0.01 * total));
+	}
+}
