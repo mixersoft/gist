@@ -3,9 +3,9 @@ using PipelineMacro;
 using System.IO;
 using System;
 
-/// <summary>Contrast value for each image in a dataset.</summary>
+/// <summary>Saturation value for each image in a dataset.</summary>
 [ TaskItemInfo(File(".txt")) ]
-public class ContrastItem : ITaskItem
+public class SaturationItem : ITaskItem
 {
 	public mutable Values : Hashtable[string, double];
 

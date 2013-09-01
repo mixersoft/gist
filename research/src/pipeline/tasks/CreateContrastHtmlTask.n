@@ -1,0 +1,49 @@
+using Nemerle.Collections;
+using PipelineMacro;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
+using System.Text;
+using System;
+
+class CreateContrastHtmlTask : ITask
+{
+	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
+	{
+		mutable mappings = [];
+		foreach ((name, contrast, images, thumbs) in items.Join.[ContrastItem, ImageCollectionItem, ThumbnailCollectionItem]())
+			mappings ::= TaskMapping(this, [ contrast, images, thumbs ], [ ContrastHtmlItem(name) ]);
+		mappings;
+	}
+
+	private Compute
+		( [InItem]  contrast : ContrastItem
+		, [InItem]  images   : ImageCollectionItem
+		, [InItem]  thumbs   : ThumbnailCollectionItem
+		, [OutItem] html     : ContrastHtmlItem
+		) : void
+	{
+		def CopyArray(src)
+		{
+			def dst = array(src.Length);
+			Array.Copy(src, dst, src.Length);
+			dst;
+		}
+
+		def text = StringBuilder();
+		def WriteLine(line) { _ = text.AppendLine(line) }
+
+		def ids = CopyArray(images.ImageIDs).Sort(contrast.Values.get_Item);
+
+		WriteLine("<html><body>");
+		foreach (id in ids)
+		{
+			def img   = Path.Combine(@"..\..", images.MakePath(id));
+			def thumb = Path.Combine(@"..\..", thumbs.MakePath(id));
+			WriteLine($"<a href='$img'><img src='$thumb' /></a> ");
+		}
+		WriteLine("</body></html>");
+
+		html.Text = text.ToString();
+	}
+}

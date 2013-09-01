@@ -90,6 +90,11 @@ module Main
 
 				// contrast evaluation
 				, ComputeContrastTask()
+				, CreateContrastHtmlTask()
+
+				// saturation evaluation
+				, ComputeSaturationTask()
+				, CreateSaturationHtmlTask()
 				]
 			, persistData     = true
 			, displayProgress = true

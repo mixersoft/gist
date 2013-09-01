@@ -1,0 +1,41 @@
+using Nemerle.Collections;
+using Emgu.CV.CvEnum;
+using Emgu.CV.Structure;
+using Emgu.CV;
+using PipelineMacro;
+
+class ComputeSaturationTask : ITask
+{
+	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
+	{
+		mutable mappings = [];
+		foreach (item is ImageCollectionItem in items)
+			mappings ::= TaskMapping(this, [ item ], [ SaturationItem(item.Name) ]);
+		mappings;
+	}
+
+	private Compute
+		( [InItem]  images   : ImageCollectionItem
+		, [OutItem] contrast : SaturationItem
+		) : void
+	{
+		contrast.Values = Hashtable();
+		foreach (id in images.ImageIDs)
+		{
+			using (img = Image(images.MakePath(id)))
+				contrast.Values[id] = ComputeSaturation(img);
+		}
+	}
+
+	/// <summary>Computes the median saturation.</summary>
+	private ComputeSaturation(img : Image[Hsv, byte]) : double
+	{
+		def (w, h) = (img.Width, img.Height);
+
+		mutable total = 0.0;
+		for (mutable y = 0; y != h; ++y)
+		for (mutable x = 0; x != w; ++x)
+			total += img[y, x].Satuation; // [sic!]
+		total / (w * h);
+	}
+}
