@@ -27,7 +27,7 @@ class ComputeSaturationTask : ITask
 		}
 	}
 
-	/// <summary>Computes the median saturation.</summary>
+	/// <summary>Computes the mean saturation.</summary>
 	private ComputeSaturation(img : Image[Hsv, byte]) : double
 	{
 		def (w, h) = (img.Width, img.Height);

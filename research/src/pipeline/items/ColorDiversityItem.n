@@ -1,0 +1,39 @@
+using Nemerle.Collections;
+using PipelineMacro;
+using System.IO;
+using System;
+
+/// <summary>Colour diversity value for each image in a dataset.</summary>
+[ TaskItemInfo(File(".txt")) ]
+public class ColorDiversityItem : ITaskItem
+{
+	public mutable Values : Hashtable[string, int];
+
+	public Save(path : string) : void
+	{
+		using (writer = File.CreateText(path))
+		{
+			writer.WriteLine(Values.Count);
+			foreach (pair in Values)
+			{
+				def (id, value) = (pair.Key, pair.Value);
+				writer.WriteLine(id);
+				writer.WriteLine(value);
+			}
+		}
+	}
+
+	public Load(_ : string) : void
+	{
+		using (reader = File.OpenText(path))
+		{
+			Values = Hashtable();
+			repeat (int.Parse(reader.ReadLine()))
+			{
+				def id    = reader.ReadLine();
+				def value = int.Parse(reader.ReadLine());
+				Values.Add(id, value);
+			}
+		}
+	}
+}

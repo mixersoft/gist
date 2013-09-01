@@ -95,6 +95,10 @@ module Main
 				// saturation evaluation
 				, ComputeSaturationTask()
 				, CreateSaturationHtmlTask()
+
+				// colour diversity
+				, ComputeColorDiversityTask()
+				, CreateColorDiversityHtmlTask()
 				]
 			, persistData     = true
 			, displayProgress = true

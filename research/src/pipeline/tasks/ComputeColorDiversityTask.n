@@ -1,0 +1,52 @@
+using Nemerle.Collections;
+using Emgu.CV.CvEnum;
+using Emgu.CV.Structure;
+using Emgu.CV;
+using PipelineMacro;
+
+class ComputeColorDiversityTask : ITask
+{
+	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
+	{
+		mutable mappings = [];
+		foreach (item is ImageCollectionItem in items)
+			mappings ::= TaskMapping(this, [ item ], [ ColorDiversityItem(item.Name) ]);
+		mappings;
+	}
+
+	private Compute
+		( [InItem]  images    : ImageCollectionItem
+		, [OutItem] diversity : ColorDiversityItem
+		) : void
+	{
+		diversity.Values = Hashtable();
+		foreach (id in images.ImageIDs)
+		{
+			using (img = Image(images.MakePath(id)))
+				diversity.Values[id] = ComputeColorDiversity(img);
+		}
+	}
+
+	/// <summary>Computes the number of hues used in the image.</summary>
+	private ComputeColorDiversity(img : Image[Hsv, byte]) : int
+	{
+		def (w, h) = (img.Width, img.Height);
+
+		def hues = array(180);
+
+		for (mutable y = 0; y != h; ++y)
+		for (mutable x = 0; x != w; ++x)
+			++hues[img[y, x].Hue :> int];
+
+		def threshold = w * h / 180 / 4; // 4 is an arbitrary small positive number
+
+		mutable count = 0;
+		for (mutable i = 0; i != hues.Length; ++i)
+		{
+			when (hues[i] > threshold)
+				++count;
+		}
+
+		count;
+	}
+}
