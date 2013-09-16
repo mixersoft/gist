@@ -20,6 +20,7 @@ public class Parameters
 	[ Parameter(LongName = "color component weight") ] public mutable ColorWeight            : double;
 	[ Parameter(LongName = "day quota") ]              public mutable DayQuota               : int;
 	[ Parameter(LongName = "dominant colors") ]        public mutable DominantColorCount     : int;
+	[ Parameter(LongName = "dominant color method") ]  public mutable DominantColorMethod    : DominantColorMethod;
 	[ Parameter(LongName = "download image prefix") ]  public mutable DownloadImagePrefix    : string;
 	[ Parameter(LongName = "duplicate threshold") ]    public mutable DuplicateThreshold     : int;
 	[ Parameter(LongName = "duplicate hash") ]         public mutable DuplicateHash          : ImageHash.HashMethod;
@@ -73,6 +74,16 @@ public class Parameters
 		| ["median", size] => ImageHash.BlurMethod.Median(int.Parse(size))
 		| ["gaussian", σ]  => ImageHash.BlurMethod.Gaussian(double.Parse(σ))
 		| _ => throw Exception($"Invalid blur format: '$text'.")
+		}
+	}
+
+	private Parse(text : string, value : out DominantColorMethod) : void
+	{
+		value = match(text)
+		{
+		| "k-means"    => DominantColorMethod.KMeans
+		| "mean shift" => DominantColorMethod.MeanShift
+		| _ => throw Exception($"Invalid dominant color method: '$text'.")
 		}
 	}
 

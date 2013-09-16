@@ -8,6 +8,12 @@ using System.Drawing;
 using System.IO;
 using System;
 
+public enum DominantColorMethod
+{
+| KMeans
+| MeanShift
+}
+
 [ Record ]
 class FindDominantColorTask : ITask
 {
@@ -22,25 +28,44 @@ class FindDominantColorTask : ITask
 	private Compute
 		( [InItem]  images : ImageCollectionItem
 		, [OutItem] result : DominantColorItem
-		, dominantColorCount : int
-		, colorSamplingStep  : int
+		, dominantColorMethod : DominantColorMethod
+		, dominantColorCount  : int
+		, colorSamplingStep   : int
 		) : void
 	{
+		def totalClusters = 4;
+
 		def imageCount = images.ImageIDs.Length;
 		result.Colors = array(imageCount, dominantColorCount);
 		for (mutable i = 0; i != imageCount; ++i)
 		{
 			Console.Write('*');
-			def path   = images.MakePath(images.ImageIDs[i]);
-			def colors = ToRgb(GetDominantColors(path, colorSamplingStep, dominantColorCount, 4));
-			for (mutable j = 0; j != dominantColorCount; ++j)
-				result.Colors[i, j] = colors[j];
+			using (image = LoadLabImage(images.MakePath(images.ImageIDs[i])))
+			{
+				def lab = 
+					match (dominantColorMethod)
+					{
+					| KMeans => GetKMeansDominantColors
+						( image
+						, colorSamplingStep
+						, dominantColorCount
+						, totalClusters
+						)
+					| MeanShift => GetMeanShiftDominantColors
+						( image
+						, dominantColorCount
+						)
+					};
+				def colors = ToRgb(lab);
+				for (mutable j = 0; j != dominantColorCount; ++j)
+					result.Colors[i, j] = colors[j];
+			}
 		}
 		Console.WriteLine();
 	}
 
-	private static GetDominantColors
-		( imagePath         : string
+	private static GetKMeansDominantColors
+		( image             : Image[Lab, float]
 		, colorSamplingStep : int
 		, clusterCount      : int
 		, totalClusters     : int
@@ -52,10 +77,7 @@ class FindDominantColorTask : ITask
 		}
 		else
 		{
-			def samples =
-				using (image = LoadLabImage(imagePath))
-					SampleImage(image, colorSamplingStep);
-
+			def samples = SampleImage(image, colorSamplingStep);
 			def labels  = Matrix.[int](samples.Rows, 1);
 			def centers = Matrix.[float](Math.Max(totalClusters, clusterCount), 3);
 
@@ -83,7 +105,16 @@ class FindDominantColorTask : ITask
 		}
 	}
 
-	private static LoadLabImage(imagePath : string) : Image.[Lab, float]
+	private static GetMeanShiftDominantColors
+		( image        : Image[Lab, float]
+		, clusterCount : int
+		) : array[float * float * float]
+	{
+		_ = image;
+		array(clusterCount);
+	}
+
+	private static LoadLabImage(imagePath : string) : Image[Lab, float]
 	{
 		// We should be able to simply use the constructor, but there is a bug in EmguCV.
 		// http://www.emgu.com/bugs/show_bug.cgi?id=81
@@ -104,9 +135,9 @@ class FindDominantColorTask : ITask
 	}
 
 	private static SampleImage
-		( image        : Image.[Lab, float]
+		( image        : Image[Lab, float]
 		, samplingStep : int
-		) : Matrix.[float]
+		) : Matrix[float]
 	{
 		def sampledRows = image.Rows / samplingStep;
 		def sampledCols = image.Cols / samplingStep;

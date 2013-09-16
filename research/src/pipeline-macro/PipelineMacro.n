@@ -192,7 +192,7 @@ namespace PipelineMacro
 		{
 			def CreateParameterInitializer(p)
 			{
-				<[ Parse(map[$(p.LongName:string)], out $(p.SrcName:dyn)) ]>
+				<[ Parse(map[$(p.LongName:string)], out this.$(p.SrcName:dyn)) ]>
 			}
 			<[ decl:
 				public Load(path : string) : void
