@@ -1,11 +1,13 @@
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
 using Emgu.CV;
+using NanoFlannNet;
 using Nemerle.Collections;
 using Nemerle.Utility;
 using PipelineMacro;
 using System.Drawing;
 using System.IO;
+using System.Math;
 using System;
 
 public enum DominantColorMethod
@@ -53,7 +55,6 @@ class FindDominantColorTask : ITask
 						)
 					| MeanShift => GetMeanShiftDominantColors
 						( image
-						, dominantColorCount
 						)
 					};
 				def colors = ToRgb(lab);
@@ -71,15 +72,28 @@ class FindDominantColorTask : ITask
 		, totalClusters     : int
 		) : array[float * float * float]
 	{
-		if (clusterCount == 0)
+		def SampleImage(image, step)
 		{
-			array(0);
+			def sampledRows = image.Rows / step;
+			def sampledCols = image.Cols / step;
+
+			def samples = Matrix.[float](sampledRows * sampledCols, 3);
+			for (mutable c = 0; c < sampledCols; ++c)
+			for (mutable r = 0; r < sampledRows; ++r)
+			{
+				def samplesRow = r * sampledCols + c;
+				def color = image[r * step, c * step];
+				samples[samplesRow, 0] = color.X :> float;
+				samples[samplesRow, 1] = color.Y :> float;
+				samples[samplesRow, 2] = color.Z :> float;
+			}
+			samples;
 		}
-		else
+
+		using (samples = SampleImage(image, colorSamplingStep))
 		{
-			def samples = SampleImage(image, colorSamplingStep);
 			def labels  = Matrix.[int](samples.Rows, 1);
-			def centers = Matrix.[float](Math.Max(totalClusters, clusterCount), 3);
+			def centers = Matrix.[float](Max(totalClusters, clusterCount), 3);
 
 			_ = CvInvoke.cvKMeans2
 				( samples      = samples.Ptr
@@ -105,13 +119,96 @@ class FindDominantColorTask : ITask
 		}
 	}
 
-	private static GetMeanShiftDominantColors
-		( image        : Image[Lab, float]
-		, clusterCount : int
-		) : array[float * float * float]
+	private static GetMeanShiftDominantColors(image : Image[Lab, float]) : array[float * float * float]
 	{
-		_ = image;
-		array(clusterCount);
+		def iterationCount = 10;
+
+		def d = 3; // dimensionality
+		def h = 10.0; // window
+
+		def VectorizeFeatures()
+		{
+			def w = image.Width;
+			def h = image.Height;
+			def vectors = array(d * w * h);
+			mutable k = 0;
+			for (mutable y = 0; y != h; ++y)
+			for (mutable x = 0; x != w; ++x)
+			{
+				for (mutable j = 0; j != d; ++j)
+				{
+					vectors[k] = image[y, x].X; ++k;
+					vectors[k] = image[y, x].Y; ++k;
+					vectors[k] = image[y, x].Z; ++k;
+				}
+			}
+			vectors;
+		}
+
+		def features = VectorizeFeatures();
+		def n = features.Length;
+
+		// g(x) = exp(-xᵀx/2)/(2π)^(-d/2)
+		def normFactor = Pow(2.0 * PI, -0.5 * d);
+		def σ   = h;
+		def var = h * h;
+
+		def modes = array(n, d);
+		def mode  = array(d);
+		System.Array.Copy(features, modes, features.Length);
+
+		def Iterate(tree)
+		{
+			mutable targetsCount = 0l;
+
+			for (mutable i = 0; i != n; ++i)
+			{
+				mutable total;
+				for (mutable k = 0; k != d; ++k)
+					mode[k] = 0.0;
+
+				def target = array(d);
+				for (mutable k = 0; k != d; ++k)
+					target[k] = features[i * d + k];
+				def indices = tree.RadiusSearch(target, σ * 6.0);
+				targetsCount += indices.Length;
+				foreach (index in indices)
+				{
+					def index = index * d;
+
+					mutable w; // K(‖x_i - x_j‖² / var)
+					for (mutable k = 0; k != d; ++k)
+					{
+						def δ = modes[i, k] - features[index + k];
+						w += δ * δ;
+					}
+					w = normFactor * Exp(-0.5 * w * w / var);
+					total += w;
+					for (mutable k = 0; k != d; ++k)
+						mode[k] += features[index + k] * w;
+				}
+				if (total == 0.0)
+				{
+					for (mutable k = 0; k != d; ++k)
+						modes[i, k] = 0.0;
+				}
+				else
+				{
+					for (mutable k = 0; k != d; ++k)
+						modes[i, k] = mode[k] / total;
+				}
+			}
+		}
+
+		using (tree = KdTree(d, features))
+		{
+			repeat (iterationCount)
+				Iterate(tree);
+		}
+
+		//modes;
+
+		array(0);
 	}
 
 	private static LoadLabImage(imagePath : string) : Image[Lab, float]
@@ -132,27 +229,6 @@ class FindDominantColorTask : ITask
 				);
 			lab;
 		}
-	}
-
-	private static SampleImage
-		( image        : Image[Lab, float]
-		, samplingStep : int
-		) : Matrix[float]
-	{
-		def sampledRows = image.Rows / samplingStep;
-		def sampledCols = image.Cols / samplingStep;
-
-		def samples = Matrix.[float](sampledRows * sampledCols, 3);
-		for (mutable c = 0; c < sampledCols; ++c)
-		for (mutable r = 0; r < sampledRows; ++r)
-		{
-			def samplesRow = r * sampledCols + c;
-			def color = image[r * samplingStep, c * samplingStep];
-			samples[samplesRow, 0] = color.X :> float;
-			samples[samplesRow, 1] = color.Y :> float;
-			samples[samplesRow, 2] = color.Z :> float;
-		}
-		samples;
 	}
 
 	private static ToRgb(data : array[float * float * float]) : array[Color]

@@ -46,6 +46,7 @@
 		<DominantColorsRef Include="lib\Emgu.Util.dll"        />
 		<DominantColorsRef Include="lib\Profiling.dll"        />
 		<PipelineMacroRef  Include="Nemerle.Compiler.dll"     />
+		<PipelineRef       Include="lib\NanoFlannNet.dll"     />
 		<PipelineRef       Include="PresentationCore"         />
 		<PipelineRef       Include="System.Core.dll"          />
 		<PipelineRef       Include="System.Drawing.dll"       />

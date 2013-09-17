@@ -1,13 +1,15 @@
 base data url = http://dev.snaphappi.com
 clustering threshold = 0.540193980531857
-color sampling step = 10
 color component weight = 0.00153788994898586
-dominant colors = 2
 download image prefix = 
 image sample size = 10
 image size = 120 120
 simulated timelines = 10
 thumbnail height = 64
+
+color sampling step = 10
+dominant colors = 2
+dominant color method = k-means
 
 duplicate threshold = 14
 duplicate hash = median
