@@ -1,5 +1,6 @@
 using Nemerle.Collections;
 using PipelineMacro;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Math;
@@ -19,6 +20,43 @@ class GraphTimelineTask : ITask
 		, [OutItem] graph : TimelineGraphItem
 		) : void
 	{
+		def GetRanges(photos)
+		{
+			// Keep track of shot ids already seen.
+			// Mark ids that have been seen multiple times.
+			mutable pastIDs = Set();
+			mutable badIDs  = Set();
+
+			// Get all of the ranges.
+			def ranges = List();
+			mutable rangeStart  = photos[0].DateTaken.Ticks;
+			mutable rangeShotID = photos[0].ShotID;
+			for (mutable i = 1; i != photos.Length; ++i)
+			{
+				def photo = photos[i];
+				when (photo.ShotID != "" && photo.ShotID != rangeShotID)
+				{
+					def rangeFinish = photos[i-1].DateTaken.Ticks;
+					ranges.Add(rangeShotID, rangeStart, rangeFinish);
+
+					if (pastIDs.Contains(rangeShotID))
+						badIDs = badIDs.Replace(rangeShotID)
+					else
+						pastIDs = pastIDs.Add(rangeShotID);
+
+					rangeStart  = photo.DateTaken.Ticks;
+					rangeShotID = photo.ShotID;
+				}
+			}
+			when (rangeShotID != "")
+				ranges.Add(rangeShotID, rangeStart, photos[photos.Length - 1].DateTaken.Ticks);
+
+			badIDs.Iter(System.Console.WriteLine);
+
+			// Mark ranges with bad IDs.
+			ranges.Map((id, s, f) => (!badIDs.Contains(id), s, f));
+		}
+
 		def ids = json.Photos.Fold(Set(), (photo, ids) => ids.Replace(photo.OwnerID));
 
 		def (min, max) = json.Photos.Map(photo => photo.DateTaken.Ticks).Fold
@@ -26,30 +64,70 @@ class GraphTimelineTask : ITask
 			, (time, (min, max)) => (Min(min, time), Max(max, time))
 			);
 
-		def (w, h, r) = (1600, ids.Count * 16, 2.5f);
+		def rowH = 24;
+		def (w, h, r) = (1600, ids.Count * rowH, 2.5f);
 
 		graph.Image = Bitmap(w, h);
 		using (gfx = Graphics.FromImage(graph.Image))
 		{
-			gfx.SmoothingMode = SmoothingMode.HighQuality;
+			gfx.SmoothingMode   = SmoothingMode.HighQuality;
+			gfx.PixelOffsetMode = PixelOffsetMode.HighQuality;
 
 			gfx.Clear(Color.White);
 
+			def linePen    = Color.FromArgb(37,  37, 37) |> Pen;
+
+			def colors  = array[(51,  51, 51), (153, 1,  0)].Map(Color.FromArgb);
+			def pens    = colors.Map(Pen);
+			def brushes = colors.Map(SolidBrush);
+
 			foreach (id in ids with i)
 			{
-				def y = 8 + i * 16;
-				gfx.DrawLine(Pens.Black, 0, y, w, y);
 				if (min == max)
 				{
 						def x = 0.5f * w;
-						gfx.FillEllipse(Brushes.Black, x - r, y - r, r + r, r + r);
+						def y = 8.5f + i * rowH;
+
+						gfx.DrawLine(linePen, 0, y, w, y);
+						gfx.FillEllipse(Brushes.Red, x - r, y - r, r + r, r + r);
+
+						def y = 16 + i * rowH;
+						gfx.DrawLine(linePen, 0, y, w, y);
 				}
 				else
 				{
-					foreach (photo when photo.OwnerID == id in json.Photos)
+					def y = 8.5f + i * rowH;
+					gfx.DrawLine(linePen, 0, y, w, y);
+
+					def photos = json.Photos.FilterToArray(photo => photo.OwnerID == id).Sort(_.DateTaken);
+
+					foreach (photo in photos)
 					{
 						def x = w * (photo.DateTaken.Ticks - min) / (max - min);
-						gfx.FillEllipse(Brushes.Black, x - r, y - r, r + r, r + r);
+						gfx.FillEllipse(brushes[0], x - r, y - r, r + r, r + r);
+					}
+
+					def y = 16.5f + i * rowH;
+					gfx.DrawLine(linePen, 0, y, w, y);
+
+					def ranges = GetRanges(photos);
+
+					foreach ((_, s, f) in ranges with i)
+					{
+						def s = w * (s - min) / (max - min);
+						def f = w * (f - min) / (max - min);
+						def f = if (s == f) s + 1 else f;
+						def rect = RectangleF(s, y - r, f - s, r + r);
+						gfx.FillRectangle(brushes[i % 2], rect);
+					}
+					foreach ((good, s, f) when !good in ranges with i)
+					{
+						def s = w * (s - min) / (max - min);
+						def f = w * (f - min) / (max - min);
+						def f = if (s == f) s + 1 else f;
+						def rect = RectangleF(s, y - r, f - s, r + r);
+						rect.Inflate(1.5f, 1.5f);
+						gfx.DrawRectangle(pens[i % 2], rect.Left, rect.Top, rect.Width, rect.Height)
 					}
 				}
 			}

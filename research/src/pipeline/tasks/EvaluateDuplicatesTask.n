@@ -20,17 +20,13 @@ public class EvaluateDuplicatesTask: ITask
 	}
 
 	private Compute
-		( [InItem]  auto  : DuplicatesItem
+		( [InItem]  auto   : DuplicatesItem
 		, [InItem]  refs   : DuplicatesRefItem
 		, [InItem]  json   : JsonItem
 		, [OutItem] result : DuplicatesEvaluationItem
 		) : void
 	{
-		def GetPhotosHash()
-		{
-			json.Photos.Fold(0, (photo, hash) => photo.ID.GetHashCode() ^ hash)
-		}
-		when (refs.Hash != GetPhotosHash())
+		unless (refs.VerifyPhotos(json.Photos))
 			throw InconsistentItemsException("Reference generated from different images.");
 
 		def GatherIndices()

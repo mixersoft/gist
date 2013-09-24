@@ -1,0 +1,57 @@
+using Nemerle.Collections;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Console;
+using System.IO;
+using System;
+
+[ Record ]
+class Photo
+{
+	public ID        : string;
+	public DateTaken : DateTime;
+	public ShotID    : string;
+}
+
+def GetPhotos()
+{
+	def GetInfo(record)
+	{
+		Photo
+			( record["id"] :> string
+			, DateTime.Parse(record["Photo"]["DateTaken"] :> string)
+			, (record["Shot"]["id"] :> string) ?? ""
+			)
+	}
+	using (reader = StreamReader(OpenStandardInput()))
+	{
+		def data = JObject.Parse(reader.ReadToEnd());
+		data["response"]["castingCall"]["CastingCall"]["Auditions"]["Audition"]
+			.Children()
+			.MapToArray(GetInfo)
+	}
+}
+def GetHash(photos)
+{
+	photos.Map(_.ID).Map(_.GetHashCode()).Fold(0, _ ^ _)
+}
+def GetDuplicateIndices(photos)
+{
+	def duplicates = List();
+	mutable prev = null;
+	foreach (id in photos.Map(_.ShotID) with i)
+	{
+		when (id == prev)
+			duplicates.Add(i);
+		prev = id;
+	}
+	duplicates.ToArray();
+}
+
+def photos = GetPhotos().Sort(_.DateTaken);
+
+WriteLine(GetHash(photos));
+
+def duplicates = GetDuplicateIndices(photos);
+WriteLine(string.Join(" ", duplicates.Map(_ + 1).Map(_.ToString())));

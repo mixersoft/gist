@@ -13,6 +13,7 @@
 		<CannySrc          Include="src\canny\*.n"           />
 		<ClusterUiSrc      Include="src\cluster-ui\*.n"      />
 		<DominantColorsSrc Include="src\dominant-colors\*.n" />
+		<ExtractShotsSrc   Include="src\extract-shots\*.n"   />
 		<PipelineMacroSrc  Include="src\pipeline-macro\*.n"  />
 		<PipelineSrc       Include="src\pipeline\*.n"        />
 		<PipelineSrc       Include="src\pipeline\items\*.n"  />
@@ -24,6 +25,7 @@
 		<CannyBin          Include="bin\Canny.exe"          />
 		<ClusterUiBin      Include="bin\ClusterUI.exe"      />
 		<DominantColorsBin Include="bin\DominantColors.exe" />
+		<ExtractShotsBin   Include="bin\ExtractShots.exe"   />
 		<PipelineBin       Include="bin\Pipeline.exe"       />
 		<PipelineMacroBin  Include="bin\PipelineMacro.dll"  />
 		<PipelineTestBin   Include="bin\PipelineTest.dll"   />
@@ -45,6 +47,7 @@
 		<DominantColorsRef Include="lib\Emgu.CV.dll"          />
 		<DominantColorsRef Include="lib\Emgu.Util.dll"        />
 		<DominantColorsRef Include="lib\Profiling.dll"        />
+		<ExtractShotsRef   Include="lib\Newtonsoft.Json.dll"  />
 		<PipelineMacroRef  Include="Nemerle.Compiler.dll"     />
 		<PipelineRef       Include="lib\NanoFlannNet.dll"     />
 		<PipelineRef       Include="PresentationCore"         />
@@ -80,7 +83,7 @@
 
 	<Target
 		Name             = "All"
-		DependsOnTargets = "Canny; Pipeline; PipelineTest; ClusterUI; PrettyPrint; DominantColors; Selector"
+		DependsOnTargets = "Canny; Pipeline; PipelineTest; ClusterUI; PrettyPrint; DominantColors; Selector; ExtractShots"
 		/>
 
 	<Target
@@ -222,6 +225,24 @@
 			Platform             = "$(Platform)"
 			References           = "@(SelectorRef)"
 			Sources              = "@(SelectorSrc)"
+			TargetType           = "exe"
+			/>
+	</Target>
+
+	<Target
+		Name             = "ExtractShots"
+		Inputs           = "@(ExtractShotsSrc)"
+		Outputs          = "@(ExtractShotsBin)"
+		DependsOnTargets = "Dependencies"
+		>
+		<ncc
+			DefineConstants      = "$(Defines)"
+			EmitDebugInformation = "true"
+			NoLogo               = "true"
+			OutputAssembly       = "@(ExtractShotsBin)"
+			Platform             = "$(Platform)"
+			References           = "@(ExtractShotsRef)"
+			Sources              = "@(ExtractShotsSrc)"
 			TargetType           = "exe"
 			/>
 	</Target>

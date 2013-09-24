@@ -1,5 +1,6 @@
 using Nemerle.Collections;
 using PipelineMacro;
+using System.Collections.Generic;
 using System.IO;
 using System;
 
@@ -26,5 +27,10 @@ public class DuplicatesRefItem : ITaskItem
 			( array[' ', '\t', '\r', '\n']
 			, StringSplitOptions.RemoveEmptyEntries
 			).Map(int.Parse).Map(_ - 1);
+	}
+
+	public VerifyPhotos(ids : IEnumerable[JsonIO.PhotoInfo]) : bool
+	{
+		Hash == ids.Fold(0, (id, hash) => id.GetHashCode() ^ hash)
 	}
 }
