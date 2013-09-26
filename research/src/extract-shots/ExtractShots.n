@@ -32,26 +32,31 @@ def GetPhotos()
 			.MapToArray(GetInfo)
 	}
 }
-def GetHash(photos)
+def GetBoundaries(photos)
 {
-	photos.Map(_.ID).Map(_.GetHashCode()).Fold(0, _ ^ _)
-}
-def GetDuplicateIndices(photos)
-{
-	def duplicates = List();
-	mutable prev = null;
-	foreach (id in photos.Map(_.ShotID) with i)
+	def GetBoundary(a, b)
 	{
-		when (id == prev)
-			duplicates.Add(i);
-		prev = id;
+		def (a, b) = (a.DateTaken.Ticks, b.DateTaken.Ticks);
+		DateTime(a + (b - a) / 2L)
 	}
-	duplicates.ToArray();
+
+	def boundaries = List();
+	mutable prev = photos[0];
+	foreach (photo in photos)
+	{
+		when (photo.ShotID != prev.ShotID)
+			GetBoundary(photo, prev) |> boundaries.Add;
+		prev = photo;
+	}
+	boundaries.ToArray();
 }
+def ToUnixTime(dateTime)
+{
+    //(dateTime - DateTime(1970, 1, 1).ToLocalTime()).TotalSeconds
+    (dateTime - DateTime(1970, 1, 1)).TotalSeconds :> long
+}
+
 
 def photos = GetPhotos().Sort(_.DateTaken);
-
-WriteLine(GetHash(photos));
-
-def duplicates = GetDuplicateIndices(photos);
-WriteLine(string.Join(" ", duplicates.Map(_ + 1).Map(_.ToString())));
+foreach (boundary in GetBoundaries(photos))
+	WriteLine(ToUnixTime(boundary));

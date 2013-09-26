@@ -15,7 +15,7 @@ class LoadReferenceEventsTask : ITask
 			items[name] = path;
 			TaskMapping(this, [], [ EventRefItem(name) ]);
 		}
-		Directory.GetFiles(@"data\events", "*.txt").MapToList(CreateMapping);
+		Directory.GetFiles(@"data\events-ref", "*.txt").MapToList(CreateMapping);
 	}
 
 	private Compute([OutItem] eventItem : EventRefItem) : void
