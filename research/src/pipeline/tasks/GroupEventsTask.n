@@ -4,6 +4,12 @@ using System.Collections.Generic;
 using System.Math;
 using System;
 
+public enum EventGroupMethod
+{
+| Fixed
+| Adaptive
+}
+
 class GroupEventsTask : ITask
 {
 	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
@@ -23,6 +29,7 @@ class GroupEventsTask : ITask
 		, fineEventSpacing    : double
 		, coarseEventSpacing  : double
 		, dayQuota            : int
+		, eventGroupMethod    : EventGroupMethod
 		) : void
 	{
 		// returns the list of indices at which new groups begin
@@ -63,7 +70,7 @@ class GroupEventsTask : ITask
 				result.Add(i);
 			result.ToArray();
 		}
-		def FindEvents(indices, times, spacing)
+		def FindEventsFixed(indices, times, spacing)
 		{
 			def IsFarFromNext(i)
 			{
@@ -73,7 +80,49 @@ class GroupEventsTask : ITask
 			}
 			def events = List();
 			def e = List();
-			for (mutable i = 0; i < indices.Length; ++i)
+			for (mutable i = 0; i != indices.Length; ++i)
+			{
+				e.Add(indices[i]);
+				when (i + 1 == indices.Length || IsFarFromNext(i))
+				{
+					events.Add(e.ToArray());
+					e.Clear();
+				}
+			}
+			events.ToArray();
+		}
+		def FindEventsAdaptive(indices, times, threshold)
+		{
+			// compare current gap with the average of nearby gaps
+			// log(g_i) ≥ K + Σ(log(g_j), j є i - wnd … i + wnd) / (2·d + 1)
+			//
+			// J. Platt, M. Czerwinski, and B. Field, “Phototoc: Automatic clustering for
+			// browsing personal photographs,” … , Communications and Signal …, 2003.
+			def IsFarFromNext(i)
+			{
+				mutable total = 0.0;
+				mutable count = 0;
+
+				def wnd = 4;
+				for (mutable j = i - wnd; j <= i + wnd; ++j)
+				{
+					when (j >= 0 && j + 1 < indices.Length)
+					{
+						def curr = times[indices[j]];
+						def next = times[indices[j+1]];
+						total += Log(next - curr);
+						++count;
+					}
+				}
+
+				def curr = times[indices[i]];
+				def next = times[indices[i+1]];
+				Log(next - curr) > threshold + total / count;
+			}
+
+			def events = List();
+			def e = List();
+			for (mutable i = 0; i != indices.Length; ++i)
 			{
 				e.Add(indices[i]);
 				when (i + 1 == indices.Length || IsFarFromNext(i))
@@ -164,26 +213,37 @@ class GroupEventsTask : ITask
 		def window             = kdeWindow * ticksPerDay;
 		def groupSpacing       = 0.1 * window;
 
+		// retrieve a sorted array of photo times
+		def times = json.Photos.MapToArray(p => p.DateTaken.Ticks :> double);
+		Array.Sort(times);
 
-		def dates = json.Photos.MapToArray(_.DateTaken);
-		Array.Sort(dates);
-
-		def times = dates.Map(date => date.Ticks :> double);
-
+		// use mean shift to group events by day
 		def modes = MeanShift(times, window);
 
 		events.DayGroups = Aggregate(modes, groupSpacing);
 		events.DayTimes  = AverageGroup(modes, events.DayGroups);
 
+		// determine which days to consider as noise
 		def (noiseTimes, noiseDays) = FindNoise(events.DayGroups);
 		events.NoiseDays = noiseDays;
 
 		def filteredTimes = FilterData($[1..times.Length-1].ToArray(), noiseTimes);
 
-		def coarseGroups = FindEvents(filteredTimes, times, coarseEventSpacing);
+		// group non-noise photos
+		match (eventGroupMethod)
+		{
+		| Fixed =>
+			def coarseGroups = FindEventsFixed(filteredTimes, times, coarseEventSpacing);
 
-		def fineGroups = coarseGroups.Map(FindEvents(_, times, fineEventSpacing));
+			def fineGroups = coarseGroups.Map(FindEventsFixed(_, times, fineEventSpacing));
 
-		events.Groups = fineGroups;
+			events.Groups = fineGroups;
+		| Adaptive =>
+			def coarseGroups = FindEventsAdaptive(filteredTimes, times, coarseEventSpacing);
+
+			def fineGroups = coarseGroups.Map(FindEventsAdaptive(_, times, fineEventSpacing));
+
+			events.Groups = fineGroups;
+		}
 	}
 }

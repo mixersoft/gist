@@ -19,6 +19,7 @@ hashed image blur = gaussian 1
 hashed image bpp = 2
 hashed image size = 8
 
+event group method = fixed
 day quota = 6
 coarse event spacing = 1
 fine event spacing = 0.5

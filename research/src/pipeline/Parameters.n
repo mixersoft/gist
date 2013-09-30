@@ -24,6 +24,7 @@ public class Parameters
 	[ Parameter(LongName = "download image prefix") ]  public mutable DownloadImagePrefix    : string;
 	[ Parameter(LongName = "duplicate threshold") ]    public mutable DuplicateThreshold     : int;
 	[ Parameter(LongName = "duplicate hash") ]         public mutable DuplicateHash          : ImageHash.HashMethod;
+	[ Parameter(LongName = "event group method") ]     public mutable EventGroupMethod       : EventGroupMethod;
 	[ Parameter(LongName = "fine event spacing") ]     public mutable FineEventSpacing       : double;
 	[ Parameter(LongName = "hash method") ]            public mutable HashMethod             : ImageHash.HashMethod;
 	[ Parameter(LongName = "hashed image blur") ]      public mutable HashedImageBlur        : ImageHash.BlurMethod;
@@ -79,11 +80,21 @@ public class Parameters
 
 	private Parse(text : string, value : out DominantColorMethod) : void
 	{
-		value = match(text)
+		value = match (text)
 		{
 		| "k-means"    => DominantColorMethod.KMeans
 		| "mean shift" => DominantColorMethod.MeanShift
 		| _ => throw Exception($"Invalid dominant color method: '$text'.")
+		}
+	}
+
+	private Parse(text : string, value : out EventGroupMethod) : void
+	{
+		value = match (text)
+		{
+		| "fixed"    => EventGroupMethod.Fixed
+		| "adaptive" => EventGroupMethod.Adaptive
+		| _ => throw Exception($"Invalid event group method: '$text'.")
 		}
 	}
 
