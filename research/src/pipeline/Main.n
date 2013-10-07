@@ -79,7 +79,6 @@ module Main
 				, AlignTimelinesTask()
 
 				// event grouping
-				, LoadReferenceEventsTask()
 				, GroupEventsTask()
 				, GraphEventsTask()
 				, CreateEventGroupJsonTask()

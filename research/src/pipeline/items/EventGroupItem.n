@@ -6,7 +6,7 @@ using System;
 [ TaskItemInfo(File(".txt")) ]
 public class EventGroupItem : ITaskItem
 {
-	public mutable Groups    : array[array[array[int]]];
+	public mutable Groups    : array[DateTime * DateTime];
 	public mutable DayGroups : array[int];
 	public mutable DayTimes  : array[double];
 	public mutable NoiseDays : Set[int];
@@ -18,11 +18,10 @@ public class EventGroupItem : ITaskItem
 		using (writer = File.CreateText(path))
 		{
 			writer.WriteLine(Groups.Length);
-			foreach (coarse in Groups)
+			foreach ((first, last) in Groups)
 			{
-				writer.WriteLine(coarse.Length);
-				foreach (fine in coarse)
-					writer.WriteLine(Join(fine));
+				writer.WriteLine(first.Ticks);
+				writer.WriteLine(last.Ticks);
 			}
 
 			writer.WriteLine(Join(DayGroups));
@@ -47,9 +46,9 @@ public class EventGroupItem : ITaskItem
 			Groups = array(int.Parse(reader.ReadLine()));
 			for (mutable i = 0; i != Groups.Length; ++i)
 			{
-				Groups[i] = array(int.Parse(reader.ReadLine()));
-				for (mutable j = 0; j != Groups[i].Length; ++j)
-					Groups[i][j] = SplitInt(reader.ReadLine());
+				def first = long.Parse(reader.ReadLine());
+				def last  = long.Parse(reader.ReadLine());
+				Groups[i] = (DateTime(first), DateTime(last));
 			}
 
 			DayGroups = SplitInt(reader.ReadLine());

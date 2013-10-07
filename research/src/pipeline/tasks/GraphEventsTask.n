@@ -1,21 +1,21 @@
 using Nemerle.Collections;
 using PipelineMacro;
+using System.Array;
 using System.Collections.Generic;
 using System.Drawing.Drawing2D;
 using System.Drawing;
 using System.Math;
-using System;
 
 class GraphEventsTask : ITask
 {
 	public MapItems(items : list[ITaskItem]) : list[TaskMapping]
 	{
 		mutable mappings = [];
-		foreach ((name, events, json, refs, thumbs) in items.Join.[EventGroupItem, JsonItem, EventRefItem, ThumbnailCollectionItem]())
+		foreach ((name, events, json, thumbs) in items.Join.[EventGroupItem, JsonItem, ThumbnailCollectionItem]())
 		{
 			mappings ::= TaskMapping
 				( this
-				, [ events, json, refs, thumbs ]
+				, [ events, json, thumbs ]
 				, [ EventGraphItem(name) ]
 				);
 		}
@@ -23,22 +23,20 @@ class GraphEventsTask : ITask
 	}
 
 	private Compute
-		( [InItem]  events    : EventGroupItem
-		, [InItem]  json      : JsonItem
-		, [InItem]  refEvents : EventRefItem
-		, [InItem]  thumbs    : ThumbnailCollectionItem
-		, [OutItem] graph     : EventGraphItem
-		, kdeWindow           : double
-		, msKernel            : MeanShiftKernel
-		, thumbHeight         : int
+		( [InItem]  events : EventGroupItem
+		, [InItem]  json   : JsonItem
+		, [InItem]  thumbs : ThumbnailCollectionItem
+		, [OutItem] graph  : EventGraphItem
+		, kdeWindow        : double
+		, msKernel         : MeanShiftKernel
+		, thumbHeight      : int
 		) : void
 	{
-		def (w, h, y) = (1600, 128, 64);
-		def dataY        = 64;
-		def dayEventY    = 80;
-		def coarseEventY = 96;
-		def fineEventY   = 112;
-		def thumbLimit   = 12;
+		def (w, h, y) = (1600, 112, 64);
+		def dataY      = 64;
+		def dayEventY  = 80;
+		def eventY     = 96;
+		def thumbLimit = 12;
 
 		def DrawDistribution(bmp, times, window)
 		{
@@ -120,22 +118,11 @@ class GraphEventsTask : ITask
 
 			def brush = Color.FromArgb(51, 51, 51) |> SolidBrush;
 
-			foreach (e in events)
+			foreach ((s, f) in events)
 			{
-				def s = (((e[0]            - min) / (max - min) * w) :> float);
-				def f = (((e[e.Length - 1] - min) / (max - min) * w) :> float);
+				def s = (((s.Ticks - min) / (max - min) * w) :> float);
+				def f = (((f.Ticks - min) / (max - min) * w) :> float);
 				gfx.FillRectangle(brush, s, y - r, f - s, r + r);
-			}
-		}
-		def DrawGrid(gfx, times, (min, max), color)
-		{
-			using (pen = Pen(color))
-			{
-				foreach (t in times)
-				{
-					def x = ((t - min) / (max - min) * w) :> float;
-					gfx.DrawLine(pen, x, 0, x, h);
-				}
 			}
 		}
 		def DrawTicks(gfx, data, y, groups, empties, (min, max))
@@ -159,7 +146,7 @@ class GraphEventsTask : ITask
 					gfx.DrawEllipse(pens[groupIndex % 2], x - r2, y - r2, r2 + r2, r2 + r2);
 			}
 		}
-		def DrawThumbs(gfx, data, events, (min, max))
+		def DrawThumbs(gfx, times, events, (min, max))
 		{
 			def GetThumbIndices(begin, end)
 			{
@@ -181,12 +168,14 @@ class GraphEventsTask : ITask
 				selection;
 			}
 
-			foreach (e in events)
+			foreach ((s, f) in events)
 			{
-				def begin = Array.IndexOf(data, e[0]);
-				def end   = Array.IndexOf(data, e[e.Length - 1]);
-				def s = ((e[0]            - min) / (max - min) * w);
-				def f = ((e[e.Length - 1] - min) / (max - min) * w);
+				def s = s.Ticks :> double;
+				def f = f.Ticks :> double;
+				def begin = FindIndex     (times, _ >= s);
+				def end   = FindLastIndex (times, _ <= f);
+				def s = ((s - min) / (max - min) * w);
+				def f = ((f - min) / (max - min) * w);
 				def m = (s + 0.5 * (f - s)) :> float;
 				foreach (i in GetThumbIndices(begin, end) with n)
 				{
@@ -199,34 +188,20 @@ class GraphEventsTask : ITask
 				}
 			}
 		}
-		def Flatten['T](arr : array[array['T]]) : array['T]
-		{
-			def result = array(arr.Map(_.Length).Fold(0, _ + _));
-			mutable i = 0;
-			foreach (group in arr)
-			{
-				group.CopyTo(result, i);
-				i += group.Length;
-			}
-			result;
-		}
 
 		def ticksPerDay = 24 * 60 * 60 * 10_000_000;
 		def window      = kdeWindow * ticksPerDay;
 
 		def dates = json.Photos.MapToArray(_.DateTaken);
-		Array.Sort(dates);
+		Sort(dates);
 
 		def times = dates.Map(date => date.Ticks :> double);
 		def range = (times[0], times[times.Length - 1]);
 
-		def refEvents = refEvents.Dates.Map(date => date.Ticks :> double);
-
-		def coarseGroups = events.Groups.Map(Flatten).Map(g => g.Map(i => times[i]));
-		def fineGroups   = Flatten(events.Groups).Map(g => g.Map(i => times[i]));
-		def dayGroups    = events.DayGroups;
-		def dayTimes     = events.DayTimes;
-		def noiseDays    = events.NoiseDays;
+		def groups    = events.Groups;
+		def dayGroups = events.DayGroups;
+		def dayTimes  = events.DayTimes;
+		def noiseDays = events.NoiseDays;
 
 		def dayTimeGroups = $[1..dayTimes.Length].ToArray();
 
@@ -237,17 +212,14 @@ class GraphEventsTask : ITask
 
 			gfx.Clear(Color.White);
 
-			DrawGrid(gfx, refEvents, range, Color.FromArgb(194, 194, 194));
-
 			DrawDistribution(graph.Image, times, window);
 
 			DrawTicks(gfx, times,    dataY,        dayGroups,     Set(),     range);
 			DrawTicks(gfx, dayTimes, dayEventY,    dayTimeGroups, noiseDays, range);
 
-			DrawEvents(gfx, coarseGroups, coarseEventY, range);
-			DrawEvents(gfx, fineGroups,   fineEventY,   range);
+			DrawEvents(gfx, groups, eventY, range);
 
-			DrawThumbs(gfx, times, fineGroups, range);
+			DrawThumbs(gfx, times, groups, range);
 		}
 	}
 }

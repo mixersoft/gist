@@ -21,15 +21,14 @@ class GroupEventsTask : ITask
 	}
 
 	private Compute
-		( [InItem]  json      : JsonItem
-		, [OutItem] events    : EventGroupItem
-		, kdeWindow           : double
-		, msIterationCount    : int
-		, msKernel            : MeanShiftKernel
-		, fineEventSpacing    : double
-		, coarseEventSpacing  : double
-		, dayQuota            : int
-		, eventGroupMethod    : EventGroupMethod
+		( [InItem]  json   : JsonItem
+		, [OutItem] events : EventGroupItem
+		, kdeWindow        : double
+		, msIterationCount : int
+		, msKernel         : MeanShiftKernel
+		, eventSpacing     : double
+		, dayQuota         : int
+		, eventGroupMethod : EventGroupMethod
 		) : void
 	{
 		// returns the list of indices at which new groups begin
@@ -149,6 +148,14 @@ class GroupEventsTask : ITask
 			}
 			(noiseData, noiseGroups);
 		}
+		def EventToSpan(indices, times)
+		{
+			def ToTime(i)
+			{
+				DateTime(times[indices[i]] :> long)
+			}
+			(ToTime(0), ToTime(indices.Length - 1))
+		}
 		def MeanShift(data, window)
 		{
 			def hFactor = 1.0 / (window * window);
@@ -207,11 +214,10 @@ class GroupEventsTask : ITask
 			modes;
 		}
 
-		def ticksPerDay        = 24 * 60 * 60 * 10_000_000;
-		def coarseEventSpacing = coarseEventSpacing * ticksPerDay;
-		def fineEventSpacing   = fineEventSpacing * ticksPerDay;
-		def window             = kdeWindow * ticksPerDay;
-		def groupSpacing       = 0.1 * window;
+		def ticksPerDay  = 24 * 60 * 60 * 10_000_000;
+		def eventSpacing = eventSpacing * ticksPerDay;
+		def window       = kdeWindow * ticksPerDay;
+		def groupSpacing = 0.1 * window;
 
 		// retrieve a sorted array of photo times
 		def times = json.Photos.MapToArray(p => p.DateTaken.Ticks :> double);
@@ -230,20 +236,11 @@ class GroupEventsTask : ITask
 		def filteredTimes = FilterData($[1..times.Length-1].ToArray(), noiseTimes);
 
 		// group non-noise photos
-		match (eventGroupMethod)
-		{
-		| Fixed =>
-			def coarseGroups = FindEventsFixed(filteredTimes, times, coarseEventSpacing);
-
-			def fineGroups = coarseGroups.Map(FindEventsFixed(_, times, fineEventSpacing));
-
-			events.Groups = fineGroups;
-		| Adaptive =>
-			def coarseGroups = FindEventsAdaptive(filteredTimes, times, coarseEventSpacing);
-
-			def fineGroups = coarseGroups.Map(FindEventsAdaptive(_, times, fineEventSpacing));
-
-			events.Groups = fineGroups;
-		}
+		events.Groups =
+			match (eventGroupMethod)
+			{
+			| Fixed    => FindEventsFixed    (filteredTimes, times, eventSpacing).Map(EventToSpan(_, times))
+			| Adaptive => FindEventsAdaptive (filteredTimes, times, eventSpacing).Map(EventToSpan(_, times))
+			}
 	}
 }

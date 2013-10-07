@@ -10,7 +10,7 @@ public class EventGroupJsonItem : ITaskItem
 
 	public Save(path : string) : void
 	{
-		JsonIO.WriteEvents(path, Events, Noise, ID);
+		JsonIO.WriteEvents(path, Events, ID);
 	}
 
 	public Load(_path : string) : void

@@ -1,5 +1,6 @@
 using Nemerle.Collections;
 using PipelineMacro;
+using System.Array;
 using System.Collections.Generic;
 using System.IO;
 
@@ -25,59 +26,19 @@ public class CreateEventGroupJsonTask : ITask
 		, [OutItem] events : EventGroupJsonItem
 		) : void
 	{
-		def MakeEventInfo(s, f, count, children)
+		def MakeGroupEventInfo(first, last)
 		{
+			
+			def firstIndex = FindIndex     (json.Photos, p => p.DateTaken >= first);
+			def lastIndex  = FindLastIndex (json.Photos, p => p.DateTaken <= last);
 			JsonIO.EventInfo
-				( firstPhotoID = s.ID
-				, photoCount   = count
-				, beginDate    = s.DateTaken
-				, endDate      = f.DateTaken
-				, children     = children
+				( firstPhotoID = json.Photos[firstIndex].ID
+				, photoCount   = lastIndex - firstIndex + 1
+				, beginDate    = first
+				, endDate      = last
 				);
 		}
-		def MakeCoarseGroupEventInfo(fineGroups : array[array[int]])
-		{
-			def First ['T] (arr : array['T]) { arr[0] }
-			def Last  ['T] (arr : array['T]) { arr[arr.Length - 1] }
-			def MakeFine(group : array[int])
-			{
-				MakeEventInfo
-					( json.Photos[First(group)]
-					, json.Photos[Last(group)]
-					, group.Length
-					, array(0)
-					)
-			}
-			MakeEventInfo
-				( json.Photos[First(First(fineGroups))]
-				, json.Photos[Last(Last(fineGroups))]
-				, fineGroups.Map(_.Length).Fold(0, _ + _ )
-				, fineGroups.Map(MakeFine)
-				)
-		}
-		def MakeNoiseEventInfo(separators : array[int], noise : Set[int])
-		{
-			def events = List();
-			mutable begin = 0;
-			foreach (end in separators with i)
-			{
-				when (noise.Contains(i))
-				{
-					events.Add
-						( MakeEventInfo
-							( json.Photos[begin]
-							, json.Photos[end-1]
-							, end - begin
-							, array(0)
-							)
-						)
-				}
-				begin = end;
-			}
-			events.ToArray();
-		}
-		events.Events = groups.Groups.Map(MakeCoarseGroupEventInfo);
-		events.Noise  = MakeNoiseEventInfo(groups.DayGroups, groups.NoiseDays);
+		events.Events = groups.Groups.Map(MakeGroupEventInfo);
 		events.ID     = json.ID;
 	}
 }

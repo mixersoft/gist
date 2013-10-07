@@ -170,14 +170,11 @@ public module JsonIO
 		public PhotoCount   : int;
 		public BeginDate    : DateTime;
 		public EndDate      : DateTime;
-
-		public Children : array[EventInfo];
 	}
 
 	public WriteEvents
 		( path   : string
 		, events : array[EventInfo]
-		, noise  : array[EventInfo]
 		, id     : uint
 		) : void
 	{
@@ -199,15 +196,6 @@ public module JsonIO
 				writer.WritePropertyName("EndDate");
 				writer.WriteValue(e.EndDate);
 
-				when (e.Children.Length > 0)
-				{
-					writer.WritePropertyName("Children");
-					writer.WriteStartArray();
-					foreach (child in e.Children)
-						WriteEvent(child);
-					writer.WriteEnd();
-				}
-
 				writer.WriteEnd();
 			}
 
@@ -221,12 +209,6 @@ public module JsonIO
 				writer.WritePropertyName("Events");
 				writer.WriteStartArray();
 				foreach (e in events)
-					WriteEvent(e);
-				writer.WriteEnd();
-
-				writer.WritePropertyName("Noise");
-				writer.WriteStartArray();
-				foreach (e in noise)
 					WriteEvent(e);
 				writer.WriteEnd();
 			}

@@ -21,8 +21,7 @@ hashed image size = 8
 
 event group method = fixed
 day quota = 6
-coarse event spacing = 1
-fine event spacing = 0.5
+event spacing = 1
 kde window = 0.25
 mean shift iterations = 100
 mean shift kernel = gaussian
