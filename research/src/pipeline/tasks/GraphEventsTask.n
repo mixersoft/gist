@@ -38,6 +38,35 @@ class GraphEventsTask : ITask
 		def eventY     = 96;
 		def thumbLimit = 12;
 
+		def DrawDateGrid(gfx, dates, (min : double, max : double))
+		{
+			def DrawLine(pen, date)
+			{
+				def x = Round(w * (date.Ticks - min) / (max - min)) :> float;
+				gfx.DrawLine(pen, x, 0, x, h);
+			}
+
+			def yPen = Pen(Color.FromArgb(232, 232, 232), 4.0f); // year
+			def sPen = Pen(Color.FromArgb(232, 232, 232), 2.0f); // season
+			def mPen = Pen(Color.FromArgb(232, 232, 232), 1.0f); // month
+
+			def (min, max) = (dates[0], dates[dates.Length - 1]);
+
+			mutable x = System.DateTime(min.Year, min.Month, 1);
+			when (x < min)
+				x = x.AddMonths(1);
+			while (x < max)
+			{
+				def pen = match(x.Month)
+				{
+				| 1                 => yPen // year
+				| m when m % 3 == 0 => sPen // season
+				| _                 => mPen // month
+				}
+				DrawLine(pen, x);
+				x = x.AddMonths(1);
+			}
+		}
 		def DrawDistribution(bmp, times, window)
 		{
 			def hFactor = 1.0 / (window * window);
@@ -275,6 +304,8 @@ class GraphEventsTask : ITask
 			gfx.SmoothingMode = SmoothingMode.AntiAlias;
 
 			gfx.Clear(Color.White);
+
+			DrawDateGrid(gfx, dates, range);
 
 			DrawDistribution(graph.Image, times, window);
 
