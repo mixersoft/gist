@@ -32,7 +32,7 @@ class GraphEventsTask : ITask
 		, thumbHeight      : int
 		) : void
 	{
-		def (w, h, y) = (1600, 112, 64);
+		def (w, h, distH) = (1600, 128, 64);
 		def dataY      = 64;
 		def dayEventY  = 80;
 		def eventY     = 96;
@@ -91,9 +91,9 @@ class GraphEventsTask : ITask
 				def foreColor = Color.FromArgb(255, 51, 0);
 				for (mutable pixelX = 0; pixelX != w; ++pixelX)
 				{
-					def value = (y - 1) * cols[pixelX] / max;
-					def h = y - Floor(value) :> int;
-					for (mutable pixelY = h; pixelY != y; ++pixelY)
+					def value = (distH - 1) * cols[pixelX] / max;
+					def h = distH - Floor(value) :> int;
+					for (mutable pixelY = h; pixelY != distH; ++pixelY)
 						bmp.SetPixel(pixelX, pixelY, foreColor);
 					// antialiasing
 					def δ = value - Floor(value);
@@ -148,6 +148,18 @@ class GraphEventsTask : ITask
 		}
 		def DrawThumbs(gfx, times, events, (min, max))
 		{
+			def bottom = h + (thumbHeight + 1) * thumbLimit;
+
+			def AppendThumbSizes(indices)
+			{
+				def sizes = List();
+				foreach (i in indices)
+				{
+					using (bmp = Bitmap(thumbs.MakePath(json.Photos[i].ID)))
+						sizes.Add(i, bmp.Width, bmp.Height);
+				}
+				sizes.ToArray();
+			}
 			def GetThumbIndices(begin, end)
 			{
 				def selection = List();
@@ -167,25 +179,77 @@ class GraphEventsTask : ITask
 				}
 				selection;
 			}
+			def LayOutThumbs(rect, thumbSizes)
+			{
+				def (xSpace, ySpace) = (4, 4);
 
-			foreach ((s, f) in events)
+				def coords = List();
+
+				mutable x = rect.Left;
+				mutable y = rect.Top;
+				foreach ((i, w, _) in thumbSizes)
+				{
+					// if out of bounds, start a new row
+					when (x + w >= rect.Right)
+						(x, y) = (rect.Left, y + thumbHeight + ySpace);
+					coords.Add(i, x, y);
+					// continue the row
+					x += w + xSpace;
+				}
+
+				coords.ToArray();
+			}
+
+			def DrawRegion(brush, eventS, eventF, groupS, groupF)
+			{
+				def eh = eventY + 2.5f;
+
+				def polygon = array
+					[ PointF(groupS, bottom), PointF(groupS, h)
+					, PointF(eventS, eh),     PointF(eventF, eh)
+					, PointF(groupF, h),      PointF(groupF, bottom)
+					];
+				gfx.FillPolygon(brush, polygon);
+			}
+			def DrawThumbs(layout)
+			{
+				foreach ((i, x, y) in layout)
+				{
+					using (bmp = Bitmap(thumbs.MakePath(json.Photos[i].ID)))
+						gfx.DrawImage(bmp, x, y);
+				}
+			}
+
+			def brush1 = Color.FromArgb(232, 232, 232) |> SolidBrush;
+			def brush2 = Color.FromArgb(51,  51,  51)  |> SolidBrush;
+
+			foreach ((s, f) in events with i)
 			{
 				def s = s.Ticks :> double;
 				def f = f.Ticks :> double;
-				def begin = FindIndex     (times, _ >= s);
-				def end   = FindLastIndex (times, _ <= f);
-				def s = ((s - min) / (max - min) * w);
-				def f = ((f - min) / (max - min) * w);
-				def m = (s + 0.5 * (f - s)) :> float;
-				foreach (i in GetThumbIndices(begin, end) with n)
-				{
-					using (bmp = Bitmap(thumbs.MakePath(json.Photos[i].ID)))
-					{
-						def x = m - 0.5f * bmp.Width;
-						def y = h + n * (thumbHeight + 1);
-						gfx.DrawImage(bmp, x, y);
-					}
-				}
+
+				def eventS = (((s - min) / (max - min) * w) :> float);
+				def eventF = (((f - min) / (max - min) * w) :> float);
+
+				def groupS = (w * (i + 0) / events.Length) :> float;
+				def groupF = (w * (i + 1) / events.Length) :> float;
+
+				def brush = if (i % 2 == 0) brush1 else brush2;
+				DrawRegion(brush, eventS, eventF, groupS, groupF);
+
+				def indices = GetThumbIndices
+					( begin = FindIndex     (times, _ >= s)
+					, end   = FindLastIndex (times, _ <= f)
+					);
+
+				def rect = RectangleF
+					( x      = groupS
+					, y      = h
+					, width  = groupF - groupS
+					, height = bottom - h
+					);
+				rect.Inflate(-2.0f, -2.0f);
+				LayOutThumbs(rect, AppendThumbSizes(indices)) |> DrawThumbs;
 			}
 		}
 
@@ -208,7 +272,7 @@ class GraphEventsTask : ITask
 		graph.Image = Bitmap(w, h + (thumbHeight + 1) * thumbLimit);
 		using (gfx = Graphics.FromImage(graph.Image))
 		{
-			gfx.SmoothingMode = SmoothingMode.HighQuality;
+			gfx.SmoothingMode = SmoothingMode.AntiAlias;
 
 			gfx.Clear(Color.White);
 
