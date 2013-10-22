@@ -31,6 +31,52 @@ class GroupEventsTask : ITask
 		, eventGroupMethod : EventGroupMethod
 		) : void
 	{
+		def AddNoiseToSpans(spans, noise, times)
+		{
+			// prepare data structures for searching span endings
+			def oldEndings = array(spans.Length * 2);
+			foreach ((s, f) in spans with i)
+			{
+				oldEndings[i + i + 0] = s.Ticks :> double;
+				oldEndings[i + i + 1] = f.Ticks :> double;
+			}
+			def newEndings = oldEndings.Clone() :> array[double];
+
+			// match noise items to nearest endings
+			def GetNearest(arr, x)
+			{
+				mutable minD = double.MaxValue;
+				mutable minI = 0;
+				foreach (y in arr with i)
+				{
+					def d = Abs(x - y);
+					when (d < minD)
+					{
+						minD = d;
+						minI = i;
+					}
+				}
+				minI;
+			}
+			foreach (i in noise)
+			{
+				def t = times[i];
+				def j = GetNearest(oldEndings, t);
+				newEndings[j] =
+					if (j % 2 == 0) Min(newEndings[j], t)  // start
+					else            Max(newEndings[j], t); // finish
+			}
+
+			// create new spans
+			def ToTime(t)
+			{
+				DateTime(t :> long)
+			}
+			def spans = array(spans.Length);
+			for (mutable i = 0; i != spans.Length; ++i)
+				spans[i] = (ToTime(newEndings[i + i]), ToTime(newEndings[i + i + 1]));
+			spans;
+		}
 		// returns the list of indices at which new groups begin
 		// assumes the data is sorted in increasing order
 		def Aggregate(data, step)
@@ -61,6 +107,14 @@ class GroupEventsTask : ITask
 				means[j] = acc / n;
 			}
 			means;
+		}
+		def EventToSpan(indices, times)
+		{
+			def ToTime(i)
+			{
+				DateTime(times[indices[i]] :> long)
+			}
+			(ToTime(0), ToTime(indices.Length - 1))
 		}
 		def FilterData(indices, noise)
 		{
@@ -148,14 +202,6 @@ class GroupEventsTask : ITask
 			}
 			(noiseData, noiseGroups);
 		}
-		def EventToSpan(indices, times)
-		{
-			def ToTime(i)
-			{
-				DateTime(times[indices[i]] :> long)
-			}
-			(ToTime(0), ToTime(indices.Length - 1))
-		}
 		def MeanShift(data, window)
 		{
 			def hFactor = 1.0 / (window * window);
@@ -233,14 +279,15 @@ class GroupEventsTask : ITask
 		def (noiseTimes, noiseDays) = FindNoise(events.DayGroups);
 		events.NoiseDays = noiseDays;
 
-		def filteredTimes = FilterData($[1..times.Length-1].ToArray(), noiseTimes);
+		def filteredTimes = FilterData($[0..times.Length-1].ToArray(), noiseTimes);
 
 		// group non-noise photos
-		events.Groups =
+		def groups = 
 			match (eventGroupMethod)
 			{
-			| Fixed    => FindEventsFixed    (filteredTimes, times, eventSpacing).Map(EventToSpan(_, times))
-			| Adaptive => FindEventsAdaptive (filteredTimes, times, eventSpacing).Map(EventToSpan(_, times))
+			| Fixed    => FindEventsFixed    (filteredTimes, times, eventSpacing)
+			| Adaptive => FindEventsAdaptive (filteredTimes, times, eventSpacing)
 			}
+		events.Groups = AddNoiseToSpans(groups.Map(EventToSpan(_, times)), noiseTimes, times);
 	}
 }
