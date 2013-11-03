@@ -174,15 +174,8 @@ class GroupEventsTask : ITask
 
 				def curr = times[indices[i]];
 				def next = times[indices[i+1]];
-				if (next != curr)
-				{
-					def result = Log(next - curr) > threshold + total / count;
-					when (result)
-						System.Console.WriteLine($"$(Log(next - curr)) > $threshold + $(total / count)");
-					result;
-				}
-				else
-					false
+
+				next != curr && Log(next - curr) > threshold + total / count;
 			}
 
 			def events = List();
