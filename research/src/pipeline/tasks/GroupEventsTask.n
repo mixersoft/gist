@@ -63,8 +63,8 @@ class GroupEventsTask : ITask
 				def t = times[i];
 				def j = GetNearest(oldEndings, t);
 				newEndings[j] =
-					if (j % 2 == 0) Min(newEndings[j], t)  // start
-					else            Max(newEndings[j], t); // finish
+					if (j % 2 == 0) Min(newEndings[j], t) // start
+					else            Max(newEndings[j], t) // finish
 			}
 
 			// create new spans
@@ -125,7 +125,7 @@ class GroupEventsTask : ITask
 		}
 		def FindEventsFixed(indices, times, spacing)
 		{
-			def IsFarFromNext(i)
+			def IsBoundary(i)
 			{
 				def curr = times[indices[i]];
 				def next = times[indices[i+1]];
@@ -136,7 +136,7 @@ class GroupEventsTask : ITask
 			for (mutable i = 0; i != indices.Length; ++i)
 			{
 				e.Add(indices[i]);
-				when (i + 1 == indices.Length || IsFarFromNext(i))
+				when (i + 1 == indices.Length || IsBoundary(i))
 				{
 					events.Add(e.ToArray());
 					e.Clear();
@@ -147,11 +147,12 @@ class GroupEventsTask : ITask
 		def FindEventsAdaptive(indices, times, threshold)
 		{
 			// compare current gap with the average of nearby gaps
-			// log(g_i) ≥ K + Σ(log(g_j), j є i - wnd … i + wnd) / (2·d + 1)
+			// log(g_i) ≥ K + Σ(log(g_j), j = i - wnd … i + wnd) / (2·d + 1)
 			//
-			// J. Platt, M. Czerwinski, and B. Field, “Phototoc: Automatic clustering for
-			// browsing personal photographs,” … , Communications and Signal …, 2003.
-			def IsFarFromNext(i)
+			// J. Platt, M. Czerwinski, and B. Field, “Phototoc: Automatic clustering for browsing
+			// personal photographs,” Information, Commun.  Signal Process.  2003 Fourth Pacific
+			// Rim Conf. Multimedia. Proc. 2003 Jt. Conf. Fourth Int. Conf., 2003.
+			def IsBoundary(i)
 			{
 				mutable total = 0.0;
 				mutable count = 0;
@@ -163,14 +164,25 @@ class GroupEventsTask : ITask
 					{
 						def curr = times[indices[j]];
 						def next = times[indices[j+1]];
-						total += Log(next - curr);
-						++count;
+						when (next != curr)
+						{
+							total += Log(next - curr);
+							++count;
+						}
 					}
 				}
 
 				def curr = times[indices[i]];
 				def next = times[indices[i+1]];
-				Log(next - curr) > threshold + total / count;
+				if (next != curr)
+				{
+					def result = Log(next - curr) > threshold + total / count;
+					when (result)
+						System.Console.WriteLine($"$(Log(next - curr)) > $threshold + $(total / count)");
+					result;
+				}
+				else
+					false
 			}
 
 			def events = List();
@@ -178,7 +190,7 @@ class GroupEventsTask : ITask
 			for (mutable i = 0; i != indices.Length; ++i)
 			{
 				e.Add(indices[i]);
-				when (i + 1 == indices.Length || IsFarFromNext(i))
+				when (i + 1 == indices.Length || IsBoundary(i))
 				{
 					events.Add(e.ToArray());
 					e.Clear();
@@ -261,7 +273,6 @@ class GroupEventsTask : ITask
 		}
 
 		def ticksPerDay  = 24 * 60 * 60 * 10_000_000;
-		def eventSpacing = eventSpacing * ticksPerDay;
 		def window       = kdeWindow * ticksPerDay;
 		def groupSpacing = 0.1 * window;
 
@@ -285,7 +296,7 @@ class GroupEventsTask : ITask
 		def groups = 
 			match (eventGroupMethod)
 			{
-			| Fixed    => FindEventsFixed    (filteredTimes, times, eventSpacing)
+			| Fixed    => FindEventsFixed    (filteredTimes, times, eventSpacing * ticksPerDay)
 			| Adaptive => FindEventsAdaptive (filteredTimes, times, eventSpacing)
 			}
 		events.Groups = AddNoiseToSpans(groups.Map(EventToSpan(_, times)), noiseTimes, times);

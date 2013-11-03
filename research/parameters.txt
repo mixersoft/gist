@@ -19,9 +19,9 @@ hashed image blur = gaussian 1
 hashed image bpp = 2
 hashed image size = 8
 
-event group method = fixed
+event group method = adaptive
 day quota = 6
-event spacing = 1
+event spacing = 5
 kde window = 0.25
 mean shift iterations = 100
 mean shift kernel = gaussian
